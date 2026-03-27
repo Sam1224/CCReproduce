@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Torch cache
+*.pt
+*.pth
+
+# OS
+.DS_Store
