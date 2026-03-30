@@ -1,0 +1,27 @@
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+import torch
+
+from dataset import make_dataset
+from model import MemoryReader
+
+
+def main() -> None:
+    ckpt = torch.load("checkpoints/memorycd.pt", map_location="cpu")
+    model = MemoryReader()
+    model.load_state_dict(ckpt["state_dict"], strict=True)
+    model.eval()
+
+    test = make_dataset(n=2000, seed=2)
+    with torch.no_grad():
+        pred = model(test.facts, test.query).argmax(dim=-1)
+    acc = (pred == test.answer).float().mean().item()
+    print(f"accuracy={acc:.3f} (recall@1)")
+
+
+if __name__ == "__main__":
+    os.chdir(Path(__file__).resolve().parent)
+    main()
