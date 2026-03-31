@@ -1,73 +1,124 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import List, Tuple
+import json
+import random
+from typing import Dict, List, Optional
 
 import numpy as np
 import torch
+from torch.utils.data import Dataset
 
 
-@dataclass
-class Pair:
-    q: torch.Tensor  # (Lq,)
-    ad_title: torch.Tensor  # (Lt,)
-    ad_img: torch.Tensor  # (d,)
-    y: int
-    ad_id: int
+def seed_everything(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
 
-def _seed(seed: int) -> np.random.Generator:
-    return np.random.default_rng(seed)
+class SimpleTokenizer:
+    def __init__(self, vocab_size: int = 10000, pad_id: int = 0, bos_id: int = 1, eos_id: int = 2) -> None:
+        self.vocab_size = vocab_size
+        self.pad_id = pad_id
+        self.bos_id = bos_id
+        self.eos_id = eos_id
+
+    def encode(self, text: str, max_len: int) -> List[int]:
+        # hash tokens into a fixed vocab for reproducibility
+        toks = [t for t in text.lower().replace("\n", " ").split(" ") if t]
+        ids = [self.bos_id]
+        for t in toks[: max(0, max_len - 2)]:
+            ids.append(3 + (abs(hash(t)) % (self.vocab_size - 3)))
+        ids.append(self.eos_id)
+        return ids
 
 
-def make_pairs(
-    n_ads: int = 4000,
-    n_pairs: int = 60000,
-    vocab: int = 5000,
-    d_img: int = 64,
-    pos_rate: float = 1e-3,
-    seed: int = 0,
-) -> Tuple[List[Pair], torch.Tensor]:
-    """Generate heavily imbalanced (query, ad) pairs.
+class QueryAdDataset(Dataset):
+    def __init__(
+        self,
+        *,
+        n: int = 6000,
+        d_img: int = 64,
+        d_ctx: int = 16,
+        max_len: int = 48,
+        seed: int = 7,
+        jsonl_path: Optional[str] = None,
+    ) -> None:
+        super().__init__()
+        seed_everything(seed)
+        self.tok = SimpleTokenizer()
+        self.max_len = max_len
+        self.d_img = d_img
+        self.d_ctx = d_ctx
 
-    We simulate ad embeddings + textual titles. Offensive pairing depends on
-    query intent interacting with ad embedding.
+        self.items: List[Dict[str, torch.Tensor]] = []
 
-    Returns:
-      pairs: examples
-      ad_embs: (n_ads, d_img)
-    """
+        if jsonl_path:
+            with open(jsonl_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    row = json.loads(line)
+                    q = str(row["query"])
+                    ad = str(row["ad_text"])
+                    img = torch.tensor(row.get("img") or np.random.randn(d_img), dtype=torch.float32)
+                    ctx = torch.tensor(row.get("ctx") or np.random.randn(d_ctx), dtype=torch.float32)
+                    y = float(row.get("label", 0))
+                    self.items.append(
+                        {
+                            "q": torch.tensor(self.tok.encode(q, max_len), dtype=torch.long),
+                            "ad": torch.tensor(self.tok.encode(ad, max_len), dtype=torch.long),
+                            "img": img,
+                            "ctx": ctx,
+                            "y": torch.tensor([y], dtype=torch.float32),
+                        }
+                    )
+        else:
+            offensive_words = ["hate", "kill", "sex", "violence", "racist", "slur"]
+            benign_words = ["shoes", "phone", "discount", "review", "delivery", "camera"]
 
-    rng = _seed(seed)
-    ad_embs = rng.normal(size=(n_ads, d_img)).astype(np.float32)
-    # introduce a few "offensive" ad clusters
-    n_clusters = 8
-    cluster_centers = rng.normal(size=(n_clusters, d_img)).astype(np.float32)
-    cluster_ids = rng.integers(0, n_clusters, size=(n_ads,))
-    ad_embs += cluster_centers[cluster_ids] * 0.7
+            for _ in range(n):
+                is_off = float(np.random.rand() < 0.2)
+                q_words = random.sample(benign_words, 2) + (random.sample(offensive_words, 1) if is_off else [])
+                ad_words = random.sample(benign_words, 4) + (random.sample(offensive_words, 1) if (is_off and np.random.rand() < 0.5) else [])
 
-    pairs: List[Pair] = []
-    for _ in range(n_pairs):
-        ad_id = int(rng.integers(0, n_ads))
-        q_len = int(rng.integers(2, 8))
-        t_len = int(rng.integers(4, 12))
+                q = " ".join(q_words)
+                ad = " ".join(ad_words)
 
-        q = rng.integers(0, vocab, size=(q_len,), dtype=np.int64)
-        title = rng.integers(0, vocab, size=(t_len,), dtype=np.int64)
-        img = ad_embs[ad_id]
+                img = torch.randn(d_img)
+                ctx = torch.randn(d_ctx)
 
-        # Pair offensiveness: rare, but correlated with cluster id and a subset of query tokens.
-        intent = int(q[0] % n_clusters)
-        y = 1 if (intent == int(cluster_ids[ad_id]) and rng.random() < 0.18) else 0
-        # enforce global scarcity
-        if rng.random() > pos_rate / max(pos_rate, 0.18):
-            y = 0
+                # label depends on mismatch between query intent and ad content (context-aware)
+                y = is_off if ("hate" in q or "slur" in q) else float(np.random.rand() < 0.05)
 
-        pairs.append(Pair(q=torch.tensor(q), ad_title=torch.tensor(title), ad_img=torch.tensor(img), y=y, ad_id=ad_id))
+                self.items.append(
+                    {
+                        "q": torch.tensor(self.tok.encode(q, max_len), dtype=torch.long),
+                        "ad": torch.tensor(self.tok.encode(ad, max_len), dtype=torch.long),
+                        "img": img,
+                        "ctx": ctx,
+                        "y": torch.tensor([y], dtype=torch.float32),
+                    }
+                )
 
-    return pairs, torch.tensor(ad_embs)
+    def __len__(self) -> int:
+        return len(self.items)
+
+    def __getitem__(self, idx: int) -> Dict[str, torch.Tensor]:
+        return self.items[idx]
 
 
-def split(items: List[Pair], frac: float = 0.9) -> Tuple[List[Pair], List[Pair]]:
-    n = int(len(items) * frac)
-    return items[:n], items[n:]
+def pad_1d(seqs: List[torch.Tensor], pad_id: int) -> torch.Tensor:
+    m = max(int(s.numel()) for s in seqs)
+    out = torch.full((len(seqs), m), pad_id, dtype=torch.long)
+    for i, s in enumerate(seqs):
+        out[i, : s.numel()] = s
+    return out
+
+
+def collate(batch: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
+    pad_id = 0
+    return {
+        "q": pad_1d([b["q"] for b in batch], pad_id),
+        "ad": pad_1d([b["ad"] for b in batch], pad_id),
+        "img": torch.stack([b["img"] for b in batch], dim=0),
+        "ctx": torch.stack([b["ctx"] for b in batch], dim=0),
+        "y": torch.stack([b["y"] for b in batch], dim=0).squeeze(-1),
+    }
