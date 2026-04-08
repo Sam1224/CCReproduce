@@ -1,8 +1,14 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.egg-info/
+
+# Virtualenv
+.venv/
+.env
+
+# Outputs
+outputs/
 
 # Torch cache
 *.pt
