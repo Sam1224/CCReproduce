@@ -1,6 +1,21 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.pt
+*.py[cod]
+*.egg-info/
+
+# Virtualenv
+.venv/
+.env
+
+# Outputs
+outputs/
 runs/
+
+# Torch / artifacts
+*.pt
+*.pth
+checkpoints/
+caches/
+
+# OS
+.DS_Store
