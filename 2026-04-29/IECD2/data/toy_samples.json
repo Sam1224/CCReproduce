@@ -1,0 +1,7 @@
+[
+  {
+    "id": "toy-1",
+    "question": "What is in the picture?",
+    "note": "This toy dataset is for wiring/IO only. For real reproduction, replace with a VQA dataset and a VLM adapter."
+  }
+]
