@@ -1,83 +1,93 @@
-# Feishu Cards — 2026-05-10 Daily AI Paper Inspection
-# 飞书卡片 — 2026-05-10 日报 (分数 ≥ 40 的论文)
+# Feishu Cards — 2026-05-10 Daily AI Paper Inspection (BACKFILL)
+
+> 以下为得分 ≥ 40 的论文飞书卡片，按得分从高到低排序。
 
 ---
 
-📄 标题：VLM as Policy: Common-Law Content Moderation Framework for Short Video Platform
-👥 作者：Xingyu Lu, Tianke Zhang, Chang Meng et al. (快手 Kuaishou Technology)
-🔗 链接：https://arxiv.org/abs/2504.14904
-📝 方法概述：提出 KuaiMod，将视觉语言大模型（VLM）训练为基于"普通法判例推理"的动态内容审核策略执行者。通过从真实平台抽取违规/合规案例构建 CoT 训练数据，结合课程训练与在线反馈持续精化策略。首创短视频平台（SVP）内容审核基准，包含真实用户/审核员反馈。
-💡 创新性分析：首次将"普通法（Common-Law）"类比引入内容审核，VLM 作为活策略执行者而非静态分类器；在线反馈闭环支持策略动态演化；与传统规则/分类器相比，推理可解释性大幅提升。评分：83/100
-📊 关键指标：生产部署后用户举报率下降 20%；在多个快手推荐场景 DAU 和 APP 使用时长均显著提升（KDD 2026 收录）
+📄 标题：Valley3: Scaling Omni Foundation Models for E-commerce
+👥 作者：Zeyu Chen, Guanghao Zhou, Qixiang Yin, Ziwang Zhao, Huanjin Yao, et al.（AIDC-AI / 阿里国际数字商业集团）
+🔗 链接：https://arxiv.org/abs/2605.01278
+📝 方法概述：Valley3 是首个面向全球化电商场景的 Omni 多模态大语言模型，统一支持文本、图像、视频、音频四模态理解与推理。采用四阶段电商持续预训练（音频理解→跨模态指令遵循→电商领域知识→长上下文推理），并引入可控推理模式（非思考/轻度/重度 CoT）和 Agentic Search 能力，专为短视频电商场景优化原生多语言音频处理。
+💡 创新性分析：业界首个端到端 Omni 电商 MLLM，将音频（达人口播/商品讲解）纳入统一预训练；可控推理链适配实时审核与深度研究的不同延迟需求；Agentic Search 解锁多步电商调研任务（比价、竞品分析、合规检查）。相比冻结特征的二阶段范式，Valley3 实现了多模态-推荐目标的端到端对齐。
+📊 关键指标：内部 Omni 电商基准（6 任务）+ 开源电商基准 全面超越强 baseline；通用多模态基准保持竞争力。得分：84/100 ✦（进入代码复现）
 
 ---
 
-📄 标题：Dynamic Content Moderation in Livestreams: Combining Supervised Classification with MLLM-Boosted Similarity Matching
-👥 作者：Wei Chee Yew, Hailun Xu, Sanjay Saha, Xiaotian Fan et al.
-🔗 链接：https://arxiv.org/abs/2512.03553
-📝 方法概述：针对直播电商/游戏/互动场景，设计双路径混合审核系统：监督分类路径检测已知违规，MLLM 增强相似度匹配路径处理新型/模糊违规，MLLM 知识蒸馏保证实时性。文本/音频/视觉多模态同步处理，两路融合取高置信度裁决。
-💡 创新性分析：双路互补架构兼顾精度与泛化性；MLLM 蒸馏将大模型推理能力迁移至轻量路由器；专为直播时序特性设计，不同于离线审核范式。评分：79/100
-📊 关键指标：生产平台（百万小时内容）分类路径 Recall@80%P=67%，相似度路径 Recall@80%P=76%，远超单路系统。KDD 2026 收录。
+📄 标题：Omni-Fake: Benchmarking Unified Multimodal Social Media Deepfake Detection
+👥 作者：Tianxiao Li, Zhenglin Huang, Haiquan Wen, et al.（University of Liverpool · CUHK-Shenzhen · NTU · University of Exeter）
+🔗 链接：https://arxiv.org/abs/2605.01638
+📝 方法概述：Omni-Fake 是首个统一跨四模态（图像/音频/视频/音视频 Talking Head）的社交媒体深度伪造检测基准。包含 Omni-Fake-Set（100 万+样本）和 Omni-Fake-OOD（20 万+分布外样本），支持检测+定位+解释三任务联合评估协议。同时提出 Omni-Fake-R1 检测器（Qwen2.5-Omni-7B + GSPO 强化学习）。
+💡 创新性分析：突破现有基准单模态局限；OOD 基准专项测试泛化性；GSPO（组序列策略优化）将 RL 引入多模态深度伪造检测是技术创新。对电商达人/主播内容真实性审核有直接应用价值。
+📊 关键指标：Omni-Fake-Set 4 模态检测 AUC 全面优于 single-modal 检测器；Omni-Fake-OOD 分布外泛化 SOTA。得分：76/100
 
 ---
 
-📄 标题：AFMRL: Attribute-Enhanced Fine-Grained Multi-Modal Representation Learning in E-commerce
-👥 作者：Biao Zhang, Lixin Chen, Bin Zhang, Zongwei Wang, Tong Liu, Bo Zheng（阿里巴巴淘宝天猫集团）
-🔗 链接：https://arxiv.org/abs/2604.20135
-📝 方法概述：针对电商同款商品检索中的细粒度语义辨别挑战，提出 AFMRL：先用 MLLM 自动提取商品属性（颜色/材质/款式），再通过属性引导对比学习（AGCL）做难负例挖掘，最后用检索感知属性强化（RAR）做 RL 精化，三阶段闭环显著提升细粒度表示质量。
-💡 创新性分析：将生成式 MLLM 与判别式对比学习+强化学习结合，属性作为中间语义锚点突破细粒度识别瓶颈；阿里巴巴大规模电商数据验证，工业可信度高。评分：78/100
-📊 关键指标：在大规模电商检索数据集上多任务 SOTA，超越 VLM2Vec 等通用大模型；多类目同款检索任务全面领先。
+📄 标题：AuDisAgent: Training-Free Multimodal Controversy Detection Multi-Agent Framework
+👥 作者：Zihan Ding, Ziyuan Yang, Yi Zhang
+🔗 链接：https://arxiv.org/abs/2605.02939
+📝 方法概述：AuDisAgent 将多模态争议内容检测（MCD）从静态特征学习重定义为"受众传播动力学"问题。三专业筛查 Agent（Video/Comment/Interaction）对视频内容初步评估；当无法达成共识时，Viewing Panel Agent 激活，模拟多元背景受众群体讨论，输出最终判定。全程基于 GLM4-9B 零样本推理，无需训练。
+💡 创新性分析：首次将"受众多元性"引入争议检测，突破传统静态分类范式；训练无关意味着可快速迁移至新平台；对短视频电商平台（抖音/快手）内容风控有直接适用性，MMCD 数据集包含 1 万+中文视频。
+📊 关键指标：MMCD 数据集（10K+中文视频）：富评论场景 Acc +1.33%、F1 +1.68%；少评论场景 Acc +1.10%、F1 +2.00%（vs. 13 个强 baseline 最优）。得分：72/100
 
 ---
 
-📄 标题：Adapting Vision-Language Models for E-commerce Understanding at Scale
-👥 作者：Matteo Nulli, Vladimir Orshulevich et al. (12 authors)
-🔗 链接：https://arxiv.org/abs/2602.11733
-📝 方法概述：系统研究如何将通用 VLM 适配至电商多图像/属性中心/噪声数据场景。构建覆盖深度商品理解、严格指令跟随、动态属性提取三维度的新评估套件，通过大规模消融实验提炼最佳实践方法论。
-💡 创新性分析：填补电商 VLM 适配方法论空白，为行业提供系统性参考；三维评估套件标准化电商 VLM 评测。评分：74/100
-📊 关键指标：有针对性适配后，电商多维评估指标全面显著提升，同时保持通用能力；评估套件计划开源。
+📄 标题：The Cost of Context: Mitigating Textual Bias in Multimodal RAG (BAIR)
+👥 作者：Hoin Jung, et al.
+🔗 链接：https://arxiv.org/abs/2605.05594
+📝 方法概述：本文识别 Multimodal RAG 中的"Recorruption"现象——即使完全准确的上下文也会导致 MLLM 放弃原本正确的视觉预测，转而依赖文本。通过注意力矩阵机制诊断，发现"视觉失明"和"位置偏差"两大根因，提出 BAIR（Bottleneck Attention Intervention for Recovery）——无参数推理时框架，恢复视觉显著性并施加位置感知惩罚。
+💡 创新性分析："Recorruption"和"成功幻觉（Illusion of Success）"概念对 RAG 评估方法论有深远影响；BAIR 完全免训练，可即插任何 MLLM+RAG 系统，对电商图文商品问答质量有直接提升价值。
+📊 关键指标：医疗事实性/社会公平性/地理空间 3 个基准均显著提升多模态基础能力，Recorruption 率大幅降低。得分：66/100
 
 ---
 
-📄 标题：OpenSearch-VL: An Open Recipe for Frontier Multimodal Search Agents
-👥 作者：Shuang Chen et al. (10 authors)
-🔗 链接：https://arxiv.org/abs/2605.05185 | GitHub: https://github.com/shawn0728/OpenSearch-VL
-📝 方法概述：开源完整多模态深度搜索 Agent 训练方案，包含：①Wikipedia 路径采样+模糊改写的高质数据策划（SFT-36k/RL-8k）；②整合文本/图像/OCR/超分等 7 类工具的统一环境；③Fatal-Aware GRPO 算法（工具失败后 token mask + 单边优势截断）防止致命失败污染奖励。
-💡 创新性分析：首个完整开放的多模态搜索 Agent 配方；Fatal-Aware GRPO 优雅处理工具失败，工程创新明显；7 项基准平均+10分，可商业模型比肩。评分：76/100
-📊 关键指标：7项多模态搜索基准平均提升 10+ 分；BrowseComp-Plus 与商业闭源模型持平；代码/数据/模型全部开源。
+📄 标题：MultiSoc-4D: Instruction-Induced Label Collapse in Closed-Set LLM Annotation
+👥 作者：（团队待补充）
+🔗 链接：https://arxiv.org/abs/2605.06940
+📝 方法概述：构建 58K+孟加拉语社交媒体评论的四维度标注基准（类别/情感/仇恨言论/讽刺），使用 ChatGPT/Gemini/Claude/Grok 分别标注。核心发现"指令诱导标签崩溃"：LLM 系统性偏向"回退标签"（Other/Neutral/No），导致79%仇恨内容和75%讽刺内容被漏标，Fleiss' Kappa≈-0.001（近乎随机）。在40+个主流 LLM 上验证该偏差与架构无关。
+💡 创新性分析：首次将"标签崩溃"定义为 LLM 自动标注的系统性缺陷，对电商违规内容自动标注系统（如不实宣传/违禁商品检测）具有直接警示意义——基于 LLM 标注数据训练的审核系统可能系统性漏检少数类违规。
+📊 关键指标：40+ LLMs 平均：仇恨漏检率79%、讽刺漏检率75%；Sarcasm Kappa≈-0.001（vs. 人工标注 Kappa 显著>0）。得分：65/100
 
 ---
 
-📄 标题：Uni-OPD: Unifying On-Policy Distillation with a Dual-Perspective Recipe
-👥 作者：Wenjin Hou et al. (16 authors)（清华大学 THUNLP 等）
-🔗 链接：https://arxiv.org/abs/2605.03677 | GitHub: https://github.com/thunlp/OPD
-📝 方法概述：提出统一 On-Policy 蒸馏框架 Uni-OPD，从学生视角引入双平衡数据策略，从教师视角提出 Outcome-Guided Margin Calibration（OGMC）恢复教师监督序一致性。统一覆盖 LLM 和 MLLM，支持单教师/多教师/跨模态蒸馏。
-💡 创新性分析：首个统一 LLM/MLLM 的 OPD 框架；OGMC 校准教师可靠性是关键创新；5 领域 16 基准全面验证，清华强实验室。评分：72/100
-📊 关键指标：5 领域（推理/QA/指令跟随/多模态/跨模态）16 基准全面超越 DistiLLM、MiniLLM 等基线；跨模态蒸馏首次系统验证。
-
----
-
-📄 标题：Lightweight Stylistic Consistency Profiling: Robust Detection of LLM-Generated Textual Content for Multimedia Moderation
-👥 作者：Siyuan Li, Aodu Wulianghai, Xi Lin, Xibin Yuan, Qinghua Mao, Guangyan Li, Xiang Chen, Jun Wu, Jianhua Li
-🔗 链接：https://arxiv.org/abs/2605.05950
-📝 方法概述：提出 LiSCP，通过构建跨改写变体的文体一致性侧写来检测 LLM 生成文本：结合离散文体特征（句式/标点/词性）和连续语义信号（embedding 相似度），轻量分类头基于一致性剖面做判断，对对抗性改写具有强鲁棒性。
-💡 创新性分析：改变检测维度——从"表面文字"转向"风格一致性指纹"，在对抗改写场景下 DetectGPT 等现有方法退化到接近随机，LiSCP 保持稳定；轻量设计适合大规模内容平台。评分：67/100
-📊 关键指标：对抗改写测试集 AUROC 显著高于 DetectGPT（后者约 55%，接近随机）；轻量级，适合实时内容审核部署。
-
----
-
-📄 标题：Multimodal Data Curation Through Ranked Retrieval
-👥 作者：Pratyush Muthukumar, Harshil Kotamreddy et al.（NVIDIA）
+📄 标题：Multimodal Data Curation Through Ranked Retrieval (SNS+EEE)
+👥 作者：Pratyush Muthukumar, Harshil Kotamreddy, Sarah Amiraslani, Tomo Kanazawa, Ramani Akkati, Shaan Jain, Andrew Mathau
 🔗 链接：https://arxiv.org/abs/2605.01163
-📝 方法概述：针对多模态 embedding 空间模态驱动分离问题，提出 SNS（Symmetric Nucleus Subsampling，对称核子采样）修剪噪声训练对，以及 EEE（Expert Embedding Engine，多专家 embedding 融合）减少模态偏差，整体提升跨模态检索和数据策划质量。
-💡 创新性分析：从训练对和 embedding 模型两个层面同时修复模态偏差；SNS 无监督过滤噪声配对，EEE 学习投影层融合专家。评分：63/100
-📊 关键指标：跨模态检索 R@1 显著改善；下游数据策划任务训练效率提升；NVIDIA 实验规范。
+📝 方法概述：针对多模态嵌入空间中的"模态偏差"（嵌入反映模态而非语义）和"标注噪声"（异构数据集混合后配对质量下降）两大问题，提出 SNS（对称核采样，精炼训练对）和 EEE（专家嵌入引擎，组合互补专家+偏差感知目标）双管齐下的数据策展框架。
+💡 创新性分析：训练对级别（SNS）和模型级别（EEE）的双重干预是新颖策略；EEE 可组合现有嵌入专家即插即用；直接适用于电商商品图文配对数据清洗（SKU 图片-标题-描述三模态对齐质量提升）。
+📊 关键指标：跨模态检索 Recall@K 多数据集上显著提升；配对一致性分数提升。得分：63/100
+
+---
+
+📄 标题：SIRA: Superintelligent Retrieval Agent
+👥 作者：Zeyu Yang, Qi Ma, Jason Chen, Anshumali Shrivastava（Meta AI Research · Rice University）
+🔗 链接：https://arxiv.org/abs/2605.06647
+📝 方法概述：SIRA 将"超级智能检索"定义为将多轮探索性搜索压缩为单次判别式检索动作的能力。通过语料库侧离线词汇增强（LLM 补充缺失搜索词）和查询侧词汇预测（LLM 预判证据词），结合文档频率过滤工具调用，最终执行一次加权 BM25 检索，完全训练无关。
+💡 创新性分析：将 LLM 从"查询重写者"升级为"语料库感知专家"，通过预测"哪些词能区分目标与混淆项"实现单轮超越多轮；开源代码，可直接集成至电商搜索召回层。
+📊 关键指标：BEIR 10 个基准 nDCG@10 全面超越密集检索和多轮 agentic 方法；下游 QA 任务显著提升。得分：61/100
+
+---
+
+📄 标题：EPIC: Embedding-based In-Context Prompt Training for LLMs as Text Encoders
+👥 作者：Ailiang Lin, Zhuoyun Li, Keyu Mao, Kotaro Funakoshi, Manabu Okumura（Tokyo Institute of Technology）
+🔗 链接：https://arxiv.org/abs/2605.01372
+📝 方法概述：EPIC 用连续嵌入向量替代离散文本示例作为 In-Context 提示，在保留 ICL 语义对齐效果的同时大幅降低 token 开销。通过对比学习训练 LLM 将演示嵌入解读为语义指导，在 MTEB 基准（公开数据条件下）达到新 SOTA。
+💡 创新性分析：离散→连续示例的替换思路在 ICL 嵌入生成中较为新颖；对电商商品语义检索（查询-商品嵌入对齐）有直接应用价值；训练时 token 节省显著。
+📊 关键指标：MTEB（公开检索数据训练）综合得分 SOTA，超越 frontier 模型。得分：60/100
+
+---
+
+📄 标题：Topic Is Not Agenda: A Citation-Community Audit of Text Embeddings
+👥 作者：Junseon Yoo
+🔗 链接：https://arxiv.org/abs/2605.07158
+📝 方法概述：通过 358 万篇科学论文的增强引用图（Leiden CPM 两粒度划分），审计 4 个 SOTA 嵌入模型（Gemini/Qwen3-8B/Qwen3-0.6B/SPECTER2）在"研究议程"层级的检索精度：L1 子领域精度 45-52%（尚可），L2 研究议程精度仅 15-21%——10 篇检索结果中 8 篇议程外。
+💡 创新性分析：对"余弦相似度=概念相关性"假设的大规模定量证伪，警示 RAG 精度在细粒度领域对齐场景下的系统性失效风险；对电商细粒度品类/违规类型精准匹配有参考价值。
+📊 关键指标：4 个 SOTA 模型 L2（研究议程）top-10 同议程率仅 15-21%，即 79-85% 的检索结果"议程外"。得分：54/100
 
 ---
 
 📄 标题：EGAD: Entropy-Guided Adaptive Distillation for Token-Level Knowledge Transfer
-👥 作者：Hao Zhang, Zhibin Zhang, Guangxin Wu, Wanyi Ning, Jiafeng Guo, Xueqi Cheng（中科院计算技术研究所）
+👥 作者：Hao Zhang, Zhibin Zhang, Guangxin Wu, Wanyi Ning, Jiafeng Guo, Xueqi Cheng（ICT-CAS / 中科院计算所）
 🔗 链接：https://arxiv.org/abs/2605.01732
-📝 方法概述：利用教师输出熵在 token 级别动态调整蒸馏：高熵 token（关键决策点）获得更大训练权重和更细粒度分布对齐，采用由易到难的 token 级课程学习策略，解决现有蒸馏方法 token 等权处理的低效问题。
-💡 创新性分析：以教师熵作为 token 难度信号驱动蒸馏课程，视角新颖；ICT CAS 实验。评分：58/100
-📊 关键指标：推理/QA 基准平均准确率提升 2-3%；指令跟随 WinRate 优于 MiniLLM 等基线。
+📝 方法概述：EGAD 通过教师模型输出熵进行 token 级自适应蒸馏：token 级课程学习（低熵→高熵逐步迁移）+自适应温度调节+双分支架构（低熵用 logits 蒸馏，高熵用特征蒸馏），解决传统 KD 对所有 token 等权处理的低效问题。
+💡 创新性分析：熵引导的 token 级课程在 LLM 蒸馏中较新颖；双分支架构平衡效率与精度；对压缩内容审核模型（大模型知识迁移至轻量部署模型）有工程价值。
+📊 关键指标：相比 token 等权蒸馏 baseline，下游任务性能显著提升；推理效率提升。得分：51/100
