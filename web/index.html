@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+:root {
+  --bg: #f8f8f6;
+  --card-bg: #ffffff;
+  --border: #e2e0db;
+  --text: #1a1a18;
+  --muted: #6b6860;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --strong: #15803d;
+  --strong-bg: #f0fdf4;
+  --weak: #9333ea;
+  --weak-bg: #faf5ff;
+  --score-hi: #15803d;
+  --score-mid: #b45309;
+  --score-lo: #dc2626;
+  --tag-bg: #f1f0ec;
+  --tag-text: #4a4843;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.05);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+       background: var(--bg); color: var(--text); line-height: 1.6; font-size: 14px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+header { background: #fff; border-bottom: 1px solid var(--border); padding: 16px 32px;
+         display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+.logo span { color: var(--accent); }
+.header-controls { display: flex; gap: 12px; align-items: center; }
+.lang-toggle { border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px;
+               cursor: pointer; font-size: 13px; background: var(--bg); color: var(--text); }
+.lang-toggle:hover { background: var(--accent-light); }
+
+/* Controls Bar */
+.controls-bar { background: #fff; border-bottom: 1px solid var(--border);
+                padding: 14px 32px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.control-group { display: flex; align-items: center; gap: 8px; }
+.control-group label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+input[type=range] { width: 100px; accent-color: var(--accent); }
+.score-display { font-size: 13px; font-weight: 600; color: var(--accent); min-width: 30px; }
+select, input[type=date] { border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px;
+                            font-size: 13px; background: var(--bg); color: var(--text); }
+.bucket-filter { display: flex; gap: 6px; }
+.bucket-btn { border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px;
+              cursor: pointer; font-size: 12px; font-weight: 600; background: var(--bg); }
+.bucket-btn.active { color: #fff; }
+.bucket-btn[data-bucket="all"].active { background: var(--accent); border-color: var(--accent); }
+.bucket-btn[data-bucket="STRONG"].active { background: var(--strong); border-color: var(--strong); }
+.bucket-btn[data-bucket="WEAK"].active { background: var(--weak); border-color: var(--weak); }
+.count-badge { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+/* Main grid */
+main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+
+/* Paper card */
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+        box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.15s, transform 0.15s; }
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+.card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.bucket-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px; }
+.bucket-badge.STRONG { background: var(--strong-bg); color: var(--strong); }
+.bucket-badge.WEAK { background: var(--weak-bg); color: var(--weak); }
+.score-badge { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.score-badge.hi { background: #dcfce7; color: var(--score-hi); }
+.score-badge.mid { background: #fef3c7; color: var(--score-mid); }
+.score-badge.lo { background: #fee2e2; color: var(--score-lo); }
+.card-date { font-size: 11px; color: var(--muted); }
+.card-title { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
+.card-authors { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-affil { font-size: 11px; color: var(--accent); font-weight: 500; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; background: var(--tag-bg); color: var(--tag-text); }
+
+/* Card body */
+.card-body { padding: 14px 18px; }
+.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+                 color: var(--muted); margin-bottom: 6px; }
+.method-text { font-size: 13px; line-height: 1.55; color: #333; }
+.story-arc { background: #f8f8f6; border-left: 3px solid var(--accent); border-radius: 4px;
+             padding: 8px 12px; margin-top: 10px; font-size: 12px; color: var(--muted); font-style: italic; }
+
+/* Toggleable sections */
+.toggle-btn { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+              color: var(--accent); background: none; border: none; cursor: pointer; padding: 6px 0;
+              margin-top: 8px; }
+.toggle-btn::before { content: '▶'; font-size: 10px; transition: transform 0.2s; }
+.toggle-btn.open::before { transform: rotate(90deg); }
+.collapsible { display: none; margin-top: 8px; }
+.collapsible.open { display: block; }
+
+/* Metrics table */
+.metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.metrics-table th { background: var(--bg); font-weight: 600; padding: 5px 8px; text-align: left;
+                    border-bottom: 1px solid var(--border); color: var(--muted); font-size: 11px; }
+.metrics-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); }
+.metrics-table tr:last-child td { border-bottom: none; }
+.metrics-value { font-weight: 700; color: var(--score-hi); }
+
+/* Score breakdown */
+.score-bars { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.score-row { display: flex; align-items: center; gap: 8px; }
+.score-dim { font-size: 11px; color: var(--muted); width: 130px; flex-shrink: 0; }
+.score-bar-wrap { flex: 1; background: var(--border); border-radius: 3px; height: 6px; }
+.score-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.score-val { font-size: 11px; font-weight: 600; width: 35px; text-align: right; }
+
+/* Methodology figure (SVG placeholder) */
+.fig-container { background: #fafafa; border: 1px solid var(--border); border-radius: 8px;
+                 padding: 12px; margin-top: 8px; text-align: center; }
+.fig-container svg { max-width: 100%; height: auto; }
+
+/* Code link */
+.code-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+             background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px 10px;
+             color: #334155; margin-top: 8px; }
+.code-link:hover { background: #e2e8f0; text-decoration: none; }
+
+/* Footer */
+footer { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 24px; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1/-1; }
+
+@media (max-width: 768px) {
+  header, .controls-bar, main { padding-left: 16px; padding-right: 16px; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CC<span>Reproduce</span> — Daily AI Paper Inspection</div>
+  <div class="header-controls">
+    <button class="lang-toggle" id="langBtn" onclick="toggleLang()">中文</button>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <div class="control-group">
+    <label>Date</label>
+    <input type="date" id="dateFilter" value="2026-05-10" onchange="filterCards()"/>
+  </div>
+  <div class="control-group">
+    <label>Min Score</label>
+    <input type="range" id="scoreFilter" min="0" max="100" value="0" oninput="updateScore(this.value)"/>
+    <span class="score-display" id="scoreDisplay">0</span>
+  </div>
+  <div class="control-group">
+    <label>Bucket</label>
+    <div class="bucket-filter">
+      <button class="bucket-btn active" data-bucket="all" onclick="setBucket('all')">All</button>
+      <button class="bucket-btn" data-bucket="STRONG" onclick="setBucket('STRONG')">STRONG</button>
+      <button class="bucket-btn" data-bucket="WEAK" onclick="setBucket('WEAK')">WEAK</button>
+    </div>
+  </div>
+  <span class="count-badge" id="countBadge">9 papers</span>
+</div>
+
+<main>
+  <div class="grid" id="papersGrid"></div>
+</main>
+
+<footer>
+  CCReproduce · Daily AI Paper Inspection · E-commerce Content Ecosystem &amp; Influencer Governance ·
+  Domain: LLM/VLM/MLLM · Embeddings · Agents · RAG · Distillation · Content Governance
+</footer>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+let lang = 'en';
+let minScore = 0;
+let bucket = 'all';
+let allPapers = [];
+
+// ── Load data ──────────────────────────────────────────────────────
+async function loadPapers() {
+  try {
+    const r = await fetch('papers_db.json');
+    const db = await r.json();
+    const dateEl = document.getElementById('dateFilter');
+    const date = dateEl.value;
+    allPapers = db.papers[date] || [];
+    renderCards();
+  } catch(e) {
+    console.error('Failed to load papers_db.json', e);
+    // Fallback: use embedded data
+    allPapers = EMBEDDED_PAPERS;
+    renderCards();
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+function scoreClass(s) { return s >= 75 ? 'hi' : s >= 60 ? 'mid' : 'lo'; }
+
+function scoreBarHTML(breakdown) {
+  const dims = [
+    ['Innovation', breakdown.innovation, 30],
+    ['SOTA Delta', breakdown.sota_delta, 15],
+    ['Exp. Quality', breakdown.experimental_quality, 15],
+    ['Efficiency', breakdown.efficiency, 10],
+    ['Generalization', breakdown.generalization, 5],
+    ['Domain Rel.', breakdown.domain_relevance, 25],
+  ];
+  return dims.map(([name, val, max]) => `
+    <div class="score-row">
+      <span class="score-dim">${name}</span>
+      <div class="score-bar-wrap">
+        <div class="score-bar-fill" style="width:${Math.round(val/max*100)}%"></div>
+      </div>
+      <span class="score-val">${val}/${max}</span>
+    </div>`).join('');
+}
+
+function metricsHTML(metrics) {
+  if (!metrics || !metrics.length) return '<p style="font-size:12px;color:#999">No metrics available</p>';
+  return `<table class="metrics-table">
+    <tr><th>Dataset</th><th>Metric</th><th>Value</th><th>Baseline</th></tr>
+    ${metrics.map(m => `<tr>
+      <td>${m.dataset}</td>
+      <td>${m.metric}</td>
+      <td class="metrics-value">${m.value}</td>
+      <td style="color:#999">${m.baseline}</td>
+    </tr>`).join('')}
+  </table>`;
+}
+
+function methodologyFig(paper) {
+  // Generate simple SVG flow diagram
+  const colors = {STRONG:'#15803d', WEAK:'#9333ea'};
+  const c = colors[paper.bucket] || '#2563eb';
+  return `<svg viewBox="0 0 340 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:90px">
+    <rect x="5" y="25" width="60" height="30" rx="6" fill="${c}22" stroke="${c}" stroke-width="1.5"/>
+    <text x="35" y="44" text-anchor="middle" font-size="9" fill="${c}" font-weight="600">Input</text>
+    <text x="35" y="54" text-anchor="middle" font-size="8" fill="${c}">Video+Text</text>
+    <polygon points="70,40 80,35 80,45" fill="${c}"/>
+    <rect x="83" y="25" width="75" height="30" rx="6" fill="${c}22" stroke="${c}" stroke-width="1.5"/>
+    <text x="120" y="44" text-anchor="middle" font-size="9" fill="${c}" font-weight="600">Model Core</text>
+    <polygon points="162,40 172,35 172,45" fill="${c}"/>
+    <rect x="175" y="25" width="70" height="30" rx="6" fill="${c}22" stroke="${c}" stroke-width="1.5"/>
+    <text x="210" y="44" text-anchor="middle" font-size="9" fill="${c}" font-weight="600">Reasoning</text>
+    <polygon points="249,40 259,35 259,45" fill="${c}"/>
+    <rect x="262" y="25" width="65" height="30" rx="6" fill="${c}" stroke="${c}" stroke-width="1.5"/>
+    <text x="294" y="44" text-anchor="middle" font-size="9" fill="white" font-weight="700">Output</text>
+    <text x="294" y="54" text-anchor="middle" font-size="8" fill="white">Verdict</text>
+    <text x="170" y="88" text-anchor="middle" font-size="10" fill="#666">${paper.title.substring(0,50)}${paper.title.length>50?'…':''}</text>
+  </svg>`;
+}
+
+function toggleSection(btn, id) {
+  const el = document.getElementById(id);
+  btn.classList.toggle('open');
+  el.classList.toggle('open');
+}
+
+// ── Render ─────────────────────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('papersGrid');
+  const filtered = allPapers.filter(p =>
+    p.score >= minScore &&
+    (bucket === 'all' || p.bucket === bucket)
+  );
+
+  document.getElementById('countBadge').textContent = `${filtered.length} paper${filtered.length !== 1 ? 's' : ''}`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><h3>No papers match current filters</h3><p>Try lowering the min score or changing the bucket filter</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.sort((a,b) => b.score - a.score).map((p, i) => {
+    const uid = `p${i}`;
+    const method = lang === 'en' ? p.method_en : p.method_zh;
+    const innov = lang === 'en' ? p.innovation_en : p.innovation_zh;
+    const arc = lang === 'en' ? p.story_arc_en : p.story_arc_zh;
+    return `
+<div class="card" data-score="${p.score}" data-bucket="${p.bucket}" data-date="${p.date}">
+  <div class="card-header">
+    <div class="card-meta">
+      <span class="bucket-badge ${p.bucket}">${p.bucket}</span>
+      <span class="score-badge ${scoreClass(p.score)}">${p.score}/100</span>
+      <span class="card-date">📅 ${p.date}</span>
+      ${p.venue ? `<span style="font-size:11px;color:var(--muted)">${p.venue}</span>` : ''}
+    </div>
+    <div class="card-title"><a href="${p.url}" target="_blank">${p.title}</a></div>
+    <div class="card-authors">${p.authors}</div>
+    <div class="card-affil">${p.affiliation}</div>
+    <div class="card-tags">${(p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+  </div>
+  <div class="card-body">
+    <div class="section-title">${lang==='en'?'Method Overview':'方法概述'}</div>
+    <div class="method-text">${method}</div>
+    <div class="story-arc">${arc}</div>
+
+    <button class="toggle-btn" onclick="toggleSection(this,'fig-${uid}')">
+      ${lang==='en'?'Methodology Figure':'方法图示'}
+    </button>
+    <div class="collapsible" id="fig-${uid}">
+      <div class="fig-container">${methodologyFig(p)}</div>
+    </div>
+
+    <button class="toggle-btn" onclick="toggleSection(this,'exp-${uid}')">
+      ${lang==='en'?'Experiments & Metrics':'实验指标'}
+    </button>
+    <div class="collapsible" id="exp-${uid}">
+      ${metricsHTML(p.metrics)}
+    </div>
+
+    <button class="toggle-btn" onclick="toggleSection(this,'innov-${uid}')">
+      ${lang==='en'?'Innovation Analysis':'创新性分析'}
+    </button>
+    <div class="collapsible" id="innov-${uid}">
+      <div class="method-text" style="font-size:12px">${innov}</div>
+    </div>
+
+    <button class="toggle-btn" onclick="toggleSection(this,'score-${uid}')">
+      ${lang==='en'?'Score Breakdown':'评分分解'}
+    </button>
+    <div class="collapsible" id="score-${uid}">
+      <div class="score-bars">${scoreBarHTML(p.score_breakdown)}</div>
+    </div>
+
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+      <a href="${p.url}" target="_blank" class="code-link">📄 arXiv</a>
+      ${p.github || p.code_url ? `<a href="${p.github||p.code_url}" target="_blank" class="code-link">💻 GitHub</a>` : ''}
+      ${p.code_path ? `<a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-10/${p.code_path}" target="_blank" class="code-link">🔬 Reproduction</a>` : ''}
+    </div>
+  </div>
+</div>`;
+  }).join('');
+}
+
+// ── Controls ───────────────────────────────────────────────────────
+function updateScore(v) {
+  minScore = parseInt(v);
+  document.getElementById('scoreDisplay').textContent = v;
+  renderCards();
+}
+function filterCards() { loadPapers(); }
+function setBucket(b) {
+  bucket = b;
+  document.querySelectorAll('.bucket-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.bucket === b);
+  });
+  renderCards();
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  document.getElementById('langBtn').textContent = lang === 'en' ? '中文' : 'English';
+  renderCards();
+}
+
+// Embedded fallback data
+const EMBEDDED_PAPERS = [{"id":"2504.14904","slug":"vlm_as_policy_kuaimod","title":"VLM as Policy: Common-Law Content Moderation Framework for Short Video Platform","authors":"Xingyu Lu, Tianke Zhang, Chang Meng et al.","affiliation":"Kuaishou Technology (快手)","date":"2026-05-10","url":"https://arxiv.org/abs/2504.14904","tags":["content-moderation","VLM","short-video","CoT","governance"],"bucket":"STRONG","score":83,"score_breakdown":{"innovation":24,"sota_delta":12,"experimental_quality":13,"efficiency":5,"generalization":4,"domain_relevance":25},"method_en":"KuaiMod trains a VLM with Chain-of-Thought reasoning to dynamically apply content moderation policy as common-law case-based judgment. Two-stage training (classifier warmup → CoT end-to-end) with online feedback refinement from user reports and reviewers.","method_zh":"KuaiMod 以 VLM+CoT 训练实现动态内容审核，两阶段课程训练+在线反馈闭环。","innovation_en":"First Common-Law reasoning paradigm for content moderation. VLM as living policy executor, not static classifier.","innovation_zh":"首次将普通法判例推理引入内容审核，VLM 作为活策略执行者。","story_arc_en":"Static classifiers fail with evolving violations → KuaiMod's VLM-as-Policy achieves -20% user reporting rate.","story_arc_zh":"静态分类器无法跟上新型违规 → KuaiMod 生产部署用户举报率下降 20%。","metrics":[{"dataset":"Kuaishou Production","metric":"User Reporting Rate","value":"-20%","baseline":"pre-KuaiMod"}],"code_path":"code/KuaiMod/","code_url":null,"venue":"KDD 2026"}];
+
+// ── Init ───────────────────────────────────────────────────────────
+loadPapers();
+</script>
+</body>
+</html>
