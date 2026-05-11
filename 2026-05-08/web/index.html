@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>ECom & Influencer Governance — Daily Paper Digest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #f7f7f4;
+    --panel: #ffffff;
+    --ink: #1f2933;
+    --muted: #5b6b78;
+    --line: #e3e6eb;
+    --accent: #5d4037;
+    --accent-soft: #d7ccc8;
+    --tag: #ece8e2;
+    --score-hi: #2e7d32;
+    --score-mid: #c77a00;
+    --score-lo: #8a8d91;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: "Source Serif Pro","Georgia","Noto Serif SC",serif; }
+  header {
+    padding: 28px 40px 20px; border-bottom: 1px solid var(--line); background: var(--panel);
+    position: sticky; top: 0; z-index: 10;
+  }
+  h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; letter-spacing: 0.02em; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .controls {
+    display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 14px;
+    font-family: "Inter","Helvetica Neue",sans-serif; font-size: 13px;
+  }
+  .controls label { color: var(--muted); }
+  .controls select, .controls input[type="range"] { font-family: inherit; }
+  .controls .sliderbox { display: flex; gap: 8px; align-items: center; min-width: 280px; }
+  .controls .langbtn {
+    background: var(--panel); border: 1px solid var(--line); padding: 4px 10px; cursor: pointer;
+    border-radius: 4px; color: var(--ink);
+  }
+  .controls .langbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  main { padding: 24px 40px 60px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 16px 18px; display: flex; flex-direction: column;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  }
+  .card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card h2 { font-size: 15px; line-height: 1.35; margin: 0 0 4px; font-weight: 600; }
+  .card .authors { font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+  .card .affil { font-family: "Inter",sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .card .score {
+    font-family: "Inter",sans-serif; font-weight: 700; font-size: 15px; padding: 4px 8px;
+    border-radius: 4px; min-width: 42px; text-align: center;
+  }
+  .score-hi { background: #e8f5e9; color: var(--score-hi); }
+  .score-mid { background: #fff3e0; color: var(--score-mid); }
+  .score-lo { background: #f1f3f4; color: var(--score-lo); }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 10px; }
+  .tag { background: var(--tag); color: var(--accent); font-family: "Inter",sans-serif; font-size: 10.5px; padding: 2px 6px; border-radius: 3px; }
+  .date { font-family: "Inter",sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .section-title { font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--muted); margin: 10px 0 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-body { font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .section-body.smaller { font-size: 12.5px; }
+  .toggle-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .toggle-btn {
+    background: var(--panel); border: 1px solid var(--line); padding: 4px 8px; cursor: pointer;
+    border-radius: 4px; font-family: "Inter",sans-serif; font-size: 11px; color: var(--accent);
+  }
+  .toggle-btn.active { background: var(--accent-soft); }
+  .figure-box, .exp-box { display: none; margin-top: 8px; padding: 10px; border: 1px dashed var(--line); border-radius: 4px; background: #fbfaf7; font-size: 12px; }
+  .figure-box.visible, .exp-box.visible { display: block; }
+  .figure-box svg { width: 100%; height: auto; }
+  .links { margin-top: 10px; display: flex; gap: 12px; font-family: "Inter",sans-serif; font-size: 12px; }
+  .links a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .links a:hover { border-bottom-color: var(--accent); }
+  .breakdown { margin-top: 8px; padding: 8px 10px; background: #fbfaf7; border-radius: 4px; font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--muted); }
+  .breakdown .row { display: flex; justify-content: space-between; }
+  .rationale { font-style: italic; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  footer { padding: 24px 40px 40px; color: var(--muted); font-family: "Inter",sans-serif; font-size: 11.5px; border-top: 1px solid var(--line); margin-top: 30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ECom & Influencer Governance — Daily Paper Digest</h1>
+  <div class="sub" id="subtitle">Daily inspection of e-commerce content & creator governance papers · 数据按日存储</div>
+  <div class="controls">
+    <div class="langbox">
+      <button class="langbtn active" data-lang="zh" id="lang-zh">中文</button>
+      <button class="langbtn" data-lang="en" id="lang-en">English</button>
+    </div>
+    <div>
+      <label for="datepick" id="lbl-date">日期</label>
+      <select id="datepick"></select>
+    </div>
+    <div class="sliderbox">
+      <label id="lbl-score">最低分</label>
+      <input type="range" id="score-slider" min="0" max="100" value="40" step="1" />
+      <span id="score-value">40</span>
+    </div>
+    <div>
+      <label id="lbl-count">显示</label>
+      <span id="visible-count">0</span> / <span id="total-count">0</span>
+    </div>
+  </div>
+</header>
+<main>
+  <div id="grid" class="grid"></div>
+</main>
+<footer id="footer">
+  巡检窗口 = 选择日期对应的 Asia/Shanghai 全天。每日 08:30 GMT+8 自动巡检；评分 ≥80 的论文会被复现并推送到
+  <a href="https://github.com/Sam1224/CCReproduce" target="_blank">CCReproduce</a>。
+</footer>
+<script>
+const I18N = {
+  zh: {
+    subtitle: "电商内容生态 & 达人治理论文每日巡检 · 按日存储",
+    date: "日期", score: "最低分", count: "显示",
+    method: "方法概述", innovation: "创新点", metric: "关键指标", rationale: "评分依据",
+    figure: "方法图", experiment: "亮眼实验",
+    arxiv: "arXiv", code: "代码", noCode: "无代码",
+    breakdown: "评分拆解",
+    footer: "巡检窗口 = 选择日期对应的 Asia/Shanghai 全天。每日 08:30 GMT+8 自动巡检；评分 ≥80 的论文会被复现并推送到 ",
+  },
+  en: {
+    subtitle: "Daily inspection of e-commerce content & creator governance papers",
+    date: "Date", score: "Min score", count: "Showing",
+    method: "Method overview", innovation: "Innovation", metric: "Key metric", rationale: "Score rationale",
+    figure: "Method figure", experiment: "Highlight experiment",
+    arxiv: "arXiv", code: "Code", noCode: "No code",
+    breakdown: "Score breakdown",
+    footer: "Window = the selected date in Asia/Shanghai. Daily inspection at 08:30 GMT+8; papers scoring ≥80 are reproduced and pushed to ",
+  }
+};
+
+let LANG = "zh";
+let DB = null;
+
+async function loadDB() {
+  const res = await fetch("papers.json");
+  DB = await res.json();
+  initUI();
+}
+
+function setLang(lang) {
+  LANG = lang;
+  document.querySelectorAll(".langbtn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.getElementById("subtitle").textContent = I18N[lang].subtitle;
+  document.getElementById("lbl-date").textContent = I18N[lang].date;
+  document.getElementById("lbl-score").textContent = I18N[lang].score;
+  document.getElementById("lbl-count").textContent = I18N[lang].count;
+  document.getElementById("footer").innerHTML = I18N[lang].footer +
+    '<a href="https://github.com/Sam1224/CCReproduce" target="_blank">CCReproduce</a>.';
+  render();
+}
+
+function initUI() {
+  const datepick = document.getElementById("datepick");
+  DB.dates.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d; opt.textContent = d; datepick.appendChild(opt);
+  });
+  datepick.value = DB.dates[DB.dates.length - 1];
+  datepick.addEventListener("change", render);
+  document.querySelectorAll(".langbtn").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  const slider = document.getElementById("score-slider");
+  slider.addEventListener("input", () => {
+    document.getElementById("score-value").textContent = slider.value;
+    render();
+  });
+  render();
+}
+
+function scoreClass(s) {
+  if (s >= 80) return "score-hi";
+  if (s >= 60) return "score-mid";
+  return "score-lo";
+}
+
+function methodFigure(p) {
+  const titleZh = p.title.split(":")[0];
+  return `<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr-${p.id}" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L0,8 L8,4 z" fill="#5d4037"/>
+      </marker>
+    </defs>
+    <rect x="6" y="6" width="388" height="148" fill="#fff" stroke="#d7ccc8"/>
+    <text x="14" y="22" font-family="Inter" font-size="11" fill="#5d4037">${titleZh}</text>
+    <rect x="14" y="40" width="100" height="32" fill="#ece8e2" stroke="#d7ccc8"/>
+    <text x="64" y="60" text-anchor="middle" font-family="Inter" font-size="11" fill="#1f2933">Input / Data</text>
+    <rect x="150" y="40" width="100" height="32" fill="#fff3e0" stroke="#d7ccc8"/>
+    <text x="200" y="60" text-anchor="middle" font-family="Inter" font-size="11" fill="#1f2933">Module A</text>
+    <rect x="286" y="40" width="100" height="32" fill="#e8f5e9" stroke="#d7ccc8"/>
+    <text x="336" y="60" text-anchor="middle" font-family="Inter" font-size="11" fill="#1f2933">Module B</text>
+    <line x1="114" y1="56" x2="150" y2="56" stroke="#5d4037" stroke-width="1.5" marker-end="url(#arr-${p.id})"/>
+    <line x1="250" y1="56" x2="286" y2="56" stroke="#5d4037" stroke-width="1.5" marker-end="url(#arr-${p.id})"/>
+    <rect x="150" y="100" width="100" height="32" fill="#d7ccc8" stroke="#5d4037"/>
+    <text x="200" y="120" text-anchor="middle" font-family="Inter" font-size="11" fill="#1f2933">Output / Score</text>
+    <line x1="200" y1="72" x2="200" y2="100" stroke="#5d4037" stroke-width="1.5" marker-end="url(#arr-${p.id})"/>
+    <text x="14" y="148" font-family="Inter" font-size="9.5" fill="#5b6b78">auto-generated overview · replace with paper figure when license permits</text>
+  </svg>`;
+}
+
+function render() {
+  const date = document.getElementById("datepick").value;
+  const minScore = parseInt(document.getElementById("score-slider").value, 10);
+  const t = I18N[LANG];
+  const list = (DB.papers[date] || []).slice().sort((a,b) => b.score - a.score);
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  let visible = 0;
+  for (const p of list) {
+    if (p.score < minScore) continue;
+    visible++;
+    const card = document.createElement("article");
+    card.className = "card";
+    const breakdown = Object.entries(p.score_breakdown).map(([k,v]) => `<div class="row"><span>${k}</span><span>${v}</span></div>`).join("");
+    const tags = (p.tags||[]).map(t => `<span class="tag">${t}</span>`).join("");
+    const codeLink = p.code
+      ? `<a href="${p.code}" target="_blank">${t.code}</a>`
+      : `<span style="color:#8a8d91;font-style:italic">${t.noCode}</span>`;
+    card.innerHTML = `
+      <div class="top">
+        <div style="flex:1">
+          <div class="date">${date}</div>
+          <h2>${p.title}</h2>
+          <div class="authors">${p.authors}</div>
+          <div class="affil">${p.affiliation || ""}</div>
+        </div>
+        <div class="score ${scoreClass(p.score)}">${p.score}</div>
+      </div>
+      <div class="tags">${tags}</div>
+      <div class="section-title">${t.method}</div>
+      <div class="section-body">${LANG==="zh"?p.method_overview_zh:p.method_overview_en}</div>
+      <div class="section-title">${t.innovation}</div>
+      <div class="section-body smaller">${LANG==="zh"?p.innovation_zh:p.innovation_en}</div>
+      <div class="section-title">${t.metric}</div>
+      <div class="section-body smaller">${LANG==="zh"?p.key_metric_zh:p.key_metric_en}</div>
+      <div class="section-title">${t.rationale}</div>
+      <div class="section-body smaller rationale">${LANG==="zh"?p.rationale_zh:p.rationale_en}</div>
+      <div class="toggle-row">
+        <button class="toggle-btn" data-toggle="figure">${t.figure}</button>
+        <button class="toggle-btn" data-toggle="experiment">${t.experiment}</button>
+        <button class="toggle-btn" data-toggle="breakdown">${t.breakdown}</button>
+      </div>
+      <div class="figure-box">${methodFigure(p)}</div>
+      <div class="exp-box">${LANG==="zh"?(p.experiment_highlight_zh||""):(p.experiment_highlight_zh||"")}</div>
+      <div class="breakdown" style="display:none">${breakdown}</div>
+      <div class="links">
+        <a href="${p.arxiv}" target="_blank">${t.arxiv}</a>
+        ${codeLink}
+      </div>
+    `;
+    card.querySelectorAll(".toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const which = btn.dataset.toggle;
+        const map = { figure: ".figure-box", experiment: ".exp-box", breakdown: ".breakdown" };
+        const el = card.querySelector(map[which]);
+        const open = !btn.classList.contains("active");
+        btn.classList.toggle("active", open);
+        if (which === "breakdown") {
+          el.style.display = open ? "block" : "none";
+        } else {
+          el.classList.toggle("visible", open);
+        }
+      });
+    });
+    grid.appendChild(card);
+  }
+  document.getElementById("visible-count").textContent = visible;
+  document.getElementById("total-count").textContent = list.length;
+}
+
+loadDB().catch(err => {
+  document.getElementById("grid").innerHTML = '<div style="padding:40px;color:#b71c1c">Failed to load papers.json — open this file from a static server (e.g. `python -m http.server`).</div>';
+  console.error(err);
+});
+</script>
+</body>
+</html>
