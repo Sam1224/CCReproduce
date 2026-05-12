@@ -11,6 +11,7 @@ __pycache__/
 # Outputs
 outputs/
 runs/
+artifacts/
 
 # Torch / artifacts
 *.pt
