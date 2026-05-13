@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --border: #e2e6ea;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --strong: #16a34a;
+    --weak: #9333ea;
+    --score-high: #15803d;
+    --score-mid: #b45309;
+    --tag-bg: #e5e7eb;
+    --font: "Inter", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "Fira Code", monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --card-bg: #1a1d2e;
+    --border: #2e3148;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent-light: #1e3a5f;
+    --tag-bg: #2e3148;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+  /* Header */
+  header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  header .subtitle { color: var(--text-muted); font-size: 12px; }
+  .header-controls { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+  /* Controls bar */
+  .controls-bar {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .controls-bar label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  select, input[type="range"], input[type="date"] {
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+  input[type="range"] { padding: 0; cursor: pointer; width: 120px; }
+  .score-display { font-size: 12px; color: var(--text-muted); min-width: 30px; }
+
+  /* Lang toggle */
+  .lang-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Theme toggle */
+  .theme-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  /* Main grid */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+  }
+
+  /* Paper card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.15s, transform 0.1s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .card.hidden { display: none; }
+
+  /* Card header */
+  .card-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .bucket-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .bucket-badge.strong { background: #dcfce7; color: #16a34a; }
+  .bucket-badge.weak { background: #f3e8ff; color: #9333ea; }
+  [data-theme="dark"] .bucket-badge.strong { background: #14532d; color: #86efac; }
+  [data-theme="dark"] .bucket-badge.weak { background: #3b0764; color: #d8b4fe; }
+
+  .score-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .score-badge.high { background: #dcfce7; color: #15803d; }
+  .score-badge.mid { background: #fef3c7; color: #b45309; }
+  .score-badge.low { background: #f3f4f6; color: #6b7280; }
+  [data-theme="dark"] .score-badge.high { background: #14532d; color: #86efac; }
+  [data-theme="dark"] .score-badge.mid { background: #451a03; color: #fcd34d; }
+  [data-theme="dark"] .score-badge.low { background: #1f2937; color: #9ca3af; }
+
+  .date-badge {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .card-authors {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .card-affil {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* Card body */
+  .card-body {
+    padding: 14px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Bilingual method overview */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .method-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .method-zh { display: none; }
+  .lang-zh .method-zh { display: block; }
+  .lang-zh .method-en { display: none; }
+
+  /* Story arc */
+  .story-arc {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .story-arc .arc-zh { display: none; }
+  .lang-zh .story-arc .arc-zh { display: block; }
+  .lang-zh .story-arc .arc-en { display: none; }
+
+  /* Figure */
+  .figure-block {
+    background: #f8f9fa;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #374151;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  [data-theme="dark"] .figure-block { background: #161b27; color: #c8d3e0; }
+
+  /* Metrics table */
+  .metrics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .metrics-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+  .metrics-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .metrics-table tr:last-child td { border-bottom: none; }
+
+  /* Score breakdown */
+  .score-breakdown {
+    font-size: 12px;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .score-row .dim { flex: 0 0 130px; color: var(--text-muted); }
+  .score-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--tag-bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+  .score-row .pts { flex: 0 0 35px; text-align: right; font-family: var(--mono); font-size: 11px; }
+
+  /* Toggles */
+  .toggle-btn {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .toggle-btn:hover { background: var(--tag-bg); color: var(--text); }
+  .toggleable { display: none; }
+  .toggleable.visible { display: block; }
+
+  /* Card footer */
+  .card-footer {
+    padding: 10px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .arxiv-link {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+  }
+  .arxiv-link:hover { background: var(--accent); color: #fff; }
+  .code-link {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+  .code-link:hover { background: var(--tag-bg); }
+
+  /* No results */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* Source coverage toggle */
+  .coverage-section {
+    max-width: 1400px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+  }
+  .coverage-toggle {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .coverage-table-wrap {
+    display: none;
+    margin-top: 10px;
+    overflow-x: auto;
+  }
+  .coverage-table-wrap.visible { display: block; }
+  table.cov {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  table.cov th {
+    background: var(--bg);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  table.cov td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  table.cov tr:last-child td { border-bottom: none; }
+  .ok { color: #16a34a; font-weight: 600; }
+  .err { color: #dc2626; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🔬 CCReproduce — Daily AI Paper Inspection</h1>
+    <div class="subtitle">Domain: E-commerce content ecosystem &amp; influencer governance</div>
+  </div>
+  <div class="header-controls">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnZH" onclick="setLang('zh')">中文</button>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 Theme</button>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <label>Date:</label>
+  <select id="datePicker" onchange="filterDate()">
+    <option value="2026-05-12" selected>2026-05-12</option>
+    <option value="2026-05-10">2026-05-10</option>
+    <option value="2026-05-09">2026-05-09</option>
+    <option value="2026-05-08">2026-05-08</option>
+    <option value="2026-05-02">2026-05-02</option>
+  </select>
+
+  <label>Min Score:</label>
+  <input type="range" id="scoreSlider" min="0" max="100" value="0" oninput="filterScore(this.value)">
+  <span class="score-display" id="scoreVal">0</span>
+
+  <label>Bucket:</label>
+  <select id="bucketFilter" onchange="filterBucket()">
+    <option value="all">All</option>
+    <option value="strong">STRONG only</option>
+    <option value="weak">WEAK only</option>
+  </select>
+</div>
+
+<div class="coverage-section">
+  <button class="coverage-toggle" onclick="toggleCoverage()">📊 Source Coverage Table (2026-05-12)</button>
+  <div class="coverage-table-wrap" id="coverageTable">
+    <table class="cov">
+      <thead>
+        <tr>
+          <th>Source</th><th>Category</th><th>Attempted</th><th>Status</th><th>Candidates</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>arxiv.org/list/cs.CL/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>arxiv.org/list/cs.CV/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>arxiv.org/list/cs.IR/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>arxiv.org/list/cs.MM/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>arxiv.org/list/cs.LG/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>arxiv.org/list/cs.AI/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>huggingface.co/papers/date/2026-05-12</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>huggingface.co/papers/trending</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0 (WebSearch fallback)</td></tr>
+        <tr><td>deepmind.google/discover/blog/</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>research.google/blog/</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>ai.meta.com/research/</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>anthropic.com/news</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>seed.bytedance.com/research</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>tech.meituan.com/</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>qwenlm.github.io/blog/ (low prio)</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>qbitai.com/ (量子位)</td><td>wechat</td><td>yes</td><td class="err">403 (WebSearch fallback)</td><td>0 papers</td></tr>
+        <tr><td>Semantic Scholar Graph API</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>zezhishao/DailyArXiv Issue #579 (GitHub)</td><td>aggregator</td><td>yes</td><td class="ok">200 OK</td><td>5</td></tr>
+        <tr><td>WebSearch arXiv 2605.07xx–2605.10xx sweep</td><td>aggregator</td><td>yes</td><td class="ok">200 OK</td><td>6</td></tr>
+        <tr><td>jiqizhixin.com (Tier 3 WebSearch)</td><td>wechat</td><td>yes</td><td class="ok">200 OK</td><td>0 in-scope</td></tr>
+        <tr><td>mp.weixin.qq.com "机器之心" (Tier 3)</td><td>wechat</td><td>yes</td><td class="ok">200 OK</td><td>0 in-scope</td></tr>
+        <tr><td>mp.weixin.qq.com "新智元" (Tier 3)</td><td>wechat</td><td>yes</td><td class="ok">200 OK</td><td>0 in-scope</td></tr>
+        <tr><td>openai.com/news (Tier 3 WebSearch)</td><td>blog</td><td>yes</td><td class="ok">200 OK</td><td>0 research papers</td></tr>
+        <tr><td>deepseek.com (Tier 3 WebSearch)</td><td>blog</td><td>yes</td><td class="ok">200 OK</td><td>0 new May-12</td></tr>
+        <tr><td>Xiaohongshu/RedTech (Tier 3)</td><td>blog</td><td>yes</td><td class="ok">200 OK</td><td>0 in-scope</td></tr>
+        <tr><td>Kuaishou Tech (Tier 3 WebSearch)</td><td>blog</td><td>yes</td><td class="ok">200 OK</td><td>0 new May-12</td></tr>
+        <tr><td>Tencent Hunyuan (Tier 3 WebSearch)</td><td>blog</td><td>yes</td><td class="ok">200 OK</td><td>0 new May-12</td></tr>
+        <tr><td>OpenReview ICLR/NeurIPS 2026</td><td>conf</td><td>no</td><td>not yet active</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<main id="paperGrid">
+</main>
+
+<script>
+// ── Embedded paper database ──────────────────────────────────────────────────
+const PAPERS_DB = {
+  "2026-05-12": [
+    {
+      id: "gligard",
+      title: "GLiGuard: Schema-Conditioned Classification for LLM Safeguard",
+      authors: "Urchade Zaratiana, Mary Newhauser, George Hurn-Maloney, Ash Lewis",
+      affil: "Fastino AI",
+      arxiv: "https://arxiv.org/abs/2605.07982",
+      arxivId: "2605.07982",
+      date: "2026-05-12",
+      bucket: "strong",
+      score: 86,
+      tags: ["content-moderation", "LLM-safety", "bidirectional-encoder", "schema", "efficiency"],
+      method_en: "GLiGuard adapts a 0.3B bidirectional encoder (GLiNER2 architecture) to LLM content safety classification. Safety task definitions, 14 harm categories, and 11 jailbreak strategies are encoded as structured token schemas prepended to the input sequence. A single non-autoregressive forward pass classifies all dimensions simultaneously. Per-label binary classifiers use mean-pooled span representations over the schema label tokens.",
+      method_zh: "GLiGuard 将 0.3B 双向编码器（GLiNER2 架构）适配为 LLM 内容安全分类器。安全任务定义、14 个危害类别和 11 种越狱策略以结构化 token schema 前缀拼接到输入，单次非自回归前向传播同时完成所有维度分类。每个标签的二元分类器基于对应 schema label token 的均值池化表示。",
+      innovation_en: "First work to apply schema-conditioned bidirectional encoding to LLM safety, replacing autoregressive generation with discriminative multi-label classification. Achieves 16× throughput and 17× latency improvement vs. 7B–27B decoder guards with only 1.7 F1 drop.",
+      innovation_zh: "首个将 schema 条件化双向编码引入 LLM 安全审核的工作，以判别式多标签分类替代自回归生成。与 7B–27B 解码器守卫相比，吞吐量提升 16×，延迟降低 17×，F1 仅差 1.7 分。",
+      arc_en: "Autoregressive guard models (7B–27B) treat safety classification as text generation → high latency, poor scalability. GLiGuard encodes schemas as structured token prefixes into a 0.3B bidirectional encoder for single-pass multi-dimension classification.",
+      arc_zh: "自回归守卫模型将安全分类变成生成任务→高延迟低吞吐。GLiGuard 将 schema 编码为 token 前缀，0.3B 双向编码器单次前向传播完成全部维度判断。",
+      metrics: [
+        ["9 safety benchmarks", "Macro F1", "Competitive (within 1.7)", "7B–27B baselines"],
+        ["Throughput", "Examples/sec", "16× higher", "7B autoregressive"],
+        ["Latency", "ms/example", "17× lower", "7B autoregressive"],
+        ["Model size", "Parameters", "0.3B", "7–27B"],
+      ],
+      scores: {
+        "Innovation": [25, 30],
+        "SOTA Delta": [13, 15],
+        "Exp Quality": [12, 15],
+        "Efficiency": [10, 10],
+        "Generalization": [4, 5],
+        "Domain Relevance": [22, 25],
+      },
+      figure: `Input: [TASK: prompt_safety: Classify safety] [LABEL: safe: ...] [LABEL: unsafe: ...]
+       [SEP] <User prompt text> [SEP]
+                         │
+        ┌────────────────┴───────────────────┐
+        │  Bidirectional Transformer Encoder  │
+        │         (DeBERTa-v3, 0.3B)          │
+        └────────────────┬───────────────────┘
+                         │  h = (1, seq_len, 768)
+        ┌────────────────┴───────────────────┐
+        │ mean_pool(h[label_token_span_i])    │  ← per label
+        │       → Linear → sigmoid → p_i     │
+        └────────────────────────────────────┘
+        All labels decided in ONE forward pass`,
+      codeLink: "2026-05-12/code/GLiGuard/",
+    },
+    {
+      id: "intent-sid",
+      title: "Intent-Driven Semantic ID Generation for Grounded Conversational News Recommendation",
+      authors: "Hongyang Su, Beibei Kong, Lei Cheng, Chengxiang Zhuo, Zang Li, Chenyun Yu",
+      affil: "Tencent + Sun Yat-sen University",
+      arxiv: "https://arxiv.org/abs/2605.07613",
+      arxivId: "2605.07613",
+      date: "2026-05-12",
+      bucket: "strong",
+      score: 76,
+      tags: ["recommendation", "semantic-ID", "intent", "distillation", "conversational", "generative-rec"],
+      method_en: "IntentSID proposes a Generate-then-Match paradigm for conversational news recommendation. 6 intent types (5 implicit) are identified from production dialogues. An LLM maps intents to hierarchical Semantic ID prefixes via two-stage training: multi-task SID alignment then GPT-4 Chain-of-Thought distillation. Generated SIDs are fuzzy-matched to the current news pool to guarantee grounded recommendations. Profile-Aware Dual-Signal Reasoning (PADR) handles cold-start users.",
+      method_zh: "IntentSID 提出对话式新闻推荐的 Generate-then-Match 范式。从生产对话识别 6 类意图（5 类隐性），LLM 通过两阶段训练（多任务 SID 对齐 + GPT-4 CoT 蒸馏）将意图映射为层次化 SID 前缀，再通过模糊匹配定位真实文章，保证推荐可落地。PADR 解决冷启动。",
+      innovation_en: "Introduces a three-level intent→SID→article mapping chain that resolves implicit intent retrieval failure. GPT-4 CoT distillation reduces expensive human annotation. Deployed on Tencent's news platform.",
+      innovation_zh: "引入意图→SID→文章三级映射链，解决隐性意图的检索失败问题。GPT-4 CoT 蒸馏大幅降低标注成本。已在腾讯新闻平台内部试点部署。",
+      arc_en: "Implicit user intents in conversational news recommendation bypass standard RAG keyword retrieval → Generate-then-Match maps intents to SID prefixes that fuzzy-match to actual articles, guaranteeing grounding.",
+      arc_zh: "隐性意图绕过关键词 RAG 检索→Generate-then-Match 将意图映射到 SID 前缀，模糊匹配到真实文章，推荐可落地。",
+      metrics: [
+        ["Tencent News (internal)", "Grounding Rate", "Significantly higher", "Retrieve-First RAG"],
+        ["Implicit intent set", "Accuracy", "Significantly higher", "Standard RAG"],
+        ["Cold-start users", "Effective rec rate", "PADR covers", "0 (no history)"],
+        ["Annotation cost", "Human labels needed", "Greatly reduced", "Full human annotation"],
+      ],
+      scores: {
+        "Innovation": [23, 30],
+        "SOTA Delta": [11, 15],
+        "Exp Quality": [10, 15],
+        "Efficiency": [7, 10],
+        "Generalization": [4, 5],
+        "Domain Relevance": [21, 25],
+      },
+      figure: `Conversation: "I like tech news about AI lately..."
+         │
+         ▼ Intent Classifier
+      Intent: [topic_exploration]
+         │
+         ▼ LLM SID Generator (GPT-4 CoT distillation)
+      SID Prefix: [tech/AI/2026/05/*]
+         │
+         ▼ Fuzzy Match → Current News Pool
+      Article: "ByteDance releases Seed1.8 model..." ✓ (grounded)`,
+      codeLink: null,
+    },
+    {
+      id: "rulesafe-vl",
+      title: "RuleSafe-VL: Evaluating Rule-Conditioned Decision Reasoning in Vision-Language Content Moderation",
+      authors: "Zhifeng Lu, Dianyuan Wang, Yuhu Shang, Zhenbo Xu",
+      affil: "Beijing University of Posts and Telecommunications",
+      arxiv: "https://arxiv.org/abs/2605.07760",
+      arxivId: "2605.07760",
+      date: "2026-05-12",
+      bucket: "strong",
+      score: 74,
+      tags: ["content-moderation", "VLM", "benchmark", "policy-rules", "violation-detection"],
+      method_en: "RuleSafe-VL formalizes real platform moderation policies into 93 atomic rules and 92 typed relations (activation conditions, inclusion/exclusion/priority relationships). 2,166 expert-reviewed image-text cases are constructed across 3 high-risk content families: nudity/sexualized content, dangerous/harmful behavior, and graphic/injury-related content. Evaluation tests rule activation identification, rule interaction reasoning, and appropriate uncertainty when evidence is insufficient.",
+      method_zh: "RuleSafe-VL 从公开平台审核政策形式化提取 93 条原子规则和 92 种类型关系（激活条件、包含/排斥/优先级）。专家构建 2,166 条图文案例，覆盖三大高风险内容类别。评测维度包括规则激活识别、规则交互推理和证据不足时的不确定性处理。",
+      innovation_en: "First benchmark to formalize platform moderation policies as a testable atomic rule system. Reveals that existing SOTA VLMs achieve good final-label accuracy but fail at rule-conditioned reasoning — scoring well via surface cues rather than policy understanding.",
+      innovation_zh: "首个将平台审核政策形式化为可评测原子规则体系的 VLM 基准。揭示现有 SOTA VLM 在最终标签准确率不错但规则条件推理上显著失败——通过表面启发式而非策略理解得到高分。",
+      arc_en: "VLM safety benchmarks reduce moderation to label prediction, missing whether models apply policy rules correctly → RuleSafe-VL tests rule-governed reasoning via 93 atomic rules + 2,166 expert cases.",
+      arc_zh: "VLM 安全基准仅测最终标签，无法检测模型是否真正理解规则→RuleSafe-VL 通过 93 条原子规则 + 2,166 专家案例测试规则条件推理。",
+      metrics: [
+        ["RuleSafe-VL", "Atomic rules", "93", "Prior benchmarks: 0 (label-only)"],
+        ["RuleSafe-VL", "Typed relations", "92", "N/A"],
+        ["RuleSafe-VL", "Expert cases", "2,166", "MM-SafetyBench: label-only"],
+        ["RuleSafe-VL", "Content families", "3", "(nudity/dangerous/graphic)"],
+      ],
+      scores: {
+        "Innovation": [22, 30],
+        "SOTA Delta": [10, 15],
+        "Exp Quality": [11, 15],
+        "Efficiency": [5, 10],
+        "Generalization": [3, 5],
+        "Domain Relevance": [23, 25],
+      },
+      figure: `Platform Policy Document
+         │
+         ▼ Rule Formalization
+      93 Atomic Rules (e.g., R12: full frontal nudity = unsafe)
+      92 Typed Relations (R12 ⊃ R8, R14 ∧ R22 → R30)
+         │
+         ▼ Expert Case Construction
+      Image + Text → [Rule triggers: {R12, R22}] → [Decision: remove]
+         │
+         ▼ VLM Evaluation
+      Q: "Which rules are triggered?" Q: "What is the final decision?"
+      SOTA models: label accuracy ✓  |  rule identification ✗`,
+      codeLink: null,
+    },
+    {
+      id: "jina-v5-omni",
+      title: "jina-embeddings-v5-omni: Text-Geometry-Preserving Multimodal Embeddings via Frozen-Tower Composition",
+      authors: "Jina AI Team",
+      affil: "Jina AI",
+      arxiv: "https://arxiv.org/abs/2605.08384",
+      arxivId: "2605.08384",
+      date: "2026-05-12",
+      bucket: "weak",
+      score: 69,
+      tags: ["multimodal-embeddings", "vector-search", "frozen-encoder", "text-image-video-audio", "retrieval"],
+      method_en: "Frozen-Tower Composition: pretrained text encoder (jina-embeddings-v5-text) and separately pretrained media encoders (images/video: Qwen SigLIP2; audio: dedicated frozen encoder) are kept frozen. Only small connector projectors (0.35% of total parameters) are trained to align all modalities into a shared semantic embedding space, preserving the text embedding geometry exactly.",
+      method_zh: "冻结塔融合：预训练文本编码器（jina-embeddings-v5-text）与独立预训练的媒体编码器（图像/视频：Qwen SigLIP2；音频：冻结编码器）全部保持冻结，仅训练 0.35% 参数的小型连接器将所有模态对齐到共享语义嵌入空间，完全保留文本嵌入几何结构。",
+      innovation_en: "Adding new modalities typically requires expensive joint pretraining. Frozen-tower composition achieves unified text+image+video+audio embeddings by training only 0.35% of parameters, while perfectly preserving text retrieval performance.",
+      innovation_zh: "添加新模态通常需要昂贵的联合预训练。冻结塔融合仅训练 0.35% 参数实现文本+图像+视频+音频统一嵌入，同时完美保留文本检索性能。",
+      arc_en: "Multimodal embedding models must retrain from scratch to add new modalities → frozen-tower composition trains only 0.35% connector parameters to unify text+image+video+audio.",
+      arc_zh: "多模态嵌入模型添加新模态通常需全量重训→冻结塔融合仅训练 0.35% 连接器参数，统一四种模态。",
+      metrics: [
+        ["MTEB text retrieval", "Score", "Matches v5-text (preserved)", "Joint retraining baseline"],
+        ["Image-text retrieval", "Recall@K", "Best open-weight <2B omni", "Competitors"],
+        ["Trainable params", "% of total", "0.35%", "Full fine-tune: 100%"],
+        ["Model sizes", "Parameters", "0.9B nano / 1.6B small", "vs. multi-billion competitors"],
+      ],
+      scores: {
+        "Innovation": [20, 30],
+        "SOTA Delta": [10, 15],
+        "Exp Quality": [9, 15],
+        "Efficiency": [9, 10],
+        "Generalization": [5, 5],
+        "Domain Relevance": [16, 25],
+      },
+      figure: `Frozen Text Encoder      Frozen Image/Video Encoder   Frozen Audio Encoder
+  (jina-v5-text)          (Qwen SigLIP2)               (audio backbone)
+       │                         │                            │
+       ▼ (frozen)                ▼ (frozen)                  ▼ (frozen)
+  text_emb                 media_emb                    audio_emb
+       └──────────── trainable connectors (0.35%) ──────────┘
+                                 │
+                         unified_embedding ∈ ℝᵈ
+                    (same semantic space for all modalities)`,
+      codeLink: null,
+    },
+    {
+      id: "drip-r",
+      title: "DRIP-R: A Benchmark for Decision-Making and Reasoning Under Real-World Policy Ambiguity in the Retail Domain",
+      authors: "Hsuvas Borkakoty, Sebastian Pohl, Cheng Wang, Bei Chen, Yufang Hou",
+      affil: "IBM Research / Microsoft / Trinity College Dublin",
+      arxiv: "https://arxiv.org/abs/2605.07699",
+      arxivId: "2605.07699",
+      date: "2026-05-12",
+      bucket: "strong",
+      score: 68,
+      tags: ["LLM-agents", "policy-compliance", "retail", "benchmark", "e-commerce", "ambiguity"],
+      method_en: "DRIP-R systematically exploits genuine ambiguities in real-world retail policy documents (refund policies, membership benefits, promotional terms) to construct decision scenarios where no single correct resolution exists. Each scenario has at least two defensible interpretations. Evaluation measures decision consistency, reasoning quality, and the ability to recognize and articulate ambiguity rather than giving confident-but-wrong answers.",
+      method_zh: "DRIP-R 从真实零售商政策文件（退款政策、会员权益、促销条款）中系统提取固有歧义点，构建无单一正确答案的决策场景。每个场景至少有两种合理解读。评测维度：决策一致性、推理质量、识别并表达歧义的能力（而非自信地给出错误答案）。",
+      innovation_en: "First benchmark specifically targeting retail policy ambiguity for LLM agents. Reveals a critical evaluation gap: existing agent benchmarks assume clear policies, but real-world deployment always involves ambiguous edge cases that agents handle poorly.",
+      innovation_zh: "首个专门针对零售政策歧义的 LLM Agent 基准。揭示关键评测空白：现有基准假设策略清晰，但现实部署中模糊边界案例无处不在，主流 LLM 处理表现差。",
+      arc_en: "LLM agent benchmarks assume unambiguous policies → critical gap for real retail/e-commerce deployment where policies inherently admit multiple valid interpretations. DRIP-R exploits real policy ambiguities to expose this gap.",
+      arc_zh: "Agent 基准假设策略无歧义→现实零售/电商部署的关键空白。DRIP-R 利用真实政策歧义暴露这一问题。",
+      metrics: [
+        ["Real retail policies", "Policy ambiguity types", "Multiple retail sub-domains", "N/A"],
+        ["LLM evaluation", "Decision consistency", "Poor across major LLMs", "Expected: ~100%"],
+        ["LLM evaluation", "Ambiguity recognition rate", "Low (LLMs over-commit)", "Ideal: high recognition"],
+        ["Benchmark source", "Policy origin", "Real public documents", "Synthetic baselines"],
+      ],
+      scores: {
+        "Innovation": [20, 30],
+        "SOTA Delta": [9, 15],
+        "Exp Quality": [9, 15],
+        "Efficiency": [5, 10],
+        "Generalization": [3, 5],
+        "Domain Relevance": [22, 25],
+      },
+      figure: `Real Retail Policy: "Refunds are accepted within 30 days for unused items.
+              Members with Gold status may receive extended consideration."
+         │
+         ▼ Ambiguity Extraction
+      Ambiguity: Does "extended consideration" = 45 days? 60 days? Case-by-case?
+         │
+         ▼ Scenario Construction
+      Scenario: Gold member requests refund on day 35. Item "barely used."
+      Valid resolutions: [Accept] ∧ [Reject] ∧ [Escalate] — all defensible
+         │
+         ▼ LLM Agent Evaluation
+      Test: Does agent (a) pick one confidently or (b) identify the ambiguity?
+      Finding: Most LLMs pick (a) — failing real-world governance requirements.`,
+      codeLink: null,
+    },
+    {
+      id: "video-reward",
+      title: "Video Understanding Reward Modeling: A Robust Benchmark and Performant Reward Models",
+      authors: "Yuancheng Wei, Linli Yao, Lei Li, Haojie Zhang, Hao Zhou, Fandong Meng, Xu Sun",
+      affil: "Peking University + WeChat AI (Tencent)",
+      arxiv: "https://arxiv.org/abs/2605.07872",
+      arxivId: "2605.07872",
+      date: "2026-05-12",
+      bucket: "weak",
+      score: 67,
+      tags: ["video-understanding", "reward-model", "MLLM", "preference-data", "RLHF", "benchmark"],
+      method_en: "Three-part framework for video reward modeling: (1) VURB benchmark — 2,100 expert preference pairs with long chain-of-thought reasoning traces (avg 1,143 tokens) and majority-vote evaluation across general, long, and reasoning-oriented video tasks; (2) VUP-35K — 35K preference pairs from fully automated pipeline; (3) VideoDRM and VideoGRM reward models trained on VURB+VUP-35K, achieving SOTA on the new benchmark.",
+      method_zh: "视频奖励建模三件套：(1) VURB 基准——2,100 对专家偏好数据，含长 CoT 推理（均 1,143 tokens），多数投票评测，覆盖通用/长视频/推理三类；(2) VUP-35K——全自动流水线生成 35K 偏好对；(3) VideoDRM 和 VideoGRM 奖励模型，在新基准上达到 SOTA。",
+      innovation_en: "First video reward benchmark with CoT reasoning traces. Fully automated VUP-35K pipeline provides large-scale training data previously unavailable. Enables RLHF alignment for video MLLMs.",
+      innovation_zh: "首个带 CoT 推理痕迹的视频奖励基准。全自动 VUP-35K 流水线提供此前缺乏的大规模训练数据，为视频 MLLM 的 RLHF 对齐铺路。",
+      arc_en: "Video reward modeling lacks robust benchmarks and preference data → VURB (2,100 CoT pairs) + VUP-35K (automated 35K pairs) + VideoDRM/VideoGRM trained models achieving SOTA.",
+      arc_zh: "视频奖励建模缺乏基准和偏好数据→VURB（2,100 CoT 对）+ VUP-35K（自动化 35K 对）+ 训练的 VideoDRM/VideoGRM 模型达到 SOTA。",
+      metrics: [
+        ["VURB benchmark", "Preference pairs", "2,100 (expert)", "VideoRewardBench: no CoT"],
+        ["VURB benchmark", "Avg CoT length", "1,143 tokens", "Prior work: no CoT"],
+        ["VUP-35K", "Training pairs", "35,000 (automated)", "Human-only: very expensive"],
+        ["VURB", "Task types", "3 (general/long/reasoning)", "Prior: limited coverage"],
+      ],
+      scores: {
+        "Innovation": [21, 30],
+        "SOTA Delta": [10, 15],
+        "Exp Quality": [11, 15],
+        "Efficiency": [7, 10],
+        "Generalization": [4, 5],
+        "Domain Relevance": [14, 25],
+      },
+      figure: `Expert Preference Pairs
+  (Video A preferred over B?) × 2,100
+         │
+         ▼ Long CoT Annotation (avg 1,143 tokens)
+  "Video A is preferred because: (1) temporal consistency...
+   (2) factual accuracy... (3) caption completeness..."
+         │
+         ┌──────────────────┐
+         │   VURB Benchmark │  ← evaluation benchmark
+         └──────────────────┘
+         │ + VUP-35K automated (35,000 pairs)
+         ▼ Fine-tune
+   VideoDRM / VideoGRM reward models
+         │
+         ▼ RLHF training signal for Video MLLMs`,
+      codeLink: null,
+    },
+  ]
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let currentLang = "en";
+let currentDate = "2026-05-12";
+let minScore = 0;
+let bucketFilter = "all";
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function scoreClass(s) {
+  if (s >= 80) return "high";
+  if (s >= 65) return "mid";
+  return "low";
+}
+
+function renderPapers() {
+  const grid = document.getElementById("paperGrid");
+  const papers = (PAPERS_DB[currentDate] || []).filter(p => {
+    if (p.score < minScore) return false;
+    if (bucketFilter === "strong" && p.bucket !== "strong") return false;
+    if (bucketFilter === "weak" && p.bucket !== "weak") return false;
+    return true;
+  });
+
+  if (papers.length === 0) {
+    grid.innerHTML = `<div class="no-results">No papers found for the selected filters.</div>`;
+    return;
+  }
+
+  grid.innerHTML = papers.map(p => renderCard(p)).join("");
+  // Attach toggle handlers
+  papers.forEach(p => {
+    const figBtn = document.getElementById(`fig-btn-${p.id}`);
+    const figBlock = document.getElementById(`fig-${p.id}`);
+    const metBtn = document.getElementById(`met-btn-${p.id}`);
+    const metBlock = document.getElementById(`met-${p.id}`);
+    const scBtn = document.getElementById(`sc-btn-${p.id}`);
+    const scBlock = document.getElementById(`sc-${p.id}`);
+    figBtn.onclick = () => { figBlock.classList.toggle("visible"); };
+    metBtn.onclick = () => { metBlock.classList.toggle("visible"); };
+    scBtn.onclick = () => { scBlock.classList.toggle("visible"); };
+  });
+}
+
+function renderCard(p) {
+  const tagsHtml = p.tags.map(t => `<span class="tag">${t}</span>`).join("");
+
+  const metricsHtml = p.metrics.map(([dataset, metric, value, baseline]) =>
+    `<tr><td>${dataset}</td><td>${metric}</td><td><strong>${value}</strong></td><td style="color:var(--text-muted)">${baseline}</td></tr>`
+  ).join("");
+
+  const scoreRows = Object.entries(p.scores).map(([dim, [got, max]]) => {
+    const pct = (got / max * 100).toFixed(0);
+    return `<div class="score-row">
+      <span class="dim">${dim}</span>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <span class="pts">${got}/${max}</span>
+    </div>`;
+  }).join("");
+
+  const codeHtml = p.codeLink
+    ? `<a class="code-link" href="https://github.com/Sam1224/CCReproduce/tree/main/${p.codeLink}" target="_blank">💻 Code</a>`
+    : "";
+
+  return `
+<div class="card" data-id="${p.id}" data-bucket="${p.bucket}" data-score="${p.score}" data-date="${p.date}">
+  <div class="card-header">
+    <div class="card-meta">
+      <span class="bucket-badge ${p.bucket}">${p.bucket}</span>
+      <span class="date-badge">${p.date}</span>
+      <span class="score-badge ${scoreClass(p.score)}">Score: ${p.score}</span>
+    </div>
+    <div class="card-title">${p.title}</div>
+    <div class="card-authors">${p.authors}</div>
+    <div class="card-affil">${p.affil}</div>
+  </div>
+  <div class="tags">${tagsHtml}</div>
+  <div class="card-body">
+    <div>
+      <div class="section-title">Method Overview</div>
+      <div class="method-text method-en">${p.method_en}</div>
+      <div class="method-text method-zh">${p.method_zh}</div>
+    </div>
+    <div class="story-arc">
+      <strong>Story Arc:</strong>
+      <span class="arc-en">${p.arc_en}</span>
+      <span class="arc-zh">${p.arc_zh}</span>
+    </div>
+    <div>
+      <div class="section-title">Innovation</div>
+      <div class="method-text method-en" style="font-size:12px">${p.innovation_en}</div>
+      <div class="method-text method-zh" style="font-size:12px">${p.innovation_zh}</div>
+    </div>
+    <div>
+      <button class="toggle-btn" id="fig-btn-${p.id}">📐 Architecture</button>
+      <div class="toggleable" id="fig-${p.id}">
+        <div class="figure-block" style="margin-top:8px">${p.figure}</div>
+      </div>
+    </div>
+    <div>
+      <button class="toggle-btn" id="met-btn-${p.id}">📊 Key Metrics</button>
+      <div class="toggleable" id="met-${p.id}">
+        <table class="metrics-table" style="margin-top:8px">
+          <thead><tr><th>Dataset</th><th>Metric</th><th>This Paper</th><th>Baseline</th></tr></thead>
+          <tbody>${metricsHtml}</tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <button class="toggle-btn" id="sc-btn-${p.id}">🎯 Score Breakdown</button>
+      <div class="toggleable" id="sc-${p.id}">
+        <div class="score-breakdown" style="margin-top:8px">${scoreRows}</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <a class="arxiv-link" href="${p.arxiv}" target="_blank">arXiv ${p.arxivId}</a>
+    ${codeHtml}
+  </div>
+</div>`;
+}
+
+// ── Controls ──────────────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle("lang-zh", lang === "zh");
+  document.getElementById("btnEN").classList.toggle("active", lang === "en");
+  document.getElementById("btnZH").classList.toggle("active", lang === "zh");
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  html.setAttribute("data-theme", html.getAttribute("data-theme") === "dark" ? "" : "dark");
+}
+
+function filterDate() {
+  currentDate = document.getElementById("datePicker").value;
+  renderPapers();
+}
+
+function filterScore(val) {
+  minScore = parseInt(val);
+  document.getElementById("scoreVal").textContent = val;
+  renderPapers();
+}
+
+function filterBucket() {
+  bucketFilter = document.getElementById("bucketFilter").value;
+  renderPapers();
+}
+
+function toggleCoverage() {
+  document.getElementById("coverageTable").classList.toggle("visible");
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderPapers();
+</script>
+</body>
+</html>
