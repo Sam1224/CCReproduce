@@ -19,3 +19,6 @@ Papers scored >=80 today all provide usable code repositories, so no additional 
 
 - **2605.07760** RuleSafe-VL: Evaluating Rule-Conditioned Decision Reasoning in Vision-Language Content Moderation
   - Code: https://anonymous.4open.science/r/RuleRuleSafe-VL-2527
+
+- **2605.12772** Just Ask for a Table: Defeats Sponsored Recommendations
+  - Code: https://github.com/akmaier/Paper-LLM-Ads
