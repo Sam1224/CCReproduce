@@ -1,0 +1,10 @@
+{"query": "wireless bluetooth headphones noise cancelling", "product_title": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones", "product_desc": "Industry-leading noise canceling with 30-hour battery life", "label": "exact", "split": "train"}
+{"query": "wireless bluetooth headphones noise cancelling", "product_title": "USB-C Charging Cable 6ft Braided", "product_desc": "Fast charging cable compatible with most devices", "label": "irrelevant", "split": "train"}
+{"query": "running shoes men size 10", "product_title": "Nike Air Zoom Pegasus 40 Men's Road Running Shoes", "product_desc": "Responsive cushioning for everyday training, size 7-15", "label": "exact", "split": "train"}
+{"query": "running shoes men size 10", "product_title": "Women's Athletic Sneakers Pink", "product_desc": "Comfortable casual sneakers for women", "label": "irrelevant", "split": "train"}
+{"query": "coffee maker automatic programmable", "product_title": "Cuisinart 12-Cup Programmable Coffee Maker", "product_desc": "Programmable 24-hr auto-on/off, 1-4 cup brewing mode", "label": "exact", "split": "test"}
+{"query": "coffee maker automatic programmable", "product_title": "Coffee Mug 16oz Ceramic White", "product_desc": "Microwave-safe ceramic coffee mug", "label": "irrelevant", "split": "test"}
+{"query": "vitamin c supplement 1000mg", "product_title": "Nature Made Vitamin C 1000mg Tablets 300ct", "product_desc": "Immune support, antioxidant, no artificial colors", "label": "exact", "split": "test"}
+{"query": "laptop stand adjustable ergonomic", "product_title": "Adjustable Laptop Stand Aluminum 6 Heights", "product_desc": "Portable aluminum stand for MacBook and other laptops", "label": "exact", "split": "train"}
+{"query": "laptop stand adjustable ergonomic", "product_title": "Gaming Mouse Wireless RGB", "product_desc": "High-precision gaming mouse with customizable RGB lighting", "label": "irrelevant", "split": "train"}
+{"query": "air purifier hepa filter large room", "product_title": "Levoit Core 400S Smart True HEPA Air Purifier", "product_desc": "HEPA filter for up to 403 sq.ft, WiFi enabled", "label": "exact", "split": "test"}

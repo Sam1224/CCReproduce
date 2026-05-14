@@ -1,0 +1,12 @@
+{"id": "ad001", "text": "Lose 30 pounds in 30 days guaranteed! Doctor-approved diet pills.", "old_label": "compliant", "new_label": "violation", "policy_version": "v2", "policy_tag": "health_anxiety", "split": "train"}
+{"id": "ad002", "text": "Best smartphone deals this weekend - up to 50% off!", "old_label": "compliant", "new_label": "compliant", "policy_version": "v2", "policy_tag": "none", "split": "train"}
+{"id": "ad003", "text": "Your child will fall behind without this tutoring app. Don't let them fail.", "old_label": "compliant", "new_label": "violation", "policy_version": "v2", "policy_tag": "education_anxiety", "split": "train"}
+{"id": "ad004", "text": "Quality furniture at unbeatable prices. Free delivery this week.", "old_label": "compliant", "new_label": "compliant", "policy_version": "v2", "policy_tag": "none", "split": "train"}
+{"id": "ad005", "text": "Ugly skin? Fix it now with our miracle cream.", "old_label": "compliant", "new_label": "violation", "policy_version": "v2", "policy_tag": "appearance_anxiety", "split": "train"}
+{"id": "ad006", "text": "Fresh organic vegetables delivered to your door.", "old_label": "compliant", "new_label": "compliant", "policy_version": "v2", "policy_tag": "none", "split": "train"}
+{"id": "ad007", "text": "Is your memory fading? This supplement can help seniors stay sharp.", "old_label": "compliant", "new_label": "violation", "policy_version": "v2", "policy_tag": "health_anxiety", "split": "train"}
+{"id": "ad008", "text": "Summer fashion sale - up to 70% off selected items.", "old_label": "compliant", "new_label": "compliant", "policy_version": "v2", "policy_tag": "none", "split": "train"}
+{"id": "ad009", "text": "Don't let your kids be left behind. Elite tutoring program enrolling now.", "old_label": "compliant", "new_label": "violation", "policy_version": "v2", "policy_tag": "education_anxiety", "split": "test"}
+{"id": "ad010", "text": "New coffee blend - rich and smooth. Order now.", "old_label": "compliant", "new_label": "compliant", "policy_version": "v2", "policy_tag": "none", "split": "test"}
+{"id": "ad011", "text": "Stop looking old! Anti-aging serum reduces wrinkles by 80%.", "old_label": "violation", "new_label": "violation", "policy_version": "v1", "policy_tag": "appearance_anxiety", "split": "test"}
+{"id": "ad012", "text": "Premium headphones, professional studio quality.", "old_label": "compliant", "new_label": "compliant", "policy_version": "v1", "policy_tag": "none", "split": "test"}

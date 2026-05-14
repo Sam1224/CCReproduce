@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --card-bg: #ffffff;
+    --accent: #2d6a4f;
+    --accent2: #40916c;
+    --text: #1b1b1b;
+    --muted: #666;
+    --border: #ddd;
+    --tag-strong: #1b4332;
+    --tag-weak: #495057;
+    --score-high: #155724;
+    --score-med: #856404;
+    --code-bg: #f8f8f2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); font-size: 15px; }
+  header { background: var(--accent); color: #fff; padding: 24px 32px; }
+  header h1 { font-size: 1.6rem; font-weight: bold; letter-spacing: 0.02em; }
+  header p { margin-top: 6px; font-size: 0.9rem; opacity: 0.85; }
+  .controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 16px 32px; background: #fff; border-bottom: 1px solid var(--border); }
+  .controls label { font-size: 0.85rem; color: var(--muted); }
+  .controls input[type=range] { width: 150px; accent-color: var(--accent); }
+  .controls select, .controls input[type=text] {
+    padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px;
+    font-size: 0.85rem; background: #fafafa;
+  }
+  .lang-toggle { margin-left: auto; }
+  .lang-toggle button {
+    padding: 5px 12px; border: 1px solid var(--accent); border-radius: 4px;
+    background: transparent; color: var(--accent); cursor: pointer; font-size: 0.82rem;
+  }
+  .lang-toggle button.active { background: var(--accent); color: #fff; }
+  .score-display { font-weight: bold; color: var(--accent); min-width: 40px; }
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 24px; }
+  .date-section { margin-bottom: 32px; }
+  .date-section h2 { font-size: 1.05rem; color: var(--muted); margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .card.hidden { display: none; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 0.95rem; font-weight: bold; line-height: 1.4; flex: 1; }
+  .score-badge {
+    font-size: 1.0rem; font-weight: bold; min-width: 42px; text-align: center;
+    padding: 4px 8px; border-radius: 6px; white-space: nowrap;
+  }
+  .score-high { background: #d4edda; color: var(--score-high); }
+  .score-med  { background: #fff3cd; color: var(--score-med); }
+  .score-low  { background: #f0f0f0; color: #555; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+  .tag {
+    font-size: 0.72rem; padding: 2px 8px; border-radius: 12px;
+    white-space: nowrap;
+  }
+  .tag-strong { background: #d8f3dc; color: var(--tag-strong); border: 1px solid #b7e4c7; }
+  .tag-weak   { background: #e9ecef; color: var(--tag-weak); border: 1px solid #ced4da; }
+  .tag-domain { background: #e8f4f8; color: #2c5f7a; border: 1px solid #bee3f8; }
+  .tag-code   { background: #fef0f6; color: #7b2d6b; border: 1px solid #f8c8e8; }
+  .authors { font-size: 0.78rem; color: var(--muted); margin: 6px 0; }
+  .method-section { margin-top: 12px; }
+  .method-section h4 { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .method-text { font-size: 0.84rem; line-height: 1.55; }
+  .method-text.zh { display: none; }
+  .innovation-block { margin-top: 10px; background: #f9f9f5; border-left: 3px solid var(--accent2); padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.83rem; }
+  .metrics-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
+  .metrics-table th { background: #f5f5f5; padding: 5px 8px; text-align: left; font-weight: 600; border: 1px solid #eee; }
+  .metrics-table td { padding: 5px 8px; border: 1px solid #eee; }
+  .toggle-btn {
+    font-size: 0.75rem; color: var(--accent); cursor: pointer; border: none;
+    background: transparent; padding: 2px 0; text-decoration: underline; margin-top: 8px;
+  }
+  .toggleable { display: none; margin-top: 8px; }
+  .toggleable.open { display: block; }
+  .card-footer { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .card-footer a {
+    font-size: 0.78rem; padding: 3px 10px; border: 1px solid var(--border);
+    border-radius: 4px; text-decoration: none; color: var(--accent);
+  }
+  .card-footer a:hover { background: #f0f0f0; }
+  .score-bar { height: 4px; background: #e0e0e0; border-radius: 2px; margin-top: 10px; }
+  .score-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .date-stamp { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+  .figure-block { margin-top: 10px; background: #fdfdfd; border: 1px solid #eee; border-radius: 6px; padding: 10px; }
+  .figure-block svg { width: 100%; height: auto; }
+  footer { text-align: center; padding: 24px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CCReproduce — Daily AI Paper Inspection</h1>
+  <p>Domain: E-commerce content ecosystem & influencer governance · LLM / VLM / Agents / RAG / Content Governance</p>
+</header>
+
+<div class="controls">
+  <label>Min Score: <span id="scoreVal" class="score-display">0</span></label>
+  <input type="range" id="scoreSlider" min="0" max="100" value="0" oninput="filterCards()">
+
+  <label>Date:
+    <select id="dateFilter" onchange="filterCards()">
+      <option value="">All dates</option>
+      <option value="2026-05-13" selected>2026-05-13</option>
+      <option value="2026-05-10">2026-05-10</option>
+    </select>
+  </label>
+
+  <label>Bucket:
+    <select id="bucketFilter" onchange="filterCards()">
+      <option value="">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </label>
+
+  <label>Search: <input type="text" id="searchBox" placeholder="keyword..." oninput="filterCards()"></label>
+
+  <div class="lang-toggle">
+    <button id="btnEN" class="active" onclick="setLang('en')">EN</button>
+    <button id="btnZH" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<main>
+  <div id="paperContainer"></div>
+</main>
+
+<footer>
+  CCReproduce · Auto-generated by Claude Code · Daily paper inspection for e-commerce AI research
+</footer>
+
+<script>
+const PAPERS = [
+  {
+    date: "2026-05-13",
+    arxivId: "2605.05991",
+    title: "A Case-Driven Multi-Agent Framework for E-Commerce Search Relevance",
+    authors: "Global E-Commerce Search Relevance Team, ByteDance",
+    affiliation: "ByteDance",
+    bucket: "STRONG",
+    score: 81,
+    domains: ["multi-agent","e-commerce","search relevance","LLM annotation","data quality"],
+    hasCode: true,
+    codeFolder: "code/CaseDrivenMASearch/",
+    methodEN: "Proposes a closed-loop multi-agent system to automate the e-commerce search relevance optimization pipeline. Three agents replace human roles: (1) User Agent discovers bad cases via conversational search simulation; (2) Annotator Agent labels query-product relevance via multi-path chain-of-thought reasoning; (3) Optimizer Agent performs root-cause analysis (policy/data/model gap) and triggers automated resolution. The agents evolve autonomously without human intervention.",
+    methodZH: "提出闭环多智能体框架，用三个 LLM 智能体替代人工角色自动化电商搜索相关性优化管线：User Agent（发现差案例）、Annotator Agent（多路CoT推理标注）、Optimizer Agent（根因分析+自动修复）。系统持续自我进化，无需人工介入。",
+    innovationEN: "First system to fully agent-ify the e-commerce search relevance human-in-the-loop pipeline. The Annotator Agent achieves +2.4% precision over human annotators at 75.4% lower cost — making autonomous annotation not just feasible but superior to human baseline.",
+    innovationZH: "首次将电商搜索相关性优化的完整人工闭环全部智能体化。LLM 标注精度超人工 2.4%，成本降低 75.4%，实现自主标注超越人类基线。",
+    metrics: [
+      {dataset:"内部电商数据集", metric:"标注精度 vs 人工", value:"+2.4%", baseline:"人工标注"},
+      {dataset:"内部电商数据集", metric:"标注成本", value:"-75.4%", baseline:"人工标注"}
+    ],
+    scores: {innovation:23, sota:12, quality:10, efficiency:9, generalization:4, domain:23},
+    link: "https://arxiv.org/abs/2605.05991",
+    paperMD: "papers/case_driven_ma_ecom_search.md"
+  },
+  {
+    date: "2026-05-13",
+    arxivId: "2605.02200",
+    title: "ARGUS: Policy-Adaptive Ad Governance via Evolving Reinforcement with Adversarial Umpiring",
+    authors: "Deyi Ji, Junyu Lu, Xuanyi Liu, Liqun Liu, Hailong Zhang, Peng Shu, Huan Yu, Jie Jiang, Tianru Chen, Lanyun Zhu",
+    affiliation: "Industrial Research Team",
+    bucket: "STRONG",
+    score: 80,
+    domains: ["ad governance","content governance","multi-agent","adversarial","policy adaptation"],
+    hasCode: true,
+    codeFolder: "code/ARGUS/",
+    methodEN: "Addresses non-stationary advertising policy by a three-stage framework: (1) Policy Seeding — initial model training on few new-policy samples; (2) Adversarial Label Rectification — Prosecutor-Defender-Umpire (PDU) architecture where agents debate to resolve conflicts between stale labels and new mandates; (3) Latent Knowledge Discovery — tripartite discussion unearths gray-area violations and synthesizes hard adversarial samples.",
+    methodZH: "通过三阶段框架解决广告治理中的策略非平稳性问题：①策略播种（少样本感知）；②对抗式标签修正（检察官-辩护人-仲裁员三智能体辩论，解决历史标签与新政策冲突）；③潜在知识挖掘（三方辩证讨论发现灰色地带违规，合成对抗样本增强训练集）。",
+    innovationEN: "Novel 'Prosecutor-Defender-Umpire' adversarial debate architecture for label rectification in non-stationary policy environments. Requires minimal new-policy gold data while significantly outperforming standard fine-tuning. Three-stage ablation clearly validates each component.",
+    innovationZH: "原创"检察官-辩护人-仲裁员"三智能体对抗辩论架构，用于策略非平稳下的标签修正。极少量新政策金标样本即可实现策略自适应，三阶段消融清晰验证各部分贡献。",
+    metrics: [
+      {dataset:"工业广告数据集", metric:"综合准确率", value:"显著优于基线", baseline:"传统微调"},
+      {dataset:"公开数据集", metric:"Historical Recall", value:"Stage III 达峰", baseline:"Stage I"},
+      {dataset:"消融实验", metric:"Stage II 引入", value:"性能显著跃升", baseline:"Stage I only"}
+    ],
+    scores: {innovation:24, sota:10, quality:11, efficiency:7, generalization:4, domain:24},
+    link: "https://arxiv.org/abs/2605.02200",
+    paperMD: "papers/argus_ad_governance.md"
+  },
+  {
+    date: "2026-05-13",
+    arxivId: "2605.01278",
+    title: "Valley3: Scaling Omni Foundation Models for E-commerce",
+    authors: "Zeyu Chen, Guanghao Zhou, Qixiang Yin, Ziwang Zhao, Huanjin Yao, Pengjiu Xia, Min Yang, Cen Chen, Minghui Qiu",
+    affiliation: "ByteDance (Valley Team)",
+    bucket: "STRONG",
+    score: 76,
+    domains: ["e-commerce","omni MLLM","video understanding","livestream","content moderation","multimodal"],
+    hasCode: false,
+    codeFolder: null,
+    methodEN: "Valley3 is an omni multimodal LLM for global e-commerce, extending Qwen3-VL with Qwen3-Omni's native audio understanding via a four-stage continued pre-training pipeline: audio alignment → cross-modal instruction following → e-commerce domain knowledge → long-context reasoning. Equipped with agentic search tool invocation. Evaluated on a 6-task Omni E-commerce Benchmark covering product understanding, after-sales, search&recommendation, livestream analysis, short video, and moderation&governance.",
+    methodZH: "Valley3 是全模态（文/图/视频/音频）电商专用大语言模型，基于 Qwen3-VL+Qwen3-Omni 扩展，通过四阶段持续预训练（音频对齐→跨模态指令跟随→电商知识注入→长上下文推理）构建，支持主动工具调用。在覆盖6个电商核心任务的自建基准上全部超越强基线。",
+    innovationEN: "First omni (text+image+video+audio) MLLM specifically for e-commerce, with native audio understanding for livestream scenarios. Creates the Omni E-commerce Benchmark — filling the gap in unified multimodal e-commerce evaluation. Agentic search capability enables deep research tasks.",
+    innovationZH: "首个全模态电商专用 MLLM，原生支持直播音频理解。构建业界首个全模态电商评测基准（6任务），覆盖内容审核&治理维度。",
+    metrics: [
+      {dataset:"Omni E-commerce Benchmark", metric:"6任务全部", value:"SOTA", baseline:"强基线"},
+      {dataset:"通用多模态基准 (MMMU等)", metric:"通用理解", value:"竞争力保持", baseline:"原骨干模型"}
+    ],
+    scores: {innovation:21, sota:10, quality:9, efficiency:6, generalization:5, domain:25},
+    link: "https://arxiv.org/abs/2605.01278",
+    paperMD: "papers/valley3_ecom_omni.md"
+  },
+  {
+    date: "2026-05-13",
+    arxivId: "2605.07982",
+    title: "GLiGuard: Schema-Conditioned Classification for LLM Safeguard",
+    authors: "Fastino Labs",
+    affiliation: "Fastino Labs",
+    bucket: "STRONG",
+    score: 74,
+    domains: ["content moderation","LLM safety","AIGC detection","guardrail","efficiency"],
+    hasCode: false,
+    codeFolder: null,
+    methodEN: "GLiGuard is a 0.3B-parameter bidirectional encoder (adapted from GLiNER2) for LLM safety moderation. Schema-conditioned design processes a user-specified moderation task list and simultaneously evaluates prompt safety, response safety, 14 harm categories, and 11 jailbreak strategies in a single forward pass via hard decision rules. 16x lower latency than decoder-based guards; 23-90x smaller than competing models.",
+    methodZH: "GLiGuard 是 0.3B 参数双向编码器安全护栏（基于 GLiNER2），Schema 条件化设计在单次前向传播中同时完成 Prompt/Response 安全判断、14 类危害分类、11 种越狱策略识别。延迟比解码器护栏降低 16x，参数量压缩 23–90x。已完全开源。",
+    innovationEN: "Transforms LLM safety guardrailing from generative classification to schema-driven bidirectional multi-task classification. Single forward pass handles all safety dimensions simultaneously. 16x latency reduction enables production deployment at scale. Open-source with 87.7 avg F1 on prompt benchmarks.",
+    innovationZH: "将 LLM 安全护栏从生成式分类转向 Schema 驱动的双向编码器多任务分类，16x 延迟下降，23–90x 参数量压缩，在极小模型下接近最强基线性能，完全开源。",
+    metrics: [
+      {dataset:"Prompt 安全基准", metric:"平均 F1", value:"87.7", baseline:"最强基线 ≈89.4"},
+      {dataset:"Response 安全基准", metric:"平均 F1 排名", value:"开源第二", baseline:"LlamaGuard4-12B"},
+      {dataset:"推理延迟", metric:"vs 解码器护栏", value:"16x 更快", baseline:"LlamaGuard系列"}
+    ],
+    scores: {innovation:22, sota:11, quality:11, efficiency:9, generalization:4, domain:17},
+    link: "https://arxiv.org/abs/2605.07982",
+    paperMD: "papers/gliguard_llm_safeguard.md"
+  },
+  {
+    date: "2026-05-13",
+    arxivId: "2605.06903",
+    title: "MELD: Multi-Task Equilibrated Learning Detector for AI-Generated Text",
+    authors: "Chenjun Li, Cheng Wan, Johannes C. Paetzold",
+    affiliation: "Cornell University / Weill Cornell Medicine / Cornell Tech",
+    bucket: "WEAK",
+    score: 58,
+    domains: ["AIGC detection","AI generated text","content moderation","multi-task learning"],
+    hasCode: false,
+    codeFolder: null,
+    methodEN: "MELD enriches binary AI-generated text detection with auxiliary supervision heads (generator family, attack type, source domain) attached to a shared encoder. Homoscedastic uncertainty weighting automatically balances four task losses. Targets three practical failure modes: attack robustness, cross-domain transfer, and low false-positive rate operation.",
+    methodZH: "MELD 在二元 AIGC 文本检测基础上增加辅助监督头（生成器家族/攻击类型/源域），通过同方差不确定性加权自动平衡多任务损失，提升对抗鲁棒性和跨域迁移能力。",
+    innovationEN: "Multi-task auxiliary supervision for AIGC detection, using generator family / attack type / source domain as structural constraints. Automatic uncertainty-based loss balancing avoids manual tuning. Positions itself as a deployable production detector.",
+    innovationZH: "利用生成器家族/攻击类型/源域作为结构化辅助监督，同方差不确定性加权自动平衡多任务损失。定位为可部署的生产级 AIGC 文本检测器。",
+    metrics: [
+      {dataset:"多域混合测试集", metric:"AUROC", value:"领先（数值未公开）", baseline:"DetectGPT / Ghostbuster"},
+      {dataset:"攻击鲁棒性测试", metric:"AUROC under attack", value:"高鲁棒性", baseline:"传统检测器显著下降"}
+    ],
+    scores: {innovation:18, sota:9, quality:9, efficiency:6, generalization:4, domain:12},
+    link: "https://arxiv.org/abs/2605.06903",
+    paperMD: "papers/meld_aigc_text_detection.md"
+  }
+];
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+  document.getElementById('btnZH').classList.toggle('active', lang === 'zh');
+  document.querySelectorAll('.method-text.en').forEach(el => {
+    el.style.display = lang === 'en' ? 'block' : 'none';
+  });
+  document.querySelectorAll('.method-text.zh').forEach(el => {
+    el.style.display = lang === 'zh' ? 'block' : 'none';
+  });
+  document.querySelectorAll('.inno-text.en').forEach(el => {
+    el.style.display = lang === 'en' ? 'block' : 'none';
+  });
+  document.querySelectorAll('.inno-text.zh').forEach(el => {
+    el.style.display = lang === 'zh' ? 'block' : 'none';
+  });
+}
+
+function getScoreClass(score) {
+  if (score >= 80) return 'score-high';
+  if (score >= 60) return 'score-med';
+  return 'score-low';
+}
+
+function makeSVGFigure(paper) {
+  const labels = ['Innovation', 'SOTA', 'Quality', 'Efficiency', 'General.', 'Domain'];
+  const maxes  = [30, 15, 15, 10, 5, 25];
+  const values = [
+    paper.scores.innovation, paper.scores.sota, paper.scores.quality,
+    paper.scores.efficiency, paper.scores.generalization, paper.scores.domain
+  ];
+  const w = 280, h = 110, barH = 13, gap = 4, labelW = 72;
+  const innerW = w - labelW - 4;
+  const bars = values.map((v, i) => {
+    const pct = v / maxes[i];
+    const bw = Math.round(pct * innerW);
+    const y = i * (barH + gap);
+    return `
+      <text x="0" y="${y + barH - 3}" fill="#666" font-size="9">${labels[i]}</text>
+      <rect x="${labelW}" y="${y}" width="${innerW}" height="${barH}" rx="2" fill="#eee"/>
+      <rect x="${labelW}" y="${y}" width="${bw}" height="${barH}" rx="2" fill="#2d6a4f" opacity="0.8"/>
+      <text x="${labelW + bw + 3}" y="${y + barH - 3}" fill="#333" font-size="9">${v}/${maxes[i]}</text>
+    `;
+  }).join('');
+  const totalH = values.length * (barH + gap);
+  return `<svg viewBox="0 0 ${w} ${totalH}" xmlns="http://www.w3.org/2000/svg" style="max-height:130px">${bars}</svg>`;
+}
+
+function renderCard(paper) {
+  const scoreClass = getScoreClass(paper.score);
+  const tagsHTML = [
+    `<span class="tag tag-${paper.bucket.toLowerCase()}">${paper.bucket}</span>`,
+    ...paper.domains.slice(0,3).map(d => `<span class="tag tag-domain">${d}</span>`),
+    paper.hasCode ? `<span class="tag tag-code">💻 code</span>` : ''
+  ].join('');
+
+  const metricsHTML = paper.metrics.map(m =>
+    `<tr><td>${m.dataset}</td><td>${m.metric}</td><td><strong>${m.value}</strong></td><td>${m.baseline}</td></tr>`
+  ).join('');
+
+  const scorePct = paper.score;
+
+  return `
+<div class="card" data-score="${paper.score}" data-date="${paper.date}" data-bucket="${paper.bucket}" data-title="${paper.title.toLowerCase()}">
+  <div class="card-header">
+    <div class="card-title">${paper.title}</div>
+    <div class="score-badge ${scoreClass}">${paper.score}</div>
+  </div>
+  <div class="date-stamp">${paper.date} · arXiv:${paper.arxivId}</div>
+  <div class="authors">${paper.authors.split(',').slice(0,3).join(', ')}${paper.authors.split(',').length > 3 ? ' et al.' : ''} · ${paper.affiliation}</div>
+  <div class="tags">${tagsHTML}</div>
+  <div class="score-bar"><div class="score-bar-fill" style="width:${scorePct}%"></div></div>
+
+  <div class="method-section" style="margin-top:12px">
+    <h4>Method Overview</h4>
+    <div class="method-text en" style="display:block">${paper.methodEN}</div>
+    <div class="method-text zh" style="display:none">${paper.methodZH}</div>
+  </div>
+
+  <div class="innovation-block">
+    <strong>💡 Innovation:</strong>
+    <span class="inno-text en" style="display:inline">${paper.innovationEN}</span>
+    <span class="inno-text zh" style="display:none">${paper.innovationZH}</span>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleSection(this, 'metrics')">▶ Show Metrics</button>
+  <div class="toggleable">
+    <table class="metrics-table">
+      <thead><tr><th>Dataset</th><th>Metric</th><th>Value</th><th>Baseline</th></tr></thead>
+      <tbody>${metricsHTML}</tbody>
+    </table>
+  </div>
+
+  <button class="toggle-btn" onclick="toggleSection(this, 'figure')">▶ Score Breakdown</button>
+  <div class="toggleable">
+    <div class="figure-block">${makeSVGFigure(paper)}</div>
+  </div>
+
+  <div class="card-footer">
+    <a href="${paper.link}" target="_blank">📄 arXiv</a>
+    ${paper.hasCode ? `<a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-13/${paper.codeFolder}" target="_blank">💻 Code</a>` : ''}
+    <a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-13/${paper.paperMD}" target="_blank">📝 Notes</a>
+  </div>
+</div>`;
+}
+
+function toggleSection(btn, type) {
+  const next = btn.nextElementSibling;
+  const isOpen = next.classList.contains('open');
+  next.classList.toggle('open', !isOpen);
+  const label = btn.textContent.replace(/^[▶▼] /, '');
+  btn.textContent = (isOpen ? '▶ ' : '▼ ') + label;
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('scoreSlider').value);
+  const dateFilter = document.getElementById('dateFilter').value;
+  const bucketFilter = document.getElementById('bucketFilter').value;
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  document.getElementById('scoreVal').textContent = minScore;
+
+  document.querySelectorAll('.card').forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const date = card.dataset.date;
+    const bucket = card.dataset.bucket;
+    const title = card.dataset.title;
+
+    const show = score >= minScore
+      && (!dateFilter || date === dateFilter)
+      && (!bucketFilter || bucket === bucketFilter)
+      && (!search || title.includes(search));
+
+    card.classList.toggle('hidden', !show);
+  });
+}
+
+function renderAll() {
+  const byDate = {};
+  PAPERS.forEach(p => {
+    if (!byDate[p.date]) byDate[p.date] = [];
+    byDate[p.date].push(p);
+  });
+
+  const container = document.getElementById('paperContainer');
+  container.innerHTML = '';
+
+  Object.keys(byDate).sort().reverse().forEach(date => {
+    const section = document.createElement('div');
+    section.className = 'date-section';
+    section.innerHTML = `<h2>📅 ${date}</h2><div class="cards-grid">${byDate[date].map(renderCard).join('')}</div>`;
+    container.appendChild(section);
+  });
+}
+
+renderAll();
+</script>
+</body>
+</html>
