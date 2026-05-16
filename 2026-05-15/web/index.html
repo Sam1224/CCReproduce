@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>ECom &amp; Governance — Daily Paper Digest 2026-05-15</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #f7f7f4; --panel: #ffffff; --ink: #1f2933;
+    --muted: #5b6b78; --line: #e3e6eb; --accent: #5d4037;
+    --accent-soft: #d7ccc8; --tag: #ece8e2;
+    --score-hi: #2e7d32; --score-mid: #c77a00; --score-lo: #8a8d91;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Source Serif Pro","Georgia","Noto Serif SC",serif; }
+  header { padding: 28px 40px 20px; border-bottom: 1px solid var(--line);
+    background: var(--panel); position: sticky; top: 0; z-index: 10; }
+  h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; letter-spacing: .02em; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .controls { display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+    margin-top: 14px; font-family: "Inter","Helvetica Neue",sans-serif; font-size: 13px; }
+  .controls label { color: var(--muted); }
+  .sliderbox { display: flex; gap: 8px; align-items: center; min-width: 260px; }
+  .langbtn { background: var(--panel); border: 1px solid var(--line);
+    padding: 4px 10px; cursor: pointer; border-radius: 4px; color: var(--ink); }
+  .langbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  main { padding: 24px 40px 60px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 16px 18px; display: flex; flex-direction: column; box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+  .card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card h2 { font-size: 15px; line-height: 1.35; margin: 0 0 4px; font-weight: 600; }
+  .card .authors { font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+  .score-badge { font-family: "Inter",sans-serif; font-size: 18px; font-weight: 700;
+    white-space: nowrap; flex-shrink: 0; }
+  .score-hi { color: var(--score-hi); }
+  .score-mid { color: var(--score-mid); }
+  .score-lo { color: var(--score-lo); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .tag { font-family: "Inter",sans-serif; font-size: 11px;
+    background: var(--tag); border-radius: 3px; padding: 2px 7px; color: var(--muted); }
+  .tag.strong { background: #e8f5e9; color: #2e7d32; }
+  .card .body { font-size: 13.5px; line-height: 1.6; color: var(--ink); }
+  .card .body .zh, .card .body .en { transition: opacity .2s; }
+  .card .body.lang-en .zh { display: none; }
+  .card .body.lang-zh .en { display: none; }
+  .card .metrics { background: #f4f4f0; border-radius: 4px; padding: 8px 10px;
+    font-family: "Inter",sans-serif; font-size: 12px; margin-top: 8px; }
+  .card .metrics .zh, .card .metrics .en { }
+  .card .metrics.lang-en .zh { display: none; }
+  .card .metrics.lang-zh .en { display: none; }
+  details summary { font-family: "Inter",sans-serif; font-size: 12px;
+    color: var(--accent); cursor: pointer; margin-top: 8px; }
+  .card footer { display: flex; justify-content: space-between; align-items: center;
+    margin-top: 10px; font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--muted); }
+  .card footer a { color: var(--accent); text-decoration: none; }
+  .card footer a:hover { text-decoration: underline; }
+  .hidden { display: none !important; }
+  .score-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+    font-family: "Inter",sans-serif; font-size: 11.5px; margin-top: 4px; }
+  .score-row div { background: #f0ede8; border-radius: 3px; padding: 3px 6px; }
+  .score-row span { color: var(--muted); }
+  @media(max-width:600px){ main{ padding:16px; } header{ padding:16px; } .grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>📑 ECom &amp; Governance — Daily Paper Digest</h1>
+  <div class="sub">Domain: E-commerce content ecosystem &amp; influencer governance · 2026-05-15 (GMT+8)</div>
+  <div class="controls">
+    <button class="langbtn active" id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button class="langbtn" id="btn-en" onclick="setLang('en')">EN</button>
+    <div class="sliderbox">
+      <label>Min Score:</label>
+      <input type="range" min="0" max="100" value="0" id="scoreSlider" oninput="filterCards()"/>
+      <span id="scoreVal">0</span>
+    </div>
+    <div>
+      <label>Date: </label>
+      <select id="datePicker" onchange="goDate()">
+        <option value="2026-05-15" selected>2026-05-15</option>
+        <option value="2026-05-14">2026-05-14</option>
+        <option value="2026-05-09">2026-05-09</option>
+        <option value="2026-05-08">2026-05-08</option>
+      </select>
+    </div>
+  </div>
+</header>
+<main>
+<div class="grid" id="grid"></div>
+</main>
+
+<script>
+const PAPERS = [
+  {
+    id: "2605.14434",
+    title: "Efficient Generative Retrieval for E-commerce Search with Semantic Cluster IDs and Expert-Guided RL (CQ-SID + EG-GRPO)",
+    authors: "arXiv:2605.14434 · 2026-05-14",
+    score: 85,
+    bucket: "STRONG",
+    date: "2026-05-15",
+    tags: ["e-commerce","generative-retrieval","RL","semantic-ID","GRPO"],
+    method_zh: "针对电商搜索中双塔+ANN 架构长尾查询泛化不足的问题，提出 CQ-SID（类目感知量化语义ID）和 EG-GRPO（专家引导 GRPO）。CQ-SID 通过3层残差 VQ-VAE 引入类目感知码本压缩十亿级 SKU 搜索空间（~3×）；EG-GRPO 在训练中注入真实 SID 作为专家锚点稳定稀疏奖励下的 RL 学习。4阶段递进训练（码本→SFT→GRPO→在线迭代）。",
+    method_en: "CQ-SID introduces category-aware first-level codebooks in a 3-layer RQ-VAE to compress the billion-item search space by ~3×. EG-GRPO injects ground-truth SID sequences as expert anchors within GRPO rollout groups, stabilizing sparse-reward policy learning. Four-stage progressive training: codebook learning → SFT → EG-GRPO → online iteration.",
+    innov_zh: "CQ-SID 类目感知码本 + EG-GRPO expert anchor 为工业落地关键创新；端到端生成式召回无需离线 ANN 索引；长尾 Recall 显著提升（+15.4%），在线 GMV +1.3%。",
+    innov_en: "CQ-SID's category-aware codebooks and EG-GRPO's expert anchor are practical industrial innovations. End-to-end generative recall eliminates offline ANN indexing. Strong long-tail gains (+15.4% Recall@10) and online GMV lift (+1.3%).",
+    metrics_zh: "内部电商 Recall@10 +8.2%（vs双塔ANN），长尾查询 Recall@10 +15.4%，在线A/B GMV +1.3%（相对提升）",
+    metrics_en: "Internal e-commerce Recall@10 +8.2% vs dual-tower+ANN; long-tail Recall@10 +15.4%; online A/B GMV +1.3% relative",
+    scoring: {"Innovation":"25/30","SOTA Delta":"13/15","Exp Quality":"13/15","Efficiency":"8/10","Generalization":"4/5","Domain Relevance":"22/25"},
+    code: "code/CQ-SID_EG-GRPO/",
+    link: "https://arxiv.org/abs/2605.14434"
+  },
+  {
+    id: "2605.15019",
+    title: "From Scenes to Elements: Multi-Granularity Evidence Retrieval for Verifiable Multimodal RAG (GranuRAG)",
+    authors: "Guanhua Chen, Chuyue Huang, Yutong Yao, Shudong Liu, Xueqing Song, Lidia S. Chao, Derek F. Wong · University of Macau · 2026-05-14",
+    score: 72,
+    bucket: "STRONG",
+    date: "2026-05-15",
+    tags: ["multimodal-RAG","visual-elements","evidence-retrieval","VQA"],
+    method_zh: "现有多模态 RAG 在场景（整图）级别检索证据导致细粒度查询失配。GranuRAG 将视觉元素（objects/regions）作为一等检索单元，三阶段：VLM驱动元素检测→CLIP元素embedding检索→多粒度证据融合生成。发布 GranuVistaVQA 基准（真实地标元素级标注）。",
+    method_en: "Existing multimodal RAG retrieves at scene level, causing granularity mismatch. GranuRAG treats visual elements as first-class retrieval units: VLM-driven element detection → CLIP element-embedding retrieval → multi-granularity evidence fusion. Releases GranuVistaVQA benchmark with element-level landmark annotations.",
+    innov_zh: "将检索粒度从场景下推至元素级是关键创新；可验证证据链支持错误诊断；可迁移至电商商品属性QA和内容核查。",
+    innov_en: "Pushing retrieval granularity from scene to element level is the key innovation. Verifiable evidence chains enable transparent error diagnosis. Directly transferable to e-commerce product attribute QA and content verification.",
+    metrics_zh: "GranuVistaVQA 基准，准确率相对6个强基线提升 +29.2%（包括GPT-4V direct）",
+    metrics_en: "GranuVistaVQA benchmark: +29.2% accuracy over 6 strong baselines (including GPT-4V direct)",
+    scoring: {"Innovation":"22/30","SOTA Delta":"13/15","Exp Quality":"11/15","Efficiency":"5/10","Generalization":"3/5","Domain Relevance":"18/25"},
+    code: null,
+    link: "https://arxiv.org/abs/2605.15019"
+  },
+  {
+    id: "2605.14291",
+    title: "To See is Not to Learn: Protecting Multimodal Data from Unauthorized Fine-Tuning of Large Vision-Language Models (MMGuard)",
+    authors: "arXiv:2605.14291 · 2026-05-14",
+    score: 64,
+    bucket: "STRONG",
+    date: "2026-05-15",
+    tags: ["data-protection","LVLM","multimodal","content-governance","AIGC"],
+    method_zh: "LVLM 普及使图文数据窃用问题浮现。MMGuard 对多模态数据加防护扰动（L-inf 约束视觉不变），被未授权微调后破坏视觉-语义对齐使模型失效，最大化跨模态 KL 散度。支持白盒和黑盒场景。",
+    method_en: "MMGuard adds protective perturbations (L-inf bounded, visually imperceptible) to multimodal data. When used for unauthorized fine-tuning, these perturbations maximize cross-modal KL divergence to destroy vision-language alignment, rendering the misuse-trained model ineffective. Supports white-box and black-box settings.",
+    innov_zh: "多模态数据版权防护新兴方向；防御性内容治理，与 AIGC 检测互补；为达人原创内容和电商商品主图提供技术版权保护。",
+    innov_en: "Emerging multimodal data copyright protection. Defensive content governance complementary to AIGC detection. Practical value for protecting creator content and e-commerce product images from AI misuse.",
+    metrics_zh: "未授权微调后 VQA 准确率相对下降 >40%；LPIPS 感知得分 ≤ 0.05（视觉不可察）",
+    metrics_en: "VQA accuracy drops >40% relative after unauthorized fine-tuning; LPIPS ≤ 0.05 (imperceptible visual change)",
+    scoring: {"Innovation":"20/30","SOTA Delta":"10/15","Exp Quality":"10/15","Efficiency":"6/10","Generalization":"3/5","Domain Relevance":"15/25"},
+    code: null,
+    link: "https://arxiv.org/abs/2605.14291"
+  },
+  {
+    id: "2605.14054",
+    title: "Bad Seeing or Bad Thinking? Rewarding Perception for Vision-Language Reasoning",
+    authors: "Haozhe Wang, Qixin Xu, Changpeng Wang, Taofeng Xue, Chong Peng, Wenhu Chen, Fangzhen Lin · ICML 2026 Spotlight",
+    score: 65,
+    bucket: "WEAK",
+    date: "2026-05-15",
+    tags: ["VLM","perception","RL","reasoning","ICML2026"],
+    method_zh: "VLM 推理失败时感知错误与逻辑错误混淆。引入感知保真度奖励（Perception Fidelity Reward），在 RLVR 框架中对视觉 grounding 单独打分，与答案奖励解耦，两步评价器分别算感知分和推理分，课程学习逐步提升难度。",
+    method_en: "VLM failures conflate bad perception ('bad seeing') with bad reasoning ('bad thinking'). A Perception Fidelity Reward is introduced in RLVR, independently scoring visual grounding separate from final answer rewards. A two-step evaluator computes perception and reasoning scores separately; curriculum learning gradually increases perceptual difficulty.",
+    innov_zh: "感知/推理双奖励解耦是对 RLVR 的重要补充（ICML 2026 Spotlight）；直接改进电商属性识别和内容审核 VLM。",
+    innov_en: "Decoupled perception/reasoning rewards are a valuable RLVR extension (ICML 2026 Spotlight). Directly improves VLMs for e-commerce attribute recognition and content moderation where perception errors are the primary failure mode.",
+    metrics_zh: "MMStar +4.1% abs，MathVista +3.8% abs，VQAv2感知困难分割 +6.2% abs（vs Base RLVR）",
+    metrics_en: "MMStar +4.1% abs; MathVista +3.8% abs; VQAv2 perception-hard split +6.2% abs vs Base RLVR",
+    scoring: {"Innovation":"21/30","SOTA Delta":"11/15","Exp Quality":"12/15","Efficiency":"6/10","Generalization":"4/5","Domain Relevance":"11/25"},
+    code: null,
+    link: "https://arxiv.org/abs/2605.14054"
+  },
+  {
+    id: "2605.10832",
+    title: "Towards On-Policy Data Evolution for Visual-Native Multimodal Deep Search Agents (ODE)",
+    authors: "arXiv:2605.10832 · 2026-05",
+    score: 62,
+    bucket: "WEAK",
+    date: "2026-05-15",
+    tags: ["search-agents","multimodal","RL","data-evolution","VLM"],
+    method_zh: "多模态搜索 Agent 丢弃中间工具返回图像且训练数据与策略漂移。Image Bank 协议将每个工具返回图像注册为全局可寻址引用（视觉原生多跳推理）；ODE 闭环生成器用当前策略 rollout 反馈自动精炼训练数据。",
+    method_en: "Multimodal search agents discard intermediate tool-returned images and suffer training-policy distribution drift. Image Bank Reference Protocol registers every tool-returned image as an addressable reference enabling visual-native multi-hop reasoning. ODE's closed-loop generator refines training data from current policy rollout feedback each round.",
+    innov_zh: "Image Bank 协议实现真正视觉原生多跳推理；ODE 闭环演化是 self-play 的实用工程化。",
+    innov_en: "Image Bank enables truly visual-native multi-hop reasoning. ODE closed-loop evolution is a practical engineering of self-play training for search agents.",
+    metrics_zh: "8个多模态深度搜索 benchmark 全面验证，复杂多跳任务相对静态数据训练显著提升",
+    metrics_en: "Validated on 8 multimodal deep search benchmarks; substantial gains on complex multi-hop tasks vs static SFT baseline",
+    scoring: {"Innovation":"20/30","SOTA Delta":"10/15","Exp Quality":"10/15","Efficiency":"5/10","Generalization":"3/5","Domain Relevance":"14/25"},
+    code: null,
+    link: "https://arxiv.org/abs/2605.10832"
+  },
+  {
+    id: "2605.07177",
+    title: "HyperEyes: Dual-Grained Efficiency-Aware Reinforcement Learning for Parallel Multimodal Search Agents",
+    authors: "DeepExperience team · 2026-05-07",
+    score: 60,
+    bucket: "WEAK",
+    date: "2026-05-15",
+    tags: ["search-agents","efficiency","RL","parallel","multimodal"],
+    method_zh: "现有多模态搜索 Agent 顺序调用工具导致轮次爆炸。HyperEyes 将视觉 grounding+检索融合为并行原子动作；TRACE 宏观效率奖励单调收紧无效工具调用；On-Policy Distillation 注入 teacher token 级纠错信号；首发 IMEB 效率感知 benchmark（300实例）。",
+    method_en: "Sequential tool calls in multimodal search agents cause redundant round explosions. HyperEyes fuses visual grounding+retrieval into a single parallel atomic action. TRACE macro reward monotonically tightens reference tool-call counts to suppress waste. On-Policy Distillation injects teacher token-level correction on failed rollouts. Introduces IMEB: first 300-instance benchmark jointly evaluating accuracy and inference efficiency.",
+    innov_zh: "并行原子动作+效率 first-class 训练目标是搜索 Agent RL 范式重要推进；IMEB 重新定义评测标准；代码开源。",
+    innov_en: "Parallel atomic actions and efficiency as first-class training objective are significant advances in search agent RL. IMEB redefines evaluation standards. Code is open-source (GitHub: DeepExperience/HyperEyes).",
+    metrics_zh: "6个搜索 benchmark 平均准确率 +9.9%（vs最强开源Agent），工具调用轮次减少 5.3×",
+    metrics_en: "6 search benchmarks: +9.9% avg accuracy vs best open-source agent; 5.3× fewer tool-call rounds",
+    scoring: {"Innovation":"21/30","SOTA Delta":"12/15","Exp Quality":"11/15","Efficiency":"8/10","Generalization":"3/5","Domain Relevance":"5/25"},
+    code: "https://github.com/DeepExperience/HyperEyes",
+    link: "https://arxiv.org/abs/2605.07177"
+  }
+];
+
+let currentLang = 'zh';
+
+function setLang(l) {
+  currentLang = l;
+  document.getElementById('btn-zh').classList.toggle('active', l==='zh');
+  document.getElementById('btn-en').classList.toggle('active', l==='en');
+  document.querySelectorAll('.card .body,.card .metrics').forEach(el => {
+    el.classList.toggle('lang-zh', l==='zh');
+    el.classList.toggle('lang-en', l==='en');
+  });
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-hi';
+  if (s >= 60) return 'score-mid';
+  return 'score-lo';
+}
+
+function buildCards() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  PAPERS.forEach(p => {
+    const sc = Object.entries(p.scoring).map(([k,v]) => `<div><span>${k}</span><br/><b>${v}</b></div>`).join('');
+    const codeStr = p.code
+      ? (p.code.startsWith('http')
+          ? `<a href="${p.code}" target="_blank">Code ↗</a>`
+          : `<span title="${p.code}">Code (local)</span>`)
+      : '<span>No public code</span>';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.dataset.score = p.score;
+    div.innerHTML = `
+      <div class="top">
+        <h2>${p.title}</h2>
+        <div class="score-badge ${scoreClass(p.score)}">${p.score}</div>
+      </div>
+      <div class="authors">${p.authors}</div>
+      <div class="tags">
+        <span class="tag ${p.bucket==='STRONG'?'strong':''}">${p.bucket}</span>
+        ${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+      </div>
+      <div class="body lang-zh">
+        <div class="zh"><b>方法概述：</b>${p.method_zh}</div>
+        <div class="en" style="display:none"><b>Method:</b> ${p.method_en}</div>
+        <div class="zh" style="margin-top:6px"><b>创新性：</b>${p.innov_zh}</div>
+        <div class="en" style="display:none"><b>Innovation:</b> ${p.innov_en}</div>
+      </div>
+      <div class="metrics lang-zh">
+        <div class="zh"><b>关键指标：</b> ${p.metrics_zh}</div>
+        <div class="en" style="display:none"><b>Key Metrics:</b> ${p.metrics_en}</div>
+      </div>
+      <details>
+        <summary>Scoring breakdown</summary>
+        <div class="score-row">${sc}</div>
+      </details>
+      <footer>
+        <span>📅 ${p.date}</span>
+        <span>${codeStr}</span>
+        <a href="${p.link}" target="_blank">arXiv ↗</a>
+      </footer>`;
+    grid.appendChild(div);
+  });
+  setLang(currentLang);
+}
+
+function filterCards() {
+  const min = parseInt(document.getElementById('scoreSlider').value);
+  document.getElementById('scoreVal').textContent = min;
+  document.querySelectorAll('.card').forEach(c => {
+    c.classList.toggle('hidden', parseInt(c.dataset.score) < min);
+  });
+}
+
+function goDate() {
+  const d = document.getElementById('datePicker').value;
+  if (d !== '2026-05-15') {
+    alert('Other dates are in their own dated folders. Navigate to ../' + d + '/web/index.html');
+  }
+}
+
+buildCards();
+</script>
+</body>
+</html>
