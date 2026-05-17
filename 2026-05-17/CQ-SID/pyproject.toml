@@ -1,0 +1,12 @@
+[project]
+name = "cq-sid-repro"
+version = "0.1.0"
+description = "Toy reproduction for CQ-SID + EG-GRPO (arXiv:2605.14434)"
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.0",
+  "numpy>=1.24",
+]
+
+[tool.setuptools]
+packages = ["cq_sid"]
