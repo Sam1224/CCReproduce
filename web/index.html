@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card-bg: #fff;
+    --primary: #2563eb;
+    --secondary: #64748b;
+    --accent: #0ea5e9;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --strong: #16a34a;
+    --weak: #d97706;
+    --badge-bg: #eff6ff;
+    --code-bg: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* Header */
+  header { background: var(--card-bg); border-bottom: 1px solid var(--border);
+           padding: 16px 32px; display: flex; align-items: center;
+           justify-content: space-between; position: sticky; top: 0; z-index: 100;
+           box-shadow: var(--shadow); }
+  .logo { font-size: 1.2rem; font-weight: 700; color: var(--primary);
+          letter-spacing: -0.5px; }
+  .logo span { color: var(--secondary); font-weight: 400; }
+  .header-controls { display: flex; gap: 12px; align-items: center; }
+  button.lang-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border);
+                    background: var(--card-bg); cursor: pointer; font-size: 0.85rem;
+                    color: var(--text); transition: all 0.15s; }
+  button.lang-btn:hover, button.lang-btn.active { background: var(--primary); color: #fff;
+                                                   border-color: var(--primary); }
+
+  /* Controls */
+  .controls { padding: 20px 32px; background: var(--card-bg);
+              border-bottom: 1px solid var(--border); display: flex;
+              gap: 16px; align-items: center; flex-wrap: wrap; }
+  .control-group { display: flex; align-items: center; gap: 8px; }
+  label { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  input[type="range"] { width: 140px; accent-color: var(--primary); }
+  select { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+           font-size: 0.85rem; background: var(--card-bg); color: var(--text); cursor: pointer; }
+  #score-display { font-size: 0.85rem; font-weight: 600; color: var(--primary);
+                   min-width: 32px; }
+  .results-count { margin-left: auto; font-size: 0.85rem; color: var(--muted); }
+
+  /* Main */
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+
+  /* Grid */
+  .papers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+                 gap: 20px; }
+
+  /* Cards */
+  .paper-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);
+                padding: 20px; transition: all 0.2s; box-shadow: var(--shadow);
+                display: flex; flex-direction: column; gap: 12px; }
+  .paper-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .paper-card.hidden { display: none; }
+
+  /* Card header */
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text); line-height: 1.4;
+                flex: 1; }
+  .score-badge { flex-shrink: 0; background: var(--primary); color: #fff;
+                 border-radius: 20px; padding: 4px 10px; font-size: 0.78rem;
+                 font-weight: 700; white-space: nowrap; }
+  .score-badge.high { background: #16a34a; }
+  .score-badge.medium { background: #d97706; }
+  .score-badge.low { background: #64748b; }
+
+  /* Tags */
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 0.72rem; padding: 3px 8px; border-radius: 12px; font-weight: 500; }
+  .tag.strong { background: #dcfce7; color: #16a34a; }
+  .tag.weak { background: #fef3c7; color: #d97706; }
+  .tag.domain { background: var(--badge-bg); color: var(--primary); }
+  .tag.date { background: #f1f5f9; color: var(--muted); }
+
+  /* Meta */
+  .card-meta { font-size: 0.8rem; color: var(--muted); }
+
+  /* Method overview */
+  .method-section { font-size: 0.85rem; }
+  .method-section .section-label { font-size: 0.75rem; font-weight: 600; color: var(--muted);
+                                    text-transform: uppercase; letter-spacing: 0.5px;
+                                    margin-bottom: 4px; }
+  .method-en, .method-zh { display: none; }
+  .method-en.active, .method-zh.active { display: block; }
+
+  /* Expandable sections */
+  .expand-btn { background: none; border: 1px solid var(--border); border-radius: 6px;
+                padding: 5px 10px; font-size: 0.78rem; cursor: pointer; color: var(--muted);
+                transition: all 0.15s; display: flex; align-items: center; gap: 4px; }
+  .expand-btn:hover { background: var(--badge-bg); color: var(--primary); border-color: var(--primary); }
+  .expand-content { display: none; }
+  .expand-content.open { display: block; }
+
+  /* Scoring table */
+  .score-table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin-top: 6px; }
+  .score-table th, .score-table td { padding: 4px 8px; text-align: left;
+                                      border-bottom: 1px solid var(--border); }
+  .score-table th { font-weight: 600; color: var(--muted); background: var(--code-bg); }
+  .score-table tr.total td { font-weight: 700; color: var(--primary); }
+
+  /* Score bar */
+  .score-bar-container { background: var(--code-bg); border-radius: 4px; height: 6px;
+                          overflow: hidden; margin-top: 4px; }
+  .score-bar { height: 100%; border-radius: 4px; background: var(--primary);
+               transition: width 0.5s ease; }
+
+  /* Links */
+  .card-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .card-links a { font-size: 0.8rem; color: var(--primary); text-decoration: none;
+                   padding: 3px 8px; border-radius: 6px; background: var(--badge-bg);
+                   transition: all 0.15s; }
+  .card-links a:hover { background: var(--primary); color: #fff; }
+
+  /* Figure placeholder */
+  .fig-placeholder { background: var(--code-bg); border-radius: 8px; padding: 16px;
+                     text-align: center; }
+  .fig-placeholder svg { max-width: 100%; }
+
+  /* Section headers */
+  .section-header { margin: 28px 0 16px; }
+  .section-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text);
+                        border-bottom: 2px solid var(--primary); padding-bottom: 6px;
+                        display: inline-block; }
+
+  /* Stats bar */
+  .stats-bar { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border);
+               padding: 14px 20px; margin-bottom: 20px; display: flex; gap: 24px;
+               flex-wrap: wrap; box-shadow: var(--shadow); }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+
+  /* Methodology figure */
+  .methodology-figure { background: var(--code-bg); border-radius: 10px; padding: 20px;
+                         margin: 8px 0; overflow-x: auto; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    main { padding: 16px; }
+    .controls { padding: 12px 16px; }
+    header { padding: 12px 16px; }
+    .papers-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CCReproduce <span>/ Daily AI Papers</span></div>
+  <div class="header-controls">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Date:</label>
+    <select id="date-picker" onchange="filterByDate(this.value)">
+      <option value="2026-05-17">2026-05-17</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Min Score:</label>
+    <input type="range" id="score-slider" min="0" max="100" value="0"
+           oninput="filterByScore(this.value)">
+    <span id="score-display">0</span>
+  </div>
+  <div class="control-group">
+    <label>Bucket:</label>
+    <select id="bucket-filter" onchange="filterByBucket(this.value)">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+  <div class="results-count" id="results-count">7 papers</div>
+</div>
+
+<main>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" id="stat-total">7</div>
+      <div class="stat-label">Papers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-strong">6</div>
+      <div class="stat-label">STRONG</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-reproduced">2</div>
+      <div class="stat-label">Reproduced</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-avg">71</div>
+      <div class="stat-label">Avg Score</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2026-05-17</div>
+      <div class="stat-label">Date (GMT+8)</div>
+    </div>
+  </div>
+
+  <div class="section-header"><h2 id="sh-papers">Today's Papers</h2></div>
+  <div class="papers-grid" id="papers-grid"></div>
+</main>
+
+<script>
+// ============================================================
+// Paper database
+// ============================================================
+const papers = [
+  {
+    id: "evade",
+    title: "EVADE: Multimodal Benchmark for Evasive Content Detection in E-Commerce Applications",
+    authors: "Anonymous (Chinese e-commerce platform research teams)",
+    affiliation: "Chinese E-commerce Platform Research",
+    date: "2026-05-17",
+    arxiv: "https://arxiv.org/abs/2505.17654",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-05-17/2026-05-17/code/EVADE",
+    bucket: "STRONG",
+    score: 88,
+    domains: ["E-commerce", "Content Moderation", "VLM Eval", "Violation Detection"],
+    method_en: "EVADE is the first expert-curated, Chinese, multimodal benchmark for evasive content detection in e-commerce. It contains 2,833 annotated text samples and 13,961 images across 6 high-risk product categories (body shaping, height growth, health supplements, etc.). Two complementary tasks: Single-Violation (fine-grained per-rule reasoning) and All-in-One (long-context unified policy instructions). 26 mainstream LLMs/VLMs are benchmarked, revealing substantial performance gaps on evasive samples.",
+    method_zh: "EVADE是首个由领域专家标注的中文多模态电商规避内容检测基准，包含2,833条文本样本和13,961张图片，覆盖塑形、增高、保健品等六大高风险品类。设计Single-Violation（细粒度短提示）和All-in-One（长上下文统一指令）两项互补任务，系统评估26个主流LLM/VLM的检测能力，揭示即使SOTA模型对规避内容也存在显著性能缺口。",
+    innovation_en: "First benchmark explicitly targeting 'evasive content' — products that superficially comply with policies while covertly conveying prohibited claims. Distinguishes from traditional adversarial attacks. Expert annotation from professionals with deep advertising law knowledge ensures regulation-aligned labels.",
+    innovation_zh: "首次明确定义"规避内容"与传统对抗攻击的区别：不是诱导模型犯错，而是通过语义歧义绕过平台审核。专家标注确保监管合规性。双任务设计揭示"政策规则清晰度"对模型判断的关键影响。",
+    metrics: "26 SOTA LLMs/VLMs evaluated; even best models (GPT-4o) show 15-25% lower F1 on evasive vs non-evasive samples; All-in-One setting narrows partial/full-match accuracy gap",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 26},
+      {dim: "SOTA Delta", max: 15, score: 11},
+      {dim: "Exp Quality", max: 15, score: 13},
+      {dim: "Efficiency", max: 10, score: 7},
+      {dim: "Generalization", max: 5, score: 4},
+      {dim: "Domain Rel.", max: 25, score: 27},
+    ]
+  },
+  {
+    id: "momoe",
+    title: "MoMoE: Mixture of Moderation Experts Framework for AI-Assisted Online Governance",
+    authors: "UIUC scuba-illinois group",
+    affiliation: "University of Illinois Urbana-Champaign",
+    date: "2026-05-17",
+    arxiv: "https://arxiv.org/abs/2505.14483",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-05-17/2026-05-17/code/MoMoE",
+    paper_code: "https://github.com/scuba-illinois/MoMoE",
+    bucket: "STRONG",
+    score: 80,
+    domains: ["Content Moderation", "Online Governance", "MoE", "Explainability"],
+    method_en: "MoMoE applies Mixture-of-Experts to content moderation via four operators: Allocate (RoBERTa-base classifier assigns weights to experts), Predict (specialized SLMs per community/norm-violation type), Aggregate (weighted dot product or majority vote), Explain (GPT-4o generates 3-level JSON justifications). Two variants: MoMoE-Community (7 subreddit experts) and MoMoE-NormVio (5 violation-type experts). Tested on 30 unseen subreddits.",
+    method_zh: "MoMoE将MoE范式应用于内容审核，四算子编排：Allocate（RoBERTa-base分配专家权重）→ Predict（社区/违规类型专用SLM推理）→ Aggregate（加权点积或多数投票）→ Explain（GPT-4o生成三级JSON说明）。两种实例化：MoMoE-Community（7个社区专家）和MoMoE-NormVio（5个违规类别专家）。在30个未见subreddit上测试。",
+    innovation_en: "Introduces MoE paradigm to content moderation, enabling scalable cross-community governance with interpretable decisions. Community-specialized small models handle inference cost-effectively; GPT-4o only invoked for explanations. Open-source EMNLP 2025 paper.",
+    innovation_zh: "将MoE架构引入内容审核，解决单一模型跨社区泛化难题。小专家模型承担推理，GPT-4o仅用于解释，成本可控。Explain算子提供结构化JSON说明，首次在审核框架层面集成解释机制。EMNLP 2025发表，代码开源。",
+    metrics: "Micro-F1: 0.72 (Community) / 0.67 (NormVio) on 30 unseen subreddits, matching/surpassing fine-tuned baselines (~0.70)",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 24},
+      {dim: "SOTA Delta", max: 15, score: 11},
+      {dim: "Exp Quality", max: 15, score: 12},
+      {dim: "Efficiency", max: 10, score: 7},
+      {dim: "Generalization", max: 5, score: 4},
+      {dim: "Domain Rel.", max: 25, score: 22},
+    ]
+  },
+  {
+    id: "gliguard",
+    title: "GLiGuard: Schema-Conditioned Classification for LLM Safeguard",
+    authors: "Fastino AI team",
+    affiliation: "Fastino AI",
+    date: "2026-05-08",
+    arxiv: "https://arxiv.org/abs/2605.07982",
+    code: "https://github.com/fastino-ai/GLiGuard",
+    bucket: "STRONG",
+    score: 72,
+    domains: ["LLM Safety", "Content Moderation", "Efficient Inference", "Guardrails"],
+    method_en: "GLiGuard is a 0.3B bidirectional encoder (adapted from GLiNER2) with schema conditioning — task definitions and label semantics are encoded directly in the input sequence. Single forward pass evaluates prompt safety, response safety, refusal detection, and 14 harm categories simultaneously. Eliminates autoregressive decoding bottleneck. 193 req/s on A100 with P99 < 1s.",
+    method_zh: "GLiGuard是0.3B双向编码器（改编自GLiNER2），通过schema conditioning将任务定义和标签语义直接编码进输入序列，单次前向传播同时评估prompt安全性、response安全性、拒绝检测和14类细粒度危害类别，彻底消除自回归解码瓶颈。A100上193 req/s，P99 < 1s。",
+    innovation_en: "16× faster than 7B-27B autoregressive guardrails with competitive accuracy. Schema conditioning enables zero-shot adaptation to new safety tasks without retraining.",
+    innovation_zh: "比7B-27B自回归护栏快16倍，精度相当。Schema conditioning支持新安全任务的零样本适配。",
+    metrics: "193 req/s @ A100, P99 < 1s, 16× speedup vs 7B+ models, accuracy competitive with 23-90× larger models",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 22},
+      {dim: "SOTA Delta", max: 15, score: 10},
+      {dim: "Exp Quality", max: 15, score: 10},
+      {dim: "Efficiency", max: 10, score: 9},
+      {dim: "Generalization", max: 5, score: 3},
+      {dim: "Domain Rel.", max: 25, score: 18},
+    ]
+  },
+  {
+    id: "gre_mc",
+    title: "Robust Multimodal Recommendation via Graph Retrieval-Enhanced Modality Completion",
+    authors: "National University of Singapore researchers",
+    affiliation: "National University of Singapore",
+    date: "2026-05-01",
+    arxiv: "https://arxiv.org/abs/2605.00670",
+    code: null,
+    bucket: "STRONG",
+    score: 70,
+    domains: ["Multimodal Recommendation", "Graph Neural Networks", "Missing Modality"],
+    method_en: "GRE-MC addresses modality incompleteness in multimodal recommendation. A modality-aware subgraph retrieval mechanism selects semantically relevant subgraphs from the global user-item interaction graph to provide context for completing missing modalities. A Graph Transformer jointly encodes query node and retrieved subgraph via global attention. A learnable sparse-routing codebook regularizes latent embeddings for robustness.",
+    method_zh: "GRE-MC针对多模态推荐中的模态缺失问题，提出模态感知子图检索机制，从全局用户-商品交互图中检索语义相关子图提供上下文，结合Graph Transformer联合编码，并通过可学习稀疏路由码本正则化潜在嵌入。",
+    innovation_en: "Applies RAG paradigm to modality completion — uses graph-based retrieval instead of static imputation. Jointly encodes retrieved context with the query for better completion quality.",
+    innovation_zh: "将RAG理念引入模态补全，以图检索替代静态填充。联合编码检索上下文与查询节点，提升补全质量，直接针对电商商品图片/文本缺失的真实痛点。",
+    metrics: "Consistent SOTA improvements on Baby, Sports, Clothing benchmarks; ~3-5% improvement on Recall@20 and NDCG@20",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 22},
+      {dim: "SOTA Delta", max: 15, score: 10},
+      {dim: "Exp Quality", max: 15, score: 11},
+      {dim: "Efficiency", max: 10, score: 6},
+      {dim: "Generalization", max: 5, score: 4},
+      {dim: "Domain Rel.", max: 25, score: 17},
+    ]
+  },
+  {
+    id: "rag_expiry",
+    title: "RAG-Enhanced LLMs for Dynamic Content Expiration Prediction in Web Search",
+    authors: "Tingyu Chen, Wenkai Zhang, Li Gao, Lixin Su, Ge Chen, Dawei Yin, Daiting Shi",
+    affiliation: "Baidu Inc., Beijing",
+    date: "2026-05-13",
+    arxiv: "https://arxiv.org/abs/2605.13052",
+    code: null,
+    bucket: "STRONG",
+    score: 65,
+    domains: ["RAG", "Content Quality", "Web Search", "LLM Industrial"],
+    method_en: "Reframes content freshness as 'Query-Aware Dynamic Content Expiration Prediction'. RAG augments LLMs with fine-grained temporal contexts extracted from documents to infer query-specific 'validity horizons'. A Contrastive Forward-Backward CoT mechanism suppresses temporal reasoning hallucinations. Deployed at Baidu Search with 14-day A/B test validation.",
+    method_zh: "将内容新鲜度从静态时间过滤重新定义为"查询感知语义有效期推断"。RAG增强LLM提取文档细粒度时间上下文，推断特定查询的语义有效期限。对比前向-后向CoT机制抑制时间推理幻觉。已在百度搜索线上部署，14天A/B实验验证。",
+    innovation_en: "Introduces query intent dimension to content freshness assessment. Contrastive CoT specifically designed for temporal reasoning hallucination suppression. Industrial deployment with A/B validation.",
+    innovation_zh: "引入查询意图维度判断内容时效性。针对时间推理幻觉设计的对比CoT。线上A/B实验验证有效性，工业可信度高。",
+    metrics: "12.81% drop in median day_away@4 for High-Freshness queries (14-day A/B test, Baidu Search live traffic)",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 19},
+      {dim: "SOTA Delta", max: 15, score: 10},
+      {dim: "Exp Quality", max: 15, score: 9},
+      {dim: "Efficiency", max: 10, score: 7},
+      {dim: "Generalization", max: 5, score: 3},
+      {dim: "Domain Rel.", max: 25, score: 17},
+    ]
+  },
+  {
+    id: "gliner_guard",
+    title: "GLiNER Guard: Unified Encoder Family for Production LLM Safety and Privacy",
+    authors: "HiveTraceLab team",
+    affiliation: "HiveTraceLab",
+    date: "2026-05-06",
+    arxiv: "https://arxiv.org/abs/2605.05277",
+    code: null,
+    bucket: "STRONG",
+    score: 60,
+    domains: ["LLM Safety", "PII Detection", "Efficient Inference"],
+    method_en: "GLiNER Guard unifies safety classification and PII span-level detection in a single encoder (3 variants: 145M compact uni/bi-encoder + 209M Omni). Trained on 467,273 examples across 6 task types. Introduces PII-Bench for end-to-end PII span detection evaluation. 193 req/s with dynamic batching.",
+    method_zh: "GLiNER Guard在单一编码器中统一安全分类和PII span级检测（3个变体：145M compact + 209M Omni），基于467,273条多任务样本训练。发布PII-Bench评测基准。A100动态批处理193 req/s。",
+    innovation_en: "Unifies safety classification + PII detection in one model, reducing inference calls. PII-Bench fills evaluation gap for span-level privacy detection.",
+    innovation_zh: "安全分类和PII检测统一于单模型，减少运维开销。PII-Bench填补span级隐私检测评测空白。",
+    metrics: "193 req/s, 145M-209M params, competitive accuracy with 7B+ models, SOTA on PII-Bench",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 18},
+      {dim: "SOTA Delta", max: 15, score: 9},
+      {dim: "Exp Quality", max: 15, score: 9},
+      {dim: "Efficiency", max: 10, score: 9},
+      {dim: "Generalization", max: 5, score: 3},
+      {dim: "Domain Rel.", max: 25, score: 12},
+    ]
+  },
+  {
+    id: "grep_search",
+    title: "Is Grep All You Need? How Agent Harnesses Reshape Agentic Search",
+    authors: "Sahil Sen, Akhil Kasturi, Elias Lumer, Anmol Gulati, Vamse Kumar Subbiah",
+    affiliation: "Independent researchers",
+    date: "2026-05-14",
+    arxiv: "https://arxiv.org/abs/2605.15184",
+    code: null,
+    bucket: "WEAK",
+    score: 52,
+    domains: ["Agentic RAG", "Retrieval Strategy", "LLM Agents", "Search"],
+    method_en: "Empirical study comparing grep and vector retrieval strategies across 4 agent harnesses (Chronos, Claude Code, Codex, Gemini CLI) on 116 questions from LongMemEval. Tests two tool output presentation modes: inline vs file-based. Key finding: inline grep outperforms inline vector across all harness-model pairs, sometimes by wide margins.",
+    method_zh: "系统对比grep与向量检索策略在4种Agent框架（Chronos、Claude Code、Codex、Gemini CLI）上的表现，基于LongMemEval的116个问题。测试两种工具输出呈现方式（inline/file-based）。核心发现：inline grep在所有框架上优于inline向量检索，有时差距显著。",
+    innovation_en: "Challenges the assumption that semantic vector search always outperforms keyword search in agentic settings. Systematic multi-harness testing provides reliable evidence. Identifies 'tool presentation mode' as a key but overlooked factor.",
+    innovation_zh: "挑战"向量语义搜索必然优于精确搜索"的行业惯例。多框架系统测试增强结论可信度。"工具输出呈现方式"的首次系统研究。",
+    metrics: "Inline grep wins all agent-model pairs on LongMemEval (116Q); gap widens with more distractor text",
+    scoring: [
+      {dim: "Innovation", max: 30, score: 16},
+      {dim: "SOTA Delta", max: 15, score: 8},
+      {dim: "Exp Quality", max: 15, score: 10},
+      {dim: "Efficiency", max: 10, score: 6},
+      {dim: "Generalization", max: 5, score: 3},
+      {dim: "Domain Rel.", max: 25, score: 9},
+    ]
+  },
+];
+
+// ============================================================
+// State
+// ============================================================
+let currentLang = 'en';
+let minScore = 0;
+let currentBucket = 'all';
+let currentDate = '2026-05-17';
+
+// ============================================================
+// Render
+// ============================================================
+function getScoreClass(score) {
+  if (score >= 80) return 'high';
+  if (score >= 60) return 'medium';
+  return 'low';
+}
+
+function renderScoring(scoring) {
+  const total = scoring.reduce((s, r) => s + r.score, 0);
+  const maxTotal = scoring.reduce((s, r) => s + r.max, 0);
+  const rows = scoring.map(r => `
+    <tr>
+      <td>${r.dim}</td>
+      <td>${r.score}/${r.max}</td>
+      <td style="width:80px">
+        <div class="score-bar-container">
+          <div class="score-bar" style="width:${(r.score/r.max)*100}%"></div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+  return `
+    <table class="score-table">
+      <thead><tr><th>Dimension</th><th>Score</th><th>Bar</th></tr></thead>
+      <tbody>
+        ${rows}
+        <tr class="total"><td><strong>Total</strong></td><td><strong>${total}/${maxTotal}</strong></td><td></td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCard(p) {
+  const scoreClass = getScoreClass(p.score);
+  const codeLink = p.code ? `<a href="${p.code}" target="_blank">💻 Code</a>` : '';
+  const paperCodeLink = p.paper_code ? `<a href="${p.paper_code}" target="_blank">🔗 Official Code</a>` : '';
+
+  return `
+  <div class="paper-card" data-score="${p.score}" data-bucket="${p.bucket}" data-date="${p.date}" id="card-${p.id}">
+    <div class="card-header">
+      <div class="card-title">${p.title}</div>
+      <div class="score-badge ${scoreClass}">${p.score}</div>
+    </div>
+
+    <div class="tags">
+      <span class="tag ${p.bucket.toLowerCase()}">${p.bucket}</span>
+      <span class="tag date">📅 ${p.date}</span>
+      ${p.domains.map(d => `<span class="tag domain">${d}</span>`).join('')}
+    </div>
+
+    <div class="card-meta">${p.authors} · <em>${p.affiliation}</em></div>
+
+    <div class="method-section">
+      <div class="section-label">Method Overview</div>
+      <div class="method-en ${currentLang === 'en' ? 'active' : ''}">${p.method_en}</div>
+      <div class="method-zh ${currentLang === 'zh' ? 'active' : ''}">${p.method_zh}</div>
+    </div>
+
+    <div>
+      <button class="expand-btn" onclick="toggleExpand('innov-${p.id}')">
+        💡 Innovation <span id="innov-${p.id}-icon">▼</span>
+      </button>
+      <div id="innov-${p.id}" class="expand-content">
+        <div style="padding:10px;font-size:0.83rem;background:var(--code-bg);border-radius:6px;margin-top:6px">
+          <div class="method-en ${currentLang === 'en' ? 'active' : ''}">${p.innovation_en}</div>
+          <div class="method-zh ${currentLang === 'zh' ? 'active' : ''}">${p.innovation_zh}</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="expand-btn" onclick="toggleExpand('metrics-${p.id}')">
+        📊 Key Metrics <span id="metrics-${p.id}-icon">▼</span>
+      </button>
+      <div id="metrics-${p.id}" class="expand-content">
+        <div style="padding:10px;font-size:0.83rem;background:var(--code-bg);border-radius:6px;margin-top:6px">
+          ${p.metrics}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="expand-btn" onclick="toggleExpand('score-${p.id}')">
+        🎯 Scoring <span id="score-${p.id}-icon">▼</span>
+      </button>
+      <div id="score-${p.id}" class="expand-content">
+        <div style="margin-top:6px">${renderScoring(p.scoring)}</div>
+      </div>
+    </div>
+
+    <div class="card-links">
+      <a href="${p.arxiv}" target="_blank">📄 ArXiv</a>
+      ${codeLink}
+      ${paperCodeLink}
+    </div>
+  </div>`;
+}
+
+function renderAll() {
+  const grid = document.getElementById('papers-grid');
+  grid.innerHTML = papers.map(p => renderCard(p)).join('');
+  applyFilters();
+}
+
+// ============================================================
+// Filters
+// ============================================================
+function applyFilters() {
+  let visible = 0;
+  papers.forEach(p => {
+    const card = document.getElementById(`card-${p.id}`);
+    const show = p.score >= minScore
+               && (currentBucket === 'all' || p.bucket === currentBucket)
+               && (currentDate === 'all' || p.date.startsWith(currentDate.slice(0, 7)));
+    if (card) {
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    }
+  });
+  document.getElementById('results-count').textContent = `${visible} papers`;
+}
+
+function filterByScore(val) {
+  minScore = parseInt(val);
+  document.getElementById('score-display').textContent = val;
+  applyFilters();
+}
+
+function filterByBucket(val) {
+  currentBucket = val;
+  applyFilters();
+}
+
+function filterByDate(val) {
+  currentDate = val;
+  applyFilters();
+}
+
+// ============================================================
+// Language toggle
+// ============================================================
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.querySelectorAll('.method-en').forEach(el => el.classList.toggle('active', lang === 'en'));
+  document.querySelectorAll('.method-zh').forEach(el => el.classList.toggle('active', lang === 'zh'));
+  document.getElementById('sh-papers').textContent = lang === 'zh' ? '今日论文' : "Today's Papers";
+}
+
+// ============================================================
+// Expand/collapse
+// ============================================================
+function toggleExpand(id) {
+  const el = document.getElementById(id);
+  const icon = document.getElementById(id + '-icon');
+  const isOpen = el.classList.toggle('open');
+  if (icon) icon.textContent = isOpen ? '▲' : '▼';
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderAll();
+</script>
+</body>
+</html>
