@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #fff; --border: #e1e4e8;
+    --text: #24292e; --muted: #6a737d; --accent: #0366d6;
+    --tag-ecom: #0075ca; --tag-gov: #e36209; --tag-mllm: #6f42c1;
+    --tag-rec: #28a745; --tag-agent: #d73a49; --tag-bench: #2ea44f;
+    --score-high: #28a745; --score-mid: #fd7e14; --score-low: #6c757d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+  header { background: #1b1f23; color: #fff; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.3px; }
+  header small { color: #8b949e; font-size: 12px; }
+
+  .toolbar { background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .toolbar label { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .toolbar input[type=range] { width: 120px; }
+  .toolbar select, .toolbar input[type=date] { padding: 4px 8px; border: 1px solid var(--border);
+    border-radius: 4px; font-size: 13px; }
+  .lang-btn { padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; font-size: 13px; background: var(--bg); }
+  .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  #score-display { font-weight: 600; color: var(--accent); min-width: 30px; }
+
+  main { max-width: 1400px; margin: 0 auto; padding: 20px 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px; display: flex; flex-direction: column; gap: 10px;
+    transition: box-shadow 0.15s; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .card.hidden { display: none; }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 14px; font-weight: 600; line-height: 1.4;
+    color: var(--text); flex: 1; }
+  .card-title a { color: inherit; text-decoration: none; }
+  .card-title a:hover { color: var(--accent); }
+  .score-badge { font-size: 13px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    white-space: nowrap; }
+  .score-high { background: #d4edda; color: #155724; }
+  .score-mid { background: #fff3cd; color: #856404; }
+  .score-low { background: #f8d7da; color: #721c24; }
+
+  .card-meta { font-size: 12px; color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 12px;
+    color: #fff; font-weight: 500; }
+  .tag-ecom { background: var(--tag-ecom); }
+  .tag-gov { background: var(--tag-gov); }
+  .tag-mllm { background: var(--tag-mllm); }
+  .tag-rec { background: var(--tag-rec); }
+  .tag-agent { background: var(--tag-agent); }
+  .tag-bench { background: var(--tag-bench); }
+
+  .section { cursor: pointer; user-select: none; }
+  .section summary { font-size: 13px; font-weight: 600; color: var(--muted);
+    padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+  .section summary::before { content: "▶"; font-size: 10px; transition: transform 0.15s; }
+  .section[open] summary::before { transform: rotate(90deg); }
+  .section-body { margin-top: 6px; font-size: 13px; color: var(--text); }
+
+  .method-en, .method-zh { font-size: 13px; line-height: 1.6; }
+  .hidden-lang { display: none; }
+
+  .metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+  .metrics-table th { background: var(--bg); padding: 4px 8px; text-align: left;
+    border: 1px solid var(--border); font-weight: 600; color: var(--muted); }
+  .metrics-table td { padding: 4px 8px; border: 1px solid var(--border); }
+
+  .score-bar { display: flex; gap: 4px; flex-direction: column; margin-top: 4px; }
+  .score-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .score-label { width: 140px; color: var(--muted); flex-shrink: 0; }
+  .score-track { flex: 1; height: 6px; background: var(--bg); border-radius: 3px;
+    border: 1px solid var(--border); overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+  .score-val { width: 32px; text-align: right; font-weight: 600; color: var(--text); }
+
+  .code-link { font-size: 12px; }
+  .code-link a { color: var(--accent); text-decoration: none; }
+  .code-link a:hover { text-decoration: underline; }
+
+  footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce — Daily AI Paper Inspection</h1>
+    <small>E-commerce Content Ecosystem &amp; Influencer Governance · 电商内容生态 &amp; 达人治理</small>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
+  </div>
+</header>
+
+<div class="toolbar">
+  <label>
+    Date:
+    <select id="date-picker" onchange="filterDate()">
+      <option value="2026-05-19">2026-05-19</option>
+      <option value="2026-05-17">2026-05-17</option>
+      <option value="2026-05-15">2026-05-15</option>
+      <option value="2026-05-13">2026-05-13</option>
+      <option value="all">All dates</option>
+    </select>
+  </label>
+  <label>
+    Min Score: <span id="score-display">60</span>
+    <input type="range" min="0" max="100" value="60" id="score-slider" oninput="filterScore(this.value)" />
+  </label>
+  <label>
+    Domain:
+    <select id="domain-filter" onchange="filterDomain()">
+      <option value="all">All domains</option>
+      <option value="governance">Content Governance</option>
+      <option value="ecommerce">E-commerce</option>
+      <option value="recommendation">Recommendation</option>
+      <option value="multimodal">Multimodal / MLLM</option>
+    </select>
+  </label>
+</div>
+
+<main>
+  <div class="grid" id="paper-grid">
+
+    <!-- Paper 1: When Rules Fall Short -->
+    <div class="card" data-score="89" data-date="2026-05-19" data-domain="governance">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2601.11634" target="_blank">
+            When Rules Fall Short: Agent-Driven Discovery of Emerging Content Issues in Short Video Platforms
+          </a>
+        </div>
+        <span class="score-badge score-high">89</span>
+      </div>
+      <div class="card-meta">TikTok Inc. · arXiv:2601.11634 · Jan 2026</div>
+      <div class="tags">
+        <span class="tag tag-gov">Content Governance</span>
+        <span class="tag tag-agent">LLM Agent</span>
+        <span class="tag tag-rec">Clustering</span>
+        <span class="tag tag-mllm">Multimodal</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            Short-video platforms face rapidly emerging content issues that outpace manual policy discovery.
+            <b>AgentIssueDiscovery</b> proposes a 3-stage pipeline: (1) A multimodal LLM Agent recalls videos
+            potentially containing new issues by comparing against existing policies; (2) Two-stage clustering
+            groups recalled videos into coarse clusters, then fine-grained sub-clusters to distinguish <i>variants</i>
+            vs. <i>new issues</i>; (3) Annotation policies are auto-generated from clusters and queued for human review.
+            Deployed at TikTok, achieving F1 +20% and ~15% reduction in problematic video views.
+          </div>
+          <div class="method-zh hidden-lang">
+            短视频平台新兴内容问题涌现速度超过人工发现能力。AgentIssueDiscovery 提出三阶段 pipeline：
+            (1) 多模态 LLM Agent 召回可能包含新问题的视频；
+            (2) 两阶段聚类区分已知变体与全新子问题；
+            (3) 自动生成标注策略供人工审核。
+            已在 TikTok 实际部署，F1 提升 >20%，违规视频曝光减少约 15%。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Innovation / 创新分析</summary>
+        <div class="section-body">
+          <div class="method-en">First systematic automated framework for emerging issue discovery in video platforms.
+            Two-stage clustering novel: coarse groups + fine discrimination of variant vs. new.
+            LLM multimodal reasoning outperforms keyword/rule approaches. Closed-loop policy iteration.
+          </div>
+          <div class="method-zh hidden-lang">首个系统化新兴内容问题自动发现框架；两阶段聚类区分变体与新问题；多模态 LLM 超越规则方法；策略迭代闭环。</div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Key Metrics / 关键指标</summary>
+        <div class="section-body">
+          <table class="metrics-table">
+            <tr><th>Metric</th><th>Value vs. Manual</th></tr>
+            <tr><td>F1 Score</td><td><b>+20%</b></td></tr>
+            <tr><td>Problematic video views</td><td><b>−15%</b></td></tr>
+            <tr><td>Policy iteration time</td><td>Significantly reduced</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:83%"></div></div><span class="score-val">25</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:87%"></div></div><span class="score-val">13</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:87%"></div></div><span class="score-val">13</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:90%"></div></div><span class="score-val">9</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:100%"></div></div><span class="score-val">25</span></div>
+          </div>
+        </div>
+      </details>
+      <div class="code-link">📦 Reproduction: <a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-19/code/AgentIssueDiscovery">code/AgentIssueDiscovery/</a></div>
+    </div>
+
+    <!-- Paper 2: E-VAds -->
+    <div class="card" data-score="84" data-date="2026-05-19" data-domain="ecommerce">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2602.08355" target="_blank">
+            E-VAds: An E-commerce Short Videos Understanding Benchmark for MLLMs
+          </a>
+        </div>
+        <span class="score-badge score-high">84</span>
+      </div>
+      <div class="card-meta">Alibaba / Taobao · arXiv:2602.08355 · Feb 2026</div>
+      <div class="tags">
+        <span class="tag tag-ecom">E-commerce</span>
+        <span class="tag tag-mllm">MLLM</span>
+        <span class="tag tag-bench">Benchmark</span>
+        <span class="tag tag-agent">Multi-Agent</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            E-commerce short videos (e.g., Taobao product demos) require understanding <i>commercial intent</i>,
+            a dimension absent from general video benchmarks. <b>E-VAds</b> contributes: (1) 3,961 Taobao videos
+            + 19,785 open-ended Q&amp;A pairs covering product ID, commercial intent, marketing strategy;
+            (2) A multimodal information density framework showing e-commerce videos are significantly denser
+            than general video; (3) <b>E-VAds-R1</b>: multi-agent annotation + RL fine-tuning (GRPO) achieving
+            109.2% improvement in commercial intent reasoning with only a few hundred samples.
+          </div>
+          <div class="method-zh hidden-lang">
+            电商短视频需要理解商业意图，现有通用基准不覆盖此维度。E-VAds 提供：
+            (1) 淘宝 3961 条视频 + 19785 个开放式 Q&A；
+            (2) 信息密度量化框架（电商视频密度显著更高）；
+            (3) E-VAds-R1：多智能体标注+RL微调，商业意图推理提升 109.2%，仅用数百样本。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Innovation / 创新分析</summary>
+        <div class="section-body">
+          <div class="method-en">First benchmark for e-commerce short video MLLM evaluation. Information density
+            framework objectively quantifies domain complexity. Multi-agent annotation scales labeling.
+            Few-shot RL fine-tuning (109.2% gain) shows remarkable sample efficiency.
+          </div>
+          <div class="method-zh hidden-lang">首个电商短视频 MLLM 基准；密度框架量化领域复杂度；多智能体标注降低成本；少样本 RL 微调效率极高。</div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Key Metrics / 关键指标</summary>
+        <div class="section-body">
+          <table class="metrics-table">
+            <tr><th>Metric</th><th>E-VAds-R1 vs Base MLLM</th></tr>
+            <tr><td>Commercial Intent Reasoning</td><td><b>+109.2%</b></td></tr>
+            <tr><td>Training Samples Needed</td><td>~few hundred</td></tr>
+            <tr><td>E-com Info Density</td><td>Significantly > general video</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">24</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">12</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">12</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:96%"></div></div><span class="score-val">24</span></div>
+          </div>
+        </div>
+      </details>
+      <div class="code-link">📦 Reproduction: <a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-19/code/EVAds">code/EVAds/</a></div>
+    </div>
+
+    <!-- Paper 3: TIGER-FG -->
+    <div class="card" data-score="83" data-date="2026-05-19" data-domain="ecommerce">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2605.18434" target="_blank">
+            TIGER-FG: Text-Guided Implicit Fine-Grained Grounding for E-commerce Retrieval
+          </a>
+        </div>
+        <span class="score-badge score-high">83</span>
+      </div>
+      <div class="card-meta">arXiv:2605.18434 · May 2026 ✦ May 19 listing</div>
+      <div class="tags">
+        <span class="tag tag-ecom">E-commerce Retrieval</span>
+        <span class="tag tag-mllm">Visual Grounding</span>
+        <span class="tag tag-rec">Distillation</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            E-commerce <b>IMMR (Implicit Multi-step Multi-modal Retrieval)</b>: user uploads a crop image
+            (e.g., a watch detail shot), retrieve the full product page (full image + structured text).
+            <b>TIGER-FG</b> uses text attributes as semantic guidance in a cross-attention over image patches
+            — no explicit object detection required. Combined with <b>Dual Distillation</b>:
+            spatial-relational distillation (patch-level attention from box priors) and
+            similarity-distribution distillation (soft targets across batch).
+          </div>
+          <div class="method-zh hidden-lang">
+            电商图搜 IMMR 任务：用户上传局部目标图，检索完整商品页。
+            TIGER-FG 用商品文本属性作为语义引导，对全图 patch 做 cross-attention 聚合，
+            无需显式目标检测。配合双蒸馏策略（空间关系蒸馏+相似度分布蒸馏），端到端实现细粒度检索。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Innovation / 创新分析</summary>
+        <div class="section-body">
+          <div class="method-en">Novel IMMR task definition. Text-semantic guided implicit grounding avoids
+            error-propagating two-stage detection. Dual distillation provides supervision without box labels.
+            Online-serving friendly (no detection overhead).
+          </div>
+          <div class="method-zh hidden-lang">IMMR 任务定义新颖；文本引导隐式 Grounding 避免显式检测误差传播；双蒸馏在无框标注时提供有效监督；在线服务友好。</div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">24</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">11</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">12</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:96%"></div></div><span class="score-val">24</span></div>
+          </div>
+        </div>
+      </details>
+      <div class="code-link">📦 Reproduction: <a href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-19/TIGER-FG">TIGER-FG/</a> (pre-built)</div>
+    </div>
+
+    <!-- Paper 4: CVA -->
+    <div class="card" data-score="79" data-date="2026-05-19" data-domain="recommendation">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2605.08810" target="_blank">
+            CVA: Compressed Video Aggregator for Efficient Micro-Video Recommendation
+          </a>
+        </div>
+        <span class="score-badge score-mid">79</span>
+      </div>
+      <div class="card-meta">arXiv:2605.08810 · May 9, 2026</div>
+      <div class="tags">
+        <span class="tag tag-rec">Video Recommendation</span>
+        <span class="tag tag-mllm">VFM</span>
+        <span class="tag tag-ecom">Short Video</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            <b>CVA</b> addresses the efficiency bottleneck of integrating Video Foundation Models (VFMs)
+            into micro-video recommendation. Key ideas: (1) Freeze VFM, train lightweight aggregator only
+            to decouple content understanding from preference learning; (2) CLIP + title-guided semantic
+            keyframe resampling to reduce frame redundancy; (3) Latent reasoning aggregation without
+            cross-attention projection → compact video embeddings. Consistent gains on MicroLens &amp; Short-Video
+            with orders-of-magnitude reduction in GPU memory &amp; training time.
+          </div>
+          <div class="method-zh hidden-lang">
+            CVA 解决 VFM 集成到微视频推荐的效率瓶颈。核心：(1) 冻结 VFM，只训练轻量聚合器；
+            (2) CLIP+标题引导语义关键帧重采样；(3) 无 cross-attention 的隐式推理聚合。
+            在 MicroLens 和 Short-Video 上持续提升效果，训练时间/显存降低数量级。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Key Metrics / 关键指标</summary>
+        <div class="section-body">
+          <table class="metrics-table">
+            <tr><th>Dataset</th><th>Result</th></tr>
+            <tr><td>MicroLens (Recall/NDCG)</td><td>Consistent gains</td></tr>
+            <tr><td>Short-Video (Recall/NDCG)</td><td>Consistent gains</td></tr>
+            <tr><td>Training time</td><td>Orders-of-magnitude ↓</td></tr>
+            <tr><td>GPU memory</td><td>Orders-of-magnitude ↓</td></tr>
+          </table>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">20</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">12</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">11</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:100%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:88%"></div></div><span class="score-val">22</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Paper 5: AuDisAgent -->
+    <div class="card" data-score="76" data-date="2026-05-19" data-domain="governance">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2605.02939" target="_blank">
+            AuDisAgent: Training-Free Multimodal Controversy Detection Multi-Agent Framework
+          </a>
+        </div>
+        <span class="score-badge score-mid">76</span>
+      </div>
+      <div class="card-meta">Sichuan Univ. / NTU · arXiv:2605.02939 · May 1, 2026</div>
+      <div class="tags">
+        <span class="tag tag-gov">Content Governance</span>
+        <span class="tag tag-agent">Multi-Agent</span>
+        <span class="tag tag-mllm">Multimodal</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            <b>AuDisAgent</b> reframes Multimodal Controversy Detection (MCD) as a dynamic audience
+            dissemination process rather than static feature classification. Three specialized Screening Agents
+            — Video Agent, Comment Agent, Interaction Agent — simulate different audience groups from
+            visual, textual, and cross-modal perspectives. The framework is <b>training-free</b> (no fine-tuning
+            needed) and provides interpretable controversy analysis for social video platforms.
+          </div>
+          <div class="method-zh hidden-lang">
+            AuDisAgent 将多模态争议检测重建为受众传播动态过程。三类筛选 Agent（Video、Comment、Interaction）
+            分别模拟不同受众的评价视角，免训练实现可解释的争议内容检测，适用于社交视频平台风险管理。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">22</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:88%"></div></div><span class="score-val">22</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Paper 6: Thinking Broad Acting Fast -->
+    <div class="card" data-score="75" data-date="2026-05-19" data-domain="ecommerce">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2601.21611" target="_blank">
+            Thinking Broad, Acting Fast: Latent Reasoning Distillation for E-Commerce Relevance
+          </a>
+        </div>
+        <span class="score-badge score-mid">75</span>
+      </div>
+      <div class="card-meta">WWW 2026 · arXiv:2601.21611 · Jan 2026</div>
+      <div class="tags">
+        <span class="tag tag-ecom">E-commerce Search</span>
+        <span class="tag tag-rec">Distillation</span>
+        <span class="tag tag-agent">CoT</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            Multi-Perspective Chain-of-Thought (CoT) reasoning captures the multi-dimensional nature of
+            e-commerce relevance (user intent, attribute matching, business rules). Latent Reasoning Distillation
+            transfers this rich reasoning capability into a compact student model that internalizes CoT in
+            latent space — enabling low-latency online serving without explicit CoT generation.
+          </div>
+          <div class="method-zh hidden-lang">
+            多视角 CoT 覆盖电商相关性多维本质（用户意图/属性/业务规则），隐式推理蒸馏将推理能力压缩到
+            轻量学生模型的隐式空间，实现低延迟在线服务。发表于 WWW 2026。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">22</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">11</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">8</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">20</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Paper 7: MAP-V -->
+    <div class="card" data-score="72" data-date="2026-05-19" data-domain="recommendation">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2604.17459" target="_blank">
+            MAP-V: Transparent Recommendation Filtering via Multimodal Multi-Agent Collaboration
+          </a>
+        </div>
+        <span class="score-badge score-mid">72</span>
+      </div>
+      <div class="card-meta">Fudan Univ. / Microsoft Research Asia · arXiv:2604.17459 · Apr 2026</div>
+      <div class="tags">
+        <span class="tag tag-rec">Recommendation Filtering</span>
+        <span class="tag tag-mllm">Multimodal</span>
+        <span class="tag tag-agent">Multi-Agent</span>
+        <span class="tag tag-gov">Governance</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            <b>MAP-V</b> addresses two LLM recommendation filtering failures: (1) lack of multimodal awareness
+            for visual content; (2) "over-association" misblocking benign content. Solution: Editable Preference
+            Graph + 4-Agent pipeline (Intent Parser → Judge → Dispute → RAH Agent for history retrieval).
+            End-cloud collaborative architecture balances latency and accuracy.
+          </div>
+          <div class="method-zh hidden-lang">
+            MAP-V 解决推荐过滤两大问题：多模态盲区和过度关联误判。
+            可编辑偏好图+四 Agent 协作（意图解析→判断→争议→历史检索）实现精准意图对齐，端云协同平衡效率。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">22</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:70%"></div></div><span class="score-val">7</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:60%"></div></div><span class="score-val">3</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">20</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Paper 8: GRE-MC -->
+    <div class="card" data-score="70" data-date="2026-05-19" data-domain="recommendation">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2605.00670" target="_blank">
+            GRE-MC: Robust Multimodal Recommendation via Graph Retrieval-Enhanced Modality Completion
+          </a>
+        </div>
+        <span class="score-badge score-mid">70</span>
+      </div>
+      <div class="card-meta">National University of Singapore · arXiv:2605.00670 · May 2026</div>
+      <div class="tags">
+        <span class="tag tag-rec">Recommendation</span>
+        <span class="tag tag-mllm">Multimodal</span>
+        <span class="tag tag-rec">Graph</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            Real-world multimodal recommendation data suffers from <b>modality incompleteness</b> (sensor failures,
+            annotation scarcity). <b>GRE-MC</b>: (1) Modality-aware subgraph retrieval from the full user-item graph
+            to provide rich context; (2) Graph Transformer jointly encodes query node + retrieved subgraph via
+            global attention to complete missing features; (3) Learnable sparse-routing codebook regularizes
+            latent embeddings for robustness.
+          </div>
+          <div class="method-zh hidden-lang">
+            GRE-MC 解决多模态推荐中的模态缺失问题。模态感知子图检索提供丰富上下文，图 Transformer
+            全局注意力联合编码补全缺失模态，可学习稀疏路由码本正则化嵌入提升鲁棒性。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:73%"></div></div><span class="score-val">22</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:60%"></div></div><span class="score-val">6</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:80%"></div></div><span class="score-val">4</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:72%"></div></div><span class="score-val">18</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Paper 9: Who Decides -->
+    <div class="card" data-score="61" data-date="2026-05-19" data-domain="governance">
+      <div class="card-header">
+        <div class="card-title">
+          <a href="https://arxiv.org/abs/2605.01416" target="_blank">
+            Who Decides What Is Harmful? Content Moderation via Multi-Agent Personalised Inference
+          </a>
+        </div>
+        <span class="score-badge score-mid">61</span>
+      </div>
+      <div class="card-meta">arXiv:2605.01416 · May 2, 2026</div>
+      <div class="tags">
+        <span class="tag tag-gov">Content Moderation</span>
+        <span class="tag tag-agent">Multi-Agent</span>
+        <span class="tag tag-mllm">LLM</span>
+      </div>
+      <details class="section">
+        <summary>Method Overview</summary>
+        <div class="section-body">
+          <div class="method-en">
+            Proposes an LLM multi-agent personalized content moderation framework with Expert Agents
+            (domain-specific), Manager Agent (orchestration), and Ghost Profile Agent (user perspective simulation).
+            Filters content based on individual user sensitivity profiles. Evaluated against non-personalized baselines:
+            up to 32% accuracy improvement.
+          </div>
+          <div class="method-zh hidden-lang">
+            LLM 多智能体个性化内容审核框架：Expert Agents（领域专家）、Manager Agent（协调）、
+            Ghost Profile Agent（用户视角模拟）。基于用户敏感性档案过滤内容，准确率较非个性化基线提升 32%。
+          </div>
+        </div>
+      </details>
+      <details class="section">
+        <summary>Score Breakdown / 评分明细</summary>
+        <div class="section-body">
+          <div class="score-bar">
+            <div class="score-row"><span class="score-label">Innovation (30)</span><div class="score-track"><div class="score-fill" style="width:60%"></div></div><span class="score-val">18</span></div>
+            <div class="score-row"><span class="score-label">SOTA Delta (15)</span><div class="score-track"><div class="score-fill" style="width:67%"></div></div><span class="score-val">10</span></div>
+            <div class="score-row"><span class="score-label">Exp. Quality (15)</span><div class="score-track"><div class="score-fill" style="width:60%"></div></div><span class="score-val">9</span></div>
+            <div class="score-row"><span class="score-label">Efficiency (10)</span><div class="score-track"><div class="score-fill" style="width:50%"></div></div><span class="score-val">5</span></div>
+            <div class="score-row"><span class="score-label">Generalization (5)</span><div class="score-track"><div class="score-fill" style="width:60%"></div></div><span class="score-val">3</span></div>
+            <div class="score-row"><span class="score-label">Domain Rel. (25)</span><div class="score-track"><div class="score-fill" style="width:64%"></div></div><span class="score-val">16</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+  </div><!-- /grid -->
+</main>
+
+<footer>
+  CCReproduce · Daily AI Paper Inspection · E-commerce Content Ecosystem &amp; Influencer Governance<br/>
+  Generated: 2026-05-20 00:30 GMT+8 · Papers indexed: 2026-05-19
+</footer>
+
+<script>
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.method-en').forEach(el => {
+    el.classList.toggle('hidden-lang', lang !== 'en');
+  });
+  document.querySelectorAll('.method-zh').forEach(el => {
+    el.classList.toggle('hidden-lang', lang !== 'zh');
+  });
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+}
+
+function filterScore(val) {
+  document.getElementById('score-display').textContent = val;
+  const threshold = parseInt(val);
+  document.querySelectorAll('.card').forEach(card => {
+    const score = parseInt(card.dataset.score || '0');
+    const dateHidden = card.classList.contains('date-hidden');
+    const domainHidden = card.classList.contains('domain-hidden');
+    const scoreHidden = score < threshold;
+    card.classList.toggle('score-hidden', scoreHidden);
+    card.classList.toggle('hidden', scoreHidden || dateHidden || domainHidden);
+  });
+}
+
+function filterDate() {
+  const val = document.getElementById('date-picker').value;
+  document.querySelectorAll('.card').forEach(card => {
+    const dateHidden = val !== 'all' && card.dataset.date !== val;
+    card.classList.toggle('date-hidden', dateHidden);
+    const scoreHidden = card.classList.contains('score-hidden');
+    const domainHidden = card.classList.contains('domain-hidden');
+    card.classList.toggle('hidden', scoreHidden || dateHidden || domainHidden);
+  });
+}
+
+function filterDomain() {
+  const val = document.getElementById('domain-filter').value;
+  document.querySelectorAll('.card').forEach(card => {
+    const domainHidden = val !== 'all' && card.dataset.domain !== val;
+    card.classList.toggle('domain-hidden', domainHidden);
+    const scoreHidden = card.classList.contains('score-hidden');
+    const dateHidden = card.classList.contains('date-hidden');
+    card.classList.toggle('hidden', scoreHidden || dateHidden || domainHidden);
+  });
+}
+
+// Initialize with score=60
+filterScore(60);
+</script>
+
+</body>
+</html>
