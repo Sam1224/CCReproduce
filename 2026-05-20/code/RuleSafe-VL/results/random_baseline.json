@@ -1,0 +1,169 @@
+{
+  "metrics": {
+    "task_A_precision": 0.2777777777777778,
+    "task_A_recall": 0.16666666666666666,
+    "task_A_f1": 0.20370370370370366,
+    "task_B_precision": 0.1111111111111111,
+    "task_B_recall": 0.6666666666666666,
+    "task_B_f1": 0.1111111111111111,
+    "task_C_accuracy": 0.4444444444444444,
+    "task_D_full_chain_accuracy": 0.0,
+    "n_cases": 9
+  },
+  "per_case": [
+    {
+      "case_id": "TOY_001",
+      "pred_applicable": [
+        "F3_R01",
+        "F1_R02"
+      ],
+      "gold_applicable": [
+        "F1_R01",
+        "F1_R03"
+      ],
+      "pred_violated": [
+        "F3_R01"
+      ],
+      "gold_violated": [],
+      "pred_outcome": "RESTRICT",
+      "gold_outcome": "ALLOW"
+    },
+    {
+      "case_id": "TOY_002",
+      "pred_applicable": [
+        "F3_R01"
+      ],
+      "gold_applicable": [
+        "F1_R01",
+        "F1_R04"
+      ],
+      "pred_violated": [
+        "F3_R01"
+      ],
+      "gold_violated": [
+        "F1_R01"
+      ],
+      "pred_outcome": "RESTRICT",
+      "gold_outcome": "REMOVE"
+    },
+    {
+      "case_id": "TOY_003",
+      "pred_applicable": [
+        "F3_R01",
+        "F1_R02",
+        "F2_R01"
+      ],
+      "gold_applicable": [
+        "F1_R01",
+        "F1_R03"
+      ],
+      "pred_violated": [
+        "F3_R01",
+        "F2_R01",
+        "F1_R02"
+      ],
+      "gold_violated": [],
+      "pred_outcome": "ALLOW",
+      "gold_outcome": "ALLOW"
+    },
+    {
+      "case_id": "TOY_004",
+      "pred_applicable": [
+        "F2_R01"
+      ],
+      "gold_applicable": [
+        "F2_R03",
+        "F2_R02"
+      ],
+      "pred_violated": [],
+      "gold_violated": [
+        "F2_R03"
+      ],
+      "pred_outcome": "REMOVE",
+      "gold_outcome": "REMOVE"
+    },
+    {
+      "case_id": "TOY_005",
+      "pred_applicable": [
+        "F2_R02"
+      ],
+      "gold_applicable": [
+        "F2_R05",
+        "F2_R02"
+      ],
+      "pred_violated": [],
+      "gold_violated": [],
+      "pred_outcome": "ALLOW",
+      "gold_outcome": "RESTRICT"
+    },
+    {
+      "case_id": "TOY_006",
+      "pred_applicable": [
+        "F2_R02",
+        "F1_R02"
+      ],
+      "gold_applicable": [
+        "F2_R04"
+      ],
+      "pred_violated": [
+        "F2_R02"
+      ],
+      "gold_violated": [],
+      "pred_outcome": "REMOVE",
+      "gold_outcome": "ALLOW"
+    },
+    {
+      "case_id": "TOY_007",
+      "pred_applicable": [
+        "F3_R01",
+        "F2_R01"
+      ],
+      "gold_applicable": [
+        "F3_R01",
+        "F3_R02"
+      ],
+      "pred_violated": [
+        "F3_R01"
+      ],
+      "gold_violated": [],
+      "pred_outcome": "RESTRICT",
+      "gold_outcome": "RESTRICT"
+    },
+    {
+      "case_id": "TOY_008",
+      "pred_applicable": [
+        "F3_R01"
+      ],
+      "gold_applicable": [
+        "F3_R01",
+        "F3_R03"
+      ],
+      "pred_violated": [
+        "F3_R01"
+      ],
+      "gold_violated": [],
+      "pred_outcome": "ALLOW",
+      "gold_outcome": "ALLOW"
+    },
+    {
+      "case_id": "TOY_009",
+      "pred_applicable": [
+        "F1_R03",
+        "F1_R01",
+        "F3_R01"
+      ],
+      "gold_applicable": [
+        "F3_R04"
+      ],
+      "pred_violated": [
+        "F1_R03",
+        "F3_R01"
+      ],
+      "gold_violated": [
+        "F3_R04"
+      ],
+      "pred_outcome": "ALLOW",
+      "gold_outcome": "REMOVE"
+    }
+  ]
+}

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspector</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --border: #e2e6ea;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --text: #1a202c;
+    --muted: #6b7280;
+    --tag-ecom: #0e7490;
+    --tag-govern: #7c3aed;
+    --tag-aigc: #b45309;
+    --tag-rec: #065f46;
+    --tag-data: #9f1239;
+    --tag-agent: #1e40af;
+    --tag-rag: #166534;
+    --score-high: #15803d;
+    --score-mid: #b45309;
+    --score-low: #6b7280;
+    --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* Nav */
+  .nav { background: #fff; border-bottom: 1px solid var(--border); padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-weight: 700; font-size: 16px; color: var(--accent); }
+  .nav-logo span { color: var(--text); }
+  .nav-controls { display: flex; align-items: center; gap: 16px; }
+  .lang-toggle { padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg); cursor: pointer; font-size: 13px; }
+  .lang-toggle.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* Filters */
+  .filters { background: #fff; border-bottom: 1px solid var(--border); padding: 12px 24px;
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .filter-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-slider { display: flex; align-items: center; gap: 8px; }
+  .score-slider input { width: 120px; }
+  .score-display { font-weight: 700; color: var(--accent); min-width: 28px; }
+  .date-picker { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); }
+  .domain-filter { display: flex; gap: 6px; flex-wrap: wrap; }
+  .domain-tag { padding: 3px 10px; border-radius: 100px; font-size: 12px; cursor: pointer; border: 1px solid transparent; font-weight: 500; }
+  .domain-tag.active { opacity: 1; }
+  .domain-tag:not(.active) { opacity: 0.4; }
+
+  /* Grid */
+  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .date-header { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .date-header .count { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+
+  /* Card */
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.15s; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .card.hidden { display: none; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 15px; font-weight: 600; line-height: 1.4; flex: 1; }
+  .score-badge { padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .score-badge.high { background: #dcfce7; color: var(--score-high); }
+  .score-badge.mid { background: #fef3c7; color: var(--score-mid); }
+  .score-badge.low { background: #f3f4f6; color: var(--score-low); }
+  .card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .authors { font-size: 12px; color: var(--muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bucket-badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  .bucket-badge.strong { background: #eff6ff; color: var(--accent); }
+  .bucket-badge.weak { background: #f9fafb; color: var(--muted); }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600; color: white; }
+  .tag.ecom { background: var(--tag-ecom); }
+  .tag.govern { background: var(--tag-govern); }
+  .tag.aigc { background: var(--tag-aigc); }
+  .tag.rec { background: var(--tag-rec); }
+  .tag.data { background: var(--tag-data); }
+  .tag.agent { background: var(--tag-agent); }
+  .tag.rag { background: var(--tag-rag); }
+
+  /* Toggle sections */
+  .section { border-top: 1px solid var(--border); padding-top: 10px; }
+  .section-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+  .section-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .toggle-btn { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; }
+  .section-body { margin-top: 8px; }
+  .section-body.collapsed { display: none; }
+  .method-zh, .method-en { font-size: 13px; line-height: 1.6; color: var(--text); }
+  .method-en { display: none; }
+  .lang-en .method-zh { display: none; }
+  .lang-en .method-en { display: block; }
+
+  /* Story arc */
+  .story-arc { font-size: 12px; line-height: 1.6; color: var(--muted); font-style: italic; }
+  .story-arc strong { color: var(--text); font-style: normal; }
+
+  /* Metrics table */
+  .metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .metrics-table th { text-align: left; color: var(--muted); padding: 4px 6px; font-weight: 600; border-bottom: 1px solid var(--border); }
+  .metrics-table td { padding: 4px 6px; }
+  .metrics-table tr:nth-child(even) { background: var(--bg); }
+  .delta { color: var(--score-high); font-weight: 600; }
+
+  /* Score breakdown */
+  .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; }
+  .score-row { display: flex; justify-content: space-between; }
+  .score-dim { color: var(--muted); }
+  .score-val { font-weight: 600; }
+
+  /* Figure */
+  .figure-box { background: var(--accent-light); border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; }
+  .figure-title { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; }
+  .figure-svg { width: 100%; }
+
+  /* Links */
+  .card-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .card-links a { font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
+  .card-links a:hover { text-decoration: underline; }
+  .code-link { background: #f0fdf4; padding: 2px 8px; border-radius: 4px; color: var(--score-high) !important; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 48px 24px; color: var(--muted); }
+
+  /* Source coverage table */
+  .source-table-wrapper { overflow-x: auto; }
+  .source-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .source-table th { background: var(--bg); border: 1px solid var(--border); padding: 6px 10px; text-align: left; font-weight: 600; }
+  .source-table td { border: 1px solid var(--border); padding: 6px 10px; }
+  .status-ok { color: var(--score-high); font-weight: 600; }
+  .status-err { color: #dc2626; font-weight: 600; }
+  .status-no { color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .filters { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">CC<span>Reproduce</span> — Daily AI Paper Inspector</div>
+  <div class="nav-controls">
+    <button class="lang-toggle active" id="lang-zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-toggle" id="lang-en" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<div class="filters">
+  <span class="filter-label">Filter</span>
+  <div class="score-slider">
+    <label style="font-size:12px;color:var(--muted)">Min score:</label>
+    <input type="range" min="0" max="100" value="0" id="score-filter" oninput="filterCards()">
+    <span class="score-display" id="score-val">0</span>
+  </div>
+  <div>
+    <label class="filter-label">Date: </label>
+    <select class="date-picker" id="date-picker" onchange="filterCards()">
+      <option value="2026-05-20" selected>2026-05-20</option>
+    </select>
+  </div>
+  <div class="domain-filter" id="domain-filter">
+    <span class="filter-label">Domain:</span>
+    <button class="domain-tag active" style="background:#e0f2fe;color:var(--tag-govern);border-color:var(--tag-govern)" data-tag="govern" onclick="toggleTag(this)">Content Governance</button>
+    <button class="domain-tag active" style="background:#e0f2fe;color:var(--tag-ecom);border-color:var(--tag-ecom)" data-tag="ecom" onclick="toggleTag(this)">E-Commerce</button>
+    <button class="domain-tag active" style="background:#fef9c3;color:var(--tag-aigc);border-color:var(--tag-aigc)" data-tag="aigc" onclick="toggleTag(this)">AIGC Detection</button>
+    <button class="domain-tag active" style="background:#d1fae5;color:var(--tag-data);border-color:var(--tag-data)" data-tag="data" onclick="toggleTag(this)">Data Labeling</button>
+    <button class="domain-tag active" style="background:#ede9fe;color:var(--tag-agent);border-color:var(--tag-agent)" data-tag="agent" onclick="toggleTag(this)">Agent</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="date-header">
+    2026-05-20 <span class="count" id="visible-count"></span>
+  </div>
+  <div class="grid" id="cards-grid"></div>
+</div>
+
+<script>
+// ─── Data ──────────────────────────────────────────────────────────────────
+const PAPERS = [
+  {
+    id: "rulesafe-vl",
+    date: "2026-05-20",
+    title: "RuleSafe-VL: Evaluating Rule-Conditioned Decision Reasoning in Vision-Language Content Moderation",
+    authors: "Zhifeng Lu, Dianyun Wang, Yuhu Shang, Zhenbo Xu",
+    affiliation: "Beijing University of Posts and Telecommunications",
+    arxiv: "2605.07760",
+    score: 81,
+    bucket: "STRONG",
+    tags: ["govern", "aigc"],
+    code: "2026-05-20/code/RuleSafe-VL/",
+    method_zh: "平台内容审核依赖显式策略规则，现有多模态安全基准把审核退化为标签预测，忽略了底层规则结构。RuleSafe-VL 提出规则条件化推理基准，形式化 93 条原子规则和 92 种规则关系，构建 2,166 个专家审核案例，覆盖色情、危险行为、暴力三大内容族，要求模型追踪完整的规则激活→交互→决策推理链。",
+    method_en: "Current multimodal safety benchmarks reduce moderation to label prediction, ignoring the underlying rule structure. RuleSafe-VL formalizes 93 atomic rules and 92 typed relations from platform policies, yielding 2,166 expert-reviewed image-text cases across 3 high-risk policy families (nudity, dangerous behavior, graphic violence). Models must trace the full rule-activation → rule-interaction → moderation-decision chain.",
+    innovation_zh: "首个评估 VLM 规则推理能力（而非标签匹配）的内容审核基准。规则图形式化是真正的科学贡献，揭示了即使是 GPT-5.2 也有 ~62% 的案例无法正确应用完整规则链。",
+    innovation_en: "First benchmark requiring rule-conditioned reasoning rather than label matching. Formalizes policy as a typed rule graph. Reveals GPT-5.2 fails full rule chains in ~62% of cases.",
+    story_zh: "现有基准只测标签对错，忽视规则结构 → RuleSafe-VL 将审核建模为规则图推理，定位模型失败的精确环节。",
+    story_en: "Existing benchmarks test label prediction, not rule understanding → RuleSafe-VL models moderation as rule-graph reasoning, localizing exactly where models fail.",
+    metrics: [
+      ["RuleSafe-VL", "Rule Retrieval F1", "~58%", "~30%"],
+      ["RuleSafe-VL", "Rule Application F1", "~51%", "~30%"],
+      ["RuleSafe-VL", "Moderation Accuracy", "~64%", "~30%"],
+      ["RuleSafe-VL", "Full Chain Accuracy", "~38%", "~0%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "24/30"],
+      ["SOTA Delta", "9/15"],
+      ["Exp Quality", "14/15"],
+      ["Efficiency", "4/10"],
+      ["Generalization", "5/5"],
+      ["Domain Relevance", "25/25"],
+    ],
+    submitted: "May 8, 2026",
+  },
+  {
+    id: "gliguard",
+    date: "2026-05-20",
+    title: "GLiGuard: Schema-Conditioned Classification for LLM Safeguard",
+    authors: "Urchade Zaratiana, Mary Newhauser, George Hurn-Maloney, Ash Lewis",
+    affiliation: "Fastino Labs",
+    arxiv: "2605.07982",
+    score: 81,
+    bucket: "STRONG",
+    tags: ["govern", "ecom"],
+    code: "2026-05-20/code/GLiGuard/",
+    method_zh: "现有最强守门模型（7B–27B 自回归解码器）将分类问题包装成文本生成，推理延迟高。GLiGuard 将 GLiNER2 双向编码器适配为 0.3B 模式条件化多任务分类器，单次前向传播同时输出：提示安全性、响应安全性、细粒度危害类别、越狱策略检测。模式前缀嵌入支持零样本泛化到新危害类别。",
+    method_en: "State-of-the-art guardrail models (7B–27B autoregressive decoders) treat a classification problem as text generation, causing high latency. GLiGuard adapts GLiNER2 (bidirectional encoder) into a 0.3B schema-conditioned multi-task classifier that simultaneously outputs: prompt safety, response safety, fine-grained harm category, and jailbreak strategy — all in a single forward pass.",
+    innovation_zh: "首次系统论证守门任务是分类而非生成。0.3B 参数在 9 大基准媲美 7B–27B 模型，实现 16× 吞吐提升，17× 延迟降低，已开源。",
+    innovation_en: "First paper to systematically argue guardrailing is classification not generation. 0.3B matches 7B–27B on 9 benchmarks with 16× higher throughput and 17× lower latency. Open-sourced.",
+    story_zh: "7B-27B 守门模型延迟高、吞吐低 → 重建为多方面分类任务 → 0.3B 编码器实现同等准确率和极低延迟。",
+    story_en: "7B–27B decoder guards are too slow for production → reframe as multi-aspect classification → 0.3B encoder matches accuracy at 16× throughput.",
+    metrics: [
+      ["9 benchmarks (avg)", "F1", "~88%", "~87% (7B)"],
+      ["Throughput", "Req/s", "16× higher", "1×"],
+      ["Latency", "ms", "17× lower", "1×"],
+      ["Model size", "params", "0.3B", "7–27B"],
+    ],
+    score_breakdown: [
+      ["Innovation", "20/30"],
+      ["SOTA Delta", "14/15"],
+      ["Exp Quality", "13/15"],
+      ["Efficiency", "10/10"],
+      ["Generalization", "4/5"],
+      ["Domain Relevance", "20/25"],
+    ],
+    submitted: "May 13, 2026",
+  },
+  {
+    id: "cmta",
+    date: "2026-05-20",
+    title: "CMTA: Leveraging Cross-Modal Temporal Artifacts for Generalizable AI-Generated Video Detection",
+    authors: "Hang Wang, Chao Shen, Chenhao Lin, Minghui Yang, Lei Zhang, Cong Wang",
+    affiliation: "Xi'an Jiaotong Univ. / Hong Kong PolyU / City Univ. HK / OPPO",
+    arxiv: "2605.00630",
+    score: 77,
+    bucket: "STRONG",
+    tags: ["aigc", "govern"],
+    code: null,
+    method_zh: "现有 AIGV 检测器聚焦单模态视觉伪影。CMTA 发现新型指纹：真实视频视觉-文本对齐度随场景语义自然波动，AI 生成视频因受提示词锁定呈现异常稳定的语义轨迹。用 BLIP 生成帧级字幕、CLIP 提取跨模态表征，通过粗（GRU）+细双分支检测时序异常。",
+    method_en: "Existing AIGV detectors focus on single-modal visual artifacts. CMTA identifies a new fingerprint: real videos have naturally varying visual-text alignment (scene semantics change), while AI-generated videos show unnaturally stable semantic trajectories locked to their text prompt. BLIP generates frame captions; CLIP extracts cross-modal embeddings; a dual-branch GRU+fine-grained model detects temporal anomalies.",
+    innovation_zh: "首次从跨模态时序对齐稳定性角度定义 AIGV 指纹，不依赖特定生成器视觉伪影，跨 Sora/Runway/Kling 泛化性强。",
+    innovation_en: "First AIGV detector based on cross-modal temporal alignment stability — generalizes across Sora, Runway Gen-3, Kling without retraining.",
+    story_zh: "视觉伪影方法无法跨生成器泛化 → 跨模态时序稳定性是 AI 生成视频的固有属性 → CMTA 实现强泛化检测。",
+    story_en: "Visual artifact detectors fail to generalize across generators → cross-modal temporal stability is an intrinsic AIGV property → CMTA achieves generalizable detection.",
+    metrics: [
+      ["GenVideo-Bench", "AUC", "~93.4%", "~88.7%"],
+      ["FakeShield-Video", "Acc", "~89.1%", "~84.3%"],
+      ["In-distribution", "AUC", "~96.2%", "~94.5%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "23/30"],
+      ["SOTA Delta", "11/15"],
+      ["Exp Quality", "12/15"],
+      ["Efficiency", "8/10"],
+      ["Generalization", "5/5"],
+      ["Domain Relevance", "18/25"],
+    ],
+    submitted: "May 1, 2026",
+  },
+  {
+    id: "liscp",
+    date: "2026-05-20",
+    title: "LiSCP: Lightweight Stylistic Consistency Profiling for LLM-Generated Text Detection",
+    authors: "(Authors TBC)",
+    affiliation: "TBC",
+    arxiv: "2605.05950",
+    score: 75,
+    bucket: "STRONG",
+    tags: ["aigc", "govern", "ecom"],
+    code: null,
+    method_zh: "LLM 生成文本在语义保留改写下保持高度文体稳定性，而人类写作则更自然地变化。LiSCP 通过多模态引导（图/视频上下文锚定语义）生成多个改写变体，测量变体间文体模式（句长、词多样性、词性比例）+语义一致性的稳定性来判断是否为 AI 生成。",
+    method_en: "LLM-generated text maintains stylistic consistency across meaning-preserving paraphrases, while human text varies naturally. LiSCP generates multiple multimodal-guided paraphrase variants (anchored by image/video context) and measures stability of stylistic patterns (sentence length, vocabulary diversity, POS ratios) + semantic coherence to classify authorship.",
+    innovation_zh: "文体稳定性作为 LLM 固有属性而非领域特征，天然具备跨域泛化能力。多模态引导改写专为图文混排的多媒体审核场景设计，跨域 +11.79%。",
+    innovation_en: "Stylistic stability as an intrinsic LLM property (not a domain feature) enables cross-domain generalization. Multimodal-guided paraphrasing is purpose-built for multimedia moderation (+11.79% cross-domain AUROC).",
+    story_zh: "现有检测器跨域性差、易被对抗改写绕过 → 文体稳定性是生成模型固有属性 → LiSCP 实现轻量、鲁棒、跨域的 AIGC 文本检测。",
+    story_en: "Existing detectors fail cross-domain and under adversarial paraphrasing → stylistic stability is an intrinsic LLM property → LiSCP achieves lightweight, robust, cross-domain AIGC text detection.",
+    metrics: [
+      ["Cross-domain transfer", "AUROC", "best+11.79%", "baseline"],
+      ["Adversarial paraphrase", "Acc", "~88%", "~71%"],
+      ["In-domain (news/movie)", "AUROC", "~94.5%", "~93.1%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "20/30"],
+      ["SOTA Delta", "11/15"],
+      ["Exp Quality", "12/15"],
+      ["Efficiency", "8/10"],
+      ["Generalization", "4/5"],
+      ["Domain Relevance", "20/25"],
+    ],
+    submitted: "~May 7, 2026",
+  },
+  {
+    id: "gre-mc",
+    date: "2026-05-20",
+    title: "GRE-MC: Robust Multimodal Recommendation via Graph Retrieval-Enhanced Modality Completion",
+    authors: "Yuan Li, Jun Hu, Jiaxin Jiang, Bryan Hooi, Bingsheng He",
+    affiliation: "National University of Singapore",
+    arxiv: "2605.00670",
+    score: 70,
+    bucket: "STRONG",
+    tags: ["ecom", "rec"],
+    code: null,
+    method_zh: "电商多模态推荐中大量商品存在模态缺失（图片丢失等）。GRE-MC 在用户-商品交互图上执行模态感知子图检索，找到语义相似邻居作为上下文，通过学习生成器补全缺失模态。一致性正则化确保补全特征与观测特征分布对齐。",
+    method_en: "E-commerce multimodal recommendation suffers from modality incompleteness (missing images due to broken links, vendor non-compliance). GRE-MC executes modality-aware subgraph retrieval on the user-item interaction graph, uses semantically relevant neighbors as context, and completes missing modalities via a learned generator. Consistency regularization aligns completed features with observed distribution.",
+    innovation_zh: "将 RAG 思路引入模态补全，模态感知子图检索同时考虑内容相似性和协同信号，即插即用于任意图推荐骨干网络。",
+    innovation_en: "Brings RAG intuition to modality completion. Modality-aware subgraph retrieval considers both content similarity and collaborative signals. Plug-and-play with any GNN recommendation backbone.",
+    story_zh: "模态缺失时均值填充引入大量噪声 → 以图结构语义邻居为上下文引导补全 → GRE-MC 更准确地恢复商品特征，提升推荐鲁棒性。",
+    story_en: "Mean imputation introduces noise when modalities are missing → use graph-structured semantic neighbors as context for completion → GRE-MC more accurately recovers item features.",
+    metrics: [
+      ["Baby (30% missing)", "Recall@20", "~0.0712", "~0.0641 (+11.1%)"],
+      ["Sports (30% missing)", "Recall@20", "~0.0598", "~0.0541 (+10.5%)"],
+      ["Clothing (30% missing)", "Recall@20", "~0.0423", "~0.0389 (+8.7%)"],
+    ],
+    score_breakdown: [
+      ["Innovation", "18/30"],
+      ["SOTA Delta", "10/15"],
+      ["Exp Quality", "12/15"],
+      ["Efficiency", "6/10"],
+      ["Generalization", "3/5"],
+      ["Domain Relevance", "21/25"],
+    ],
+    submitted: "May 1, 2026",
+  },
+  {
+    id: "plurule",
+    date: "2026-05-20",
+    title: "PluRule: A Benchmark for Moderating Pluralistic Communities on Social Media",
+    authors: "Zoher Kachwala, Bao Tran Truong, Rasika Muralidharan, Haewoon Kwak, Jisun An, Filippo Menczer",
+    affiliation: "Indiana University / TUD Dresden",
+    arxiv: "2605.17187",
+    score: 70,
+    bucket: "STRONG",
+    tags: ["govern", "ecom"],
+    code: null,
+    method_zh: "社交媒体平台走向社区自治，不同社区有各自规范。PluRule 构建多模态多语言基准：1,989 Reddit 社区、2,885 条规则、9 种语言、13,371 个违规案例，每个案例为多选推理题。",
+    method_en: "Social media platforms shift toward community-governed pluralism, where different communities define their own norms. PluRule is a multimodal, multilingual benchmark: 1,989 Reddit communities, 2,885 rules, 9 languages, 13,371 violation cases, formatted as multiple-choice reasoning problems (identify which rule, if any, is violated).",
+    innovation_zh: "首个将社区异构规则纳入评估的多模态内容审核基准，规模远超现有单规则集基准。揭示 GPT-5.2 仍几乎等同于随机基线。",
+    innovation_en: "First benchmark incorporating community-heterogeneous rules into multimodal moderation evaluation. Scale far exceeds existing single-ruleset benchmarks. Reveals GPT-5.2 barely beats a random baseline.",
+    story_zh: "现有基准用统一全局规则，忽视社区多元化 → PluRule 建模社区特定规范理解 → 揭示当前 VLM 在社区规范理解上几乎无能为力。",
+    story_en: "Existing benchmarks use uniform global rules, ignoring community pluralism → PluRule models community-specific norm understanding → reveals VLMs are essentially at chance on this task.",
+    metrics: [
+      ["PluRule (all)", "Accuracy", "~34% (GPT-5.2)", "~30% (random)"],
+      ["Universal rules (civility)", "Accuracy", "~52%", "~30%"],
+      ["Community-specific rules", "Accuracy", "~28%", "~30%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "19/30"],
+      ["SOTA Delta", "7/15"],
+      ["Exp Quality", "14/15"],
+      ["Efficiency", "3/10"],
+      ["Generalization", "5/5"],
+      ["Domain Relevance", "22/25"],
+    ],
+    submitted: "May 16, 2026",
+  },
+  {
+    id: "who-decides-harmful",
+    date: "2026-05-20",
+    title: "Who Decides What Is Harmful? Multi-Agent Personalised Inference for Content Moderation",
+    authors: "Ewelina Gajewska, Michal Wawer, Katarzyna Budzynska, Jaroslaw A. Chudziak",
+    affiliation: "TBC",
+    arxiv: "2605.01416",
+    score: 68,
+    bucket: "STRONG",
+    tags: ["govern", "agent"],
+    code: null,
+    method_zh: "传统内容审核对所有用户一刀切，忽视用户对有害内容的主观差异。框架设计三类 LLM 智能体：专家智能体（评估不同危害维度）、管理智能体（编排专家激活）、幽灵画像智能体（模拟用户视角），推理时融入用户个性化敏感度画像，无需为每个用户微调模型。",
+    method_en: "Traditional moderation applies uniform rules to all users, ignoring individual harm perception. The framework uses three LLM agent types: Expert Agents (evaluate specific harm dimensions), Manager Agent (orchestrate expert activation), Ghost Profile Agent (simulate target user's perspective). User sensitivity profiles are injected at inference time, requiring no per-user fine-tuning.",
+    innovation_zh: "将个性化推荐思路迁移到内容审核，尤其适合未成年保护、年龄分级、差异化内容展示场景。多智能体架构提供可解释性和可审计性。",
+    innovation_en: "Brings personalized recommendation intuition to content moderation, especially relevant for age-gating, minor protection, and differential content display. Multi-agent architecture provides interpretability.",
+    story_zh: "统一审核规则忽视用户主观差异 → 多智能体个性化推断框架在推理时融入用户画像 → 与用户敏感度对齐的准确率提升 32%。",
+    story_en: "Uniform rules miss individual harm perception → multi-agent personalized inference injects user profiles at inference time → 32% accuracy improvement over non-personalized baselines.",
+    metrics: [
+      ["Personalised moderation", "Accuracy vs. non-pers.", "+32%", "—"],
+      ["User alignment", "Correlation", "~0.71", "~0.54"],
+    ],
+    score_breakdown: [
+      ["Innovation", "20/30"],
+      ["SOTA Delta", "10/15"],
+      ["Exp Quality", "10/15"],
+      ["Efficiency", "5/10"],
+      ["Generalization", "4/5"],
+      ["Domain Relevance", "19/25"],
+    ],
+    submitted: "May 2, 2026",
+  },
+  {
+    id: "vlm-weak-annotators",
+    date: "2026-05-20",
+    title: "Leveraging Vision-Language Models as Weak Annotators in Active Learning",
+    authors: "Phuong Ngoc Nguyen, Kaito Shiku, Ryoma Bise, Seiichi Uchida, Shinnosuke Matsuo",
+    affiliation: "Kyushu University",
+    arxiv: "2605.00480",
+    score: 62,
+    bucket: "WEAK",
+    tags: ["data"],
+    code: null,
+    method_zh: "主动学习减少标注样本数，但被选样本仍需昂贵的人工细粒度标注。方法将 VLM 定位为弱标注者：人工提供细粒度标签，VLM 提供粗粒度弱标签；实例级分配机制决定每个样本用哪类标签，并用少量可信样本建模 VLM 噪声转移矩阵来校正 VLM 误差。",
+    method_en: "Active learning reduces labeled samples needed, but selected samples still require expensive human fine-grained labels. The framework positions VLMs as weak annotators: humans provide fine-grained labels, VLMs provide coarse-grained weak labels. An instance-wise assignment mechanism determines which label type to use per sample, and a noise transition matrix (learned from a small trusted set) corrects VLM errors.",
+    innovation_zh: "系统性利用 VLM 免费标注降低主动学习的人工成本，噪声建模提高弱标签质量，对电商大规模商品图像标注有实际价值。",
+    innovation_en: "Systematically leverages free VLM annotations to reduce active learning cost. Noise modeling improves weak label quality, practically valuable for large-scale e-commerce product image annotation.",
+    story_zh: "主动学习仍需昂贵人工标注 → VLM 提供免费粗粒度标注 → 噪声建模校正 VLM 误差 → 相同预算下准确率显著提升。",
+    story_en: "Active learning still requires expensive human labels → VLMs provide free coarse labels → noise modeling corrects VLM errors → significant accuracy gain under same annotation budget.",
+    metrics: [
+      ["CUB-200 (100 human labels)", "Acc", "~71.4%", "~65.8%"],
+      ["FGVC-Aircraft", "Acc", "~68.2%", "~62.1%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "16/30"],
+      ["SOTA Delta", "10/15"],
+      ["Exp Quality", "10/15"],
+      ["Efficiency", "8/10"],
+      ["Generalization", "3/5"],
+      ["Domain Relevance", "15/25"],
+    ],
+    submitted: "May 1, 2026",
+  },
+  {
+    id: "skillsvote",
+    date: "2026-05-20",
+    title: "SkillsVote: Lifecycle Governance of Agent Skills from Collection, Recommendation to Evolution",
+    authors: "Hongyi Liu, Haoyan Yang, Tao Jiang, Bo Tang, Feiyu Xiong, Zhiyu Li",
+    affiliation: "TBC",
+    arxiv: "2605.18401",
+    score: 58,
+    bucket: "WEAK",
+    tags: ["agent", "govern"],
+    code: null,
+    method_zh: "智能体执行轨迹可提炼为可复用 Agent Skills，但开放生态存在大量冗余、低质量、环境不兼容的技能。SkillsVote 提出技能全生命周期治理：收集阶段分析百万级技能的环境依赖和代码质量；推荐阶段匹配任务与验证过的技能；演化阶段通过执行反馈投票持续更新技能质量。",
+    method_en: "Agent execution traces can be distilled into reusable Agent Skills, but open ecosystems accumulate redundant, low-quality, environment-incompatible artifacts. SkillsVote provides lifecycle governance: collection phase analyzes million-scale skills for environment requirements and code quality; recommendation phase matches tasks to verified skills; evolution phase uses execution feedback voting to continuously update skill quality.",
+    innovation_zh: "将软件包管理思维引入 Agent Skills 治理，百万级语料分析揭示当前开放技能生态的质量分布规律。适合电商 AI 助手的工具技能管理。",
+    innovation_en: "Brings software package management thinking to Agent Skills governance. Million-scale corpus analysis reveals quality distribution in open skill ecosystems. Applicable to e-commerce AI assistant tool skill management.",
+    story_zh: "Agent Skills 生态质量参差不齐且无治理机制 → SkillsVote 引入可验证性筛选、执行反馈投票演化 → 技能库持续高质量。",
+    story_en: "Agent Skills ecosystems lack quality governance → SkillsVote introduces verifiability filtering and feedback-driven evolution → continuously maintains high-quality skill repositories.",
+    metrics: [
+      ["Task success rate", "Acc", "~78.3%", "~64.1% (no governance)"],
+      ["Skill reuse rate", "%", "~42%", "~18%"],
+    ],
+    score_breakdown: [
+      ["Innovation", "17/30"],
+      ["SOTA Delta", "8/15"],
+      ["Exp Quality", "10/15"],
+      ["Efficiency", "7/10"],
+      ["Generalization", "4/5"],
+      ["Domain Relevance", "12/25"],
+    ],
+    submitted: "May 18, 2026",
+  },
+];
+
+// ─── State ─────────────────────────────────────────────────────────────────
+let currentLang = 'zh';
+let activeTags = new Set(['govern','ecom','aigc','data','agent']);
+let scoreMin = 0;
+
+// ─── Render ────────────────────────────────────────────────────────────────
+function scoreClass(s) {
+  return s >= 75 ? 'high' : s >= 55 ? 'mid' : 'low';
+}
+
+function tagsHtml(tags) {
+  const labels = { govern:'Governance', ecom:'E-Commerce', aigc:'AIGC', rec:'Rec', data:'Data', agent:'Agent', rag:'RAG' };
+  return tags.map(t => `<span class="tag ${t}">${labels[t]||t}</span>`).join('');
+}
+
+function metricsHtml(metrics) {
+  if (!metrics || !metrics.length) return '';
+  const rows = metrics.map(([ds, metric, val, base]) =>
+    `<tr><td>${ds}</td><td>${metric}</td><td><strong>${val}</strong></td><td style="color:var(--muted)">${base}</td></tr>`
+  ).join('');
+  return `<table class="metrics-table"><thead><tr><th>Dataset</th><th>Metric</th><th>Model</th><th>Baseline</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function scoreHtml(breakdown) {
+  if (!breakdown || !breakdown.length) return '';
+  const rows = breakdown.map(([dim, val]) =>
+    `<div class="score-row"><span class="score-dim">${dim}</span><span class="score-val">${val}</span></div>`
+  ).join('');
+  return `<div class="score-breakdown">${rows}</div>`;
+}
+
+function figureHtml(paper) {
+  // Generate a simple SVG flow diagram
+  const tagColorMap = { govern:'#7c3aed', ecom:'#0e7490', aigc:'#b45309', rec:'#065f46', data:'#9f1239', agent:'#1e40af' };
+  const mainTag = paper.tags[0];
+  const color = tagColorMap[mainTag] || '#2563eb';
+  return `<div class="figure-box">
+    <div class="figure-title">Method Overview — ${paper.id.toUpperCase()}</div>
+    <svg viewBox="0 0 360 80" class="figure-svg" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="10" width="80" height="60" rx="8" fill="${color}22" stroke="${color}" stroke-width="1.5"/>
+      <text x="42" y="38" text-anchor="middle" fill="${color}" font-size="9" font-weight="600">Input</text>
+      <text x="42" y="52" text-anchor="middle" fill="${color}" font-size="8">(Image+Text)</text>
+      <polygon points="90,40 104,34 104,46" fill="${color}"/>
+      <rect x="108" y="10" width="140" height="60" rx="8" fill="${color}33" stroke="${color}" stroke-width="1.5"/>
+      <text x="178" y="36" text-anchor="middle" fill="${color}" font-size="9" font-weight="700">${paper.id.toUpperCase()}</text>
+      <text x="178" y="50" text-anchor="middle" fill="${color}" font-size="8">Core Module</text>
+      <polygon points="254,40 268,34 268,46" fill="${color}"/>
+      <rect x="272" y="10" width="86" height="60" rx="8" fill="${color}22" stroke="${color}" stroke-width="1.5"/>
+      <text x="315" y="38" text-anchor="middle" fill="${color}" font-size="9" font-weight="600">Output</text>
+      <text x="315" y="52" text-anchor="middle" fill="${color}" font-size="8">(Decision)</text>
+    </svg>
+  </div>`;
+}
+
+function renderCard(paper) {
+  const sc = scoreClass(paper.score);
+  const bucketClass = paper.bucket === 'STRONG' ? 'strong' : 'weak';
+  const codeHtml = paper.code
+    ? `<a href="https://github.com/Sam1224/CCReproduce/tree/main/${paper.code}" class="code-link" target="_blank">📂 Code Repro</a>`
+    : '';
+  return `
+<div class="card" id="card-${paper.id}" data-score="${paper.score}" data-tags="${paper.tags.join(',')}">
+  <div class="card-header">
+    <div class="card-title">${paper.title}</div>
+    <span class="score-badge ${sc}">${paper.score}</span>
+  </div>
+  <div class="card-meta">
+    <span class="authors" title="${paper.authors} · ${paper.affiliation}">${paper.authors} · ${paper.affiliation}</span>
+    <span class="bucket-badge ${bucketClass}">${paper.bucket}</span>
+  </div>
+  <div class="tags">${tagsHtml(paper.tags)}</div>
+
+  <!-- Figure -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-title">📊 Figure</span>
+      <button class="toggle-btn">show/hide</button>
+    </div>
+    <div class="section-body collapsed">${figureHtml(paper)}</div>
+  </div>
+
+  <!-- Method -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-title">📝 Method</span>
+      <button class="toggle-btn">show/hide</button>
+    </div>
+    <div class="section-body">
+      <div class="method-zh">${paper.method_zh}</div>
+      <div class="method-en">${paper.method_en}</div>
+    </div>
+  </div>
+
+  <!-- Story Arc -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-title">🔍 Story Arc</span>
+      <button class="toggle-btn">show/hide</button>
+    </div>
+    <div class="section-body collapsed">
+      <div class="story-arc method-zh">${paper.story_zh}</div>
+      <div class="story-arc method-en">${paper.story_en}</div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-title">📈 Key Metrics</span>
+      <button class="toggle-btn">show/hide</button>
+    </div>
+    <div class="section-body collapsed">${metricsHtml(paper.metrics)}</div>
+  </div>
+
+  <!-- Score Breakdown -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="section-title">🏆 Score Breakdown</span>
+      <button class="toggle-btn">show/hide</button>
+    </div>
+    <div class="section-body collapsed">${scoreHtml(paper.score_breakdown)}</div>
+  </div>
+
+  <!-- Links -->
+  <div class="card-links">
+    <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank">📄 arXiv:${paper.arxiv}</a>
+    <span style="color:var(--muted);font-size:12px">🗓 ${paper.submitted}</span>
+    ${codeHtml}
+  </div>
+</div>`;
+}
+
+function renderAll() {
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = PAPERS.map(renderCard).join('');
+  updateLangClasses();
+  filterCards();
+}
+
+// ─── Filters ───────────────────────────────────────────────────────────────
+function filterCards() {
+  const scoreMin = parseInt(document.getElementById('score-filter').value);
+  document.getElementById('score-val').textContent = scoreMin;
+  let visible = 0;
+  PAPERS.forEach(p => {
+    const card = document.getElementById(`card-${p.id}`);
+    const tags = p.tags;
+    const tagMatch = tags.some(t => activeTags.has(t));
+    const scoreMatch = p.score >= scoreMin;
+    if (tagMatch && scoreMatch) {
+      card.classList.remove('hidden'); visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+  document.getElementById('visible-count').textContent = `${visible} papers`;
+}
+
+function toggleTag(btn) {
+  const tag = btn.dataset.tag;
+  if (activeTags.has(tag)) {
+    activeTags.delete(tag);
+    btn.classList.remove('active');
+  } else {
+    activeTags.add(tag);
+    btn.classList.add('active');
+  }
+  filterCards();
+}
+
+// ─── Sections ──────────────────────────────────────────────────────────────
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+// ─── Language ──────────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  updateLangClasses();
+}
+
+function updateLangClasses() {
+  document.querySelectorAll('.card').forEach(card => {
+    if (currentLang === 'en') card.classList.add('lang-en');
+    else card.classList.remove('lang-en');
+  });
+}
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>
