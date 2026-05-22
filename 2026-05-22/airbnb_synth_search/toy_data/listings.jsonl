@@ -1,0 +1,12 @@
+{"listing_id":"L1","location":"Shinjuku","city":"Tokyo","property_type":"studio","price_tier":"mid","amenities":["wifi","workspace","elevator"],"vibe":["modern","quiet"],"nearby":["metro","restaurants"]}
+{"listing_id":"L2","location":"Asakusa","city":"Tokyo","property_type":"apartment","price_tier":"budget","amenities":["wifi","kitchen"],"vibe":["cozy"],"nearby":["temple","metro"]}
+{"listing_id":"L3","location":"Sentosa","city":"Singapore","property_type":"villa","price_tier":"premium","amenities":["pool","aircon","wifi"],"vibe":["luxury","beachfront"],"nearby":["beach"]}
+{"listing_id":"L4","location":"Bugis","city":"Singapore","property_type":"apartment","price_tier":"mid","amenities":["wifi","workspace","kitchen"],"vibe":["central"],"nearby":["metro","shopping"]}
+{"listing_id":"L5","location":"Ubud","city":"Bali","property_type":"cabin","price_tier":"budget","amenities":["wifi","workspace","fan"],"vibe":["nature","quiet"],"nearby":["rice_fields"]}
+{"listing_id":"L6","location":"Seminyak","city":"Bali","property_type":"villa","price_tier":"premium","amenities":["pool","kitchen","wifi"],"vibe":["romantic"],"nearby":["beach","nightlife"]}
+{"listing_id":"L7","location":"Gangnam","city":"Seoul","property_type":"loft","price_tier":"premium","amenities":["wifi","workspace","balcony"],"vibe":["modern"],"nearby":["nightlife","metro"]}
+{"listing_id":"L8","location":"Hongdae","city":"Seoul","property_type":"studio","price_tier":"budget","amenities":["wifi"],"vibe":["lively"],"nearby":["nightlife","metro"]}
+{"listing_id":"L9","location":"Namba","city":"Osaka","property_type":"apartment","price_tier":"mid","amenities":["wifi","kitchen","workspace"],"vibe":["family"],"nearby":["shopping","metro"]}
+{"listing_id":"L10","location":"Karuizawa","city":"Nagano","property_type":"house","price_tier":"premium","amenities":["fireplace","kitchen","parking"],"vibe":["mountain","quiet"],"nearby":["hiking"]}
+{"listing_id":"L11","location":"Joo Chiat","city":"Singapore","property_type":"house","price_tier":"mid","amenities":["kitchen","wifi"],"vibe":["heritage","quiet"],"nearby":["cafes"]}
+{"listing_id":"L12","location":"Chaweng","city":"Koh Samui","property_type":"villa","price_tier":"premium","amenities":["pool","wifi","aircon"],"vibe":["beachfront","family"],"nearby":["beach"]}
