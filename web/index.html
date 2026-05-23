@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #e2e6ea;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --strong-tag: #059669;
+    --weak-tag: #d97706;
+    --score-high: #059669;
+    --score-mid: #2563eb;
+    --score-low: #6b7280;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+  /* Header */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  header h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  header .subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .lang-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+  .lang-btn.active, .lang-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* Controls bar */
+  .controls { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .control-group { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .control-group label { color: var(--text-muted); white-space: nowrap; }
+  input[type=range] { width: 140px; accent-color: var(--accent); }
+  select, input[type=date] { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--surface); color: var(--text); }
+  .score-display { font-weight: 600; color: var(--accent); min-width: 28px; }
+
+  /* Stats bar */
+  .stats { background: var(--accent-light); padding: 8px 24px; font-size: 12px; color: var(--accent); display: flex; gap: 16px; flex-wrap: wrap; }
+  .stat { font-weight: 500; }
+
+  /* Main grid */
+  main { padding: 20px 24px; }
+  .papers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+  /* Paper card */
+  .paper-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--shadow); transition: transform 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; gap: 10px; }
+  .paper-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+
+  /* Card header */
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 14px; font-weight: 600; line-height: 1.4; flex: 1; }
+  .score-badge { font-size: 18px; font-weight: 700; min-width: 36px; text-align: right; flex-shrink: 0; }
+  .score-badge.high { color: var(--score-high); }
+  .score-badge.mid { color: var(--score-mid); }
+  .score-badge.low { color: var(--score-low); }
+
+  /* Card meta */
+  .card-meta { font-size: 11px; color: var(--text-muted); }
+  .card-meta .authors { margin-bottom: 2px; }
+
+  /* Tags */
+  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .tag-bucket-STRONG { background: #d1fae5; color: var(--strong-tag); }
+  .tag-bucket-WEAK { background: #fef3c7; color: var(--weak-tag); }
+  .tag-domain { background: #e0e7ff; color: #3730a3; }
+
+  /* Method overview */
+  .card-method { font-size: 13px; line-height: 1.55; color: #374151; }
+
+  /* Innovation */
+  .card-innovation { font-size: 12px; background: #f9fafb; border-left: 3px solid var(--accent); padding: 8px 10px; border-radius: 0 6px 6px 0; color: #374151; }
+
+  /* Metrics */
+  .card-metrics { font-size: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 10px; border-radius: 6px; color: #065f46; font-family: 'JetBrains Mono', monospace; }
+
+  /* Score breakdown toggle */
+  .toggle-btn { font-size: 11px; color: var(--accent); cursor: pointer; background: none; border: none; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+  .score-breakdown { display: none; margin-top: 4px; }
+  .score-breakdown.visible { display: block; }
+  .score-bar { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 11px; }
+  .score-bar-label { width: 100px; color: var(--text-muted); flex-shrink: 0; }
+  .score-bar-track { flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+  .score-bar-value { width: 32px; text-align: right; color: var(--text); font-weight: 500; }
+
+  /* Figure toggle */
+  .figure-section { display: none; }
+  .figure-section.visible { display: block; }
+
+  /* Links */
+  .card-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
+  .card-link { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 500; text-decoration: none; transition: opacity 0.15s; }
+  .card-link:hover { opacity: 0.8; }
+  .link-paper { background: #eff6ff; color: var(--accent); border: 1px solid #bfdbfe; }
+  .link-code { background: #f0fdf4; color: #059669; border: 1px solid #bbf7d0; }
+  .link-model { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+
+  /* Date stamp */
+  .date-stamp { font-size: 10px; color: var(--text-muted); }
+
+  /* No results */
+  .no-results { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
+
+  /* Figure SVG */
+  .method-figure { margin: 8px 0; background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; padding: 10px; }
+  .method-figure svg { width: 100%; height: auto; }
+
+  @media (max-width: 640px) {
+    header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .controls { flex-direction: column; align-items: flex-start; }
+    .papers-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📄 CCReproduce Daily Paper Inspection</h1>
+    <div class="subtitle">电商内容生态 & 达人治理 · E-Commerce Content Ecosystem & Influencer Governance</div>
+  </div>
+  <div class="header-controls">
+    <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label id="label-date">日期 / Date:</label>
+    <select id="date-picker" onchange="filterCards()">
+      <option value="all">All Dates</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label id="label-score">最低分 / Min Score:</label>
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="onScoreSlide(this.value)">
+    <span class="score-display" id="score-val">0</span>
+  </div>
+  <div class="control-group">
+    <label id="label-bucket">类别 / Bucket:</label>
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+</div>
+
+<div class="stats" id="stats-bar">
+  <span class="stat" id="stat-total">Loading...</span>
+</div>
+
+<main>
+  <div class="papers-grid" id="papers-grid"></div>
+  <div class="no-results" id="no-results" style="display:none">
+    <span id="no-results-text">No papers match the current filters.</span>
+  </div>
+</main>
+
+<script>
+// ─── Data ────────────────────────────────────────────────────────────────────
+let PAPERS = [];
+let lang = 'zh';
+
+// ─── Language ─────────────────────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-zh').classList.toggle('active', l === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  renderCards(getFilteredPapers());
+}
+
+// ─── Score slider ──────────────────────────────────────────────────────────────
+function onScoreSlide(v) {
+  document.getElementById('score-val').textContent = v;
+  filterCards();
+}
+
+// ─── Filtering ─────────────────────────────────────────────────────────────────
+function getFilteredPapers() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const dateFilter = document.getElementById('date-picker').value;
+  const bucketFilter = document.getElementById('bucket-filter').value;
+
+  return PAPERS.filter(p => {
+    if (p.score < minScore) return false;
+    if (dateFilter !== 'all' && p.date !== dateFilter) return false;
+    if (bucketFilter !== 'all' && p.bucket !== bucketFilter) return false;
+    return true;
+  });
+}
+
+function filterCards() {
+  const filtered = getFilteredPapers();
+  renderCards(filtered);
+}
+
+// ─── Scoring bar ───────────────────────────────────────────────────────────────
+const SCORE_DIMS = [
+  { key: 'innovation', labelZh: '创新性', labelEn: 'Innovation', max: 30 },
+  { key: 'sota_delta', labelZh: 'SOTA提升', labelEn: 'SOTA Delta', max: 15 },
+  { key: 'exp_quality', labelZh: '实验质量', labelEn: 'Exp Quality', max: 15 },
+  { key: 'efficiency', labelZh: '效率', labelEn: 'Efficiency', max: 10 },
+  { key: 'generalization', labelZh: '泛化性', labelEn: 'Generalization', max: 5 },
+  { key: 'domain_relevance', labelZh: '领域相关性', labelEn: 'Domain Relevance', max: 25 },
+];
+
+function renderScoreBreakdown(scoring, uid) {
+  return `
+    <button class="toggle-btn" onclick="toggleBreakdown('${uid}')">${lang==='zh'?'▾ 评分详情':'▾ Score Breakdown'}</button>
+    <div class="score-breakdown" id="breakdown-${uid}">
+      ${SCORE_DIMS.map(d => {
+        const v = scoring[d.key] || 0;
+        const pct = Math.round(v / d.max * 100);
+        const label = lang === 'zh' ? d.labelZh : d.labelEn;
+        return `<div class="score-bar">
+          <span class="score-bar-label">${label}</span>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+          <span class="score-bar-value">${v}/${d.max}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function toggleBreakdown(uid) {
+  const el = document.getElementById(`breakdown-${uid}`);
+  el && el.classList.toggle('visible');
+}
+
+// ─── Method figure (SVG generated) ─────────────────────────────────────────────
+function generateFigure(paper) {
+  const figs = {
+    'GLiGuard': `<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="30" width="90" height="60" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="55" y="57" text-anchor="middle" font-size="9" fill="#1d4ed8">Input Text</text>
+      <text x="55" y="70" text-anchor="middle" font-size="7" fill="#3b82f6">+ Schema Tokens</text>
+      <text x="55" y="83" text-anchor="middle" font-size="7" fill="#3b82f6">(task + labels)</text>
+      <line x1="100" y1="60" x2="130" y2="60" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr)"/>
+      <rect x="130" y="30" width="110" height="60" rx="6" fill="#f0fdf4" stroke="#059669"/>
+      <text x="185" y="55" text-anchor="middle" font-size="9" fill="#065f46">Bidirectional</text>
+      <text x="185" y="68" text-anchor="middle" font-size="9" fill="#065f46">Encoder</text>
+      <text x="185" y="81" text-anchor="middle" font-size="8" fill="#6ee7b7">0.3B (GLiNER2)</text>
+      <line x1="240" y1="60" x2="270" y2="60" stroke="#059669" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="270" y="20" width="110" height="80" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="325" y="45" text-anchor="middle" font-size="8" fill="#92400e">✓ Prompt Safety</text>
+      <text x="325" y="59" text-anchor="middle" font-size="8" fill="#92400e">✓ Response Safety</text>
+      <text x="325" y="73" text-anchor="middle" font-size="8" fill="#92400e">✓ Jailbreak</text>
+      <text x="325" y="87" text-anchor="middle" font-size="8" fill="#92400e">✓ Harm Category</text>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker>
+        <marker id="arr2" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#059669"/></marker>
+      </defs>
+    </svg>`,
+
+    'TGQ-Former': `<svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="40" width="75" height="50" rx="5" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="42" y="63" text-anchor="middle" font-size="8" fill="#1d4ed8">Product</text>
+      <text x="42" y="76" text-anchor="middle" font-size="8" fill="#1d4ed8">Image (noisy)</text>
+      <rect x="5" y="100" width="75" height="25" rx="5" fill="#f0fdf4" stroke="#059669"/>
+      <text x="42" y="116" text-anchor="middle" font-size="8" fill="#065f46">Metadata</text>
+      <line x1="80" y1="65" x2="110" y2="55" stroke="#2563eb" stroke-width="1.2"/>
+      <line x1="80" y1="112" x2="110" y2="95" stroke="#059669" stroke-width="1.2"/>
+      <rect x="110" y="35" width="85" height="75" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="152" y="58" text-anchor="middle" font-size="8" fill="#92400e">Hybrid-Query</text>
+      <text x="152" y="70" text-anchor="middle" font-size="8" fill="#92400e">Connector</text>
+      <text x="152" y="84" text-anchor="middle" font-size="7" fill="#b45309">Anchored Path ↕</text>
+      <text x="152" y="97" text-anchor="middle" font-size="7" fill="#b45309">Explore Path ↕</text>
+      <line x1="195" y1="72" x2="225" y2="72" stroke="#d97706" stroke-width="1.2"/>
+      <rect x="225" y="45" width="80" height="55" rx="6" fill="#f5f3ff" stroke="#7c3aed"/>
+      <text x="265" y="65" text-anchor="middle" font-size="8" fill="#5b21b6">Dual-Gate</text>
+      <text x="265" y="78" text-anchor="middle" font-size="8" fill="#5b21b6">Modulation</text>
+      <text x="265" y="91" text-anchor="middle" font-size="7" fill="#7c3aed">(reliability-aware)</text>
+      <line x1="305" y1="72" x2="330" y2="72" stroke="#7c3aed" stroke-width="1.2"/>
+      <rect x="330" y="52" width="65" height="40" rx="5" fill="#d1fae5" stroke="#059669"/>
+      <text x="362" y="70" text-anchor="middle" font-size="8" fill="#065f46">HR@100</text>
+      <text x="362" y="83" text-anchor="middle" font-size="8" fill="#065f46">+6.04%</text>
+    </svg>`,
+
+    'MM-LLM-Rec': `<svg viewBox="0 0 430 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="30" width="80" height="60" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="45" y="57" text-anchor="middle" font-size="8" fill="#1d4ed8">Video/Image</text>
+      <text x="45" y="70" text-anchor="middle" font-size="8" fill="#1d4ed8">Audio/Text</text>
+      <text x="45" y="83" text-anchor="middle" font-size="7" fill="#3b82f6">UGC Content</text>
+      <line x1="85" y1="60" x2="110" y2="60" stroke="#2563eb" stroke-width="1.2"/>
+      <rect x="110" y="20" width="95" height="80" rx="6" fill="#f0fdf4" stroke="#059669"/>
+      <text x="157" y="42" text-anchor="middle" font-size="8" fill="#065f46">① Content Interp.</text>
+      <text x="157" y="55" text-anchor="middle" font-size="7" fill="#059669">Q-Former + LLaMA2</text>
+      <text x="157" y="67" text-anchor="middle" font-size="7" fill="#059669">→ Caption</text>
+      <line x1="205" y1="60" x2="230" y2="60" stroke="#059669" stroke-width="1.2"/>
+      <rect x="230" y="30" width="90" height="60" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="275" y="52" text-anchor="middle" font-size="8" fill="#92400e">② Repr. Extract.</text>
+      <text x="275" y="65" text-anchor="middle" font-size="7" fill="#b45309">Tokenize caption</text>
+      <text x="275" y="78" text-anchor="middle" font-size="7" fill="#b45309">→ DLRM features</text>
+      <line x1="320" y1="60" x2="345" y2="60" stroke="#d97706" stroke-width="1.2"/>
+      <rect x="345" y="30" width="80" height="60" rx="6" fill="#fce7f3" stroke="#db2777"/>
+      <text x="385" y="52" text-anchor="middle" font-size="8" fill="#9d174d">③ Pipeline Int.</text>
+      <text x="385" y="65" text-anchor="middle" font-size="7" fill="#db2777">1.5B LLaMA2</text>
+      <text x="385" y="78" text-anchor="middle" font-size="7" fill="#db2777">Real-time DLRM</text>
+    </svg>`,
+
+    'Who-Decides-Harmful': `<svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="45" width="70" height="40" rx="5" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="40" y="63" text-anchor="middle" font-size="8" fill="#1d4ed8">Content</text>
+      <text x="40" y="76" text-anchor="middle" font-size="8" fill="#1d4ed8">Input</text>
+      <line x1="75" y1="65" x2="100" y2="65" stroke="#2563eb" stroke-width="1.2"/>
+      <rect x="100" y="30" width="80" height="70" rx="6" fill="#f0fdf4" stroke="#059669"/>
+      <text x="140" y="50" text-anchor="middle" font-size="8" fill="#065f46">Manager Agent</text>
+      <text x="140" y="63" text-anchor="middle" font-size="7" fill="#059669">+ Expert Agents</text>
+      <text x="140" y="76" text-anchor="middle" font-size="7" fill="#059669">(harm categories)</text>
+      <text x="140" y="89" text-anchor="middle" font-size="7" fill="#059669">orchestration</text>
+      <rect x="100" y="105" width="80" height="20" rx="4" fill="#f5f3ff" stroke="#7c3aed"/>
+      <text x="140" y="119" text-anchor="middle" font-size="7" fill="#5b21b6">Ghost Profile Agent</text>
+      <line x1="140" y1="100" x2="140" y2="105" stroke="#7c3aed" stroke-width="1"/>
+      <line x1="180" y1="65" x2="210" y2="65" stroke="#059669" stroke-width="1.2"/>
+      <rect x="210" y="40" width="90" height="50" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="255" y="61" text-anchor="middle" font-size="8" fill="#92400e">Personalised</text>
+      <text x="255" y="74" text-anchor="middle" font-size="8" fill="#92400e">Moderation</text>
+      <text x="255" y="87" text-anchor="middle" font-size="7" fill="#b45309">Decision</text>
+      <line x1="300" y1="65" x2="325" y2="65" stroke="#d97706" stroke-width="1.2"/>
+      <rect x="325" y="47" width="70" height="36" rx="5" fill="#d1fae5" stroke="#059669"/>
+      <text x="360" y="63" text-anchor="middle" font-size="8" fill="#065f46">User-adaptive</text>
+      <text x="360" y="76" text-anchor="middle" font-size="8" fill="#065f46">Outcome</text>
+    </svg>`,
+  };
+  return figs[paper.id] || null;
+}
+
+// ─── Render ────────────────────────────────────────────────────────────────────
+function scoreClass(s) { return s >= 75 ? 'high' : s >= 55 ? 'mid' : 'low'; }
+
+function renderCards(papers) {
+  const grid = document.getElementById('papers-grid');
+  const noResults = document.getElementById('no-results');
+  const statsBar = document.getElementById('stats-bar');
+
+  if (papers.length === 0) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    statsBar.innerHTML = `<span class="stat">${lang==='zh'?'无匹配论文':'No matching papers'}</span>`;
+    return;
+  }
+
+  noResults.style.display = 'none';
+  const strongCount = papers.filter(p => p.bucket === 'STRONG').length;
+  const weakCount = papers.filter(p => p.bucket === 'WEAK').length;
+  statsBar.innerHTML = `
+    <span class="stat">${lang==='zh'?'共':'Total'}: <b>${papers.length}</b></span>
+    <span class="stat">STRONG: <b>${strongCount}</b></span>
+    <span class="stat">WEAK: <b>${weakCount}</b></span>
+    <span class="stat">${lang==='zh'?'均分':'Avg Score'}: <b>${Math.round(papers.reduce((s,p)=>s+p.score,0)/papers.length)}</b></span>
+  `;
+
+  grid.innerHTML = papers.map(p => {
+    const uid = p.id.replace(/[^a-z0-9]/gi, '_');
+    const methodText = lang === 'zh' ? p.method_zh : p.method_en;
+    const innovText = lang === 'zh' ? p.innovation_zh : p.innovation_en;
+    const fig = generateFigure(p);
+    const hasCode = !!p.code_url;
+    const hasModel = !!p.model_url;
+
+    return `
+    <div class="paper-card" id="card-${uid}">
+      <div class="card-header">
+        <div class="card-title">${p.title}</div>
+        <div class="score-badge ${scoreClass(p.score)}">${p.score}</div>
+      </div>
+
+      <div class="card-meta">
+        <div class="authors">${p.authors}</div>
+        <div>${p.affiliation}${p.venue ? ` &middot; <b>${p.venue}</b>` : ''}</div>
+      </div>
+
+      <div class="card-tags">
+        <span class="tag tag-bucket-${p.bucket}">${p.bucket}</span>
+        ${p.tags.slice(0,3).map(t=>`<span class="tag tag-domain">${t}</span>`).join('')}
+        <span class="date-stamp">${p.date}</span>
+      </div>
+
+      <div class="card-method">${methodText}</div>
+
+      ${fig ? `
+        <div class="method-figure">
+          <button class="toggle-btn" onclick="toggleFig('${uid}')">${lang==='zh'?'▾ 方法图示':'▾ Method Figure'}</button>
+          <div class="figure-section" id="fig-${uid}">${fig}</div>
+        </div>` : ''}
+
+      <div class="card-innovation">
+        <b>${lang==='zh'?'创新性':'Innovation'}:</b> ${innovText}
+      </div>
+
+      <div class="card-metrics">
+        <b>${lang==='zh'?'关键指标':'Key Metrics'}:</b><br>${p.key_metrics}
+      </div>
+
+      ${renderScoreBreakdown(p.scoring, uid)}
+
+      <div class="card-links">
+        <a class="card-link link-paper" href="${p.paper_url}" target="_blank">📄 arXiv</a>
+        ${hasCode ? `<a class="card-link link-code" href="${p.code_url}" target="_blank">💻 Code</a>` : ''}
+        ${hasModel ? `<a class="card-link link-model" href="${p.model_url}" target="_blank">🤗 Model</a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFig(uid) {
+  document.getElementById(`fig-${uid}`)?.classList.toggle('visible');
+}
+
+// ─── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const resp = await fetch('papers.json');
+    const data = await resp.json();
+    PAPERS = data.papers || [];
+
+    // Populate date picker
+    const datePicker = document.getElementById('date-picker');
+    const dates = [...new Set(PAPERS.map(p => p.date))].sort().reverse();
+    dates.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d; opt.textContent = d;
+      datePicker.appendChild(opt);
+    });
+    // Default to latest date
+    if (dates.length > 0) datePicker.value = dates[0];
+
+    filterCards();
+  } catch(e) {
+    console.error('Failed to load papers.json', e);
+    document.getElementById('papers-grid').innerHTML = '<p style="padding:20px;color:red">Failed to load papers.json</p>';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
