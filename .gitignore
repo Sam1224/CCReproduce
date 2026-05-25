@@ -21,3 +21,11 @@ caches/
 
 # OS
 .DS_Store
+
+# Frontend
+node_modules/
+dist/
+pnpm-debug.log*
+
+# SQLite
+*.sqlite3
