@@ -1,0 +1,197 @@
+{
+  "rules": [
+    {
+      "rule_id": "H001",
+      "description": "Content that explicitly targets an individual or group based on race, ethnicity, or national origin with intent to degrade.",
+      "policy_family": "hate_speech",
+      "keywords": [
+        "racial slur",
+        "ethnic insult",
+        "derogatory"
+      ],
+      "requires_visual_evidence": false,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "H002",
+      "description": "Content using dehumanizing language (e.g., comparing people to animals, insects, or objects) targeting a protected group.",
+      "policy_family": "hate_speech",
+      "keywords": [
+        "dehumanize",
+        "subhuman",
+        "vermin"
+      ],
+      "requires_visual_evidence": false,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "H003",
+      "description": "Imagery that depicts protected groups in a degrading or stereotypical manner that promotes prejudice.",
+      "policy_family": "hate_speech",
+      "keywords": [
+        "caricature",
+        "degrading imagery"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": false
+    },
+    {
+      "rule_id": "H004",
+      "description": "Counter-speech or educational content discussing hate speech in a factual or critical framing (exemption).",
+      "policy_family": "hate_speech",
+      "keywords": [
+        "educational",
+        "counter-speech",
+        "documentary"
+      ],
+      "requires_visual_evidence": false,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "A001",
+      "description": "Sexually explicit imagery showing nudity in a sexual context.",
+      "policy_family": "adult_content",
+      "keywords": [
+        "explicit",
+        "nudity",
+        "sexual"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": false
+    },
+    {
+      "rule_id": "A002",
+      "description": "Suggestive content that is sexually implicit but not fully explicit (eligible for age-gate, not removal).",
+      "policy_family": "adult_content",
+      "keywords": [
+        "suggestive",
+        "innuendo"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "A003",
+      "description": "Content depicting or soliciting sexual activity involving minors (absolute prohibition).",
+      "policy_family": "adult_content",
+      "keywords": [
+        "minor",
+        "child",
+        "underage"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "A004",
+      "description": "Licensed artistic or medical content depicting nudity in a non-sexual context (exemption).",
+      "policy_family": "adult_content",
+      "keywords": [
+        "medical",
+        "artistic",
+        "anatomy"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "F001",
+      "description": "Health claims that promise to cure, treat, or prevent medical conditions without scientific evidence.",
+      "policy_family": "fraud_misleading",
+      "keywords": [
+        "cure",
+        "treat",
+        "prevent",
+        "guaranteed"
+      ],
+      "requires_visual_evidence": false,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "F002",
+      "description": "Financial claims using fabricated testimonials, fake before/after imagery, or unverifiable statistics.",
+      "policy_family": "fraud_misleading",
+      "keywords": [
+        "testimonial",
+        "before-after",
+        "guaranteed profit"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "F003",
+      "description": "Counterfeit goods: products falsely representing brand ownership or quality certification.",
+      "policy_family": "fraud_misleading",
+      "keywords": [
+        "fake brand",
+        "counterfeit",
+        "replica"
+      ],
+      "requires_visual_evidence": true,
+      "requires_text_evidence": true
+    },
+    {
+      "rule_id": "F004",
+      "description": "Satirical or clearly labeled hypothetical content discussing fraudulent schemes (exemption).",
+      "policy_family": "fraud_misleading",
+      "keywords": [
+        "satire",
+        "hypothetical",
+        "example"
+      ],
+      "requires_visual_evidence": false,
+      "requires_text_evidence": true
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "REL001",
+      "source_rule_id": "H004",
+      "target_rule_id": "H001",
+      "relation_type": "priority"
+    },
+    {
+      "relation_id": "REL002",
+      "source_rule_id": "H004",
+      "target_rule_id": "H002",
+      "relation_type": "priority"
+    },
+    {
+      "relation_id": "REL003",
+      "source_rule_id": "A001",
+      "target_rule_id": "A002",
+      "relation_type": "exclusive"
+    },
+    {
+      "relation_id": "REL004",
+      "source_rule_id": "A001",
+      "target_rule_id": "A003",
+      "relation_type": "conditional"
+    },
+    {
+      "relation_id": "REL005",
+      "source_rule_id": "A004",
+      "target_rule_id": "A001",
+      "relation_type": "priority"
+    },
+    {
+      "relation_id": "REL006",
+      "source_rule_id": "F001",
+      "target_rule_id": "F002",
+      "relation_type": "conditional"
+    },
+    {
+      "relation_id": "REL007",
+      "source_rule_id": "F004",
+      "target_rule_id": "F001",
+      "relation_type": "priority"
+    },
+    {
+      "relation_id": "REL008",
+      "source_rule_id": "F002",
+      "target_rule_id": "F003",
+      "relation_type": "conjunction"
+    }
+  ]
+}

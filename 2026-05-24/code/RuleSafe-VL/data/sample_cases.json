@@ -1,0 +1,249 @@
+[
+  {
+    "case_id": "H_001",
+    "policy_family": "hate_speech",
+    "text_content": "These people are literally vermin infesting our neighborhoods. We need to remove them.",
+    "image_file": null,
+    "gt_activated_rules": [
+      "H001",
+      "H002"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "H_002",
+    "policy_family": "hate_speech",
+    "text_content": "Documentary: Understanding the history of racist propaganda in 20th century Europe. [Educational content]",
+    "image_file": null,
+    "gt_activated_rules": [
+      "H001",
+      "H004"
+    ],
+    "gt_applicable_relations": [
+      "REL001"
+    ],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "H_003",
+    "policy_family": "hate_speech",
+    "text_content": "Look at this image, it speaks for itself.",
+    "image_file": "toy_hate_imagery.jpg",
+    "gt_activated_rules": [
+      "H003"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": false,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "H_004",
+    "policy_family": "hate_speech",
+    "text_content": "I genuinely enjoy learning about different cultures and their traditions.",
+    "image_file": null,
+    "gt_activated_rules": [],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "H_005",
+    "policy_family": "hate_speech",
+    "text_content": "These subhumans should go back where they came from. [This is NOT educational framing]",
+    "image_file": null,
+    "gt_activated_rules": [
+      "H001",
+      "H002"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "A_001",
+    "policy_family": "adult_content",
+    "text_content": "Medical anatomy textbook page showing reproductive system diagram.",
+    "image_file": "toy_anatomy.jpg",
+    "gt_activated_rules": [
+      "A001",
+      "A004"
+    ],
+    "gt_applicable_relations": [
+      "REL005"
+    ],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "A_002",
+    "policy_family": "adult_content",
+    "text_content": "Late night entertainment, adults only. Subscribe for exclusive content.",
+    "image_file": "toy_suggestive.jpg",
+    "gt_activated_rules": [
+      "A002"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "restricted"
+  },
+  {
+    "case_id": "A_003",
+    "policy_family": "adult_content",
+    "text_content": "Family-friendly cooking show for kids! Fun recipes everyone will love.",
+    "image_file": null,
+    "gt_activated_rules": [],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "A_004",
+    "policy_family": "adult_content",
+    "text_content": "Explicit adult content (text too graphic to reproduce in reproduction sample)",
+    "image_file": "toy_explicit.jpg",
+    "gt_activated_rules": [
+      "A001"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "A_005",
+    "policy_family": "adult_content",
+    "text_content": "Sculpture exhibition at the national museum. Classical Greek artwork on display.",
+    "image_file": "toy_sculpture.jpg",
+    "gt_activated_rules": [
+      "A004"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "F_001",
+    "policy_family": "fraud_misleading",
+    "text_content": "MIRACLE CURE! Our supplement GUARANTEES to reverse diabetes in 7 days! Doctor-verified results! Before: 200mg/dL. After: 90mg/dL!",
+    "image_file": "toy_before_after.jpg",
+    "gt_activated_rules": [
+      "F001",
+      "F002"
+    ],
+    "gt_applicable_relations": [
+      "REL006"
+    ],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "F_002",
+    "policy_family": "fraud_misleading",
+    "text_content": "SATIRE: A hypothetical ad for a miracle cure that claims to fix everything. (Educational example of misleading health marketing)",
+    "image_file": null,
+    "gt_activated_rules": [
+      "F001",
+      "F004"
+    ],
+    "gt_applicable_relations": [
+      "REL007"
+    ],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "F_003",
+    "policy_family": "fraud_misleading",
+    "text_content": "High quality fashion bag, genuine leather, brand new. Limited stock.",
+    "image_file": "toy_fake_bag.jpg",
+    "gt_activated_rules": [
+      "F003"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": false,
+    "gt_decision": "restricted"
+  },
+  {
+    "case_id": "F_004",
+    "policy_family": "fraud_misleading",
+    "text_content": "Certified organic apples from local farms. No additives, no preservatives.",
+    "image_file": null,
+    "gt_activated_rules": [],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "F_005",
+    "policy_family": "fraud_misleading",
+    "text_content": "This weight loss tea burns fat overnight! Our customers lost 30 lbs in a month! 100% natural! Guaranteed or money back!",
+    "image_file": null,
+    "gt_activated_rules": [
+      "F001"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "AMB_001",
+    "policy_family": "hate_speech",
+    "text_content": "Some people say that [group] are inferior, but research shows this is completely false.",
+    "image_file": null,
+    "gt_activated_rules": [
+      "H001",
+      "H004"
+    ],
+    "gt_applicable_relations": [
+      "REL001"
+    ],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "AMB_002",
+    "policy_family": "fraud_misleading",
+    "text_content": "Results may vary. This product is not intended to diagnose, treat, or cure any disease.",
+    "image_file": null,
+    "gt_activated_rules": [],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  },
+  {
+    "case_id": "AMB_003",
+    "policy_family": "adult_content",
+    "text_content": "Fashion shoot for swimwear collection. Professional photography.",
+    "image_file": "toy_swimwear.jpg",
+    "gt_activated_rules": [
+      "A002"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": false,
+    "gt_decision": "restricted"
+  },
+  {
+    "case_id": "AMB_004",
+    "policy_family": "fraud_misleading",
+    "text_content": "REPLICA watches at replica prices! Inspired by luxury designs.",
+    "image_file": "toy_replica_watch.jpg",
+    "gt_activated_rules": [
+      "F003"
+    ],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "removed"
+  },
+  {
+    "case_id": "AMB_005",
+    "policy_family": "hate_speech",
+    "text_content": "I think people from [country] are generally known for their work ethic. Thoughts?",
+    "image_file": null,
+    "gt_activated_rules": [],
+    "gt_applicable_relations": [],
+    "gt_sufficient_evidence": true,
+    "gt_decision": "allowed"
+  }
+]

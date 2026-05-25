@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — AI Paper Daily</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #fff;
+    --border: #e2e6ea;
+    --text: #212529;
+    --muted: #6c757d;
+    --accent: #3b5bdb;
+    --accent-light: #e7ecff;
+    --strong-tag: #d1f0d1;
+    --weak-tag: #fff3cd;
+    --tag-text: #333;
+    --score-high: #1a7a2e;
+    --score-mid: #865a00;
+    --score-low: #555;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* Header */
+  header { background: #fff; border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 20px; font-weight: 700; color: var(--accent); }
+  header .subtitle { font-size: 12px; color: var(--muted); }
+  .lang-toggle { margin-left: auto; display: flex; gap: 8px; }
+  .lang-toggle button { padding: 4px 12px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-size: 12px; }
+  .lang-toggle button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Controls */
+  .controls { padding: 16px 32px; background: #fff; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .controls label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .controls select, .controls input[type=date] {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+    font-size: 13px; background: var(--bg);
+  }
+  .score-filter { display: flex; align-items: center; gap: 8px; }
+  .score-filter input[type=range] { width: 120px; }
+  #scoreVal { font-weight: 700; color: var(--accent); }
+  .domain-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .domain-tag {
+    padding: 3px 10px; border-radius: 12px; font-size: 11px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--bg); transition: background 0.15s;
+  }
+  .domain-tag.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Grid */
+  main { padding: 24px 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  /* Card */
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  .card-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--border); }
+  .card-header h2 { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 6px; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .tag.strong { background: var(--strong-tag); color: #1a5c2a; }
+  .tag.weak { background: var(--weak-tag); color: #7a5200; }
+  .tag.domain { background: var(--accent-light); color: var(--accent); }
+  .score-badge { padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; }
+  .score-badge.high { background: #d4edda; color: var(--score-high); }
+  .score-badge.mid { background: #fff3cd; color: var(--score-mid); }
+  .score-badge.low { background: #f0f0f0; color: var(--score-low); }
+  .date-tag { font-size: 11px; color: var(--muted); }
+
+  .card-body { padding: 14px 18px; flex: 1; }
+  .card-body h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
+  .card-body p { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 12px; }
+  .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .bilingual .col { font-size: 12px; line-height: 1.5; }
+  .bilingual .col .lang-label { font-size: 10px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+
+  /* Collapsible sections */
+  .toggle-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--accent); padding: 0; text-decoration: underline; }
+  .collapsible { overflow: hidden; transition: max-height 0.3s ease; max-height: 0; }
+  .collapsible.open { max-height: 600px; }
+  .score-breakdown { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .score-breakdown th { text-align: left; font-weight: 600; padding: 4px 8px; background: var(--bg); }
+  .score-breakdown td { padding: 4px 8px; border-top: 1px solid var(--border); }
+  .score-bar { height: 6px; border-radius: 3px; background: #dee2e6; }
+  .score-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+
+  /* Metrics highlight */
+  .metrics-block { background: #f8f9fa; border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 12px; }
+  .metrics-block strong { color: var(--accent); }
+
+  /* Figure */
+  .figure-block { background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin: 10px 0; text-align: center; }
+  .figure-block svg { max-width: 100%; height: auto; }
+  .figure-caption { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+  .card-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+  .card-footer a { font-size: 12px; color: var(--accent); text-decoration: none; }
+  .card-footer a:hover { text-decoration: underline; }
+
+  /* No results */
+  .no-results { text-align: center; padding: 60px; color: var(--muted); }
+
+  /* Date bar */
+  .date-bar { font-size: 13px; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+  .date-bar span { color: var(--accent); }
+
+  @media (max-width: 700px) {
+    header { padding: 12px 16px; }
+    .controls, main { padding: 12px 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .bilingual { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce · AI Paper Daily</h1>
+    <div class="subtitle">E-commerce Content Ecosystem &amp; Influencer Governance · LLM / VLM / MLLM</div>
+  </div>
+  <div class="lang-toggle">
+    <button id="btnEn" class="active" onclick="setLang('en')">EN</button>
+    <button id="btnZh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div>
+    <label>Date</label><br>
+    <input type="date" id="datePicker" value="2026-05-24" onchange="filterCards()">
+  </div>
+  <div class="score-filter">
+    <label>Min Score</label><br>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="range" id="scoreSlider" min="0" max="100" value="0" oninput="updateScore(this.value)">
+      <span id="scoreVal">0</span>
+    </div>
+  </div>
+  <div>
+    <label>Domain Tags</label><br>
+    <div class="domain-tags">
+      <button class="domain-tag active" data-tag="all" onclick="setTag(this,'all')">All</button>
+      <button class="domain-tag" data-tag="content-governance" onclick="setTag(this,'content-governance')">Content Governance</button>
+      <button class="domain-tag" data-tag="recommendation" onclick="setTag(this,'recommendation')">Recommendation</button>
+      <button class="domain-tag" data-tag="data-quality" onclick="setTag(this,'data-quality')">Data Quality</button>
+      <button class="domain-tag" data-tag="agents" onclick="setTag(this,'agents')">Agents</button>
+      <button class="domain-tag" data-tag="aigc-detection" onclick="setTag(this,'aigc-detection')">AIGC Detection</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="date-bar">Showing papers for date: <span id="currentDate">2026-05-24</span> (GMT+8)</div>
+  <div class="grid" id="grid"></div>
+  <div class="no-results" id="noResults" style="display:none">No papers match the current filters.</div>
+</main>
+
+<script>
+// ===== Embedded paper database =====
+const PAPERS_DB = {
+  "2026-05-24": [
+    {
+      id: "rulesafe_vl",
+      title: "RuleSafe-VL: Evaluating Rule-Conditioned Decision Reasoning in Vision-Language Content Moderation",
+      authors: "Zhifeng Lu, Dianyuan Wang, Yuhu Shang, Zhenbo Xu",
+      affiliation: "Academic / Industry Lab",
+      arxiv: "2605.07760",
+      date: "2026-05-08",
+      bucket: "strong",
+      score: 80,
+      domains: ["content-governance", "aigc-detection"],
+      method_en: "Constructs the first benchmark for rule-conditioned decision reasoning in VLM content moderation. Formalizes 93 atomic rules and 92 typed rule relations from public platform policies, yielding 2,166 context-sensitive image-text cases across three high-risk policy families (hate speech, adult content, fraud). Evaluates whether VLMs truly understand policy rules rather than relying on superficial label cues.",
+      method_zh: "构建首个基于规则条件推理的视觉语言内容审核基准。从公开平台政策中提炼 93 条原子规则和 92 种规则关系，生成 2,166 个图文案例，覆盖三大高风险政策族，评估 VLM 是否真正理解政策规则而非依赖表面特征。",
+      innovation_en: "Existing VLM safety benchmarks reduce moderation to label matching, ignoring policy rule structure. RuleSafe-VL introduces rule activation F1, interaction accuracy, and evidence sufficiency as evaluation dimensions — testing whether models apply policy correctly, not just arrive at the right label.",
+      innovation_zh: "现有安全基准将审核简化为标签匹配。RuleSafe-VL 首次将平台政策规则形式化为有向图，测试规则激活、交互推理、充分性三层能力，揭示 SOTA VLM 在政策驱动审核中的系统性缺陷。",
+      metrics: "SOTA VLMs: decision macro-F1 < 60% · Human baseline: > 85% · Rule interaction reasoning failure rate: significant across all models tested",
+      scoreBreakdown: {
+        "Innovation": {score: 26, max: 30},
+        "Experimental SOTA Delta": {score: 10, max: 15},
+        "Experimental Quality": {score: 12, max: 15},
+        "Efficiency": {score: 4, max: 10},
+        "Generalization": {score: 5, max: 5},
+        "Domain Relevance": {score: 23, max: 25}
+      },
+      codeLink: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-05-24/2026-05-24/code/RuleSafe-VL",
+      hasFigure: true
+    },
+    {
+      id: "tgq_former",
+      title: "Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation (TGQ-Former)",
+      authors: "(See paper for full author list)",
+      affiliation: "Industry Lab",
+      arxiv: "2605.17366",
+      date: "2026-05-17",
+      bucket: "strong",
+      score: 79,
+      domains: ["recommendation"],
+      method_en: "Proposes TGQ-Former, a text-guided Q-Former connector that uses structured product metadata (title, category, attributes) as semantic guidance for visual token extraction. A hybrid-query design maintains both a metadata-anchored stream and an exploratory visual stream, fused by a reliability-aware dual-gated modulation module that adapts to image noise levels.",
+      method_zh: "提出 TGQ-Former，以商品结构化元数据为语义锚引导视觉 token 提取，双路设计兼顾语义对齐与视觉发现，可靠性感知双门调制模块根据图像噪声自适应融合两路信号，解决电商图像噪声导致的检索退化问题。",
+      innovation_en: "Standard Q-Formers suffer on noisy e-commerce product images (promotional overlays, watermarks). TGQ-Former is the first to use structured text metadata as Q-Former query guidance, complemented by a reliability-aware gate that dynamically weights metadata-anchored vs. exploratory visual evidence based on estimated image quality.",
+      innovation_zh: "首次将商品结构化文本作为 Q-Former query 的语义约束，双门可靠性调制在推理时自适应图像质量，工程实用性强，可部署于亿级商品全库检索系统。",
+      metrics: "Hit Rate@100 (H@100): +6.04% avg over strong connector baselines · Real-world large-scale e-commerce dataset · Full-pool retrieval evaluation",
+      scoreBreakdown: {
+        "Innovation": {score: 23, max: 30},
+        "Experimental SOTA Delta": {score: 11, max: 15},
+        "Experimental Quality": {score: 12, max: 15},
+        "Efficiency": {score: 6, max: 10},
+        "Generalization": {score: 4, max: 5},
+        "Domain Relevance": {score: 23, max: 25}
+      },
+      codeLink: null,
+      hasFigure: true
+    },
+    {
+      id: "meta_mllm_rec",
+      title: "A General Framework for Multimodal LLM-Based Multimedia Understanding in Large-Scale Recommendation Systems",
+      authors: "Yiming Zhu, Xu Liu, Ziyun Xu, Zheng Wu, Joena Zhang, Sirius Chen et al.",
+      affiliation: "Meta Platforms, Menlo Park, USA",
+      arxiv: "2605.09338",
+      date: "2026-05-10",
+      bucket: "strong",
+      score: 72,
+      domains: ["recommendation"],
+      method_en: "Tripartite framework for integrating MM-LLMs into industrial-scale recommendation: (1) offline LLaMA2-based MM-LLM generates rich captions and semantic embeddings; (2) semantic distillation layer compresses LLM knowledge into lightweight online models; (3) online recommendation layer uses distilled models under strict latency constraints. Deployed at Meta scale.",
+      method_zh: "三层工业级框架：离线 MM-LLM 生成丰富 caption + 语义嵌入；语义蒸馏层压缩到轻量在线模型；在线推荐层满足延迟约束。在 Meta 大规模系统上验证，提供工业 MM-LLM 集成实用范式。",
+      innovation_en: "MM-LLMs are too slow for real-time recommendation. This framework positions LLMs as offline semantic annotators, using caption distillation to inject LLM semantics into lightweight real-time rankers — solving the latency-accuracy tradeoff that has prevented MM-LLM adoption in production.",
+      innovation_zh: "将 LLM 定位为离线语义标注器而非在线推理器，通过 caption 蒸馏解决延迟-准确率矛盾，来自 Meta 真实系统的验证具有高可信度，为大规模电商平台提供直接参考。",
+      metrics: "User engagement rate: significant lift at Meta scale · Online inference latency: <10ms · Outperforms lightweight vision encoder baselines",
+      scoreBreakdown: {
+        "Innovation": {score: 18, max: 30},
+        "Experimental SOTA Delta": {score: 10, max: 15},
+        "Experimental Quality": {score: 10, max: 15},
+        "Efficiency": {score: 8, max: 10},
+        "Generalization": {score: 4, max: 5},
+        "Domain Relevance": {score: 22, max: 25}
+      },
+      codeLink: null,
+      hasFigure: false
+    },
+    {
+      id: "who_decides_harmful",
+      title: "Who Decides What Is Harmful? Content Moderation Policy Through A Multi-Agent Personalised Inference Framework",
+      authors: "Ewelina Gajewska et al.",
+      affiliation: "European Academic / Industry Lab",
+      arxiv: "2605.01416",
+      date: "2026-05-02",
+      bucket: "strong",
+      score: 68,
+      domains: ["content-governance", "agents"],
+      method_en: "Three-tier multi-agent content moderation: Expert Agents (domain-specific LLMs for each violation type) + Manager Agent (orchestrates routing and aggregation) + Ghost Profile Agent (simulates user sensitivity from demographics and cultural background). Three layers cooperate to convert one-size-fits-all policy into personalized moderation decisions.",
+      method_zh: "三层多智能体内容审核框架：专家智能体层（领域 LLM 专家）+ 管理智能体层（协调路由和综合）+ 幽灵档案智能体层（基于用户人口统计学模拟用户视角），三层协同将统一政策转化为个性化内容判断，准确率提升 32%。",
+      innovation_en: "One-size-fits-all moderation over- and under-censors simultaneously. The Ghost Profile Agent is the core innovation: personalizing moderation by simulating user perspectives rather than using raw user data, preserving privacy while enabling sensitivity-aware decisions. First application of preference alignment principles to operational content moderation.",
+      innovation_zh: "'幽灵档案智能体'是核心创新：通过模拟而非直接使用用户数据实现个性化，保护隐私；首次将 RLHF 式偏好对齐思路系统引入内容审核决策，准确率提升 32%。",
+      metrics: "Personalized moderation accuracy: +32% over unified policy baseline · User sensitivity alignment: significant improvement across demographic groups",
+      scoreBreakdown: {
+        "Innovation": {score: 20, max: 30},
+        "Experimental SOTA Delta": {score: 11, max: 15},
+        "Experimental Quality": {score: 9, max: 15},
+        "Efficiency": {score: 5, max: 10},
+        "Generalization": {score: 3, max: 5},
+        "Domain Relevance": {score: 20, max: 25}
+      },
+      codeLink: null,
+      hasFigure: false
+    },
+    {
+      id: "detectrl_x",
+      title: "DetectRL-X: Towards Reliable Multilingual and Real-World LLM-Generated Text Detection",
+      authors: "Junchao Wu, Yefeng Liu, Chenyu Zhu, Hao Zhang, Zeyu Wu, Tianqi Shi, Yichao Du, Longyue Wang, Weihua Luo, Jinsong Su, Derek F. Wong",
+      affiliation: "Xiamen University, Tencent et al.",
+      arxiv: "2605.15518",
+      date: "2026-05-15",
+      bucket: "weak",
+      score: 61,
+      domains: ["aigc-detection", "content-governance"],
+      method_en: "Comprehensive multilingual AIGC text detection benchmark: 8 languages × 6 high-risk domains (including e-commerce reviews) × 4 commercial LLMs × AI-assisted writing operations (polishing, expanding, condensing). 8 evaluation dimensions covering cross-lingual generalization, robustness to adversarial attacks, and low-resource scenarios.",
+      method_zh: "迄今最全面的多语言 LLM 文本检测基准：8 种语言 × 6 个高风险领域（含电商评论）× 4 种商业 LLM × AI 辅助写作操作（润色/扩写/压缩），8 个评估维度，系统揭示当前检测器在真实多语言商业场景下的可靠性瓶颈。",
+      innovation_en: "Existing AIGC detection benchmarks are English-only and ignore human-AI collaborative writing (the most common real-world scenario). DetectRL-X covers 8 languages and realistic AI-assisted writing patterns (polishing is harder to detect than fully generated text), directly addressing fake reviews and AI-generated product descriptions on e-commerce platforms.",
+      innovation_zh: "首次全面覆盖 AI 辅助写作（润色比完全机器生成更难检测），直接对应虚假商品评论、AI 生成商品描述等电商违规场景；多语言覆盖远超现有基准。",
+      metrics: "Cross-lingual AUC: < 0.70 for current detectors · AI-polished text detection significantly harder than fully generated · Best: cross-lingual pretrained models",
+      scoreBreakdown: {
+        "Innovation": {score: 18, max: 30},
+        "Experimental SOTA Delta": {score: 10, max: 15},
+        "Experimental Quality": {score: 11, max: 15},
+        "Efficiency": {score: 4, max: 10},
+        "Generalization": {score: 4, max: 5},
+        "Domain Relevance": {score: 14, max: 25}
+      },
+      codeLink: null,
+      hasFigure: false
+    },
+    {
+      id: "bitter_lesson_data_filtering",
+      title: "A Bitter Lesson for Data Filtering",
+      authors: "Christopher Mohri, John Duchi, Tatsunori Hashimoto",
+      affiliation: "Stanford University",
+      arxiv: "2605.19407",
+      date: "2026-05-19",
+      bucket: "weak",
+      score: 60,
+      domains: ["data-quality"],
+      method_en: "Systematic scaling studies investigating data filtering for LLM pretraining in the high-compute, data-scarce regime. Compares no-filter vs. various filtering strengths, including extreme low-quality data (token shuffling, random injection). Finds that sufficiently trained large models tolerate and even benefit from nominally 'poor' data.",
+      method_zh: "系统性 scaling 实验研究数据过滤对高计算量、数据稀缺场景下大模型预训练的影响。发现充分训练的大参数量模型不仅能容忍低质量数据，甚至能从'坏数据'中获益，挑战'过滤优先'的行业共识。",
+      innovation_en: "Challenges the industry belief that high-quality data filtering is essential for strong LLMs. In the high-compute data-scarce regime, the best filter is no filter — sufficiently trained large models benefit from raw, diverse, even noisy data. Defines the boundary conditions for when data filtering helps vs. hurts.",
+      innovation_zh: "在高计算量-数据稀缺场景下'最好的过滤策略就是不过滤'，挑战行业共识，揭示'数据过滤有益'的适用边界，对电商域 LLM 预训练策略有直接指导价值。",
+      metrics: "High-compute regime: no-filter ≥ filtered (perplexity + downstream tasks) · Random token injection ≈ re-epoching same data · Boundary: low-compute still benefits from filtering",
+      scoreBreakdown: {
+        "Innovation": {score: 20, max: 30},
+        "Experimental SOTA Delta": {score: 12, max: 15},
+        "Experimental Quality": {score: 13, max: 15},
+        "Efficiency": {score: 4, max: 10},
+        "Generalization": {score: 4, max: 5},
+        "Domain Relevance": {score: 7, max: 25}
+      },
+      codeLink: null,
+      hasFigure: false
+    },
+    {
+      id: "code_as_agent_harness",
+      title: "Code as Agent Harness: Toward Executable, Verifiable, and Stateful Agent Systems",
+      authors: "43 authors from multiple institutions",
+      affiliation: "Multi-institution survey",
+      arxiv: "2605.18747",
+      date: "2026-05-18",
+      bucket: "weak",
+      score: 42,
+      domains: ["agents"],
+      method_en: "Survey paper organizing the emerging paradigm of code-as-harness for LLM agents. Three-layer framework: harness interface (code connects agents to reasoning/action/environment), harness mechanisms (planning, memory, tool use, feedback control), harness reliability (long-horizon stability, verification, error recovery).",
+      method_zh: "综述论文，从'代码即线束'视角统一梳理代码在 LLM 智能体中的三大角色：可执行推理、可编程行动、可检验状态。三层框架：接口层、机制层、可靠性层，覆盖规划、记忆、工具使用、反馈控制等核心机制。",
+      innovation_en: "First survey to unify code's multiple roles in LLM agent systems under a single 'harness' framework, capturing the paradigm shift from code-as-output to code-as-infrastructure. 43-author collaboration covers latest advances and identifies open challenges (long-horizon stability, verification completeness, tool interface standardization).",
+      innovation_zh: "首次以统一'线束'框架系统梳理代码在 LLM 智能体中从'输出目标'到'执行基础'的范式转变，43 位作者覆盖最新进展，对电商内容生成和审核流水线自动化的智能体架构设计有参考价值。",
+      metrics: "Survey — no direct experimental metrics · GitHub: https://github.com/YennNing/Awesome-Code-as-Agent-Harness-Papers",
+      scoreBreakdown: {
+        "Innovation": {score: 15, max: 30},
+        "Experimental SOTA Delta": {score: 5, max: 15},
+        "Experimental Quality": {score: 5, max: 15},
+        "Efficiency": {score: 5, max: 10},
+        "Generalization": {score: 5, max: 5},
+        "Domain Relevance": {score: 7, max: 25}
+      },
+      codeLink: "https://github.com/YennNing/Awesome-Code-as-Agent-Harness-Papers",
+      hasFigure: false
+    }
+  ]
+};
+
+// ===== State =====
+let currentLang = 'en';
+let currentTag = 'all';
+let currentMinScore = 0;
+let currentDate = '2026-05-24';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+  renderGrid();
+}
+
+function setTag(btn, tag) {
+  document.querySelectorAll('.domain-tag').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTag = tag;
+  filterCards();
+}
+
+function updateScore(val) {
+  currentMinScore = parseInt(val);
+  document.getElementById('scoreVal').textContent = val;
+  filterCards();
+}
+
+function filterCards() {
+  currentDate = document.getElementById('datePicker').value;
+  document.getElementById('currentDate').textContent = currentDate;
+  renderGrid();
+}
+
+function scoreBadgeClass(score) {
+  if (score >= 75) return 'high';
+  if (score >= 55) return 'mid';
+  return 'low';
+}
+
+function buildFigure(paper) {
+  if (paper.id === 'rulesafe_vl') {
+    return `
+    <div class="figure-block">
+      <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;font-family:sans-serif">
+        <!-- Platform Policy -->
+        <rect x="10" y="10" width="120" height="50" rx="6" fill="#e7ecff" stroke="#3b5bdb" stroke-width="1.5"/>
+        <text x="70" y="32" text-anchor="middle" font-size="11" font-weight="bold" fill="#3b5bdb">Platform Policy</text>
+        <text x="70" y="48" text-anchor="middle" font-size="9" fill="#555">Rules + Relations</text>
+        <!-- Arrow -->
+        <line x1="130" y1="35" x2="160" y2="35" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <!-- Rule Graph -->
+        <rect x="160" y="10" width="130" height="50" rx="6" fill="#fff3cd" stroke="#d4a017" stroke-width="1.5"/>
+        <text x="225" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="#7a5200">Rule Graph</text>
+        <text x="225" y="42" text-anchor="middle" font-size="9" fill="#555">93 rules · 92 relations</text>
+        <text x="225" y="54" text-anchor="middle" font-size="9" fill="#555">3 policy families</text>
+        <!-- Arrow -->
+        <line x1="290" y1="35" x2="320" y2="35" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <!-- Test Cases -->
+        <rect x="320" y="10" width="140" height="50" rx="6" fill="#d4edda" stroke="#1a7a2e" stroke-width="1.5"/>
+        <text x="390" y="28" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5c2a">2,166 Cases</text>
+        <text x="390" y="42" text-anchor="middle" font-size="9" fill="#555">Image + Text</text>
+        <text x="390" y="54" text-anchor="middle" font-size="9" fill="#555">Multi-condition</text>
+
+        <!-- VLM Evaluation -->
+        <rect x="130" y="100" width="220" height="50" rx="6" fill="#f8f9fa" stroke="#999" stroke-width="1.5"/>
+        <text x="240" y="118" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">VLM Evaluation</text>
+        <text x="240" y="132" text-anchor="middle" font-size="9" fill="#555">Rule Activation · Interaction · Sufficiency</text>
+        <text x="240" y="144" text-anchor="middle" font-size="9" fill="#555">End-to-End Decision</text>
+
+        <!-- Arrows down -->
+        <line x1="225" y1="60" x2="225" y2="100" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="390" y1="60" x2="390" y2="125" stroke="#888" stroke-width="1.5"/>
+        <line x1="390" y1="125" x2="350" y2="125" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Score -->
+        <rect x="150" y="170" width="180" height="25" rx="4" fill="#e7ecff"/>
+        <text x="240" y="187" text-anchor="middle" font-size="10" fill="#3b5bdb">Human: 85%+ vs SOTA VLM: &lt;60% Macro-F1</text>
+        <line x1="240" y1="150" x2="240" y2="170" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <defs>
+          <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#888"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="figure-caption">RuleSafe-VL pipeline: Platform policies → Rule graph → Multi-condition test cases → VLM evaluation</div>
+    </div>`;
+  }
+  if (paper.id === 'tgq_former') {
+    return `
+    <div class="figure-block">
+      <svg viewBox="0 0 480 180" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;font-family:sans-serif">
+        <!-- Product Image + Metadata Input -->
+        <rect x="10" y="20" width="90" height="40" rx="5" fill="#e7ecff" stroke="#3b5bdb" stroke-width="1.5"/>
+        <text x="55" y="36" text-anchor="middle" font-size="10" fill="#3b5bdb" font-weight="bold">Product Image</text>
+        <text x="55" y="50" text-anchor="middle" font-size="9" fill="#555">(noisy overlays)</text>
+
+        <rect x="10" y="80" width="90" height="40" rx="5" fill="#fff3cd" stroke="#d4a017" stroke-width="1.5"/>
+        <text x="55" y="96" text-anchor="middle" font-size="10" fill="#7a5200" font-weight="bold">Metadata</text>
+        <text x="55" y="110" text-anchor="middle" font-size="9" fill="#555">title / attrs</text>
+
+        <!-- Vision Encoder -->
+        <rect x="130" y="10" width="80" height="40" rx="5" fill="#f8f9fa" stroke="#999" stroke-width="1"/>
+        <text x="170" y="28" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">Frozen ViT</text>
+        <text x="170" y="42" text-anchor="middle" font-size="9" fill="#555">Vision Encoder</text>
+
+        <!-- TGQ-Former box -->
+        <rect x="240" y="20" width="140" height="120" rx="7" fill="#f0f7ff" stroke="#3b5bdb" stroke-width="2"/>
+        <text x="310" y="40" text-anchor="middle" font-size="11" font-weight="bold" fill="#3b5bdb">TGQ-Former</text>
+
+        <!-- Stream 1 -->
+        <rect x="255" y="50" width="110" height="25" rx="4" fill="#e7ecff"/>
+        <text x="310" y="67" text-anchor="middle" font-size="9" fill="#3b5bdb">Metadata-Anchored Stream</text>
+
+        <!-- Stream 2 -->
+        <rect x="255" y="82" width="110" height="25" rx="4" fill="#d4edda"/>
+        <text x="310" y="99" text-anchor="middle" font-size="9" fill="#1a5c2a">Exploratory Visual Stream</text>
+
+        <!-- Gate -->
+        <rect x="260" y="114" width="100" height="20" rx="4" fill="#fff3cd"/>
+        <text x="310" y="128" text-anchor="middle" font-size="9" fill="#7a5200">Dual-Gate Modulation</text>
+
+        <!-- Output -->
+        <rect x="400" y="60" width="70" height="40" rx="5" fill="#d4edda" stroke="#1a7a2e" stroke-width="1.5"/>
+        <text x="435" y="77" text-anchor="middle" font-size="10" fill="#1a5c2a" font-weight="bold">Retrieval</text>
+        <text x="435" y="91" text-anchor="middle" font-size="9" fill="#555">H@100 +6%</text>
+
+        <!-- Arrows -->
+        <line x1="100" y1="40" x2="130" y2="40" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="210" y1="40" x2="240" y2="65" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="100" y1="100" x2="240" y2="95" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+        <line x1="380" y1="100" x2="400" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+
+        <defs>
+          <marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#888"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="figure-caption">TGQ-Former: Text-guided dual-stream Q-Former with reliability-aware gating for noisy e-commerce product images</div>
+    </div>`;
+  }
+  return '';
+}
+
+function buildScoreBreakdown(paper) {
+  let rows = '';
+  const breakdown = paper.scoreBreakdown;
+  for (const [dim, {score, max}] of Object.entries(breakdown)) {
+    const pct = Math.round(score / max * 100);
+    rows += `
+      <tr>
+        <td>${dim}</td>
+        <td>${score}/${max}</td>
+        <td style="width:80px"><div class="score-bar"><div class="score-bar-fill" style="width:${pct}%"></div></div></td>
+      </tr>`;
+  }
+  return `<table class="score-breakdown"><tr><th>Dimension</th><th>Score</th><th>Bar</th></tr>${rows}</table>`;
+}
+
+function buildCard(paper) {
+  const bucketTag = `<span class="tag ${paper.bucket}">${paper.bucket.toUpperCase()}</span>`;
+  const scoreTag = `<span class="score-badge ${scoreBadgeClass(paper.score)}">${paper.score}/100</span>`;
+  const domainTags = paper.domains.map(d => `<span class="tag domain">${d}</span>`).join(' ');
+  const dateTag = `<span class="date-tag">📅 ${paper.date}</span>`;
+
+  const methodLabel = currentLang === 'en' ? 'Method Overview' : '方法概述';
+  const innovLabel = currentLang === 'en' ? 'Innovation' : '创新性';
+  const methodText = currentLang === 'en' ? paper.method_en : paper.method_zh;
+  const innovText = currentLang === 'en' ? paper.innovation_en : paper.innovation_zh;
+
+  const figHtml = paper.hasFigure ? buildFigure(paper) : '';
+
+  const codeHtml = paper.codeLink
+    ? `<a href="${paper.codeLink}" target="_blank">🔗 Code</a>`
+    : '<span style="color:#aaa;font-size:12px">No official code</span>';
+
+  return `
+  <div class="card" data-score="${paper.score}" data-domains="${paper.domains.join(' ')}">
+    <div class="card-header">
+      <h2>${paper.title}</h2>
+      <div class="card-meta">
+        ${bucketTag} ${scoreTag} ${domainTags} ${dateTag}
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">${paper.authors} · ${paper.affiliation}</div>
+    </div>
+    <div class="card-body">
+      ${figHtml}
+      <h3>${methodLabel}</h3>
+      <p>${methodText}</p>
+      <h3>${innovLabel}</h3>
+      <p>${innovText}</p>
+      <div class="metrics-block"><strong>Key Metrics:</strong> ${paper.metrics}</div>
+
+      <div style="display:flex;gap:12px;margin-bottom:8px">
+        <button class="toggle-btn" onclick="toggleSection(this,'fig-${paper.id}')">
+          ${paper.hasFigure ? '▼ Hide Figure' : '(no figure)'}
+        </button>
+        <button class="toggle-btn" onclick="toggleSection(this,'score-${paper.id}')">▼ Score Breakdown</button>
+      </div>
+      <div class="collapsible open" id="score-${paper.id}">
+        ${buildScoreBreakdown(paper)}
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank">📄 arXiv:${paper.arxiv}</a>
+      ${codeHtml}
+    </div>
+  </div>`;
+}
+
+function toggleSection(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  const isOpen = el.classList.contains('open');
+  if (btn.textContent.includes('▼')) btn.textContent = btn.textContent.replace('▼', '▲');
+  else btn.textContent = btn.textContent.replace('▲', '▼');
+}
+
+function renderGrid() {
+  const papers = PAPERS_DB[currentDate] || [];
+  const filtered = papers.filter(p => {
+    if (p.score < currentMinScore) return false;
+    if (currentTag !== 'all' && !p.domains.includes(currentTag)) return false;
+    return true;
+  });
+
+  const grid = document.getElementById('grid');
+  const noResults = document.getElementById('noResults');
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+  grid.innerHTML = filtered.map(buildCard).join('');
+}
+
+// Init
+renderGrid();
+</script>
+</body>
+</html>
