@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspector</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --accent: #2563eb;
+    --accent2: #7c3aed;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --strong: #059669;
+    --weak: #d97706;
+    --code: #1e293b;
+    --code-bg: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); font-size: 14px; line-height: 1.6; }
+  header { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 24px 32px; }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  header p { color: #94a3b8; font-size: 13px; margin-top: 4px; }
+  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 16px 32px; background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .toolbar label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .toolbar input[type=range] { width: 120px; accent-color: var(--accent); }
+  .toolbar select, .toolbar input[type=date] { border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; color: var(--text); background: white; cursor: pointer; }
+  .toolbar .lang-toggle { margin-left: auto; display: flex; gap: 4px; }
+  .lang-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all .15s; }
+  .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  #score-display { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 30px; }
+  main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .card { background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; transition: transform .15s, box-shadow .15s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+  .card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+  .card-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-strong { background: #d1fae5; color: var(--strong); }
+  .badge-weak { background: #fef3c7; color: var(--weak); }
+  .badge-date { background: #e0f2fe; color: #0369a1; }
+  .badge-domain { background: #f3e8ff; color: #7c3aed; }
+  .score-ring { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .score-num { font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .score-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-header h2 { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .card-header .authors { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .card-body { padding: 14px 18px; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 6px; margin-top: 12px; }
+  .section-label:first-child { margin-top: 0; }
+  .method-text { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .innovation-text { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .method-text.zh, .innovation-text.zh { display: none; }
+  .card-footer { padding: 12px 18px; background: var(--code-bg); border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .link-btn { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; border: 1px solid; transition: all .12s; }
+  .link-arxiv { color: var(--accent); border-color: #bfdbfe; background: #eff6ff; }
+  .link-arxiv:hover { background: var(--accent); color: white; }
+  .link-code { color: var(--strong); border-color: #a7f3d0; background: #ecfdf5; }
+  .link-code:hover { background: var(--strong); color: white; }
+  .score-bar-container { margin-top: 10px; }
+  .score-bars { display: none; }
+  .score-bars.open { display: block; }
+  .score-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 12px; }
+  .score-bar-label { width: 130px; color: var(--muted); flex-shrink: 0; }
+  .score-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 3px; transition: width .3s; }
+  .score-bar-val { width: 30px; text-align: right; color: var(--text); font-weight: 600; }
+  .toggle-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--accent); padding: 0; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .toggle-btn:hover { text-decoration: underline; }
+  .metrics-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-top: 6px; }
+  .metrics-table th { background: var(--code-bg); padding: 5px 8px; text-align: left; font-weight: 600; color: var(--muted); border: 1px solid var(--border); }
+  .metrics-table td { padding: 4px 8px; border: 1px solid var(--border); color: var(--text); }
+  .no-results { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 16px; }
+  .stats-bar { background: #1e293b; color: #94a3b8; padding: 8px 32px; font-size: 12px; display: flex; gap: 20px; }
+  .stats-bar span { color: white; font-weight: 700; }
+  @media (max-width: 600px) {
+    main { padding: 16px; }
+    .toolbar { padding: 12px 16px; }
+    .grid { grid-template-columns: 1fr; }
+    header { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CCReproduce — Daily AI Paper Inspector</h1>
+  <p>E-commerce content ecosystem &amp; influencer governance · Auto-updated daily at 08:30 GMT+8</p>
+</header>
+
+<div class="stats-bar" id="stats-bar">
+  <div>Sources attempted: <span id="stat-sources">17</span></div>
+  <div>Papers today: <span id="stat-papers">8</span></div>
+  <div>High-score reproductions: <span id="stat-code">1</span></div>
+</div>
+
+<div class="toolbar">
+  <label>Min Score</label>
+  <input type="range" id="score-slider" min="0" max="100" value="0">
+  <span id="score-display">0</span>
+
+  <label>Date</label>
+  <input type="date" id="date-picker" value="2026-05-25">
+
+  <label>Bucket</label>
+  <select id="bucket-filter">
+    <option value="all">All</option>
+    <option value="STRONG">STRONG</option>
+    <option value="WEAK">WEAK</option>
+  </select>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="no-results" id="no-results" style="display:none">No papers match the current filters.</div>
+</main>
+
+<script>
+// ===== Embedded paper DB =====
+const PAPERS_DB = {
+  "2026-05-25": [
+    {
+      id: "vina",
+      title: "VINA: Video as Natural Augmentation — Towards Unified AI-Generated Image and Video Detection",
+      authors: "Zhengcen Li, Chenyang Jiang, Liangxiu Su, Tong Shao, Shiyang Zhou, Ming Tao, Jingyong Su",
+      affiliation: "Harbin Institute of Technology (Shenzhen) · Pengcheng Laboratory",
+      arxiv: "https://arxiv.org/abs/2605.21977",
+      code: "https://github.com/Sam1224/CCReproduce/tree/main/2026-05-25/code/VINA",
+      date: "2026-05-21",
+      bucket: "STRONG",
+      score: 83,
+      domains: ["AIGC Detection", "Content Governance", "Video"],
+      method_en: "VINA uses video frames as physically-grounded natural augmentations to jointly train an AIGC detector on both still images and video frames. A cross-modal supervised contrastive objective aligns image and video-frame representations in a unified embedding space, eliminating the cross-modal gap caused by codec compression, color conversion, and blur that causes image detectors to fail on video frames. A single model detects both AI-generated images and videos without dataset-specific tuning.",
+      method_zh: "VINA将视频帧作为物理上天然合理的增强数据，联合训练图像和视频AIGC检测器。通过跨模态监督对比目标将图像与视频帧的表示对齐到统一嵌入空间，消除视频编解码、色彩转换、模糊等处理引入的跨模态差距。单一统一模型无需数据集特定调优即可同时检测AI生成图像和视频。",
+      innovation_en: "First to treat video as 'natural augmentation' for image AIGC detectors — no manual augmentation or separate video pipeline needed. Cross-modal contrastive learning bridges the modality gap. SOTA on 14 diverse image, video, and in-the-wild benchmarks simultaneously.",
+      innovation_zh: "首创'视频作为自然增强'范式，无需手工增强或独立视频流水线。跨模态对比学习消除模态差距。在14个多样化基准上同时达到SOTA，包括图像、视频及野外数据集。",
+      metrics: [
+        ["14 image benchmarks", "AUC", "SOTA", "Isolated image det."],
+        ["14 video benchmarks", "ACC", "SOTA", "Isolated video det."],
+        ["In-the-wild", "AUC", "SOTA", "Baseline"],
+      ],
+      score_breakdown: [
+        ["Innovation", 24, 30],
+        ["SOTA Delta", 13, 15],
+        ["Exp. Quality", 12, 15],
+        ["Efficiency", 7, 10],
+        ["Generalization", 5, 5],
+        ["Domain Relevance", 22, 25],
+      ]
+    },
+    {
+      id: "gliguard",
+      title: "GLiGuard: Schema-Conditioned Classification for LLM Safeguard",
+      authors: "Urchade Zaratiana, Mary Newhauser, George Hurn-Maloney, Ash Lewis",
+      affiliation: "Fastino Labs",
+      arxiv: "https://arxiv.org/abs/2605.07982",
+      code: "https://github.com/fastino-ai/GLiGuard",
+      date: "2026-05-08",
+      bucket: "STRONG",
+      score: 77,
+      domains: ["Content Safety", "LLM Safeguard", "Efficiency"],
+      method_en: "GLiGuard is a 0.3B bidirectional encoder adapted from GLiNER2 that encodes task definitions and label semantics as structured token schemas in the input sequence. A single non-autoregressive forward pass simultaneously evaluates prompt safety, response safety, refusal detection, 14 fine-grained harm categories, and jailbreak strategies — 16× faster than decoder-based guards.",
+      method_zh: "GLiGuard是0.3B双向编码器（基于GLiNER2适配），将安全任务定义和标签语义编码为结构化Token Schema注入输入序列。单次非自回归前向推理同时完成提示安全、响应安全、14种危害类别、越狱策略检测，比解码器类guard模型快16倍。",
+      innovation_en: "Schema-conditioned input design embeds task semantics directly into token sequences, enabling flexible multi-dimensional safety coverage without architecture changes. Single non-autoregressive inference eliminates decoder latency. 0.3B model within 1.7 F1 points of models 23-90× larger.",
+      innovation_zh: "Schema条件化设计将任务语义嵌入token序列，无需架构修改即可灵活覆盖新安全类别。单次非自回归推理从根本消除自回归延迟。0.3B模型F1仅落后23-90倍大小基线1.7点。",
+      metrics: [
+        ["Prompt safety", "F1", "−1.7 vs best", "Largest decoder guard"],
+        ["Response safety", "F1", "2nd best (open)", "Decoder guards"],
+        ["Latency", "ms/sample", "16× faster", "Decoder-based guards"],
+      ],
+      score_breakdown: [
+        ["Innovation", 23, 30],
+        ["SOTA Delta", 12, 15],
+        ["Exp. Quality", 11, 15],
+        ["Efficiency", 9, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 19, 25],
+      ]
+    },
+    {
+      id: "tgqformer",
+      title: "Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation",
+      authors: "Yufei Guo, Jing Ma, Tianlu Zhang, Shijie Yang, Yanlong Zang, Weijie Ding, Pinghua Gong, Jungong Han",
+      affiliation: "Tsinghua University · JD.COM",
+      arxiv: "https://arxiv.org/abs/2605.17366",
+      code: null,
+      date: "2026-05-17",
+      bucket: "STRONG",
+      score: 76,
+      domains: ["E-commerce", "Multimodal", "Recommendation"],
+      method_en: "TGQ-Former uses structured product metadata (title, category, attributes) as semantic guidance to drive a Q-Former connector in selectively extracting relevant visual tokens from noisy product images. Promotional overlays, watermarks, and background clutter are filtered by text-guided cross-attention, preserving complementary visual evidence while suppressing spurious visual cues.",
+      method_zh: "TGQ-Former以结构化商品元数据（标题/类目/属性）作为语义引导，驱动Q-Former连接器从含促销水印的商品图片中选取与商品核心语义对齐的视觉Token，过滤噪声的同时保留互补视觉证据，提升I2I检索鲁棒性。",
+      innovation_en: "Identifies and solves the promotional-overlay noise problem specific to e-commerce product images. Elevates metadata from auxiliary input to an active guidance signal for visual feature extraction. Industrial validation on JD.COM real data. Only connector modification needed — compatible with any frozen backbone.",
+      innovation_zh: "精准识别并解决电商商品图片特有的促销叠加噪声问题。将元数据从辅助信息提升为视觉特征提取的主动引导信号。京东真实数据工业验证，只需修改连接器层。",
+      metrics: [
+        ["JD.COM I2I (noisy)", "Recall@K", "+↑ significant", "Standard LLaVA conn."],
+        ["JD.COM I2I (clean)", "Recall@K", "On-par/slight+", "Baseline"],
+      ],
+      score_breakdown: [
+        ["Innovation", 22, 30],
+        ["SOTA Delta", 11, 15],
+        ["Exp. Quality", 11, 15],
+        ["Efficiency", 7, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 22, 25],
+      ]
+    },
+    {
+      id: "latentprobe",
+      title: "Latent Space Probing for Adult Content Detection in Video Generative Models",
+      authors: "(Authors not fully disclosed)",
+      affiliation: "Unknown",
+      arxiv: "https://arxiv.org/abs/2605.00874",
+      code: null,
+      date: "2026-05-01",
+      bucket: "STRONG",
+      score: 72,
+      domains: ["NSFW Detection", "Content Governance", "Video Generation"],
+      method_en: "Lightweight probe classifiers (CNN/MLP) are attached to denoised latent representations of CogVideoX video diffusion model during inference. By intercepting internal U-Net activations at specific denoising timesteps, adult content is detected in real-time without waiting for full pixel-space rendering. Dataset: 11,039 ten-second video clips (5,086 violating / 5,953 non-violating).",
+      method_zh: "轻量级探测分类器（CNN/MLP）附加于CogVideoX视频扩散模型推理过程中的去噪潜在表示。在特定去噪时间步拦截U-Net内部激活，实现实时成人内容检测，无需等待完整像素空间渲染。数据集：11,039个10秒视频片段（5,086违规/5,953非违规）。",
+      innovation_en: "First to probe inside video diffusion model latent space during generation for safety classification — not post-hoc pixel inspection. Real-time intervention during generation. Large-scale video safety dataset (11k+ clips) is a significant contribution. Latency far below pixel-space methods.",
+      innovation_zh: "首次在视频扩散模型生成过程中探测潜空间用于安全分类，而非事后像素检测。生成时实时介入，延迟远低于像素空间方法。11k+视频片段安全数据集是重要贡献。",
+      metrics: [
+        ["11,039 clips (binary)", "AUC", "↑ vs pixel-space", "Post-hoc pixel detection"],
+        ["Latency", "ms/clip", "Real-time", "Full render + detect"],
+      ],
+      score_breakdown: [
+        ["Innovation", 20, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 10, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 21, 25],
+      ]
+    },
+    {
+      id: "grmcrec",
+      title: "Robust Multimodal Recommendation via Graph Retrieval-Enhanced Modality Completion",
+      authors: "Yuan Li, Jun Hu, Jiaxin Jiang, Bryan Hooi, Bingsheng He",
+      affiliation: "National University of Singapore",
+      arxiv: "https://arxiv.org/abs/2605.00670",
+      code: null,
+      date: "2026-05-01",
+      bucket: "STRONG",
+      score: 69,
+      domains: ["Recommendation", "Multimodal", "Graph Neural Networks"],
+      method_en: "GRMCR addresses missing-modality problems in multimodal recommendation through three components: (1) modality-aware subgraph retrieval selecting semantically relevant neighbors from the item-interaction graph; (2) a graph transformer jointly encoding the query node and retrieved subgraph for missing feature completion; (3) a learnable sparse-routing codebook regularizing latent embeddings into compact bases for robustness.",
+      method_zh: "GRMCR通过三个组件解决多模态推荐中的模态缺失问题：(1)模态感知子图检索从商品交互图中选取语义相关邻居；(2)图Transformer联合编码查询节点与检索子图完成缺失特征；(3)可学习稀疏路由码本将补全嵌入正则化为紧凑基向量，提升鲁棒性。",
+      innovation_en: "RAG paradigm creatively applied to modality completion — retrieves contextual neighbors from the interaction graph rather than external documents. Graph transformer provides structural context for completion. Sparse codebook regularization produces compact, robust embeddings.",
+      innovation_zh: "RAG范式创造性迁移至模态补全——从交互图而非外部文档检索上下文邻居。图Transformer提供结构性上下文。稀疏码本正则化产生紧凑鲁棒嵌入。",
+      metrics: [
+        ["Amazon Baby/Sports/Clothing/Beauty", "Recall@20", "↑ vs FREEDOM/SLMRec", "Missing rate 20-80%"],
+        ["Amazon Beauty", "NDCG@20", "↑", "—"],
+      ],
+      score_breakdown: [
+        ["Innovation", 20, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 11, 15],
+        ["Efficiency", 5, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 20, 25],
+      ]
+    },
+    {
+      id: "granurag",
+      title: "From Scenes to Elements: Multi-Granularity Evidence Retrieval for Verifiable Multimodal RAG",
+      authors: "Guanhua Chen, Chuyue Huang, Yutong Yao, Shudong Liu, Xueqing Song, Lidia S. Chao, Derek F. Wong",
+      affiliation: "University of Macau",
+      arxiv: "https://arxiv.org/abs/2605.15019",
+      code: null,
+      date: "2026-05-14",
+      bucket: "WEAK",
+      score: 57,
+      domains: ["RAG", "Multimodal", "VQA"],
+      method_en: "GranuRAG decomposes visual scenes into fine-grained elements as first-class retrieval units, performs multi-granularity cross-modal alignment for element-level evidence retrieval, and generates answers with attribution constraints for verifiable reasoning chains. Introduces GranuVistaVQA benchmark with real-world landmarks and element-level annotations across multiple viewpoints.",
+      method_zh: "GranuRAG将视觉场景分解为细粒度元素作为检索单元，进行多粒度跨模态对齐在元素级别检索证据，生成时对检索证据显式归因，提供可追溯验证的推理链。引入GranuVistaVQA基准（地标+元素级标注+多视角）。",
+      innovation_en: "Refines RAG retrieval granularity from scene-level to element-level, resolving the granularity mismatch problem. Provides transparent error diagnosis through element-level attribution. New GranuVistaVQA benchmark captures partial-observation challenges.",
+      innovation_zh: "将RAG检索粒度从场景级细化到元素级，解决粒度不匹配问题。通过元素级归因提供透明错误诊断。GranuVistaVQA基准捕获部分观测挑战。",
+      metrics: [
+        ["GranuVistaVQA", "Accuracy", "↑ vs coarse RAG", "Scene-level RAG"],
+        ["Attribution", "—", "Verifiable", "Unverifiable"],
+      ],
+      score_breakdown: [
+        ["Innovation", 18, 30],
+        ["SOTA Delta", 8, 15],
+        ["Exp. Quality", 9, 15],
+        ["Efficiency", 5, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 14, 25],
+      ]
+    },
+    {
+      id: "llavackd",
+      title: "LLaVA-CKD: Bottom-Up Cascaded Knowledge Distillation for Vision-Language Models",
+      authors: "Nikolaos Gkalelis, Vasileios Mezaris",
+      affiliation: "CERTH-ITI",
+      arxiv: "https://arxiv.org/abs/2605.10641",
+      code: null,
+      date: "2026-05-11",
+      bucket: "WEAK",
+      score: 55,
+      domains: ["Knowledge Distillation", "VLM", "Efficiency"],
+      method_en: "LLaVA-CKD introduces intermediate Teaching Assistant (TA) VLMs to form a cascaded distillation chain: Teacher → TA → Student. Bottom-up training — first distill from Teacher to TA, then from TA to Student — reduces the capacity gap at each step. Built on the LLaVA-KD framework with TinyLLaVA-pretrained assistants.",
+      method_zh: "LLaVA-CKD引入中间助手（TA）VLM构建级联蒸馏链：教师→TA→学生。自底向上训练——先从教师蒸馏到TA，再从TA蒸馏到学生——在每个步骤减小容量差距。基于LLaVA-KD框架，助手按TinyLLaVA方法预训练。",
+      innovation_en: "Applies cascaded KD to VLMs for the first time via LLaVA-KD backbone. Systematic capacity-gap reduction through intermediate TA. Practical value for deploying smaller VLMs on edge/mobile devices.",
+      innovation_zh: "首次将级联KD应用于LLaVA-KD框架上的VLM。通过中间TA系统性减小容量差距。对边端/移动端部署小型VLM有实践价值。",
+      metrics: [
+        ["VQA/MMBench", "Accuracy", "↑ vs LLaVA-KD direct", "LLaVA-KD (Teacher→Student)"],
+      ],
+      score_breakdown: [
+        ["Innovation", 17, 30],
+        ["SOTA Delta", 8, 15],
+        ["Exp. Quality", 9, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 10, 25],
+      ]
+    },
+    {
+      id: "repair",
+      title: "Improving Retrieval-Augmented Generation without Taxonomy-based Error Categorization",
+      authors: "Gongbo Zhang, Yifan Peng, Chunhua Weng",
+      affiliation: "Columbia University",
+      arxiv: "https://arxiv.org/abs/2605.18772",
+      code: null,
+      date: "2026-04-16",
+      bucket: "WEAK",
+      score: 51,
+      domains: ["RAG", "Agentic AI", "Error Correction"],
+      method_en: "RePAIR learns direct mappings from flawed RAG responses to error-mitigating action plans, bypassing the need for pre-defined fine-grained error taxonomies. The response-action learning paradigm is more robust to taxonomy misalignment and incomplete error categorization that plagues existing agentic RAG critic systems.",
+      method_zh: "RePAIR直接学习缺陷RAG响应到错误缓解行动计划的映射，绕过预先定义细粒度错误分类体系的依赖。响应-行动学习范式对分类不对齐和不完整错误分类更鲁棒，解决了现有Agentic RAG Critic系统的核心痛点。",
+      innovation_en: "Bypasses taxonomy alignment problem entirely through response-to-action learning. Simpler and more robust critic design for agentic RAG. Applicable to knowledge-intensive QA systems where error types are diverse.",
+      innovation_zh: "通过响应到行动学习完全绕过分类对齐问题。更简单鲁棒的Agentic RAG Critic设计。适用于错误类型多样的知识密集型问答系统。",
+      metrics: [
+        ["Multiple QA benchmarks", "EM/F1", "↑ vs taxonomy RAG", "Agentic RAG w/ taxonomy"],
+      ],
+      score_breakdown: [
+        ["Innovation", 16, 30],
+        ["SOTA Delta", 7, 15],
+        ["Exp. Quality", 8, 15],
+        ["Efficiency", 5, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 12, 25],
+      ]
+    },
+  ]
+};
+
+// ===== State =====
+let currentLang = 'en';
+let minScore = 0;
+let bucketFilter = 'all';
+let currentDate = '2026-05-25';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase()));
+  document.querySelectorAll('.method-text, .innovation-text').forEach(el => {
+    el.style.display = el.classList.contains(lang) ? 'block' : 'none';
+  });
+}
+
+function renderScoreBar(breakdown) {
+  return breakdown.map(([label, val, max]) => {
+    const pct = Math.round(val / max * 100);
+    return `<div class="score-bar-row">
+      <div class="score-bar-label">${label}</div>
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <div class="score-bar-val">${val}/${max}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderMetrics(metrics) {
+  if (!metrics || !metrics.length) return '';
+  const rows = metrics.map(([dataset, metric, val, baseline]) =>
+    `<tr><td>${dataset}</td><td>${metric}</td><td><strong>${val}</strong></td><td style="color:#94a3b8">${baseline}</td></tr>`
+  ).join('');
+  return `<table class="metrics-table">
+    <tr><th>Dataset</th><th>Metric</th><th>Ours</th><th>Baseline</th></tr>
+    ${rows}
+  </table>`;
+}
+
+function renderCard(paper) {
+  const bucketClass = paper.bucket === 'STRONG' ? 'badge-strong' : 'badge-weak';
+  const domainBadges = paper.domains.map(d => `<span class="badge badge-domain">${d}</span>`).join('');
+  const codeBtn = paper.code ? `<a class="link-btn link-code" href="${paper.code}" target="_blank">⚡ Code</a>` : '';
+  const scoreColor = paper.score >= 80 ? '#059669' : paper.score >= 70 ? '#2563eb' : '#64748b';
+
+  return `<div class="card" data-score="${paper.score}" data-bucket="${paper.bucket}" data-date="${paper.date}">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="badge ${bucketClass}">${paper.bucket}</span>
+        <span class="badge badge-date">${paper.date}</span>
+        ${domainBadges}
+        <div class="score-ring" style="margin-left:auto">
+          <div>
+            <div class="score-num" style="color:${scoreColor}">${paper.score}</div>
+            <div class="score-label">/ 100</div>
+          </div>
+        </div>
+      </div>
+      <h2>${paper.title}</h2>
+      <div class="authors">${paper.authors} — <em>${paper.affiliation}</em></div>
+    </div>
+    <div class="card-body">
+      <div class="section-label">Method Overview</div>
+      <div class="method-text en">${paper.method_en}</div>
+      <div class="method-text zh" style="display:none">${paper.method_zh}</div>
+
+      <div class="section-label">Innovation</div>
+      <div class="innovation-text en">${paper.innovation_en}</div>
+      <div class="innovation-text zh" style="display:none">${paper.innovation_zh}</div>
+
+      <div class="section-label" style="cursor:pointer;display:flex;align-items:center;gap:6px" onclick="toggleMetrics('${paper.id}')">
+        Key Metrics <span id="metrics-arrow-${paper.id}">▶</span>
+      </div>
+      <div id="metrics-${paper.id}" style="display:none">${renderMetrics(paper.metrics)}</div>
+
+      <div class="section-label score-bar-container" style="cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:10px" onclick="toggleScore('${paper.id}')">
+        Score Breakdown <span id="score-arrow-${paper.id}">▶</span>
+      </div>
+      <div id="score-bars-${paper.id}" class="score-bars">${renderScoreBar(paper.score_breakdown)}</div>
+    </div>
+    <div class="card-footer">
+      <a class="link-btn link-arxiv" href="${paper.arxiv}" target="_blank">📄 arXiv</a>
+      ${codeBtn}
+    </div>
+  </div>`;
+}
+
+function toggleMetrics(id) {
+  const el = document.getElementById('metrics-' + id);
+  const arrow = document.getElementById('metrics-arrow-' + id);
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  arrow.textContent = open ? '▼' : '▶';
+}
+
+function toggleScore(id) {
+  const el = document.getElementById('score-bars-' + id);
+  const arrow = document.getElementById('score-arrow-' + id);
+  el.classList.toggle('open');
+  arrow.textContent = el.classList.contains('open') ? '▼' : '▶';
+}
+
+function renderGrid() {
+  const papers = PAPERS_DB[currentDate] || [];
+  const filtered = papers.filter(p =>
+    p.score >= minScore &&
+    (bucketFilter === 'all' || p.bucket === bucketFilter)
+  );
+
+  const grid = document.getElementById('grid');
+  const noResults = document.getElementById('no-results');
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+  grid.innerHTML = filtered.map(renderCard).join('');
+  // Apply current lang
+  setLang(currentLang);
+}
+
+// ===== Event listeners =====
+document.getElementById('score-slider').addEventListener('input', function() {
+  minScore = parseInt(this.value);
+  document.getElementById('score-display').textContent = minScore;
+  renderGrid();
+});
+
+document.getElementById('bucket-filter').addEventListener('change', function() {
+  bucketFilter = this.value;
+  renderGrid();
+});
+
+document.getElementById('date-picker').addEventListener('change', function() {
+  currentDate = this.value;
+  // Update stats
+  const papers = PAPERS_DB[currentDate] || [];
+  document.getElementById('stat-papers').textContent = papers.length;
+  document.getElementById('stat-code').textContent = papers.filter(p => p.code && p.code.includes('CCReproduce')).length;
+  renderGrid();
+});
+
+// Initial render
+renderGrid();
+</script>
+</body>
+</html>
