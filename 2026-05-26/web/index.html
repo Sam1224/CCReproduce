@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>ECom & Influencer Governance — Daily Paper Digest 2026-05-26</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #f7f7f4;
+    --panel: #ffffff;
+    --ink: #1f2933;
+    --muted: #5b6b78;
+    --line: #e3e6eb;
+    --accent: #4a5568;
+    --accent-soft: #cbd5e0;
+    --tag-strong: #c6f6d5;
+    --tag-moderate: #fef3c7;
+    --tag-weak: #e2e8f0;
+    --score-hi: #2e7d32;
+    --score-mid: #c77a00;
+    --score-lo: #8a8d91;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Source Serif Pro","Georgia","Noto Serif SC",serif; }
+  header {
+    padding: 22px 36px 16px; border-bottom: 1px solid var(--line);
+    background: var(--panel); position: sticky; top: 0; z-index: 10;
+  }
+  h1 { margin: 0 0 4px; font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+  .sub { color: var(--muted); font-size: 12.5px; }
+  .controls {
+    display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+    margin-top: 12px; font-family: "Inter","Helvetica Neue",sans-serif; font-size: 13px;
+  }
+  .controls label { color: var(--muted); }
+  .sliderbox { display: flex; gap: 8px; align-items: center; }
+  .sliderbox input[type="range"] { width: 140px; }
+  .langbtn {
+    background: var(--panel); border: 1px solid var(--line); padding: 4px 12px;
+    cursor: pointer; border-radius: 4px; color: var(--ink); font-family: inherit;
+    font-size: 12px;
+  }
+  .langbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  main { padding: 20px 36px 60px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 16px 18px; display: flex; flex-direction: column;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: box-shadow 0.15s;
+  }
+  .card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .card h2 { font-size: 14.5px; line-height: 1.35; margin: 0; font-weight: 600; flex: 1; }
+  .score-badge {
+    flex-shrink: 0; font-family: "Inter",sans-serif; font-size: 15px; font-weight: 700;
+    min-width: 36px; text-align: right;
+  }
+  .score-hi { color: var(--score-hi); }
+  .score-mid { color: var(--score-mid); }
+  .score-lo { color: var(--score-lo); }
+  .authors { font-family: "Inter",sans-serif; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .tag {
+    font-family: "Inter",sans-serif; font-size: 10.5px; padding: 2px 6px;
+    border-radius: 3px; background: var(--tag-weak);
+  }
+  .tag.bucket-STRONG { background: var(--tag-strong); color: #276749; font-weight: 600; }
+  .tag.bucket-MODERATE { background: var(--tag-moderate); color: #92400e; }
+  .method-box { font-size: 13px; line-height: 1.55; margin-bottom: 10px; }
+  .method-zh { display: none; }
+  .lang-zh .method-zh { display: block; }
+  .lang-zh .method-en { display: none; }
+  details { border: 1px solid var(--line); border-radius: 4px; margin-top: 8px; }
+  details summary {
+    padding: 7px 10px; cursor: pointer; font-family: "Inter",sans-serif;
+    font-size: 12px; color: var(--muted); user-select: none;
+  }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  details .inner { padding: 10px 12px; font-size: 12.5px; line-height: 1.6; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: "Inter",sans-serif; }
+  .score-table th, .score-table td { padding: 4px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+  .score-table th { color: var(--muted); font-weight: 500; }
+  .score-total { font-weight: 700; }
+  .metrics-block { background: #f0f4f8; border-radius: 4px; padding: 8px 10px; font-size: 12px; font-family: "Inter",sans-serif; }
+  .card-footer { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .card-footer a {
+    font-family: "Inter",sans-serif; font-size: 11.5px; color: var(--accent);
+    text-decoration: none; padding: 3px 8px; border: 1px solid var(--accent-soft);
+    border-radius: 3px;
+  }
+  .card-footer a:hover { background: var(--accent); color: #fff; }
+  .date-tag { font-size: 11px; color: var(--muted); font-family: "Inter",sans-serif; }
+  .hidden { display: none !important; }
+  .empty-msg { color: var(--muted); font-family: "Inter",sans-serif; font-size: 14px; padding: 40px 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>E-Commerce & Influencer Governance — AI Paper Daily Digest</h1>
+  <div class="sub">Date: <strong>2026-05-26 (GMT+8)</strong> · Domain: E-commerce content ecosystem · Influencer (达人) governance</div>
+  <div class="controls">
+    <button class="langbtn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="langbtn" id="btn-zh" onclick="setLang('zh')">中文</button>
+    <div class="sliderbox">
+      <label>Min score: <strong id="score-val">40</strong></label>
+      <input type="range" min="0" max="100" value="40" step="5" id="score-slider"
+             oninput="filterCards(this.value)" />
+    </div>
+    <span class="date-tag">5 papers indexed · 1 reproduction</span>
+  </div>
+</header>
+
+<main>
+<div class="grid" id="grid">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAPER 1: ClaimDiff-RL                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card" data-score="81">
+  <div class="card-top">
+    <h2>ClaimDiff-RL: Fine-Grained Caption Reinforcement Learning through Visual Claim Comparison</h2>
+    <span class="score-badge score-hi">81</span>
+  </div>
+  <div class="authors">Tianle Li, Xuyang Shen, Yan Ma, et al. · CUHK, MiniMax · 2026-05-19</div>
+  <div class="tags">
+    <span class="tag bucket-STRONG">STRONG</span>
+    <span class="tag">Captioning</span>
+    <span class="tag">RL</span>
+    <span class="tag">Hallucination</span>
+    <span class="tag">Content Quality</span>
+  </div>
+
+  <!-- Method overview — bilingual -->
+  <div class="method-box">
+    <div class="method-en">
+      Existing caption RL methods penalize captions as whole sequences, missing fine-grained hallucination
+      and omission errors at the claim level. <strong>ClaimDiff-RL</strong> decomposes the reward into
+      atomic visual claim differences: a multimodal judge enumerates claim-level discrepancies between
+      the candidate and reference, verifies each against the image, assigns open-vocabulary error types
+      and severity scores, and composes two independently tunable penalties
+      <em>R = −α·R<sub>hall</sub> − β·R<sub>omit</sub></em>.
+      This enables precise navigation of the hallucination-omission Pareto frontier.
+    </div>
+    <div class="method-zh">
+      现有描述生成 RL 方法以整段为奖励单元，无法区分幻觉与遗漏。<strong>ClaimDiff-RL</strong>
+      将奖励粒度降至原子视觉声明差异：多模态评判器逐声明对比候选与参考描述，
+      对每条差异进行图像验证，赋予开放词表错误类型和严重级别，
+      合成双分量奖励 <em>R = −α·R<sub>幻觉</sub> − β·R<sub>遗漏</sub></em>，
+      首次支持对幻觉惩罚和遗漏惩罚的独立调控。
+    </div>
+  </div>
+
+  <!-- Experiment block -->
+  <details>
+    <summary>📊 Key Experiments</summary>
+    <div class="inner">
+      <div class="metrics-block">
+        <strong>160-image diagnostic benchmark:</strong> Achieves improved Pareto frontier vs. holistic scalar reward RL<br/>
+        <strong>Fine-grained captioning:</strong> Surpasses Gemini-3-Pro-Preview on multiple fine-grained capability dimensions<br/>
+        <strong>VQA benchmarks:</strong> Competitive SOTA across multiple public benchmarks<br/>
+        <em>Key lever:</em> α/β ratio controls faithfulness-coverage trade-off independently
+      </div>
+    </div>
+  </details>
+
+  <!-- Scoring breakdown -->
+  <details>
+    <summary>🏆 Score Breakdown</summary>
+    <div class="inner">
+      <table class="score-table">
+        <tr><th>Dimension</th><th>Score</th><th>Max</th><th>Note</th></tr>
+        <tr><td>Innovation</td><td>24</td><td>30</td><td>Atomic claim reward granularity is novel; builds on RLVR</td></tr>
+        <tr><td>SOTA Delta</td><td>12</td><td>15</td><td>Beats Gemini-3-Pro-Preview on fine-grained dimensions</td></tr>
+        <tr><td>Experiment Quality</td><td>12</td><td>15</td><td>Human diagnostic benchmark + captioning + VQA</td></tr>
+        <tr><td>Efficiency</td><td>6</td><td>10</td><td>Judge overhead during training; no inference overhead</td></tr>
+        <tr><td>Generalization</td><td>4</td><td>5</td><td>Multiple benchmarks tested</td></tr>
+        <tr><td>Domain Relevance</td><td>23</td><td>25</td><td>Direct: product caption QC, influencer short-video captions</td></tr>
+        <tr class="score-total"><td><strong>Total</strong></td><td><strong>81</strong></td><td>100</td><td>—</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <div class="card-footer">
+    <a href="https://arxiv.org/abs/2605.20278" target="_blank">📄 arXiv</a>
+    <a href="../code/ClaimDiff-RL/" target="_blank">💻 Reproduction</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAPER 2: SMART Embedding                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card" data-score="74">
+  <div class="card-top">
+    <h2>Your Embedding Model is SMARTer Than You Think</h2>
+    <span class="score-badge score-hi">74</span>
+  </div>
+  <div class="authors">TBD · 2026-05-26</div>
+  <div class="tags">
+    <span class="tag bucket-STRONG">STRONG</span>
+    <span class="tag">Embeddings</span>
+    <span class="tag">Multi-Vector Retrieval</span>
+    <span class="tag">Multimodal Search</span>
+    <span class="tag">E-Commerce Retrieval</span>
+  </div>
+
+  <div class="method-box">
+    <div class="method-en">
+      Standard single-vector embedding models sacrifice fine-grained semantic resolution to achieve
+      inference efficiency. Multi-vector models recover precision at the cost of storage and retrieval
+      overhead. <strong>SMART</strong> reveals that standard single-vector embeddings already encode
+      latent multi-vector capabilities — and proposes a decoding strategy that unlocks these capabilities
+      at inference time, without retraining, achieving near multi-vector precision at single-vector
+      storage cost.
+    </div>
+    <div class="method-zh">
+      单向量嵌入模型推理高效但牺牲细粒度语义；多向量模型精度高但存储/检索开销大。
+      <strong>SMART</strong> 揭示标准单向量嵌入模型内部已潜藏多向量能力，
+      通过推理时解码策略激活这些潜能，无需重训练，
+      即可以单向量存储成本获得接近多向量的检索精度。
+    </div>
+  </div>
+
+  <details>
+    <summary>📊 Key Experiments</summary>
+    <div class="inner">
+      <div class="metrics-block">
+        <strong>Multimodal retrieval benchmarks:</strong> Significant Recall@K improvement over single-vector baseline<br/>
+        <strong>Attribute-level queries:</strong> Better precision for color/material/style queries vs. pure single-vector<br/>
+        <em>Storage cost:</em> Same as single-vector (no patch-level storage needed)
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🏆 Score Breakdown</summary>
+    <div class="inner">
+      <table class="score-table">
+        <tr><th>Dimension</th><th>Score</th><th>Max</th><th>Note</th></tr>
+        <tr><td>Innovation</td><td>22</td><td>30</td><td>Revealing latent multi-vector capacity is a novel insight</td></tr>
+        <tr><td>SOTA Delta</td><td>10</td><td>15</td><td>Described as significant; full numbers pending</td></tr>
+        <tr><td>Experiment Quality</td><td>10</td><td>15</td><td>Limited public details; community description used</td></tr>
+        <tr><td>Efficiency</td><td>8</td><td>10</td><td>Core advantage: single-vector cost, multi-vector quality</td></tr>
+        <tr><td>Generalization</td><td>4</td><td>5</td><td>General multimodal retrieval</td></tr>
+        <tr><td>Domain Relevance</td><td>20</td><td>25</td><td>Direct: product image search, style retrieval, similarity matching</td></tr>
+        <tr class="score-total"><td><strong>Total</strong></td><td><strong>74</strong></td><td>100</td><td>—</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <div class="card-footer">
+    <a href="https://arxiv.org/abs/2605.24938" target="_blank">📄 arXiv</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAPER 3: ParaVT                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card" data-score="67">
+  <div class="card-top">
+    <h2>ParaVT: Taming the Tool Prior Paradox for Parallel Tool Use in Agentic Video RL</h2>
+    <span class="score-badge score-mid">67</span>
+  </div>
+  <div class="authors">Zuhao Yang, Kaichen Zhang, Sudong Wang, et al. · EvolvingLMMs-Lab · 2026-05-19</div>
+  <div class="tags">
+    <span class="tag bucket-MODERATE">MODERATE</span>
+    <span class="tag">Video Agent</span>
+    <span class="tag">Parallel Tool Use</span>
+    <span class="tag">RL</span>
+    <span class="tag">Long Video</span>
+  </div>
+
+  <div class="method-box">
+    <div class="method-en">
+      Sequential video tool calling suffers from error propagation, context pollution, and linear
+      inference cost. <strong>ParaVT</strong> is the first multi-agent RL framework for parallel video
+      tool calling: a main agent dispatches multiple temporal crops in one turn to weight-sharing
+      sub-agents, then aggregates parallel evidence. It identifies the <em>Tool Prior Paradox</em>
+      (pretrained priors hinder RL convergence) and proposes <strong>PARA-GRPO</strong> with targeted
+      format rewards and per-prompt frame-budget randomization.
+    </div>
+    <div class="method-zh">
+      顺序工具调用导致错误传播和上下文污染。<strong>ParaVT</strong> 是首个并行视频工具调用
+      多 Agent RL 框架：主 Agent 单轮并行分发多个时间窗口裁剪，权重共享子 Agent 聚合并行证据。
+      识别"工具先验悖论"，提出 <strong>PARA-GRPO</strong>：可解析性锚定格式奖励 + 帧预算随机化。
+    </div>
+  </div>
+
+  <details>
+    <summary>📊 Key Experiments</summary>
+    <div class="inner">
+      <div class="metrics-block">
+        <strong>Long-video QA:</strong> Significantly outperforms sequential tool-calling baselines<br/>
+        <strong>Inference efficiency:</strong> N sequential turns → 1 parallel turn<br/>
+        <strong>Fault tolerance:</strong> Multi-sub-agent cross-validation reduces error propagation<br/>
+        <em>Code:</em> github.com/EvolvingLMMs-Lab/ParaVT
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🏆 Score Breakdown</summary>
+    <div class="inner">
+      <table class="score-table">
+        <tr><th>Dimension</th><th>Score</th><th>Max</th><th>Note</th></tr>
+        <tr><td>Innovation</td><td>22</td><td>30</td><td>Tool Prior Paradox + PARA-GRPO both novel</td></tr>
+        <tr><td>SOTA Delta</td><td>11</td><td>15</td><td>First-of-kind vs. sequential baselines</td></tr>
+        <tr><td>Experiment Quality</td><td>11</td><td>15</td><td>Open-sourced, ablations on PARA-GRPO components</td></tr>
+        <tr><td>Efficiency</td><td>7</td><td>10</td><td>Parallel dispatch reduces rounds</td></tr>
+        <tr><td>Generalization</td><td>3</td><td>5</td><td>Video crop tool; framework generalizable</td></tr>
+        <tr><td>Domain Relevance</td><td>13</td><td>25</td><td>Applicable to livestream/video content agents</td></tr>
+        <tr class="score-total"><td><strong>Total</strong></td><td><strong>67</strong></td><td>100</td><td>—</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <div class="card-footer">
+    <a href="https://arxiv.org/abs/2605.20342" target="_blank">📄 arXiv</a>
+    <a href="https://github.com/EvolvingLMMs-Lab/ParaVT" target="_blank">💻 GitHub</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAPER 4: NMM Roadmap                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card" data-score="55">
+  <div class="card-top">
+    <h2>Toward Native Multimodal Modeling: A Roadmap</h2>
+    <span class="score-badge score-mid">55</span>
+  </div>
+  <div class="authors">Siyu An, Junru Lu, Junnan Dong, et al. (21 authors) · Tencent Youtu Lab, Tsinghua, HKU · 2026-05-25</div>
+  <div class="tags">
+    <span class="tag bucket-MODERATE">MODERATE</span>
+    <span class="tag">MLLM Survey</span>
+    <span class="tag">Native Multimodal</span>
+    <span class="tag">Architecture</span>
+    <span class="tag">Roadmap</span>
+  </div>
+
+  <div class="method-box">
+    <div class="method-en">
+      Current MLLMs rely on late-fusion (encoder + frozen LM). This survey formalizes a 4-level
+      <strong>architectural nativity</strong> taxonomy: Late-fusion → Mid-fusion → Early-fusion →
+      <em>Born-native</em>, where all modalities are processed symmetrically in a unified Transformer
+      space. The paper provides a roadmap for transitioning to native multimodal modeling with
+      discussion of training data, architecture, efficiency, and multi-task coordination challenges.
+    </div>
+    <div class="method-zh">
+      现有 MLLM 主要依赖后融合架构。本综述形式化定义四级「架构原生性」分类：
+      后融合→中融合→早融合→天生原生（Born-native），后者实现所有模态在统一 Transformer 空间内的对称处理。
+      提供从现有架构到 Born-native 状态的完整演化路线图。
+    </div>
+  </div>
+
+  <details>
+    <summary>📊 Coverage</summary>
+    <div class="inner">
+      <div class="metrics-block">
+        <strong>Models analyzed:</strong> Show-o, Janus, BAGEL, LWM, Emu3, and 15+ more<br/>
+        <strong>Classification framework:</strong> 4-level nativity taxonomy<br/>
+        <strong>Institutions:</strong> Tencent Youtu Lab, Tsinghua, HKU, and others (21 authors)
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🏆 Score Breakdown</summary>
+    <div class="inner">
+      <table class="score-table">
+        <tr><th>Dimension</th><th>Score</th><th>Max</th><th>Note</th></tr>
+        <tr><td>Innovation</td><td>18</td><td>30</td><td>Formal taxonomy, but survey nature limits ceiling</td></tr>
+        <tr><td>SOTA Delta</td><td>5</td><td>15</td><td>Survey: no direct experimental results</td></tr>
+        <tr><td>Experiment Quality</td><td>8</td><td>15</td><td>Systematic literature analysis</td></tr>
+        <tr><td>Efficiency</td><td>5</td><td>10</td><td>Discusses efficiency design principles</td></tr>
+        <tr><td>Generalization</td><td>5</td><td>5</td><td>Covers full MLLM research landscape</td></tr>
+        <tr><td>Domain Relevance</td><td>14</td><td>25</td><td>Foundation for ecom content understanding MLLM selection</td></tr>
+        <tr class="score-total"><td><strong>Total</strong></td><td><strong>55</strong></td><td>100</td><td>—</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <div class="card-footer">
+    <a href="https://arxiv.org/abs/2605.25343" target="_blank">📄 arXiv</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAPER 5: Claw-Anything                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="card" data-score="50">
+  <div class="card-top">
+    <h2>Claw-Anything: Benchmarking Always-On Personal Assistants</h2>
+    <span class="score-badge score-mid">50</span>
+  </div>
+  <div class="authors">TBD · 2026-05-26</div>
+  <div class="tags">
+    <span class="tag bucket-MODERATE">MODERATE</span>
+    <span class="tag">Agent Benchmark</span>
+    <span class="tag">Always-On Assistant</span>
+    <span class="tag">Long-Horizon</span>
+    <span class="tag">Multi-Device</span>
+  </div>
+
+  <div class="method-box">
+    <div class="method-en">
+      Existing agent benchmarks provide only narrow slices of user state. <strong>Claw-Anything</strong>
+      expands agent context along three dimensions: (1) long-horizon activity histories (months of
+      simulated user activity via event injection), (2) interdependent backend services (calendar,
+      email, shopping, maps), and (3) integrated GUI+CLI interaction across multiple devices.
+      The benchmark reveals that current SOTA agents fail dramatically in always-on settings.
+    </div>
+    <div class="method-zh">
+      现有 Agent 基准仅提供有限用户状态切片。<strong>Claw-Anything</strong> 沿三维度扩展 Agent 上下文：
+      ①长视野活动历史（事件注入模拟数月用户活动）、②相互依赖的多后端服务、③跨设备 GUI+CLI 混合交互。
+      揭示当前 SOTA Agent 在"永远在线"场景下的巨大能力差距。
+    </div>
+  </div>
+
+  <details>
+    <summary>📊 Key Findings</summary>
+    <div class="inner">
+      <div class="metrics-block">
+        <strong>Current SOTA agent performance:</strong> Far below human on Claw-Anything tasks<br/>
+        <strong>Context dimensions:</strong> 3 (temporal depth × service breadth × interaction span)<br/>
+        <strong>Noise modeling:</strong> Irrelevant events + conflicting signals via multi-round event injection
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🏆 Score Breakdown</summary>
+    <div class="inner">
+      <table class="score-table">
+        <tr><th>Dimension</th><th>Score</th><th>Max</th><th>Note</th></tr>
+        <tr><td>Innovation</td><td>16</td><td>30</td><td>3D context expansion novel; benchmark paper ceiling</td></tr>
+        <tr><td>SOTA Delta</td><td>7</td><td>15</td><td>Reveals gap, no solution proposed</td></tr>
+        <tr><td>Experiment Quality</td><td>9</td><td>15</td><td>Systematic event injection, benchmark design</td></tr>
+        <tr><td>Efficiency</td><td>4</td><td>10</td><td>N/A for benchmark paper</td></tr>
+        <tr><td>Generalization</td><td>3</td><td>5</td><td>General personal assistant</td></tr>
+        <tr><td>Domain Relevance</td><td>11</td><td>25</td><td>Shopping/influencer management agent scenarios</td></tr>
+        <tr class="score-total"><td><strong>Total</strong></td><td><strong>50</strong></td><td>100</td><td>—</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <div class="card-footer">
+    <a href="https://arxiv.org/abs/2605.26086" target="_blank">📄 arXiv</a>
+  </div>
+</div>
+
+</div><!-- end .grid -->
+<p class="empty-msg hidden" id="empty-msg">No papers meet the current filter criteria.</p>
+</main>
+
+<script>
+var currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.className = lang === 'zh' ? 'lang-zh' : '';
+  document.getElementById('btn-en').className = 'langbtn' + (lang === 'en' ? ' active' : '');
+  document.getElementById('btn-zh').className = 'langbtn' + (lang === 'zh' ? ' active' : '');
+}
+
+function filterCards(minScore) {
+  document.getElementById('score-val').textContent = minScore;
+  var cards = document.querySelectorAll('.card');
+  var visible = 0;
+  cards.forEach(function(c) {
+    var score = parseInt(c.dataset.score, 10);
+    if (score >= parseInt(minScore, 10)) {
+      c.classList.remove('hidden');
+      visible++;
+    } else {
+      c.classList.add('hidden');
+    }
+  });
+  document.getElementById('empty-msg').className =
+    visible === 0 ? 'empty-msg' : 'empty-msg hidden';
+}
+</script>
+</body>
+</html>
