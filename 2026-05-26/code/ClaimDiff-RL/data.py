@@ -5,8 +5,6 @@ Compatible with COCO Captions format (image_id, image_path, reference captions).
 import json
 import os
 from pathlib import Path
-from PIL import Image
-import torch
 from torch.utils.data import Dataset
 
 

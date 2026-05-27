@@ -174,7 +174,7 @@ TOY_VOCAB_INV = {v: k for k, v in TOY_VOCAB.items()}
 
 def encode(text: str, max_len: int = 30) -> list:
     tokens = [TOY_VOCAB.get(w, 3) for w in text.lower().split()[:max_len]]
-    return [ToyCapationPolicy_BOS := 1] + tokens + [2]  # BOS + tokens + EOS
+    return [1] + tokens + [2]  # BOS + tokens + EOS
 
 
 def encode_text(text: str) -> list:
