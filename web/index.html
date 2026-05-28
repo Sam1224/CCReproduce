@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspector</title>
+<style>
+  :root {
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --border: #e2e5ea;
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --text: #1e293b;
+    --muted: #64748b;
+    --strong: #16a34a;
+    --weak: #9333ea;
+    --tag-bg: #f1f5f9;
+    --score-high: #16a34a;
+    --score-mid: #d97706;
+    --score-low: #dc2626;
+    --shadow: 0 2px 8px rgba(0,0,0,.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  header h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; color: var(--primary); }
+  header .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .lang-toggle { display: flex; gap: 6px; }
+  .lang-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--tag-bg); cursor: pointer; font-size: 12px; font-weight: 500; transition: all .15s; }
+  .lang-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .controls { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .controls label { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .score-filter { display: flex; align-items: center; gap: 10px; }
+  .score-filter input[type=range] { width: 140px; accent-color: var(--primary); }
+  .score-val { font-weight: 700; color: var(--primary); min-width: 28px; }
+  .date-picker { display: flex; align-items: center; gap: 8px; }
+  .date-picker select { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 12px; background: var(--tag-bg); cursor: pointer; }
+  .bucket-filter { display: flex; gap: 6px; }
+  .bucket-btn { padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--tag-bg); cursor: pointer; font-size: 11px; font-weight: 600; transition: all .15s; }
+  .bucket-btn.active-strong { background: var(--strong); color: #fff; border-color: var(--strong); }
+  .bucket-btn.active-weak { background: var(--weak); color: #fff; border-color: var(--weak); }
+  .bucket-btn.active-all { background: var(--primary); color: #fff; border-color: var(--primary); }
+  main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+  .date-section { margin-bottom: 32px; }
+  .date-heading { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: transform .15s, box-shadow .15s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.1); }
+  .card-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+  .card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .bucket-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: .5px; }
+  .STRONG { background: #dcfce7; color: #166534; }
+  .WEAK { background: #f3e8ff; color: #6b21a8; }
+  .score-badge { font-size: 12px; font-weight: 800; padding: 2px 10px; border-radius: 20px; }
+  .score-high { background: #dcfce7; color: var(--score-high); }
+  .score-mid { background: #fef3c7; color: var(--score-mid); }
+  .score-low { background: #fee2e2; color: var(--score-low); }
+  .card-date { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .card-title { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .card-authors { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .card-body { padding: 14px 16px; }
+  .domain-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .tag { font-size: 10px; background: var(--tag-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2px 8px; color: var(--muted); font-weight: 500; }
+  .section-toggle { cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .5px; padding: 6px 0; border-top: 1px solid var(--border); user-select: none; }
+  .section-toggle:first-child { border-top: none; }
+  .chevron { transition: transform .2s; font-size: 10px; }
+  .collapsed .chevron { transform: rotate(-90deg); }
+  .section-content { font-size: 12px; color: var(--text); line-height: 1.6; padding: 6px 0; }
+  .section-content.hidden { display: none; }
+  .method-text .en { display: block; }
+  .method-text .zh { display: none; }
+  body.zh .method-text .en { display: none; }
+  body.zh .method-text .zh { display: block; }
+  .metrics-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 11px; }
+  .metrics-table th { background: var(--tag-bg); text-align: left; padding: 4px 8px; font-weight: 600; color: var(--muted); }
+  .metrics-table td { padding: 3px 8px; border-top: 1px solid var(--border); }
+  .metrics-table tr:hover td { background: var(--primary-light); }
+  .score-breakdown { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 11px; }
+  .score-breakdown td { padding: 3px 6px; border-top: 1px solid var(--border); }
+  .score-breakdown td:last-child { font-weight: 700; text-align: right; }
+  .score-total { font-weight: 800; font-size: 13px; color: var(--primary); }
+  .card-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
+  .arxiv-link { font-size: 11px; color: var(--primary); text-decoration: none; font-weight: 600; }
+  .arxiv-link:hover { text-decoration: underline; }
+  .code-link { font-size: 11px; color: var(--strong); text-decoration: none; font-weight: 600; background: #dcfce7; padding: 2px 8px; border-radius: 8px; }
+  .figure-block { background: var(--tag-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px; text-align: center; }
+  .figure-block svg { max-width: 100%; }
+  .figure-caption { font-size: 10px; color: var(--muted); margin-top: 6px; font-style: italic; }
+  .no-papers { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 15px; }
+  @media (max-width: 640px) { .cards-grid { grid-template-columns: 1fr; } main { padding: 12px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce — Daily AI Paper Inspector</h1>
+    <div class="subtitle">E-commerce Content Ecosystem &amp; Influencer Governance · LLM/VLM/MLLM · Embeddings · Agents · RAG</div>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="score-filter">
+    <label>Min Score</label>
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()">
+    <span class="score-val" id="score-display">0</span>
+  </div>
+  <div class="date-picker">
+    <label>Date</label>
+    <select id="date-select" onchange="filterCards()">
+      <option value="all">All Dates</option>
+    </select>
+  </div>
+  <div class="bucket-filter">
+    <label>Bucket</label>
+    <button class="bucket-btn active-all" id="btn-all" onclick="setBucket('all')">All</button>
+    <button class="bucket-btn" id="btn-strong" onclick="setBucket('STRONG')">STRONG</button>
+    <button class="bucket-btn" id="btn-weak" onclick="setBucket('WEAK')">WEAK</button>
+  </div>
+</div>
+
+<main id="main-content">
+  <div class="no-papers" id="no-papers" style="display:none">No papers match current filters.</div>
+</main>
+
+<script>
+// ---- Embedded paper database ----
+const PAPERS = [
+  {
+    date: "2026-05-27",
+    arxiv: "2605.27295",
+    title: "Gemini Embedding 2: A Native Multimodal Embedding Model from Gemini",
+    authors: "Madhuri Shanbhogue et al. (88 authors)",
+    affiliation: "Google DeepMind",
+    bucket: "STRONG",
+    score: 84,
+    tags: ["Embeddings", "Multimodal", "RAG", "Retrieval", "Video", "Audio"],
+    method_en: "GE2 is the first natively multimodal embedding model jointly encoding video, audio, image, and text in a unified vector space. Built on Gemini's decoder backbone, it uses multi-task multi-stage contrastive learning. Late-layer hidden states are mean-pooled and L2-normalized as the final embedding. No modality-specific projection heads needed—cross-modal and mixed-modal queries are handled natively.",
+    method_zh: "GE2 是首个将视频、音频、图像、文字统一编码到单一向量空间的原生多模态嵌入模型。基于 Gemini 解码器主干，采用多任务多阶段对比学习，直接利用后层隐状态均值池化并 L2 归一化作为最终嵌入，无需模态专用投影头，原生支持跨模态混合查询。",
+    innovation_en: "First four-modality native embedding; no modality-specific projectors; multi-task unified training covering retrieval/clustering/STS/QA; robust zero-shot generalization across specialized domains.",
+    innovation_zh: "首个四模态原生统一嵌入；无模态专用投影头；多任务统一训练覆盖检索/聚类/语义相似度等；跨专业领域零样本泛化能力强。",
+    metrics: [
+      ["MTEB Multilingual", "Avg", "69.9", "~67"],
+      ["MTEB Code", "Avg", "84.0", "~81"],
+      ["MSCOCO", "R@1", "62.9", "~58"],
+      ["Vatex", "NDCG@10", "68.8", "~63"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 25],
+      ["SOTA Delta", 15, 12],
+      ["Exp Quality", 15, 12],
+      ["Efficiency", 10, 8],
+      ["Generalization", 5, 5],
+      ["Domain Relevance", 25, 22],
+    ],
+    code: "code/GeminiEmbedding2/",
+    link: "https://arxiv.org/abs/2605.27295",
+    listed_date: "2026-05-27 (confirmed ✓)",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.27365",
+    title: "LocateAnything: Fast and High-Quality Vision-Language Grounding with Parallel Box Decoding",
+    authors: "Bharath Raj Nagoor Kani, Noah Snavely et al.",
+    affiliation: "NVIDIA",
+    bucket: "WEAK",
+    score: 69,
+    tags: ["VLM", "Grounding", "Detection", "Efficiency"],
+    method_en: "LocateAnything introduces Parallel Box Decoding (PBD): instead of decoding bounding box coordinates as sequential tokens (which mismatches coupled geometry), all coordinates are decoded simultaneously as an atomic unit in a single forward step. Supports referring expression grounding, multi-object detection, GUI grounding, and text localization. Trained on LocateAnything-Data with 138M+ samples.",
+    method_zh: "LocateAnything 提出并行边界框解码（PBD）：将边界框坐标作为原子单元在单次前向中并行解码，避免串行坐标 Token 的几何不一致问题。支持指代表达定位、多目标检测、GUI 元素定位和文字定位。在 1.38 亿样本数据集上训练。",
+    innovation_en: "Parallel atomic box decoding ensures geometric coherence and unlocks parallel throughput. 138M sample data engine. Generalist multi-task grounding model.",
+    innovation_zh: "并行原子解码保证几何一致性并提升吞吐量；1.38 亿样本规模；多任务通才定位模型。",
+    metrics: [
+      ["Referring Expr. Grounding", "Acc", "SOTA", "—"],
+      ["GUI Grounding", "Acc", "SOTA", "—"],
+      ["Inference", "Throughput", "Significantly ↑", "Sequential decode"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 22],
+      ["SOTA Delta", 15, 11],
+      ["Exp Quality", 15, 12],
+      ["Efficiency", 10, 9],
+      ["Generalization", 5, 5],
+      ["Domain Relevance", 25, 10],
+    ],
+    link: "https://arxiv.org/abs/2605.27365",
+    listed_date: "2026-05-27 (confirmed ✓)",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.05991",
+    title: "A Case-Driven Multi-Agent Framework for E-Commerce Search Relevance",
+    authors: "ByteDance Global E-Commerce Search Relevance Team",
+    affiliation: "ByteDance",
+    bucket: "STRONG",
+    score: 76,
+    tags: ["E-commerce", "Agent", "Search", "Annotation", "ByteDance"],
+    method_en: "A case-driven multi-agent framework for industrial e-commerce search relevance with three agents: (1) Annotator Agent for multi-turn relevance annotation minimizing hallucination; (2) Optimizer Agent for autonomous bad-case analysis and resolution; (3) User Agent for surfacing bad cases via conversation. Unified by Global Memory to reduce information asymmetry. Also includes Deep Search Agent for underestimation failures and human-agent collaboration chatbot.",
+    method_zh: "针对工业级电商搜索相关性的案例驱动多智能体框架，三个专用 Agent：(1) 标注 Agent（多轮标注，减少幻觉）；(2) 优化 Agent（自主分析修复 Bad Case）；(3) 用户 Agent（对话挖掘 Bad Case）。全局记忆协同，配合 Deep Search Agent 和人机协作聊天机器人，形成持续优化闭环。",
+    innovation_en: "Industrial three-agent closed loop for e-commerce search; Global Memory reduces cross-agent information gaps; proactive bad-case discovery via User Agent; production-ready Harness Engineering paradigm.",
+    innovation_zh: "工业级三 Agent 电商搜索闭环；全局记忆降低信息不对称；用户 Agent 主动发现 Bad Case；可生产部署的 Harness Engineering 范式。",
+    metrics: [
+      ["Annotation Accuracy", "Human Eval", "Significant ↑", "Manual pipeline"],
+      ["Bad Case Resolution", "Timeliness", "Faster", "Manual pipeline"],
+      ["Generalizability", "Coverage", "Broader", "Rule-based"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 22],
+      ["SOTA Delta", 15, 10],
+      ["Exp Quality", 15, 10],
+      ["Efficiency", 10, 7],
+      ["Generalization", 5, 3],
+      ["Domain Relevance", 25, 24],
+    ],
+    link: "https://arxiv.org/abs/2605.05991",
+    listed_date: "2026-05-06",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.17366",
+    title: "Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation",
+    authors: "Yufei Guo, Jing Ma, Tianlu Zhang et al.",
+    affiliation: "Tsinghua University / JD.COM",
+    bucket: "STRONG",
+    score: 75,
+    tags: ["E-commerce", "Multimodal", "Recommendation", "Embedding", "I2I Retrieval"],
+    method_en: "TGQ-Former: text-guided visual representation learning that uses structured metadata (title, category, attributes) to semantically guide visual token extraction in a Q-Former. A hybrid-query connector produces two complementary streams: metadata-anchored tokens and exploratory tokens. A reliability-aware dual-gated vector modulation module adaptively fuses them, downweighting noisy channels when image-metadata consistency is low.",
+    method_zh: "TGQ-Former：以结构化元数据（标题、类目、属性）引导视觉 Token 提取的 Q-Former。混合查询连接器产生两路互补视觉流：元数据锚定 Token 和探索性 Token。可靠性感知双门控模块自适应融合，在图像-元数据一致性低时自动降权噪声通道。",
+    innovation_en: "Metadata-guided Q-Former bridges structured text and visual encoding; dual-stream design separates aligned and exploratory features; reliability-aware gating handles noisy product images; validated on large-scale real-world JD.COM data.",
+    innovation_zh: "元数据引导 Q-Former 打通结构化文本与视觉编码；双流设计分离锚定与探索特征；可靠性门控处理噪声商品图片；大规模真实京东数据验证。",
+    metrics: [
+      ["JD.COM E-commerce (full-pool)", "H@100", "+6.04%", "Best connector baseline"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 20],
+      ["SOTA Delta", 15, 10],
+      ["Exp Quality", 15, 12],
+      ["Efficiency", 10, 7],
+      ["Generalization", 5, 3],
+      ["Domain Relevance", 25, 23],
+    ],
+    link: "https://arxiv.org/abs/2605.17366",
+    listed_date: "2026-05-17",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.24247",
+    title: "Improving Labeling Consistency with Detailed Constitutional Definitions and AI-Driven Evaluation",
+    authors: "Konstantin Berlin, Adam Swanda",
+    affiliation: "Cisco",
+    bucket: "STRONG",
+    score: 75,
+    tags: ["Data Labeling", "Content Moderation", "Constitutional AI", "Annotation Quality"],
+    method_en: "For each content moderation labeling category, an LLM first writes a detailed constitutional definition covering all edge cases. The same LLM then acts as the annotator, interpreting the constitution to produce golden labels. Key insight: LLMs hold more detailed specs in working memory than human annotators, producing more consistent labels. Cross-model disagreement diagnosing specification gaps is a bonus quality-control tool.",
+    method_zh: "对每个内容审核标注类别，LLM 首先生成覆盖所有边界情形的详细宪法定义，再由 LLM 作为标注者解释宪法生成金标签。核心洞见：LLM 工作记忆能保持远超人类标注者的详细规范，产生更一致的标签。跨模型不一致性还可用于诊断规范质量。",
+    innovation_en: "Constitutional AI applied to data annotation pipelines; cross-model inconsistency as automated spec quality diagnostic; scalable to any classification labeling task; outperforms human annotators in expert alignment.",
+    innovation_zh: "Constitutional AI 迁移至数据标注管道；跨模型不一致性作为规范质量自动诊断；可扩展至任何分类标注；与专家裁决的对齐优于人类标注者。",
+    metrics: [
+      ["HarmBench", "Cross-model inconsistency", "57× lower", "Paragraph definition"],
+      ["HarmBench", "Expert adjudication alignment", "Higher", "Human annotators"],
+      ["HarmBench", "3-model unanimity", "Higher", "3 human annotators"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 22],
+      ["SOTA Delta", 15, 10],
+      ["Exp Quality", 15, 11],
+      ["Efficiency", 10, 6],
+      ["Generalization", 5, 4],
+      ["Domain Relevance", 25, 22],
+    ],
+    link: "https://arxiv.org/abs/2605.24247",
+    listed_date: "2026-05-22",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.15518",
+    title: "DetectRL-X: Towards Reliable Multilingual and Real-World LLM-Generated Text Detection",
+    authors: "Junchao Wu, Yefeng Liu, Chenyu Zhu et al.",
+    affiliation: "Multi-institution",
+    bucket: "STRONG",
+    score: 67,
+    tags: ["AIGC Detection", "Content Governance", "Multilingual", "Benchmark"],
+    method_en: "DetectRL-X is a multilingual AIGC detection benchmark covering 8 dimensions: 8 languages, 6 domains (including e-commerce product descriptions and marketing), 4 commercial LLMs, and real-world AI-assisted writing operations (polishing, expanding, condensing). Evaluates existing detectors and exposes reliability gaps in multilingual and commercial contexts.",
+    method_zh: "DetectRL-X 是覆盖 8 维度的多语言 AIGC 检测基准：8 种语言、6 个领域（含电商商品描述和营销文案）、4 种商业 LLM，以及真实 AI 辅助写作操作（润色/扩写/缩写）。评估现有检测器，揭示多语言和商业场景下的可靠性盲区。",
+    innovation_en: "First AIGC detection benchmark covering e-commerce/marketing domains; multilingual (8 languages); AI polishing/expansion patterns expose detector weaknesses; commercially relevant evaluation setup.",
+    innovation_zh: "首个覆盖电商/营销领域的 AIGC 检测基准；多语言（8 种）；AI 润色/扩写模式暴露检测器弱点；面向商业场景的评估设置。",
+    metrics: [
+      ["8 Languages × 6 Domains", "Coverage", "Comprehensive", "Previous: EN-only"],
+      ["AI Polishing Detection", "Accuracy", "Exposes failures", "Most detectors fail"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 18],
+      ["SOTA Delta", 15, 9],
+      ["Exp Quality", 15, 10],
+      ["Efficiency", 10, 5],
+      ["Generalization", 5, 5],
+      ["Domain Relevance", 25, 20],
+    ],
+    link: "https://arxiv.org/abs/2605.15518",
+    listed_date: "2026-05-15",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.09338",
+    title: "A General Framework for Multimodal LLM-Based Multimedia Understanding in Large-Scale Recommendation Systems",
+    authors: "(SIGIR 2026 authors)",
+    affiliation: "Industry (SIGIR 2026)",
+    bucket: "STRONG",
+    score: 66,
+    tags: ["Recommendation", "Multimodal", "Industrial Scale", "SIGIR 2026"],
+    method_en: "A tripartite framework for MM-LLM-driven multimedia understanding: (1) Content Interpretation — LLaMA2-based MM-LLM generates descriptive captions from multimedia; (2) Representation Extraction — captions tokenized to categorical features; (3) Pipeline Integration — offline captioning decoupled from real-time serving. This design lets industrial-scale recommendation systems benefit from MM-LLM semantics without real-time latency.",
+    method_zh: "MM-LLM 驱动的多媒体理解三部曲框架：(1) 内容解读：LLaMA2 离线生成多媒体描述标注；(2) 表示提取：标注 tokenize 为类别特征；(3) 流水线集成：离线与在线解耦。工业级推荐系统可享受 MM-LLM 语义而无需承担实时推理延迟。",
+    innovation_en: "Offline-online decoupling solves MM-LLM latency bottleneck; LLM semantics → categorical features compatible with existing recommender architectures; backbone-agnostic; validated at industrial scale at SIGIR 2026.",
+    innovation_zh: "离线-在线解耦解决 MM-LLM 延迟瓶颈；LLM 语义→类别特征兼容现有推荐架构；与主干无关；SIGIR 2026 工业规模验证。",
+    metrics: [
+      ["Large-scale deployment", "Recall", "Improvement", "Without MM-LLM"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 18],
+      ["SOTA Delta", 15, 8],
+      ["Exp Quality", 15, 8],
+      ["Efficiency", 10, 7],
+      ["Generalization", 5, 3],
+      ["Domain Relevance", 25, 22],
+    ],
+    link: "https://arxiv.org/abs/2605.09338",
+    listed_date: "2026-05-10",
+  },
+  {
+    date: "2026-05-27",
+    arxiv: "2605.14448",
+    title: "Think When Needed: Adaptive Reasoning-Driven Multimodal Embeddings with a Dual-LoRA Architecture",
+    authors: "(See arxiv)",
+    affiliation: "(See arxiv)",
+    bucket: "WEAK",
+    score: 64,
+    tags: ["Embeddings", "Multimodal", "LoRA", "Efficiency", "CoT Reasoning"],
+    method_en: "TWN proposes adaptive CoT reasoning for multimodal embeddings. A dual-LoRA architecture attaches reasoning and embedding adapters to a shared frozen backbone with gradient detachment at their interface. A lightweight complexity router decides whether CoT is needed per input. Simple inputs skip reasoning (avoiding noise), complex inputs trigger CoT. ~60% inference cost reduction vs. always-on CoT systems.",
+    method_zh: "TWN 为多模态嵌入提出自适应 CoT 推理。双 LoRA 架构在共享冻结主干上挂载推理 LoRA 和嵌入 LoRA，接口处梯度截断。轻量复杂度路由器按需决定是否触发 CoT，简单输入跳过推理（避免噪声），复杂输入才触发。相比 always-on CoT 推理成本节省约 60%。",
+    innovation_en: "Dual-LoRA adaptive reasoning/embedding on shared backbone; gradient decoupling at interface prevents conflicts; complexity router for selective CoT; ~60% cost reduction vs. always-on CoT.",
+    innovation_zh: "双 LoRA 在共享主干上自适应推理/嵌入；接口梯度解耦避免冲突；复杂度路由器按需 CoT；相比全 CoT 降低约 60% 推理成本。",
+    metrics: [
+      ["Multimodal Retrieval", "vs always-on CoT", "~Comparable", "Full CoT model"],
+      ["Inference Cost", "vs always-on CoT", "~40% of cost", "Full CoT model"],
+    ],
+    score_breakdown: [
+      ["Innovation", 30, 20],
+      ["SOTA Delta", 15, 9],
+      ["Exp Quality", 15, 10],
+      ["Efficiency", 10, 9],
+      ["Generalization", 5, 4],
+      ["Domain Relevance", 25, 12],
+    ],
+    link: "https://arxiv.org/abs/2605.14448",
+    listed_date: "2026-05-14",
+  },
+];
+
+// ---- State ----
+let currentLang = 'en';
+let currentBucket = 'all';
+
+// ---- Helpers ----
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function buildMetricsTable(metrics) {
+  if (!metrics || !metrics.length) return '';
+  let rows = metrics.map(([ds, met, val, base]) =>
+    `<tr><td>${ds}</td><td>${met}</td><td><strong>${val}</strong></td><td style="color:var(--muted)">${base}</td></tr>`
+  ).join('');
+  return `<table class="metrics-table"><thead><tr><th>Dataset</th><th>Metric</th><th>Ours</th><th>Baseline</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function buildScoreTable(breakdown, total) {
+  let rows = breakdown.map(([dim, max, got]) =>
+    `<tr><td>${dim}</td><td style="color:var(--muted)">/${max}</td><td>${got}</td></tr>`
+  ).join('');
+  rows += `<tr style="border-top:2px solid var(--border)"><td class="score-total">Total</td><td></td><td class="score-total">${total}</td></tr>`;
+  return `<table class="score-breakdown"><tbody>${rows}</tbody></table>`;
+}
+
+function buildFigureSVG(paper) {
+  // Architecture diagram as SVG
+  const w = 280, h = 160;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;font-size:10px">
+    <rect x="0" y="0" width="${w}" height="${h}" fill="#f8f9fb" rx="6"/>
+    <!-- Input boxes -->
+    <rect x="4" y="10" width="58" height="20" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="33" y="24" text-anchor="middle" fill="#1e40af">Text</text>
+    <rect x="68" y="10" width="58" height="20" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+    <text x="97" y="24" text-anchor="middle" fill="#166534">Image</text>
+    <rect x="132" y="10" width="58" height="20" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+    <text x="161" y="24" text-anchor="middle" fill="#92400e">Audio</text>
+    <rect x="196" y="10" width="58" height="20" rx="4" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="225" y="24" text-anchor="middle" fill="#9d174d">Video</text>
+    <!-- Arrow down to backbone -->
+    <line x1="140" y1="30" x2="140" y2="50" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- Backbone box -->
+    <rect x="20" y="50" width="240" height="34" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="140" y="64" text-anchor="middle" fill="#4c1d95" font-weight="bold">Shared Transformer Backbone</text>
+    <text x="140" y="78" text-anchor="middle" fill="#5b21b6">(RoPE + SwiGLU + RMSNorm)</text>
+    <!-- Arrow down to pool -->
+    <line x1="140" y1="84" x2="140" y2="104" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- Pool box -->
+    <rect x="60" y="104" width="160" height="22" rx="4" fill="#fef9c3" stroke="#ca8a04" stroke-width="1"/>
+    <text x="140" y="119" text-anchor="middle" fill="#713f12">Mean Pool → Project → L2 Norm</text>
+    <!-- Arrow down to embed -->
+    <line x1="140" y1="126" x2="140" y2="142" stroke="#94a3b8" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- Output box -->
+    <rect x="80" y="142" width="120" height="14" rx="4" fill="#2563eb"/>
+    <text x="140" y="153" text-anchor="middle" fill="#fff" font-weight="bold">Embedding (D,)</text>
+    <!-- Arrow markers -->
+    <defs>
+      <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+  </svg>`;
+}
+
+function buildCard(paper) {
+  const sc = scoreClass(paper.score);
+  const metricsHtml = buildMetricsTable(paper.metrics);
+  const scoreHtml = buildScoreTable(paper.score_breakdown, paper.score);
+  const figHtml = buildFigureSVG(paper);
+  const codeHtml = paper.code
+    ? `<a class="code-link" href="https://github.com/Sam1224/CCReproduce/tree/main/2026-05-27/${paper.code}" target="_blank">⚙ Code</a>`
+    : '';
+
+  return `
+  <div class="card" data-score="${paper.score}" data-bucket="${paper.bucket}" data-date="${paper.date}">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="bucket-badge ${paper.bucket}">${paper.bucket}</span>
+        <span class="score-badge ${sc}">${paper.score}</span>
+        <span class="card-date">${paper.listed_date}</span>
+      </div>
+      <div class="card-title">${paper.title}</div>
+      <div class="card-authors">${paper.authors} · ${paper.affiliation}</div>
+    </div>
+    <div class="card-body">
+      <div class="domain-tags">${paper.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+
+      <div class="section-toggle" onclick="toggleSection(this)">
+        <span>Method Overview</span><span class="chevron">▾</span>
+      </div>
+      <div class="section-content method-text">
+        <div class="en">${paper.method_en}</div>
+        <div class="zh">${paper.method_zh}</div>
+      </div>
+
+      <div class="section-toggle" onclick="toggleSection(this)">
+        <span>Innovation Analysis</span><span class="chevron">▾</span>
+      </div>
+      <div class="section-content method-text">
+        <div class="en">${paper.innovation_en}</div>
+        <div class="zh">${paper.innovation_zh}</div>
+      </div>
+
+      <div class="section-toggle collapsed" onclick="toggleSection(this)">
+        <span>Architecture Figure</span><span class="chevron">▾</span>
+      </div>
+      <div class="section-content hidden">
+        <div class="figure-block">${figHtml}<div class="figure-caption">Architecture overview (auto-generated from paper description)</div></div>
+      </div>
+
+      <div class="section-toggle" onclick="toggleSection(this)">
+        <span>Key Metrics</span><span class="chevron">▾</span>
+      </div>
+      <div class="section-content">${metricsHtml}</div>
+
+      <div class="section-toggle collapsed" onclick="toggleSection(this)">
+        <span>Score Breakdown</span><span class="chevron">▾</span>
+      </div>
+      <div class="section-content hidden">${scoreHtml}</div>
+    </div>
+    <div class="card-footer">
+      <a class="arxiv-link" href="${paper.link}" target="_blank">arXiv: ${paper.arxiv} ↗</a>
+      ${codeHtml}
+    </div>
+  </div>`;
+}
+
+// ---- Rendering ----
+function renderAll() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const dateFilter = document.getElementById('date-select').value;
+  document.getElementById('score-display').textContent = minScore;
+
+  const filtered = PAPERS.filter(p => {
+    if (p.score < minScore) return false;
+    if (currentBucket !== 'all' && p.bucket !== currentBucket) return false;
+    if (dateFilter !== 'all' && p.date !== dateFilter) return false;
+    return true;
+  });
+
+  const main = document.getElementById('main-content');
+  const noP = document.getElementById('no-papers');
+
+  if (!filtered.length) {
+    main.innerHTML = '';
+    main.appendChild(noP);
+    noP.style.display = 'block';
+    return;
+  }
+  noP.style.display = 'none';
+
+  // Group by date
+  const byDate = {};
+  filtered.forEach(p => { (byDate[p.date] = byDate[p.date] || []).push(p); });
+  const dates = Object.keys(byDate).sort().reverse();
+
+  main.innerHTML = dates.map(d => `
+    <div class="date-section">
+      <div class="date-heading">${d} — ${byDate[d].length} paper${byDate[d].length > 1 ? 's' : ''}</div>
+      <div class="cards-grid">${byDate[d].map(buildCard).join('')}</div>
+    </div>`
+  ).join('');
+}
+
+function filterCards() { renderAll(); }
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('zh', lang === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+}
+
+function setBucket(b) {
+  currentBucket = b;
+  ['all','strong','weak'].forEach(x => {
+    document.getElementById('btn-'+x).className = 'bucket-btn';
+  });
+  document.getElementById('btn-'+b.toLowerCase()).classList.add('active-'+b.toLowerCase() === 'active-all' ? 'active-all' : b === 'STRONG' ? 'active-strong' : b === 'WEAK' ? 'active-weak' : 'active-all');
+  renderAll();
+}
+
+function toggleSection(toggle) {
+  const content = toggle.nextElementSibling;
+  const collapsed = toggle.classList.contains('collapsed');
+  toggle.classList.toggle('collapsed', !collapsed);
+  content.classList.toggle('hidden', !collapsed);
+}
+
+// ---- Init date picker ----
+function initDatePicker() {
+  const dates = [...new Set(PAPERS.map(p => p.date))].sort().reverse();
+  const sel = document.getElementById('date-select');
+  dates.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+}
+
+// ---- Bootstrap ----
+initDatePicker();
+renderAll();
+</script>
+</body>
+</html>
