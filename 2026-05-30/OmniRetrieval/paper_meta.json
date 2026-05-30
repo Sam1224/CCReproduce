@@ -1,0 +1,9 @@
+{
+  "paper_id": "2605.29250",
+  "title": "OmniRetrieval: Unified Retrieval across Heterogeneous Knowledge Sources",
+  "date": "2026-05-29",
+  "authors": ["Jinheon Baek", "Soyeong Jeong", "Sangwoo Park", "Woongyeong Yeo", "Minki Kang", "Patara Trirat", "Heejun Lee", "Sung Ju Hwang"],
+  "affiliations": ["KAIST", "DeepAuto.ai"],
+  "paper_url": "https://arxiv.org/abs/2605.29250",
+  "code_url": "https://github.com/JinheonBaek/OmniRetrieval"
+}
