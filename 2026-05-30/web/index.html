@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily AI Paper Digest — 2026-05-30</title>
+<style>
+  :root {
+    --bg: #f8f9fb;
+    --card-bg: #ffffff;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --accent-strong: #1e40af;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --warn: #d97706;
+    --strong-tag: #2563eb;
+    --weak-tag: #7c3aed;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 60%, #3b82f6 100%);
+    color: white;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  header .meta { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+  .lang-toggle button {
+    padding: 6px 14px;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: transparent;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-left: 6px;
+  }
+  .lang-toggle button.active, .lang-toggle button:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: white;
+  }
+
+  /* ─── Controls ─── */
+  .controls {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .controls label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .controls input[type=range] { width: 180px; accent-color: var(--accent); }
+  .score-display {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 60px;
+  }
+  .bucket-filter {
+    display: flex;
+    gap: 8px;
+  }
+  .bucket-filter button {
+    padding: 5px 12px;
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .bucket-filter button.active-strong {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+  .bucket-filter button.active-weak {
+    background: #ede9fe;
+    border-color: #7c3aed;
+    color: #5b21b6;
+  }
+  .bucket-filter button.active-all {
+    background: var(--text);
+    border-color: var(--text);
+    color: white;
+  }
+  .result-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  /* ─── Grid ─── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+    padding: 24px 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* ─── Paper Card ─── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.10); transform: translateY(-2px); }
+
+  .card-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .tag-strong { background: var(--accent-light); color: var(--accent-strong); }
+  .tag-weak   { background: #ede9fe; color: #5b21b6; }
+  .tag-code   { background: #dcfce7; color: #15803d; }
+  .tag-domain { background: #fef3c7; color: #92400e; }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .card-meta a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .card-meta a:hover { text-decoration: underline; }
+
+  /* Score bar */
+  .score-section {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .score-label { font-size: 11px; color: var(--text-muted); font-weight: 600; min-width: 40px; }
+  .score-bar-wrap { flex: 1; background: var(--bg); border-radius: 6px; height: 8px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+  .score-val { font-size: 13px; font-weight: 800; min-width: 32px; text-align: right; }
+
+  /* Sub-scores breakdown */
+  .breakdown { padding: 0 18px 10px; display: none; }
+  .breakdown.show { display: block; }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    font-size: 11px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-dim { color: var(--text-muted); }
+  .breakdown-score { font-weight: 700; color: var(--text); }
+
+  /* Body */
+  .card-body { padding: 14px 18px; flex: 1; }
+  .card-body .section-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin: 10px 0 4px;
+  }
+  .card-body .section-title:first-child { margin-top: 0; }
+
+  .method-text, .innovation-text {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .method-text.zh, .innovation-text.zh { display: none; }
+  .method-text.en, .innovation-text.en { display: block; }
+
+  /* Experiment block */
+  .experiment-block {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .experiment-block table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: var(--mono);
+  }
+  .experiment-block th {
+    text-align: left;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-bottom: 1px solid #bae6fd;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .experiment-block td { padding: 2px 6px; }
+  .experiment-block .best { color: var(--success); font-weight: 700; }
+
+  /* Figure placeholder */
+  .figure-block {
+    background: #f8f9fb;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .figure-svg { width: 100%; max-width: 320px; }
+
+  /* Toggles */
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+    padding: 8px 18px;
+    border-top: 1px solid var(--border);
+    background: #fafbfc;
+    flex-wrap: wrap;
+  }
+  .toggle-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .toggle-btn:hover { background: #bfdbfe; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; padding: 12px; }
+    header, .controls { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🔬 Daily AI Paper Digest</h1>
+    <div class="meta">2026-05-30 (GMT+8) · E-Commerce Content Ecosystem &amp; Influencer Governance</div>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <label>Min Score:</label>
+  <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()">
+  <span class="score-display" id="score-val">≥ 0</span>
+  <div class="bucket-filter">
+    <button id="btn-all" class="active-all" onclick="setBucket('all')">All</button>
+    <button id="btn-strong" onclick="setBucket('strong')">STRONG</button>
+    <button id="btn-weak" onclick="setBucket('weak')">WEAK</button>
+  </div>
+  <span class="result-count" id="result-count">9 papers</span>
+</div>
+
+<div class="grid" id="paper-grid"></div>
+
+<footer>
+  Generated by Claude Code · Scheduled daily inspection · Domain: E-Commerce Content &amp; Governance
+  · <a href="https://github.com/Sam1224/CCReproduce" style="color:var(--accent)">GitHub Repo</a>
+</footer>
+
+<script>
+const PAPERS = [
+  {
+    id: "thinking-broad",
+    title: "Thinking Broad, Acting Fast: Latent Reasoning Distillation from Multi-Perspective CoT for E-Commerce Relevance",
+    arxiv: "2601.21611",
+    date: "2026-01-29",
+    venue: "WWW 2026",
+    affiliation: "E-Commerce Platform",
+    score: 85,
+    bucket: "STRONG",
+    hasCode: true,
+    codeDir: "ThinkingBroadActingFast",
+    domains: ["E-Commerce Search", "Distillation", "Chain-of-Thought"],
+    breakdown: { Innovation: [25,30], SOTA: [12,15], ExpQuality: [12,15], Efficiency: [9,10], Generalization: [3,5], DomainRelevance: [24,25] },
+    method_en: "Multi-Perspective CoT generates reasoning chains from multiple angles (semantic match, user intent, attribute alignment, long-tail coverage) via a teacher LLM. Latent Reasoning Distillation then transfers this multi-angle reasoning capability into a fast student model — without generating explicit CoT chains at inference.",
+    method_zh: "由教师 LLM 从多个角度（语义匹配、用户意图、属性对齐、长尾覆盖）生成推理链（Multi-Perspective CoT），再通过潜在推理蒸馏将多角度推理能力迁移到快速学生模型，推理时无需显式生成 CoT。",
+    innovation_en: "Prior single-perspective CoT misses the multidimensional nature of e-commerce relevance. Latent (not token-level) distillation preserves reasoning structure without inference overhead. Long-tail queries see the largest improvement.",
+    innovation_zh: "单视角 CoT 无法捕捉电商相关性的多维性；潜在蒸馏（非 token 级别）保留推理结构而不增加延迟；长尾查询改善最为显著。",
+    metrics: [
+      ["E-Commerce Search", "NDCG@10", "Best", "−Δ vs single-persp. CoT"],
+      ["E-Commerce Search", "Latency", "Real-time", "High (teacher LLM)"],
+    ]
+  },
+  {
+    id: "sarm",
+    title: "SARM: LLM-Augmented Semantic Anchor for End-to-End Live-Streaming Ranking",
+    arxiv: "2602.09401",
+    date: "2026-02-10",
+    venue: "arXiv / Kuaishou",
+    affiliation: "Kuaishou Technology; CAS Institute of Information Engineering",
+    score: 83,
+    bucket: "STRONG",
+    hasCode: true,
+    codeDir: "SARM",
+    domains: ["Live-Streaming", "Ranking", "LLM Semantics"],
+    breakdown: { Innovation: [25,30], SOTA: [11,15], ExpQuality: [12,15], Efficiency: [8,10], Generalization: [3,5], DomainRelevance: [24,25] },
+    method_en: "Semantic anchors are learnable text token embeddings representing live-stream content semantics, jointly optimized with the ranking objective. An offline LLM initializes anchors from transcripts; the ranking model adapts them during training. Topic-level granularity (best in ablation) captures non-stationary content dynamics.",
+    method_zh: "语义锚点是可学习的文本 token 嵌入，与排序目标联合优化。离线 LLM 从转录文本初始化锚点；排序模型在训练中自适应调整。Topic 级别粒度（消融最优）捕捉直播内容的非平稳语义。",
+    innovation_en: "Unlike pre-computed frozen embeddings, semantic anchors are ranking-objective-aligned. LLM processing is offline, eliminating online latency. Deployed at Kuaishou (billions of users), validated in A/B tests.",
+    innovation_zh: "语义锚点与排序目标对齐，区别于冻结预计算嵌入；LLM 处理离线化消除在线延迟；已在快手亿级用户场景 A/B 实验验证。",
+    metrics: [
+      ["Kuaishou (Online)", "Watch Time", "↑ Significant", "Baseline ranking"],
+      ["Kuaishou (Online)", "CTR", "↑ Significant", "Baseline ranking"],
+      ["Anchor Granularity", "Best Config", "Topic-level", "Session/Product lower"],
+    ]
+  },
+  {
+    id: "tgq-former",
+    title: "TGQ-Former: Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation",
+    arxiv: "2605.17366",
+    date: "2026-05-14",
+    venue: "arXiv (May 2026)",
+    affiliation: "Industrial E-Commerce Research",
+    score: 82,
+    bucket: "STRONG",
+    hasCode: true,
+    codeDir: "TGQ-Former",
+    domains: ["E-Commerce I2I", "Multimodal", "Noise Robustness"],
+    breakdown: { Innovation: [25,30], SOTA: [11,15], ExpQuality: [11,15], Efficiency: [9,10], Generalization: [3,5], DomainRelevance: [23,25] },
+    method_en: "Dual-stream Q-Former uses product metadata to guide visual feature extraction into two complementary streams: metadata-anchored queries (metadata-consistent visual evidence) and exploratory queries (complementary patterns beyond metadata). Dual-Gated Vector Modulation calibrates streams via cross-modal agreement + saliency. R³ Regularizer enforces stream complementarity.",
+    method_zh: "双流 Q-Former 利用商品元数据引导视觉特征提取为两路互补流：元数据锚定查询（元数据一致的视觉证据）和探索性查询（超出元数据的互补模式）。双门向量调制通过跨模态一致性和显著性校准两路；R³ 正则化器强制两路互补。",
+    innovation_en: "First dual-stream adaptive disentanglement for e-commerce noise. DGVM calibration via agreement+saliency is novel. Achieves end-to-end MLLM quality at substantially lower inference cost.",
+    innovation_zh: "首个针对电商图片噪声的自适应双流解耦框架；DGVM 利用跨模态一致性+显著性进行校准；以远低于端到端 MLLM 的推理成本达到相当质量。",
+    metrics: [
+      ["Large-scale E-Commerce I2I", "Full-Pool Recall@K", "Consistent gains", "Connector baselines"],
+      ["Inference Cost", "FLOPs vs E2E-MLLM", "Substantially lower", "End-to-end MLLM"],
+    ]
+  },
+  {
+    id: "gemini-embedding",
+    title: "Gemini Embedding 2: A Native Multimodal Embedding Model from Gemini",
+    arxiv: "2605.27295",
+    date: "2026-05-27",
+    venue: "arXiv (Google DeepMind)",
+    affiliation: "Google DeepMind",
+    score: 79,
+    bucket: "WEAK",
+    hasCode: false,
+    domains: ["Embeddings", "Multimodal", "RAG", "Retrieval"],
+    breakdown: { Innovation: [26,30], SOTA: [13,15], ExpQuality: [13,15], Efficiency: [6,10], Generalization: [5,5], DomainRelevance: [16,25] },
+    method_en: "First native multimodal embedding model processing text, image, video, audio, documents, and any interleaved combination in a single model. Multi-task multi-stage contrastive training with weakly-supervised pretraining → supervised fine-tuning achieves SOTA across unimodal, cross-modal, and multimodal retrieval benchmarks.",
+    method_zh: "首个原生多模态嵌入模型，单一模型处理文本、图像、视频、音频、文档及其任意组合输入。多任务多阶段对比学习（弱监督预训练→有监督微调），在单模态、跨模态和多模态检索基准上均达到 SOTA。",
+    innovation_en: "First native (not late-fusion) multimodal embedding at this breadth. Surpasses specialized unimodal models on their own benchmarks. Strong zero-shot transfer across specialized domains. Applicable to e-commerce search, product RAG, and similarity-based recommendation.",
+    innovation_zh: "首个此广度的原生（非后融合）多模态嵌入；在各模态专用基准上超越专用模型；强零样本跨域迁移；适用于电商搜索、商品 RAG 和相似度推荐。",
+    metrics: [
+      ["MSCOCO", "R@1 (Image-Text)", "62.9", "Specialized CLIP"],
+      ["Vatex", "NDCG@10 (Video-Text)", "68.8", "Specialized video models"],
+      ["MTEB Multilingual", "NDCG@10", "69.9", "Text-only specialized"],
+      ["MTEB Code", "NDCG@10", "84.0", "Code-specialized models"],
+    ]
+  },
+  {
+    id: "e-vads",
+    title: "E-VAds: An E-commerce Short Videos Understanding Benchmark for MLLMs",
+    arxiv: "2602.08355",
+    date: "2026-02-09",
+    venue: "arXiv (Alibaba/Taobao)",
+    affiliation: "Alibaba Group (Taobao / Tmall)",
+    score: 78,
+    bucket: "STRONG",
+    hasCode: false,
+    domains: ["Short Video", "Benchmark", "E-Commerce", "MLLM Eval"],
+    breakdown: { Innovation: [22,30], SOTA: [10,15], ExpQuality: [12,15], Efficiency: [5,10], Generalization: [4,5], DomainRelevance: [25,25] },
+    method_en: "First benchmark for e-commerce short video understanding. 3,961 Taobao product videos with multi-modal information density assessment framework quantifying visual/audio/text complexity. Tasks: commercial intent classification, product attribute extraction, open-ended commercial reasoning. 26+ MLLMs evaluated.",
+    method_zh: "首个电商短视频理解基准，包含 3,961 条淘宝商品视频。多模态信息密度评估框架量化视觉/音频/文本复杂度。任务：商业意图分类、商品属性提取、开放式商业推理。评估 26+ 主流 MLLM。",
+    innovation_en: "Formally quantifies why e-commerce videos are harder than general videos (3× higher multi-modal density). Reveals systematic MLLM underperformance on commercial reasoning. Real Taobao production data. Dynamic sampling for category fairness.",
+    innovation_zh: "正式量化电商视频比通用视频更难的原因（多模态密度高 3 倍）；揭示主流 MLLM 在商业推理任务上系统性不足；真实淘宝生产数据；动态采样保证类别均衡。",
+    metrics: [
+      ["Commercial Intent (Taobao)", "Accuracy", "MLLM < Human", "~30-40% gap"],
+      ["Product Attr. Extraction", "F1", "MLLM << Human", "Large gap"],
+      ["Multimodal Density", "vs General Video", "~3×", "VideoMME datasets"],
+    ]
+  },
+  {
+    id: "vina",
+    title: "VINA: Video as Natural Augmentation — Towards Unified AIGC Detection",
+    arxiv: "2605.21977",
+    date: "2026-05-21",
+    venue: "arXiv (May 2026)",
+    affiliation: "Harbin Institute of Technology (Shenzhen); Pengcheng Laboratory",
+    score: 65,
+    bucket: "WEAK",
+    hasCode: false,
+    domains: ["AIGC Detection", "Content Governance", "Video", "Unified Model"],
+    breakdown: { Innovation: [20,30], SOTA: [10,15], ExpQuality: [10,15], Efficiency: [6,10], Generalization: [4,5], DomainRelevance: [15,25] },
+    method_en: "Unified AIGC image+video detector that treats video frames as physically grounded natural augmentations for image detectors. Cross-modal supervised contrastive training aligns real and AI-generated representations across both modalities, solving the image→video generalization gap.",
+    method_zh: "统一 AIGC 图像+视频检测器，将视频帧作为图像检测器的物理真实自然增强；跨模态有监督对比训练在两种模态上对齐真实和 AI 生成的表示，解决图像→视频泛化问题。",
+    innovation_en: "Reframes the image-video processing gap as a natural augmentation opportunity. Single model replaces two separate detectors. Cross-modal contrastive training improves cross-generator generalization.",
+    innovation_zh: "将图像-视频处理差异重新定义为自然增强机遇；单一模型取代独立检测器；跨模态对比训练提升跨生成器泛化。",
+    metrics: [
+      ["Image AIGC Detection", "AUC", "0.9+", "0.9+ (image-only)"],
+      ["Video Frame Detection", "AUC", "0.9+ (unified)", "0.6-0.7 (image-only)"],
+    ]
+  },
+  {
+    id: "adapting-vlm",
+    title: "Adapting Vision-Language Models for E-commerce Understanding at Scale",
+    arxiv: "2602.11733",
+    date: "2026-02-12",
+    venue: "arXiv (Feb 2026)",
+    affiliation: "Industrial Research (12 authors)",
+    score: 71,
+    bucket: "STRONG",
+    hasCode: false,
+    domains: ["VLM Adaptation", "Product Understanding", "Attribute Extraction"],
+    breakdown: { Innovation: [18,30], SOTA: [10,15], ExpQuality: [11,15], Efficiency: [7,10], Generalization: [4,5], DomainRelevance: [21,25] },
+    method_en: "Large-scale experimental study documenting the first systematic VLM adaptation strategy for e-commerce: multi-image aggregation, noisy image handling, attribute-centric instruction tuning, and balanced fine-tuning mix to preserve general capabilities. New evaluation suite covering product understanding, instruction following, and attribute extraction.",
+    method_zh: "大规模实验研究记录首个系统性 VLM 电商适配策略：多图聚合、噪声图像处理、属性中心指令微调、平衡精调混合保留通用能力。新评估套件覆盖商品理解、指令遵循和属性提取。",
+    innovation_en: "First documented VLM e-commerce adaptation recipe. Multi-image aggregation is critical for product understanding. Balanced fine-tuning preserves general VLM capabilities.",
+    innovation_zh: "首次系统记录 VLM 电商适配方法；多图聚合是商品理解的关键能力；平衡精调防止灾难性遗忘。",
+    metrics: [
+      ["Product Attr. Extraction", "Accuracy", "Substantial gain", "Base VLM"],
+      ["Instruction Following", "Structured Output", "Large gain", "Base VLM"],
+      ["General VLM Benchmarks", "Performance", "Maintained", "No regression"],
+    ]
+  },
+  {
+    id: "bitter-lesson",
+    title: "A Bitter Lesson for Data Filtering",
+    arxiv: "2605.19407",
+    date: "2026-05-19",
+    venue: "arXiv (Stanford, May 2026)",
+    affiliation: "Stanford University",
+    score: 61,
+    bucket: "WEAK",
+    hasCode: false,
+    domains: ["Data Quality", "Pretraining", "Scaling Laws"],
+    breakdown: { Innovation: [20,30], SOTA: [8,15], ExpQuality: [10,15], Efficiency: [7,10], Generalization: [4,5], DomainRelevance: [12,25] },
+    method_en: "Scaling study in the high-compute, data-scarce regime shows that with enough compute, large models not only tolerate but benefit from noisy, low-quality, and distracting data. The best data filter in this regime is no data filter.",
+    method_zh: "在高计算量、数据稀缺场景下的规模化研究表明：算力充足时，大型模型不仅能容忍低质量和干扰数据，实际上还能从中获益。在此场景下，最好的数据过滤是不过滤。",
+    innovation_en: "Challenges the universal belief that quality filtering always helps. Reveals that the training regime (data-rich vs data-scarce) fundamentally changes the optimal filtering strategy. Echoes Sutton's Bitter Lesson for data curation.",
+    innovation_zh: "挑战数据过滤总是有益的普遍认知；揭示训练场景（数据充裕 vs 数据稀缺）根本改变最优过滤策略；呼应 Sutton 苦涩教训在数据管理上的延伸。",
+    metrics: [
+      ["Data-scarce Regime", "Downstream Tasks", "No filtering ≥ Heavy filtering", "—"],
+      ["Data-rich Regime", "Downstream Tasks", "Heavy filtering wins", "Standard result"],
+    ]
+  },
+  {
+    id: "mm-llm-rec",
+    title: "A General Framework for Multimodal LLM-Based Multimedia Understanding in Large-Scale Recommendation Systems",
+    arxiv: "2605.09338",
+    date: "2026-05-10",
+    venue: "SIGIR 2026 (Melbourne)",
+    affiliation: "Meta Platforms",
+    score: 74,
+    bucket: "STRONG",
+    hasCode: false,
+    domains: ["Recommendation", "Multimodal LLM", "Industrial Scale"],
+    breakdown: { Innovation: [19,30], SOTA: [9,15], ExpQuality: [11,15], Efficiency: [9,10], Generalization: [4,5], DomainRelevance: [22,25] },
+    method_en: "Tripartite architecture: (1) Content Interpretation — LLaMA2-based MM-LLM generates rich textual descriptions of multimedia; (2) Representation Extraction — converts descriptions to vectors; (3) Pipeline Integration — offline caching serves latency-constrained online ranking. Decouples LLM quality from online latency.",
+    method_zh: "三元架构：（1）内容解析——LLaMA2 基础 MM-LLM 离线生成多媒体富语义描述；（2）表示提取——描述转换为向量；（3）管线集成——离线缓存服务于延迟约束的在线排序。将 LLM 质量与在线延迟解耦。",
+    innovation_en: "Systematic tripartite framework enabling MM-LLM quality in latency-constrained production. Deployed at Meta scale. Applicable across heterogeneous multimedia (image, video, text). SIGIR 2026 accepted.",
+    innovation_zh: "系统性三元框架在延迟约束生产中实现 MM-LLM 质量；已在 Meta 生产部署；适用于异构多媒体（图像、视频、文本）；SIGIR 2026 录用。",
+    metrics: [
+      ["Meta Prod. Recommendation", "Content Understanding", "Significant ↑", "Baseline system"],
+      ["Online Latency", "Overhead", "None", "Offline caching"],
+    ]
+  },
+];
+
+let currentLang = 'en';
+let currentBucket = 'all';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+
+  document.querySelectorAll('.method-text.en, .innovation-text.en').forEach(el => {
+    el.style.display = lang === 'en' ? 'block' : 'none';
+  });
+  document.querySelectorAll('.method-text.zh, .innovation-text.zh').forEach(el => {
+    el.style.display = lang === 'zh' ? 'block' : 'none';
+  });
+}
+
+function setBucket(bucket) {
+  currentBucket = bucket;
+  document.getElementById('btn-all').className = bucket === 'all' ? 'active-all' : '';
+  document.getElementById('btn-strong').className = bucket === 'strong' ? 'active-strong' : '';
+  document.getElementById('btn-weak').className = bucket === 'weak' ? 'active-weak' : '';
+  filterCards();
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  document.getElementById('score-val').textContent = `≥ ${minScore}`;
+
+  let visible = 0;
+  document.querySelectorAll('.card').forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const bucket = card.dataset.bucket;
+    const bucketOk = currentBucket === 'all' || bucket === currentBucket.toUpperCase();
+    const show = score >= minScore && bucketOk;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('result-count').textContent = `${visible} paper${visible !== 1 ? 's' : ''}`;
+}
+
+function getScoreColor(score) {
+  if (score >= 80) return '#16a34a';
+  if (score >= 70) return '#2563eb';
+  if (score >= 60) return '#d97706';
+  return '#64748b';
+}
+
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show');
+}
+
+function buildCard(p) {
+  const color = getScoreColor(p.score);
+  const scorePercent = p.score;
+
+  const tagHtml = [
+    `<span class="tag tag-${p.bucket.toLowerCase()}">${p.bucket}</span>`,
+    ...p.domains.map(d => `<span class="tag tag-domain">${d}</span>`),
+    p.hasCode ? `<span class="tag tag-code">Code ✓</span>` : '',
+  ].join('');
+
+  const breakdownHtml = Object.entries(p.breakdown).map(([dim, [got, max]]) =>
+    `<div class="breakdown-row">
+       <span class="breakdown-dim">${dim}</span>
+       <span class="breakdown-score">${got}/${max}</span>
+     </div>`
+  ).join('');
+
+  const metricsHtml = p.metrics.map(row =>
+    `<tr><td>${row[0]}</td><td>${row[1]}</td><td class="best">${row[2]}</td><td>${row[3]}</td></tr>`
+  ).join('');
+
+  const ghLink = p.hasCode
+    ? `<a href="https://github.com/Sam1224/CCReproduce/tree/daily/2026-05-30/code/${p.codeDir}" target="_blank">GitHub Code</a> ·`
+    : '';
+
+  return `
+<div class="card" data-score="${p.score}" data-bucket="${p.bucket}" id="card-${p.id}">
+  <div class="card-header">
+    <div class="card-tags">${tagHtml}</div>
+    <div class="card-title">${p.title}</div>
+    <div class="card-meta">
+      <span>📅 ${p.date}</span>
+      <span>🏛️ ${p.affiliation}</span>
+      <a href="https://arxiv.org/abs/${p.arxiv}" target="_blank">arXiv:${p.arxiv}</a>
+      <span>${p.venue}</span>
+    </div>
+  </div>
+
+  <div class="score-section">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap">
+      <div class="score-bar" style="width:${scorePercent}%; background:${color}"></div>
+    </div>
+    <span class="score-val" style="color:${color}">${p.score}</span>
+  </div>
+
+  <div class="breakdown" id="bd-${p.id}">
+    ${breakdownHtml}
+  </div>
+
+  <div class="card-body">
+    <div class="section-title">Method Overview</div>
+    <div class="method-text en">${p.method_en}</div>
+    <div class="method-text zh" style="display:none">${p.method_zh}</div>
+
+    <div class="section-title">Innovation</div>
+    <div class="innovation-text en">${p.innovation_en}</div>
+    <div class="innovation-text zh" style="display:none">${p.innovation_zh}</div>
+
+    <div class="section-title">Key Experiments</div>
+    <div class="experiment-block" id="exp-${p.id}">
+      <table>
+        <thead><tr><th>Dataset/Task</th><th>Metric</th><th>This Work</th><th>vs. Baseline</th></tr></thead>
+        <tbody>${metricsHtml}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="toggle-row">
+    <button class="toggle-btn" onclick="toggleSection('bd-${p.id}')">Score Breakdown</button>
+    ${p.hasCode ? `<button class="toggle-btn" onclick="window.open('https://github.com/Sam1224/CCReproduce/tree/daily/2026-05-30/code/${p.codeDir}')">View Code</button>` : ''}
+    <a href="https://arxiv.org/abs/${p.arxiv}" target="_blank" style="font-size:11px;color:var(--accent);padding:4px 10px;font-weight:600;text-decoration:none;">arXiv ↗</a>
+  </div>
+</div>`;
+}
+
+// Render
+const grid = document.getElementById('paper-grid');
+const sorted = [...PAPERS].sort((a,b) => b.score - a.score);
+grid.innerHTML = sorted.map(buildCard).join('');
+filterCards();
+</script>
+</body>
+</html>
