@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CCReproduce — Daily AI Paper Scanner</title>
+  <style>
+    :root {
+      --bg: #f7f6f3;
+      --card-bg: #ffffff;
+      --border: #e5e4e0;
+      --text: #1a1a18;
+      --text-muted: #6b6b65;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --strong-tag: #16a34a;
+      --weak-tag: #d97706;
+      --score-high: #16a34a;
+      --score-mid: #2563eb;
+      --score-low: #6b7280;
+      --font: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; line-height: 1.6; }
+    header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    header h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; flex: 1; }
+    header .subtitle { color: var(--text-muted); font-size: 11px; }
+    .controls { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .controls label { font-size: 11px; color: var(--text-muted); }
+    .controls input[type=range] { width: 140px; accent-color: var(--accent); }
+    .controls select, .controls input[type=date] { font-family: var(--font); font-size: 12px; border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; background: var(--bg); color: var(--text); }
+    .lang-toggle { margin-left: auto; display: flex; gap: 4px; }
+    .lang-toggle button { font-family: var(--font); font-size: 11px; border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; background: var(--bg); cursor: pointer; }
+    .lang-toggle button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .score-display { font-weight: 700; font-size: 12px; }
+    main { max-width: 1400px; margin: 0 auto; padding: 20px 16px; }
+    .stats-bar { display: flex; gap: 16px; margin-bottom: 16px; font-size: 11px; color: var(--text-muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: box-shadow .15s; }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .card-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .card-title { font-size: 12px; font-weight: 700; line-height: 1.4; flex: 1; }
+    .card-title a { color: var(--accent); text-decoration: none; }
+    .card-title a:hover { text-decoration: underline; }
+    .score-badge { flex-shrink: 0; font-size: 14px; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+    .score-high { background: #dcfce7; color: var(--score-high); }
+    .score-mid { background: #dbeafe; color: var(--score-mid); }
+    .score-low { background: #f3f4f6; color: var(--score-low); }
+    .card-meta { padding: 8px 16px; font-size: 10px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .bucket-tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; }
+    .bucket-strong { background: #dcfce7; color: var(--strong-tag); }
+    .bucket-weak { background: #fef3c7; color: var(--weak-tag); }
+    .domain-tag { font-size: 10px; padding: 1px 6px; background: var(--accent-light); color: var(--accent); border-radius: 3px; }
+    .card-body { padding: 12px 16px; }
+    .section-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; margin-top: 10px; }
+    .section-label:first-child { margin-top: 0; }
+    .card-text { font-size: 11px; color: var(--text); line-height: 1.6; }
+    .card-text.muted { color: var(--text-muted); }
+    .metrics-block { background: var(--bg); border-radius: 4px; padding: 8px 10px; margin-top: 4px; font-size: 11px; }
+    .score-breakdown { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .score-item { font-size: 10px; background: var(--bg); border-radius: 3px; padding: 2px 6px; color: var(--text-muted); }
+    .score-item span { color: var(--text); font-weight: 700; }
+    .toggle-row { display: flex; gap: 8px; margin-top: 8px; }
+    .toggle-btn { font-family: var(--font); font-size: 10px; border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; background: transparent; cursor: pointer; color: var(--text-muted); }
+    .toggle-btn:hover { background: var(--bg); }
+    .toggle-section { display: none; margin-top: 8px; background: var(--bg); border-radius: 4px; padding: 8px 10px; font-size: 11px; line-height: 1.6; }
+    .toggle-section.open { display: block; }
+    .card-links { padding: 8px 16px 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .link-btn { font-family: var(--font); font-size: 10px; padding: 3px 8px; border-radius: 4px; text-decoration: none; border: 1px solid var(--border); color: var(--text-muted); }
+    .link-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+    .link-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .no-results { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    footer { text-align: center; padding: 24px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 32px; }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>CCReproduce — Daily AI Paper Scanner</h1>
+    <div class="subtitle">电商内容生态 & 达人治理 | Domain: E-commerce Content Ecosystem & Influencer Governance</div>
+  </div>
+</header>
+
+<div class="controls">
+  <label>Min Score: <span id="score-val" class="score-display">0</span></label>
+  <input type="range" id="score-filter" min="0" max="100" value="0" step="5"
+         oninput="document.getElementById('score-val').textContent=this.value; applyFilters()"/>
+
+  <label>Date:</label>
+  <input type="date" id="date-filter" value="2026-05-31" onchange="applyFilters()"/>
+
+  <label>Bucket:</label>
+  <select id="bucket-filter" onchange="applyFilters()">
+    <option value="all">All</option>
+    <option value="STRONG">STRONG</option>
+    <option value="WEAK">WEAK</option>
+  </select>
+
+  <div class="lang-toggle">
+    <button id="btn-zh" class="active" onclick="setLang('zh')">中文</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<main>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="grid" id="grid"></div>
+  <div class="no-results" id="no-results" style="display:none">No papers match the current filters.</div>
+</main>
+
+<footer>CCReproduce · Daily paper scan for e-commerce content governance research · Auto-generated</footer>
+
+<script>
+let allPapers = [];
+let lang = 'zh';
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-zh').className = l === 'zh' ? 'active' : '';
+  document.getElementById('btn-en').className = l === 'en' ? 'active' : '';
+  renderCards(allPapers.filter(p => p._visible !== false));
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function bucketClass(b) {
+  return b && b.includes('STRONG') ? 'bucket-strong' : 'bucket-weak';
+}
+
+function makeCard(p) {
+  const breakdown = p.score_breakdown || {};
+  const breakdownHtml = Object.entries(breakdown).map(([k, v]) =>
+    `<div class="score-item">${k}: <span>${v}</span></div>`
+  ).join('');
+
+  const method = lang === 'zh' ? (p.method_zh || p.abstract_zh) : (p.method_en || p.abstract_en);
+  const innov = lang === 'zh' ? p.innovation_zh : p.innovation_en;
+  const abstract = lang === 'zh' ? p.abstract_zh : p.abstract_en;
+
+  const tagsHtml = (p.tags || []).slice(0, 4).map(t =>
+    `<span class="domain-tag">${t}</span>`
+  ).join('');
+
+  const codeLink = p.official_code
+    ? `<a class="link-btn" href="${p.official_code}" target="_blank">Official Code</a>`
+    : (p.code_url ? `<a class="link-btn" href="${p.code_url}">Local Code</a>` : '');
+
+  return `
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><a href="${p.url}" target="_blank">${p.title}</a></div>
+      <div class="score-badge ${scoreClass(p.score)}">${p.score}</div>
+    </div>
+    <div class="card-meta">
+      <span class="bucket-tag ${bucketClass(p.bucket)}">${p.bucket || 'WEAK'}</span>
+      <span>${p.authors ? p.authors.split(',').slice(0,2).join(', ') + (p.authors.split(',').length > 2 ? ' et al.' : '') : ''}</span>
+      <span>${p.affiliation || ''}</span>
+      <span>${p.date || ''}</span>
+    </div>
+    <div class="card-meta">${tagsHtml}</div>
+    <div class="card-body">
+      <div class="section-label">${lang === 'zh' ? '摘要' : 'Abstract'}</div>
+      <div class="card-text">${abstract || ''}</div>
+
+      <div class="toggle-row">
+        <button class="toggle-btn" onclick="toggleSection(this, 'method')">
+          ${lang === 'zh' ? '+ 方法' : '+ Method'}
+        </button>
+        <button class="toggle-btn" onclick="toggleSection(this, 'innov')">
+          ${lang === 'zh' ? '+ 创新性' : '+ Innovation'}
+        </button>
+        <button class="toggle-btn" onclick="toggleSection(this, 'metrics')">
+          ${lang === 'zh' ? '+ 指标' : '+ Metrics'}
+        </button>
+        <button class="toggle-btn" onclick="toggleSection(this, 'score')">
+          ${lang === 'zh' ? '+ 评分' : '+ Score'}
+        </button>
+      </div>
+
+      <div class="toggle-section" data-type="method">${method || ''}</div>
+      <div class="toggle-section" data-type="innov">${innov || ''}</div>
+      <div class="toggle-section metrics-block" data-type="metrics">${p.metrics || 'N/A'}</div>
+      <div class="toggle-section" data-type="score">
+        <div class="score-breakdown">${breakdownHtml}</div>
+      </div>
+    </div>
+    <div class="card-links">
+      <a class="link-btn primary" href="${p.url}" target="_blank">arXiv</a>
+      ${codeLink}
+    </div>
+  </div>`;
+}
+
+function toggleSection(btn, type) {
+  const card = btn.closest('.card-body');
+  const section = card.querySelector(`.toggle-section[data-type="${type}"]`);
+  if (!section) return;
+  const open = section.classList.toggle('open');
+  btn.textContent = (open ? '− ' : '+ ') + btn.textContent.slice(2);
+}
+
+function renderCards(papers) {
+  const grid = document.getElementById('grid');
+  const noRes = document.getElementById('no-results');
+  if (!papers.length) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+  } else {
+    noRes.style.display = 'none';
+    grid.innerHTML = papers.map(makeCard).join('');
+  }
+  document.getElementById('stats-bar').textContent =
+    `Showing ${papers.length} papers | `
+    + `Strong: ${papers.filter(p=>p.bucket&&p.bucket.includes('STRONG')).length} | `
+    + `Avg score: ${papers.length ? Math.round(papers.reduce((a,p)=>a+p.score,0)/papers.length) : 0}`;
+}
+
+function applyFilters() {
+  const minScore = parseInt(document.getElementById('score-filter').value);
+  const dateVal = document.getElementById('date-filter').value;
+  const bucket = document.getElementById('bucket-filter').value;
+
+  const filtered = allPapers.filter(p => {
+    if (p.score < minScore) return false;
+    if (dateVal && p.date !== dateVal) return false;
+    if (bucket !== 'all' && p.bucket && !p.bucket.includes(bucket)) return false;
+    return true;
+  });
+  renderCards(filtered);
+}
+
+async function loadData() {
+  try {
+    const r = await fetch('papers_db.json');
+    allPapers = await r.json();
+    allPapers.sort((a,b) => b.score - a.score);
+    renderCards(allPapers);
+
+    // Set date picker to first available date
+    if (allPapers.length) {
+      const dates = [...new Set(allPapers.map(p=>p.date))].sort();
+      const picker = document.getElementById('date-filter');
+      if (dates.length) picker.value = dates[dates.length - 1];
+    }
+  } catch(e) {
+    document.getElementById('grid').innerHTML =
+      '<div style="padding:20px;color:red">Failed to load papers_db.json: ' + e + '</div>';
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
