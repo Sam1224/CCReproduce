@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Report</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #fff;
+    --border: #e1e4e8;
+    --primary: #0366d6;
+    --primary-dark: #024fa4;
+    --text: #24292e;
+    --text-secondary: #586069;
+    --strong-tag: #e6f3ff;
+    --strong-border: #0366d6;
+    --weak-tag: #f1f8ff;
+    --weak-border: #79b8ff;
+    --score-high: #28a745;
+    --score-mid: #f0a800;
+    --score-low: #cb2431;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Header */
+  header { background: #24292e; color: #fff; padding: 24px 32px;
+           display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.02em; }
+  header .subtitle { font-size: 0.85rem; color: #8b949e; margin-top: 4px; }
+  .lang-toggle { display: flex; gap: 6px; }
+  .lang-toggle button { background: #30363d; border: 1px solid #444c56; color: #c9d1d9;
+                        padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+  .lang-toggle button.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  /* Controls */
+  .controls { background: var(--surface); border-bottom: 1px solid var(--border);
+              padding: 16px 32px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .controls label { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+  .controls input[type=range] { width: 160px; }
+  .controls select, .controls input[type=date] { border: 1px solid var(--border); border-radius: 6px;
+                                                   padding: 6px 10px; font-size: 0.85rem; }
+  #score-display { font-weight: 700; color: var(--primary); min-width: 28px; }
+
+  /* Stats bar */
+  .stats-bar { padding: 12px 32px; background: var(--surface); border-bottom: 1px solid var(--border);
+               font-size: 0.82rem; color: var(--text-secondary); }
+
+  /* Main layout */
+  main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+
+  /* Paper cards */
+  .paper-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+                box-shadow: var(--shadow); overflow: hidden; transition: transform 0.15s, box-shadow 0.15s; }
+  .paper-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+
+  .card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tag { font-size: 0.72rem; padding: 3px 9px; border-radius: 12px; font-weight: 600; }
+  .tag-strong { background: var(--strong-tag); color: var(--strong-border); border: 1px solid #c8e1ff; }
+  .tag-weak   { background: var(--weak-tag);   color: #0056b3; border: 1px solid #c8e1ff; }
+  .tag-domain { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+  .tag-venue  { background: #f3e8ff; color: #6f42c1; border: 1px solid #d2a6f5; }
+
+  .card-header h2 { font-size: 0.98rem; line-height: 1.4; font-weight: 700; }
+  .card-header .authors { font-size: 0.78rem; color: var(--text-secondary); margin-top: 5px; }
+  .card-header .affil  { font-size: 0.76rem; color: var(--text-secondary); font-style: italic; }
+
+  /* Score badge */
+  .score-badge { display: inline-flex; align-items: center; justify-content: center;
+                 width: 44px; height: 44px; border-radius: 50%; font-size: 1rem;
+                 font-weight: 800; color: #fff; float: right; margin-left: 12px; }
+  .score-high { background: var(--score-high); }
+  .score-mid  { background: var(--score-mid); }
+  .score-low  { background: var(--score-low); }
+
+  .card-body { padding: 14px 18px; }
+
+  /* Methodology figure */
+  .fig-section { margin-bottom: 14px; }
+  .fig-section .fig-toggle { background: none; border: none; color: var(--primary);
+                              font-size: 0.82rem; cursor: pointer; padding: 0; text-decoration: underline; }
+  .fig-container { display: none; margin-top: 8px; }
+  .fig-container.show { display: block; }
+  .fig-container svg { width: 100%; border: 1px solid var(--border); border-radius: 6px; }
+
+  /* Method text */
+  .method-section h3 { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary);
+                        text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .method-section p, .method-section .zh { font-size: 0.85rem; line-height: 1.6; margin-bottom: 10px; }
+  .method-section .en { display: none; }
+  body.lang-en .method-section .zh { display: none; }
+  body.lang-en .method-section .en { display: block; }
+
+  /* Metrics */
+  .metrics-section { background: #f6f8fa; border-radius: 6px; padding: 10px 12px; margin: 12px 0; font-size: 0.82rem; }
+  .metrics-section strong { font-size: 0.78rem; text-transform: uppercase; color: var(--text-secondary); }
+  .metric-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px dashed #e1e4e8; }
+  .metric-row:last-child { border-bottom: none; }
+
+  /* Score breakdown */
+  .score-breakdown { margin-top: 12px; }
+  .score-breakdown summary { font-size: 0.82rem; cursor: pointer; color: var(--text-secondary);
+                              font-weight: 600; list-style: none; user-select: none; }
+  .score-breakdown summary::before { content: "▶ "; font-size: 0.7rem; }
+  .score-breakdown[open] summary::before { content: "▼ "; }
+  .score-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.78rem; }
+  .score-table th { background: #f6f8fa; padding: 5px 8px; text-align: left; font-weight: 600; }
+  .score-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0; }
+  .score-bar { height: 6px; border-radius: 3px; background: var(--primary); display: inline-block; }
+
+  /* Links */
+  .card-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; }
+  .card-footer a { font-size: 0.8rem; color: var(--primary); text-decoration: none; font-weight: 500; }
+  .card-footer a:hover { text-decoration: underline; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 60px; color: var(--text-secondary); grid-column: 1/-1; }
+
+  /* Date in card */
+  .card-date { font-size: 0.72rem; color: var(--text-secondary); }
+
+  @media (max-width: 600px) {
+    main { padding: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    header { padding: 16px; }
+  }
+</style>
+</head>
+<body class="lang-zh">
+
+<header>
+  <div>
+    <h1>🔬 CCReproduce · Daily AI Paper Report</h1>
+    <div class="subtitle">E-commerce · Influencer Governance · LLM/VLM · Content Moderation</div>
+  </div>
+  <div class="lang-toggle">
+    <button class="active" onclick="setLang('zh')">中文</button>
+    <button onclick="setLang('en')">English</button>
+  </div>
+</header>
+
+<div class="controls">
+  <label>
+    Min Score:
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()">
+    <span id="score-display">0</span>
+  </label>
+  <label>
+    Date:
+    <select id="date-picker" onchange="filterCards()">
+      <option value="all">All Dates</option>
+      <option value="2026-06-01" selected>2026-06-01</option>
+    </select>
+  </label>
+  <label>
+    Bucket:
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </label>
+</div>
+
+<div class="stats-bar" id="stats-bar">Showing all papers</div>
+
+<main>
+  <div class="grid" id="paper-grid"></div>
+</main>
+
+<script>
+const PAPERS = [
+  {
+    id: "hybridmod",
+    date: "2026-06-01",
+    title: "Dynamic Content Moderation in Livestreams: Combining Supervised Classification with MLLM-Boosted Similarity Matching",
+    authors: "Wei Chee Yew, Hailun Xu, Sanjay Saha, Xiaotian Fan, Hiok Hian Ong et al.",
+    affil: "Industry (Production Platform Team)",
+    venue: "KDD 2026",
+    arxiv: "https://arxiv.org/abs/2512.03553",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-01/2026-06-01/code/HybridMod",
+    score: 84,
+    bucket: "STRONG",
+    domains: ["Content Moderation", "Live Streaming", "MLLM", "Distillation"],
+    method_zh: "提出 HybridMod 混合直播内容审核框架：①有监督分类管道（处理已知违规，MLLM 蒸馏训练）+ ②MLLM 驱动相似性匹配管道（处理新兴违规，参考库检索），双管道得分融合做最终决策，全程多模态（文本+音频+视觉）。",
+    method_en: "HybridMod: a dual-pipeline livestream moderation framework. Pipeline A is a supervised multimodal classifier distilled from an MLLM teacher for known violations. Pipeline B uses MLLM-boosted similarity matching against a reference gallery for novel/emerging violations. Score-level fusion combines both pipelines at decision time.",
+    innovation_zh: "MLLM 同时扮演蒸馏教师和特征提取器双重角色，推理时无需调用大模型；明确分离已知/未知违规两类问题；首篇在生产 A/B 测试中验证的直播多模态审核系统。",
+    innovation_en: "MLLM serves dual roles (teacher for distillation + feature extractor for gallery). Explicitly separates known vs. novel violations. First production A/B-validated multimodal livestream moderation system.",
+    metrics: [
+      { label: "Recall @ 80% Prec (Classifier)", val: "67%" },
+      { label: "Recall @ 80% Prec (Similarity)", val: "76%" },
+      { label: "A/B: Unwanted View Reduction", val: "6–8%" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 22, max: 30 },
+      { dim: "SOTA Delta", val: 12, max: 15 },
+      { dim: "Exp Quality", val: 13, max: 15 },
+      { dim: "Efficiency", val: 8, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 25, max: 25 },
+    ],
+  },
+  {
+    id: "csvar",
+    date: "2026-06-01",
+    title: "Deja Vu in Plots: Leveraging Cross-Session Evidence with Retrieval-Augmented LLMs for Live Streaming Risk Assessment",
+    authors: "Yiran Qiao, Xiang Ao, Jing Chen, Yang Liu, Qiwei Zhong, Qing He",
+    affil: "Chinese Academy of Sciences (ICT)",
+    venue: "arXiv 2601.16027",
+    arxiv: "https://arxiv.org/abs/2601.16027",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-01/2026-06-01/code/CS-VAR",
+    score: 81,
+    bucket: "STRONG",
+    domains: ["Live Streaming", "Risk Assessment", "RAG", "Distillation", "Governance"],
+    method_zh: "提出 CS-VAR：训练阶段 LLM 对当前会话 + RAG 检索到的历史会话证据进行联合推理，识别跨场次重复恶意模式，知识蒸馏给轻量小模型。推理阶段只用小模型，无需调用 LLM，满足实时需求。",
+    method_en: "CS-VAR: Training-time LLM reasons over current session + RAG-retrieved historical cross-session evidence to identify recurring malicious patterns. Knowledge distillation transfers LLM insights to a lightweight student model for real-time inference without LLM calls.",
+    innovation_zh: "首次将 RAG 范式引入直播风险检测，显式建模跨会话重复恶意手法；蒸馏后推理不需 LLM，输出可定位风险信号支持人工审核。",
+    innovation_en: "First RAG-based cross-session risk detection for live streaming. Explicitly models recurring patterns across sessions. Post-distillation inference is LLM-free with localized, interpretable risk signals.",
+    metrics: [
+      { label: "Offline (Industrial Dataset)", val: "SOTA" },
+      { label: "Online Validation", val: "Positive" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 24, max: 30 },
+      { dim: "SOTA Delta", val: 11, max: 15 },
+      { dim: "Exp Quality", val: 11, max: 15 },
+      { dim: "Efficiency", val: 8, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 23, max: 25 },
+    ],
+  },
+  {
+    id: "tgqformer",
+    date: "2026-06-01",
+    title: "Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation (TGQ-Former)",
+    authors: "Yufei Guo, Jing Ma, Tianlu Zhang (Tsinghua); Shijie Yang, Yanlong Zang, Weijie Ding, Pinghua Gong (JD.COM); Jungong Han (Tsinghua)",
+    affil: "Tsinghua University + JD.COM",
+    venue: "arXiv 2605.17366",
+    arxiv: "https://arxiv.org/abs/2605.17366",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-01/2026-06-01/code/TGQ-Former",
+    score: 81,
+    bucket: "STRONG",
+    domains: ["E-commerce", "I2I Retrieval", "VLM", "Embeddings", "Recommendation"],
+    method_zh: "TGQ-Former：以商品结构化元数据（标题、品类、属性）为语义锚点引导 Q-Former 视觉 token 提取。Hybrid-Query Connector 分为元数据锚定查询（过滤促销贴片噪声）和探索性查询（捕获补充视觉线索）两路，Reliability-Aware Dual-Gated Vector Modulation 动态融合。",
+    method_en: "TGQ-Former: uses structured product metadata as semantic anchors to guide visual token extraction. A Hybrid-Query Connector splits into Metadata-Anchored Query (filters promotional overlay noise) and Exploratory Query (captures complementary visual details). Reliability-Aware Dual-Gated Vector Modulation adaptively fuses both streams.",
+    innovation_zh: "首次针对电商噪声商品图像设计文本引导双路 Q-Former；可靠性门控自适应融合相比固定权重更鲁棒；针对 I2I 检索任务优化，清华+京东工业合作。",
+    innovation_en: "First text-guided dual-stream Q-Former specifically designed for noisy e-commerce product images. Reliability-aware gating outperforms fixed-weight fusion. Optimized for I2I retrieval (not generation). Industry-academia collaboration (Tsinghua + JD.COM).",
+    metrics: [
+      { label: "H@100 Avg Improvement", val: "+6.04%" },
+      { label: "vs. Strong Connector Baselines", val: "✓ Outperforms" },
+      { label: "vs. End-to-End MLLMs", val: "✓ Outperforms" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 24, max: 30 },
+      { dim: "SOTA Delta", val: 12, max: 15 },
+      { dim: "Exp Quality", val: 12, max: 15 },
+      { dim: "Efficiency", val: 7, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 22, max: 25 },
+    ],
+  },
+  {
+    id: "vlmecom",
+    date: "2026-06-01",
+    title: "Adapting Vision-Language Models for E-commerce Understanding at Scale",
+    authors: "Matteo Nulli, Vladimir Orshulevich, Tala Bazazo, Christian Herold et al.",
+    affil: "Industry (E-commerce Platform)",
+    venue: "arXiv 2602.11733",
+    arxiv: "https://arxiv.org/abs/2602.11733",
+    code: null,
+    score: 74,
+    bucket: "STRONG",
+    domains: ["E-commerce", "VLM", "Adaptation", "Product Understanding"],
+    method_zh: "大规模系统实验，探索将通用 VLM 适配到电商场景的三大挑战：属性中心推理、多图聚合、卖家噪声内容鲁棒性。提出有针对性的适配策略，同时保留通用多模态能力。",
+    method_en: "Large-scale empirical study of adapting general-purpose VLMs to e-commerce. Addresses three key challenges: attribute-centric reasoning, multi-image aggregation, and robustness to noisy seller-generated content. Proposes targeted adaptation strategies that substantially improve e-commerce performance without catastrophic forgetting.",
+    innovation_zh: "首个系统研究电商 VLM 适配策略的实证工作，覆盖多主流架构，提供可复用的适配配方。",
+    innovation_en: "First systematic empirical study of VLM adaptation strategies for e-commerce, covering multiple architectures and providing reusable adaptation recipes.",
+    metrics: [
+      { label: "E-commerce Tasks", val: "Substantially Improved" },
+      { label: "General Benchmarks", val: "Preserved" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 20, max: 30 },
+      { dim: "SOTA Delta", val: 11, max: 15 },
+      { dim: "Exp Quality", val: 11, max: 15 },
+      { dim: "Efficiency", val: 6, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 22, max: 25 },
+    ],
+  },
+  {
+    id: "gremc",
+    date: "2026-06-01",
+    title: "Robust Multimodal Recommendation via Graph Retrieval-Enhanced Modality Completion (GRE-MC)",
+    authors: "Yuan Li, Jun Hu, Jiaxin Jiang, Bryan Hooi, Bingsheng He",
+    affil: "National University of Singapore (NUS)",
+    venue: "arXiv 2605.00670",
+    arxiv: "https://arxiv.org/abs/2605.00670",
+    code: null,
+    score: 70,
+    bucket: "WEAK",
+    domains: ["Recommendation", "Embeddings", "Multimodal", "Graph"],
+    method_zh: "GRE-MC：模态感知子图检索从全图中获取语义相关上下文，联合编码图变换器（全局注意力）完成缺失模态特征重建，可学习稀疏路由码本正则化潜在 embedding。",
+    method_en: "GRE-MC: modality-aware subgraph retrieval fetches semantically relevant context from the full graph. A joint-encoding graph transformer with global attention completes missing modality features. A learnable sparse-routing codebook regularizes latent embeddings.",
+    innovation_zh: "突破现有模态补全方法局限于局部邻居的瓶颈，子图检索显著扩大语义感受野；图变换器联合编码避免两阶段误差累积。",
+    innovation_en: "Overcomes the local-neighbor bottleneck of prior modality completion methods via subgraph retrieval. Joint-encoding graph transformer avoids two-stage error accumulation.",
+    metrics: [
+      { label: "Multimodal Rec Benchmarks", val: "Consistently SOTA" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 20, max: 30 },
+      { dim: "SOTA Delta", val: 11, max: 15 },
+      { dim: "Exp Quality", val: 12, max: 15 },
+      { dim: "Efficiency", val: 7, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 16, max: 25 },
+    ],
+  },
+  {
+    id: "longtrace",
+    date: "2026-06-01",
+    title: "LongTraceRL: Learning Long-Context Reasoning from Search Agent Trajectories with Rubric Rewards",
+    authors: "Nianyi Lin, Jiajie Zhang, Lei Hou, Juanzi Li",
+    affil: "Tsinghua University (THU-KEG)",
+    venue: "arXiv 2605.31584",
+    arxiv: "https://arxiv.org/abs/2605.31584",
+    code: "https://github.com/THU-KEG/LongTraceRL",
+    score: 67,
+    bucket: "WEAK",
+    domains: ["Long-Context", "RAG", "RL", "Agent"],
+    method_zh: "利用搜索 Agent 轨迹构建分层干扰文档（读过但未引用 / 仅出现在检索结果），通过知识图谱随机游走生成多跳问题。以推理链中间实体为 rubric 细粒度过程奖励，RLVR 训练 LLM 长上下文推理。",
+    method_en: "Builds tiered distractor documents from search agent trajectories: (1) docs read but not cited (high confusability), (2) docs retrieved but unopened (low confusability). Rubric rewards use gold entities along reasoning chains as fine-grained process supervision (positive-only strategy).",
+    innovation_zh: "分层干扰文档提高 RLVR 训练挑战性；实体级过程奖励填补稀疏奖励空洞；开源实现。",
+    innovation_en: "Tiered distractors increase RLVR training difficulty. Entity-level rubric rewards provide dense process supervision. Open-source implementation.",
+    metrics: [
+      { label: "5 Long-Context Benchmarks", val: "Consistently > Baselines" },
+      { label: "Model Sizes Tested", val: "4B, 7B, 30B" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 22, max: 30 },
+      { dim: "SOTA Delta", val: 12, max: 15 },
+      { dim: "Exp Quality", val: 12, max: 15 },
+      { dim: "Efficiency", val: 7, max: 10 },
+      { dim: "Generalization", val: 4, max: 5 },
+      { dim: "Domain Relevance", val: 10, max: 25 },
+    ],
+  },
+  {
+    id: "colleague",
+    date: "2026-06-01",
+    title: "COLLEAGUE.SKILL: Automated AI Skill Generation via Expert Knowledge Distillation",
+    authors: "Tianyi Zhou, Dongrui Liu, Leitao Yuan, Jing Shao, Xia Hu",
+    affil: "University / Research Lab",
+    venue: "arXiv 2605.31264",
+    arxiv: "https://arxiv.org/abs/2605.31264",
+    code: null,
+    score: 60,
+    bucket: "WEAK",
+    domains: ["Distillation", "Agent", "Data Quality", "Knowledge"],
+    method_zh: "从专家操作轨迹（traces）自动蒸馏出可检查、可纠错的结构化 AI 技能，注入通用 LLM Agent，使其表现出特定专家的知识和行为模式，端到端 trace-to-skill 流程。",
+    method_en: "Automated trace-to-skill distillation: parses expert operation traces, distills structured skills (trigger condition, execution steps, expected outcomes) via LLM, stores in inspectable format, injects into general-purpose LLM agents for person-grounded behavior.",
+    innovation_zh: "端到端 trace-to-skill 蒸馏框架，首次实现专家知识可移植、可审计包装；可拓展到电商专家标注知识的 Agent 化。",
+    innovation_en: "End-to-end trace-to-skill distillation framework. First to enable portable, auditable packaging of expert knowledge for agent injection. Extensible to e-commerce expert annotation knowledge.",
+    metrics: [
+      { label: "Expert Knowledge Scenarios", val: "Validated" },
+    ],
+    scoreBreakdown: [
+      { dim: "Innovation", val: 20, max: 30 },
+      { dim: "SOTA Delta", val: 9, max: 15 },
+      { dim: "Exp Quality", val: 9, max: 15 },
+      { dim: "Efficiency", val: 7, max: 10 },
+      { dim: "Generalization", val: 3, max: 5 },
+      { dim: "Domain Relevance", val: 12, max: 25 },
+    ],
+  },
+];
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function buildFigureSVG(paper) {
+  const svgs = {
+    hybridmod: `<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+      <rect x="160" y="5" width="140" height="24" rx="5" fill="#0366d6" opacity="0.15" stroke="#0366d6"/>
+      <text x="230" y="21" text-anchor="middle" fill="#0366d6" font-weight="bold">Video Segment (Text+Audio+Visual)</text>
+      <line x1="150" y1="29" x2="90" y2="55" stroke="#555" marker-end="url(#arr)"/>
+      <line x1="310" y1="29" x2="370" y2="55" stroke="#555" marker-end="url(#arr)"/>
+      <rect x="10" y="55" width="160" height="32" rx="5" fill="#28a745" opacity="0.15" stroke="#28a745"/>
+      <text x="90" y="69" text-anchor="middle" fill="#24692e">Pipeline A</text>
+      <text x="90" y="82" text-anchor="middle" fill="#24692e" font-size="9">Supervised Classifier (KD)</text>
+      <rect x="290" y="55" width="160" height="32" rx="5" fill="#f0a800" opacity="0.15" stroke="#f0a800"/>
+      <text x="370" y="69" text-anchor="middle" fill="#7a5200">Pipeline B</text>
+      <text x="370" y="82" text-anchor="middle" fill="#7a5200" font-size="9">MLLM Similarity Matching</text>
+      <line x1="90" y1="87" x2="200" y2="120" stroke="#555" marker-end="url(#arr)"/>
+      <line x1="370" y1="87" x2="260" y2="120" stroke="#555" marker-end="url(#arr)"/>
+      <rect x="155" y="120" width="150" height="28" rx="5" fill="#6f42c1" opacity="0.15" stroke="#6f42c1"/>
+      <text x="230" y="138" text-anchor="middle" fill="#4a1a8c" font-weight="bold">Decision Fusion</text>
+      <line x1="230" y1="148" x2="230" y2="170" stroke="#555" marker-end="url(#arr)"/>
+      <rect x="155" y="170" width="150" height="24" rx="5" fill="#cb2431" opacity="0.12" stroke="#cb2431"/>
+      <text x="230" y="186" text-anchor="middle" fill="#cb2431" font-weight="bold">Moderation Decision</text>
+      <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#555"/></marker></defs>
+    </svg>`,
+
+    csvar: `<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+      <rect x="150" y="5" width="160" height="24" rx="5" fill="#0366d6" opacity="0.15" stroke="#0366d6"/>
+      <text x="230" y="21" text-anchor="middle" fill="#0366d6" font-weight="bold">Current Live Stream Session</text>
+      <line x1="230" y1="29" x2="100" y2="60" stroke="#555" marker-end="url(#arr2)"/>
+      <line x1="230" y1="29" x2="360" y2="60" stroke="#555" marker-end="url(#arr2)"/>
+      <rect x="10" y="60" width="170" height="45" rx="5" fill="#28a745" opacity="0.15" stroke="#28a745"/>
+      <text x="95" y="78" text-anchor="middle" fill="#155724">Session Encoder</text>
+      <text x="95" y="93" text-anchor="middle" fill="#155724" font-size="9">(Lightweight Transformer)</text>
+      <rect x="280" y="60" width="170" height="45" rx="5" fill="#f0a800" opacity="0.15" stroke="#f0a800"/>
+      <text x="365" y="78" text-anchor="middle" fill="#7a5200">History DB + RAG</text>
+      <text x="365" y="93" text-anchor="middle" fill="#7a5200" font-size="9">Retrieved Cross-Sessions</text>
+      <line x1="180" y1="82" x2="280" y2="82" stroke="#555" stroke-dasharray="4" marker-end="url(#arr2)"/>
+      <rect x="150" y="120" width="160" height="30" rx="5" fill="#6f42c1" opacity="0.15" stroke="#6f42c1"/>
+      <text x="230" y="133" text-anchor="middle" fill="#4a1a8c">LLM Teacher (Train)</text>
+      <text x="230" y="146" text-anchor="middle" fill="#4a1a8c" font-size="9">RAG + Joint Reasoning → KD</text>
+      <line x1="95" y1="105" x2="200" y2="120" stroke="#555" marker-end="url(#arr2)"/>
+      <line x1="365" y1="105" x2="260" y2="120" stroke="#555" marker-end="url(#arr2)"/>
+      <line x1="230" y1="150" x2="230" y2="168" stroke="#555" marker-end="url(#arr2)"/>
+      <rect x="145" y="168" width="170" height="24" rx="5" fill="#cb2431" opacity="0.12" stroke="#cb2431"/>
+      <text x="230" y="183" text-anchor="middle" fill="#cb2431" font-weight="bold">Risk Score (Real-Time)</text>
+      <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#555"/></marker></defs>
+    </svg>`,
+
+    tgqformer: `<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11">
+      <rect x="10" y="5" width="130" height="24" rx="5" fill="#0366d6" opacity="0.15" stroke="#0366d6"/>
+      <text x="75" y="21" text-anchor="middle" fill="#0366d6">Product Image</text>
+      <rect x="320" y="5" width="130" height="24" rx="5" fill="#28a745" opacity="0.15" stroke="#28a745"/>
+      <text x="385" y="21" text-anchor="middle" fill="#28a745">Metadata (Text)</text>
+      <line x1="75" y1="29" x2="75" y2="55" stroke="#555" marker-end="url(#arr3)"/>
+      <line x1="385" y1="29" x2="385" y2="55" stroke="#555" marker-end="url(#arr3)"/>
+      <rect x="10" y="55" width="130" height="24" rx="5" fill="#6f42c1" opacity="0.1" stroke="#6f42c1"/>
+      <text x="75" y="71" text-anchor="middle" fill="#4a1a8c">Vision Encoder (frozen)</text>
+      <rect x="320" y="55" width="130" height="24" rx="5" fill="#6f42c1" opacity="0.1" stroke="#6f42c1"/>
+      <text x="385" y="71" text-anchor="middle" fill="#4a1a8c">Text Encoder</text>
+      <line x1="75" y1="79" x2="155" y2="105" stroke="#555" marker-end="url(#arr3)"/>
+      <line x1="385" y1="79" x2="305" y2="105" stroke="#555" marker-end="url(#arr3)"/>
+      <rect x="100" y="105" width="260" height="40" rx="5" fill="#f0a800" opacity="0.15" stroke="#f0a800"/>
+      <text x="230" y="119" text-anchor="middle" fill="#7a5200" font-weight="bold">Hybrid-Query Connector</text>
+      <text x="175" y="135" text-anchor="middle" fill="#7a5200" font-size="9">Anchored Query (guided)</text>
+      <text x="285" y="135" text-anchor="middle" fill="#7a5200" font-size="9">Exploratory Query (free)</text>
+      <line x1="230" y1="145" x2="230" y2="162" stroke="#555" marker-end="url(#arr3)"/>
+      <rect x="115" y="162" width="230" height="24" rx="5" fill="#cb2431" opacity="0.12" stroke="#cb2431"/>
+      <text x="230" y="178" text-anchor="middle" fill="#cb2431" font-weight="bold">Reliability-Aware Dual-Gated Fusion</text>
+      <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#555"/></marker></defs>
+    </svg>`,
+  };
+  return svgs[paper.id] || null;
+}
+
+function buildCard(paper, lang) {
+  const sc = paper.score;
+  const scClass = scoreClass(sc);
+  const figSVG = buildFigureSVG(paper);
+
+  const domainTags = paper.domains.map(d =>
+    `<span class="tag tag-domain">${d}</span>`
+  ).join('');
+
+  const breakdown = paper.scoreBreakdown.map(r => {
+    const pct = Math.round((r.val / r.max) * 100);
+    return `<tr>
+      <td>${r.dim}</td>
+      <td>${r.val}/${r.max}</td>
+      <td><span class="score-bar" style="width:${pct * 0.6}px"></span></td>
+    </tr>`;
+  }).join('');
+
+  const metrics = paper.metrics.map(m =>
+    `<div class="metric-row"><span>${m.label}</span><strong>${m.val}</strong></div>`
+  ).join('');
+
+  const figBlock = figSVG ? `
+    <div class="fig-section">
+      <button class="fig-toggle" onclick="toggleFig(this)">▶ Architecture Figure</button>
+      <div class="fig-container">
+        ${figSVG}
+      </div>
+    </div>` : '';
+
+  return `<div class="paper-card" data-score="${sc}" data-bucket="${paper.bucket}" data-date="${paper.date}">
+    <div class="card-header">
+      <div class="card-tags">
+        <span class="tag tag-${paper.bucket.toLowerCase()}">${paper.bucket}</span>
+        <span class="tag tag-venue">${paper.venue}</span>
+        ${domainTags}
+      </div>
+      <span class="score-badge ${scClass}">${sc}</span>
+      <h2>${paper.title}</h2>
+      <div class="authors">${paper.authors}</div>
+      <div class="affil">${paper.affil} · <span class="card-date">${paper.date}</span></div>
+    </div>
+    <div class="card-body">
+      ${figBlock}
+      <div class="method-section">
+        <h3>Method</h3>
+        <p class="zh">${paper.method_zh}</p>
+        <p class="en">${paper.method_en}</p>
+        <h3>Innovation</h3>
+        <p class="zh">${paper.innovation_zh}</p>
+        <p class="en">${paper.innovation_en}</p>
+      </div>
+      <div class="metrics-section">
+        <strong>Key Metrics</strong>
+        ${metrics}
+      </div>
+      <details class="score-breakdown">
+        <summary>Score Breakdown (${sc}/100)</summary>
+        <table class="score-table">
+          <thead><tr><th>Dimension</th><th>Score</th><th>Bar</th></tr></thead>
+          <tbody>${breakdown}</tbody>
+        </table>
+      </details>
+    </div>
+    <div class="card-footer">
+      <a href="${paper.arxiv}" target="_blank">📄 arXiv</a>
+      ${paper.code ? `<a href="${paper.code}" target="_blank">💻 Code</a>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleFig(btn) {
+  const container = btn.nextElementSibling;
+  const showing = container.classList.toggle('show');
+  btn.textContent = (showing ? '▼' : '▶') + ' Architecture Figure';
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  document.getElementById('score-display').textContent = minScore;
+  const dateFilter = document.getElementById('date-picker').value;
+  const bucketFilter = document.getElementById('bucket-filter').value;
+
+  const lang = document.body.classList.contains('lang-zh') ? 'zh' : 'en';
+  const filtered = PAPERS.filter(p =>
+    p.score >= minScore &&
+    (dateFilter === 'all' || p.date === dateFilter) &&
+    (bucketFilter === 'all' || p.bucket === bucketFilter)
+  );
+
+  const grid = document.getElementById('paper-grid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">No papers match the current filters.</div>';
+  } else {
+    grid.innerHTML = filtered.map(p => buildCard(p, lang)).join('');
+  }
+  document.getElementById('stats-bar').textContent =
+    `Showing ${filtered.length} of ${PAPERS.length} papers`;
+}
+
+function setLang(lang) {
+  document.body.className = `lang-${lang}`;
+  document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-toggle button').forEach(b => {
+    if (b.textContent.trim() === (lang === 'zh' ? '中文' : 'English')) b.classList.add('active');
+  });
+  filterCards();
+}
+
+// Initial render
+filterCards();
+</script>
+</body>
+</html>
