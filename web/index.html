@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCReproduce — Daily AI Paper Inspection</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card-bg: #ffffff;
+      --border: #e0e4ea;
+      --accent: #3b5bdb;
+      --accent2: #0ca678;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --strong-tag: #d1fae5;
+      --strong-text: #065f46;
+      --weak-tag: #dbeafe;
+      --weak-text: #1e40af;
+      --score-high: #15803d;
+      --score-mid: #b45309;
+      --score-low: #6b7280;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── Header ── */
+    header { background: var(--accent); color: #fff; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.3px; }
+    header p { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+    .lang-toggle { display: flex; gap: 6px; }
+    .lang-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; border-radius: 6px; padding: 4px 12px; cursor: pointer; font-size: 0.8rem; transition: background 0.2s; }
+    .lang-btn.active, .lang-btn:hover { background: rgba(255,255,255,0.4); }
+
+    /* ── Controls Bar ── */
+    .controls { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .control-group { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); }
+    .control-group label { font-weight: 600; }
+    input[type="range"] { width: 120px; accent-color: var(--accent); }
+    #score-display { font-weight: 700; color: var(--accent); min-width: 28px; }
+    select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; background: var(--bg); }
+    .date-label { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── Grid ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Card ── */
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: box-shadow 0.2s, transform 0.15s; display: flex; flex-direction: column; }
+    .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .card[hidden] { display: none !important; }
+
+    .card-header { padding: 16px 18px 10px; }
+    .card-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .tag { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tag-strong { background: var(--strong-tag); color: var(--strong-text); }
+    .tag-weak { background: var(--weak-tag); color: var(--weak-text); }
+    .tag-domain { background: #f3e8ff; color: #6b21a8; }
+    .date-tag { font-size: 0.7rem; color: var(--muted); }
+
+    .score-badge { margin-left: auto; font-size: 1.05rem; font-weight: 800; }
+    .score-high { color: var(--score-high); }
+    .score-mid { color: var(--score-mid); }
+    .score-low { color: var(--score-low); }
+
+    .card-title { font-size: 0.97rem; font-weight: 700; line-height: 1.4; margin-bottom: 4px; }
+    .card-authors { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+    .card-affil { font-size: 0.72rem; color: var(--muted); }
+
+    .card-body { padding: 0 18px 14px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+    .section-toggle { cursor: pointer; user-select: none; font-size: 0.78rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 4px; background: none; border: none; padding: 0; }
+    .section-toggle::after { content: '▼'; font-size: 0.65rem; transition: transform 0.2s; }
+    .section-toggle.collapsed::after { transform: rotate(-90deg); }
+    .section-content { font-size: 0.8rem; line-height: 1.55; color: #374151; }
+    .section-content.hidden { display: none; }
+
+    .method-en, .method-zh { display: none; }
+    .method-en.show, .method-zh.show { display: block; }
+
+    .metrics-block { background: #f9fafb; border-left: 3px solid var(--accent2); padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 0.78rem; }
+    .metrics-block .metric-row { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 3px; }
+    .metric-row:last-child { margin-bottom: 0; }
+    .metric-dataset { font-weight: 600; color: var(--accent); }
+    .metric-value { font-weight: 700; color: var(--score-high); }
+
+    .score-breakdown { background: #f9fafb; border-radius: 8px; padding: 10px 12px; font-size: 0.75rem; }
+    .score-breakdown h4 { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .score-row:last-child { margin-bottom: 0; }
+    .score-label { width: 140px; flex-shrink: 0; color: #374151; }
+    .score-bar-wrap { flex: 1; background: var(--border); border-radius: 100px; height: 5px; }
+    .score-bar { height: 5px; border-radius: 100px; background: var(--accent); }
+    .score-num { font-weight: 700; min-width: 38px; text-align: right; color: var(--text); }
+
+    .card-footer { padding: 10px 18px 14px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+    .btn { font-size: 0.75rem; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 600; transition: background 0.15s; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-paper { border-color: var(--accent); }
+
+    /* ── Methodology Figure ── */
+    .fig-wrap { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
+    .fig-svg { width: 100%; display: block; }
+
+    /* ── Empty State ── */
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); font-size: 0.9rem; }
+
+    @media (max-width: 600px) {
+      .grid { padding: 16px; gap: 14px; }
+      header { padding: 14px 16px; }
+      .controls { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce — Daily AI Paper Inspection</h1>
+    <p>E-commerce Content Ecosystem &amp; Influencer Governance · LLM / VLM / MLLM · Content Moderation</p>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Min Score:</label>
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()" />
+    <span id="score-display">0</span>
+  </div>
+  <div class="control-group">
+    <label>Date:</label>
+    <select id="date-picker" onchange="filterCards()">
+      <option value="all">All Dates</option>
+      <option value="2026-06-02" selected>2026-06-02</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Bucket:</label>
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+  <div class="date-label" id="result-count"></div>
+</div>
+
+<div class="grid" id="grid">
+</div>
+
+<script>
+/* ─── Data ─── */
+const papers = [
+  {
+    id: "pasbench_video",
+    date: "2026-06-02",
+    bucket: "STRONG",
+    score: 73,
+    title: "PaSBench-Video: A Streaming Video Benchmark for Proactive Safety Warning",
+    authors: "Yusong Zhao, Yuejin Xie, Youliang Yuan, Junjie Hu, Jitian Guo, Yujiu Yang, Pinjia He",
+    affil: "CUHK-Shenzhen; Tsinghua University",
+    link: "https://arxiv.org/abs/2606.02443",
+    tags: ["Video Safety", "Benchmark", "MLLM", "Content Governance"],
+    method_en: "PaSBench-Video builds a 740-video streaming benchmark (481 risk + 259 no-risk) across driving, healthcare, daily life, and industrial domains. Risk videos are annotated with frame-level onset and accident boundaries. Models must observe videos causally (no future peeking) and produce warnings that are both temporally calibrated and content-correct. Three progressively stricter metrics: Detection Hit → Timed-Hit → Content-Grounded Accuracy. 13 MLLMs evaluated; no model exceeds 20% on the strictest metric.",
+    method_zh: "PaSBench-Video 构建了 740 段流式视频（481 风险 + 259 无风险），覆盖驾驶、医疗、日常生活、工业四大场景。风险视频标注帧级风险时刻与事故边界，模型只能观察历史帧（因果约束），须发出时间校准且内容正确的告警。三级指标：检测命中 → 时间命中 → 内容正确。13 个 MLLM 评估，最严格指标无模型超过 20%。",
+    innov_en: "First benchmark specifically testing proactive safety warning in streaming video. Fills gap in timing precision and false-positive measurement. Reveals current MLLMs rely on surface scene cues rather than risk reasoning.",
+    innov_zh: "全球首个流式主动安全告警基准，填补时间精度和误报率评测空白。揭示现有MLLM依赖表面场景线索，无法真正推理风险是否会升级。",
+    metrics: [
+      { dataset: "PaSBench-Video (strictest)", metric: "Content-Grounded Acc", best: "<20% (best MLLM)", baseline: "N/A" },
+      { dataset: "Recall vs FPR", metric: "Pearson r", best: "0.64", baseline: "—" }
+    ],
+    scores: [
+      { label: "Innovation", val: 22, max: 30 },
+      { label: "SOTA Delta", val: 8, max: 15 },
+      { label: "Exp Quality", val: 13, max: 15 },
+      { label: "Efficiency", val: 3, max: 10 },
+      { label: "Generalization", val: 4, max: 5 },
+      { label: "Domain Relevance", val: 23, max: 25 }
+    ]
+  },
+  {
+    id: "expweaver",
+    date: "2026-06-02",
+    bucket: "WEAK",
+    score: 72,
+    title: "ExpWeaver: LLM Agents Learn from Experience via Latent RAG",
+    authors: "Tao Feng, Tianyang Luo, Jingjun Xu, Zhigang Hua, Yan Xie, Shuang Yang, Ge Liu, Jiaxuan You",
+    affil: "Multiple institutions",
+    link: "https://arxiv.org/abs/2606.01041",
+    tags: ["LLM Agent", "RAG", "Latent Space", "Experience Learning"],
+    method_en: "ExpWeaver moves agent experience learning from explicit text space to the LLM's own latent space. Experiences are encoded as hidden-state vectors. At each decoding step, the current hidden state queries the experience bank via learned similarity; retrieved vectors are aggregated via cross-attention and injected through gated residuals. The full pipeline is optimized end-to-end with reinforcement learning. No separate RAG module needed, reducing token overhead.",
+    method_zh: "ExpWeaver 将 Agent 经验从显式文本移至 LLM 自身隐状态空间。每个解码步以当前隐状态查询经验库，通过跨注意力聚合并经门控残差注入主干。整条 pipeline 端到端 RL 训练，无独立 RAG 模块，大幅减少 token 开销。",
+    innov_en: "First framework to perform experience retrieval in LLM latent space at every decoding step. Eliminates separate RAG module. Jointly optimizes retrieval and generation. Achieves SOTA on 12/13 diverse tasks, >6.8% over baselines.",
+    innov_zh: "全球首次在 LLM 潜在空间逐解码步做经验检索；消除独立 RAG 模块；端到端 RL 联合优化检索与生成；12/13 任务 SOTA，平均领先 >6.8%。",
+    metrics: [
+      { dataset: "13-task benchmark", metric: "SOTA tasks", best: "12 / 13", baseline: "prev best" },
+      { dataset: "Average improvement", metric: "vs best baseline", best: ">6.8%", baseline: "0%" }
+    ],
+    scores: [
+      { label: "Innovation", val: 25, max: 30 },
+      { label: "SOTA Delta", val: 12, max: 15 },
+      { label: "Exp Quality", val: 11, max: 15 },
+      { label: "Efficiency", val: 8, max: 10 },
+      { label: "Generalization", val: 4, max: 5 },
+      { label: "Domain Relevance", val: 12, max: 25 }
+    ]
+  },
+  {
+    id: "rcem",
+    date: "2026-06-02",
+    bucket: "WEAK",
+    score: 66,
+    title: "RCEM: Embedder Equipped with Query Rewriting Skill for Robust Conversational Search in Distributional Shift",
+    authors: "Kilho Son, Paul Hsu, Cha Zhang, Dinei Florencio",
+    affil: "Microsoft Research, Redmond",
+    link: "https://arxiv.org/abs/2606.01697",
+    tags: ["Dense Retrieval", "Embeddings", "Conversational Search", "Distillation"],
+    method_en: "RCEM distills LLM query-rewriting capability into the embedding model via alignment training: conversational-query embeddings are aligned to rewritten-query embeddings (which are more robust under distribution shift). At inference, no explicit LLM rewriting is needed. Training requires only (dialogue, rewritten-query) pairs — no conversation-to-document relevance labels. Evaluated on QReCC, TopiOCQA, and TREC CAsT.",
+    method_zh: "RCEM 通过对比对齐训练，将 LLM 查询改写能力蒸馏至 embedding 模型：对话查询嵌入对齐改写查询嵌入。推理时无需调用 LLM 改写，只需对话-改写对训练，无对话-文档标注依赖。在 QReCC 等 3 个基准上一致超越强基线，分布偏移下 Recall@10 最高提升 20%。",
+    innov_en: "Novel: distilling LLM query-rewriting into embedding model (not into a smaller LM). No inference-time rewriting overhead. Specifically targets distributional shift robustness. Up to +20% Recall@10 under shift.",
+    innov_zh: "创新：将 LLM 改写能力蒸馏至 embedding 层而非轻量 LM；推理零改写开销；专项解决分布偏移鲁棒性；分布偏移下 Recall@10 最高 +20%。",
+    metrics: [
+      { dataset: "QReCC (cross-domain)", metric: "Recall@10", best: "+20% vs baseline", baseline: "strong baselines" },
+      { dataset: "TopiOCQA / TREC CAsT", metric: "Recall@10", best: "consistent SOTA", baseline: "strong baselines" }
+    ],
+    scores: [
+      { label: "Innovation", val: 20, max: 30 },
+      { label: "SOTA Delta", val: 11, max: 15 },
+      { label: "Exp Quality", val: 11, max: 15 },
+      { label: "Efficiency", val: 8, max: 10 },
+      { label: "Generalization", val: 4, max: 5 },
+      { label: "Domain Relevance", val: 12, max: 25 }
+    ]
+  },
+  {
+    id: "cram",
+    date: "2026-06-02",
+    bucket: "WEAK",
+    score: 65,
+    title: "CRAM: Centroid-Routing and Adaptive MoE for Multimodal Continual Instruction Tuning",
+    authors: "Jun-Tao Tang, Zhen-Hao Xie, Yu-Cheng Shi, Da-Wei Zhou",
+    affil: "Institutional affiliations not fully disclosed",
+    link: "https://arxiv.org/abs/2606.02502",
+    tags: ["MLLM", "Continual Learning", "MoE", "Instruction Tuning"],
+    method_en: "CRAM addresses Multimodal Continual Instruction Tuning (MCIT): shared parameters cause forgetting; dedicated modules per task cause parameter explosion. Solution: (1) Centroid Routing clusters task samples and routes new inputs to the nearest-centroid expert, naturally isolating task interference; (2) Adaptive Rank MoE allocates LoRA rank proportional to the capability gap between current expertise and new task demands.",
+    method_zh: "CRAM 解决 MCIT 两难：共享参数遗忘 vs 专用模块爆炸。(1) 质心路由：对任务样本聚类，新输入路由至最近质心专家，自然隔离干扰；(2) 自适应秩 MoE：根据能力差距动态分配 LoRA 秩，避免参数浪费。两者结合首次同时实现无遗忘+参数可控。",
+    innov_en: "Centroid routing is more stable than learnable gating and needs no task labels. Adaptive rank allocation for MoE in MCIT is novel. First to jointly achieve no-forgetting and parameter-efficiency in MLLM task streams.",
+    innov_zh: "质心路由比可学习门控更稳定且无需任务标签；自适应秩 MoE 是 MCIT 新方向；首次在 MLLM 任务流上同时实现无遗忘与参数可控。",
+    metrics: [
+      { dataset: "MCIT tasks (multiple)", metric: "vs shared params", best: "better, no forgetting", baseline: "shared LoRA" },
+      { dataset: "MCIT tasks (multiple)", metric: "vs dedicated modules", best: "comparable quality", baseline: "per-task LoRA" }
+    ],
+    scores: [
+      { label: "Innovation", val: 22, max: 30 },
+      { label: "SOTA Delta", val: 10, max: 15 },
+      { label: "Exp Quality", val: 10, max: 15 },
+      { label: "Efficiency", val: 9, max: 10 },
+      { label: "Generalization", val: 4, max: 5 },
+      { label: "Domain Relevance", val: 10, max: 25 }
+    ]
+  },
+  {
+    id: "moment_video",
+    date: "2026-06-02",
+    bucket: "STRONG",
+    score: 64,
+    title: "Moment-Video: Diagnosing Temporal Fidelity of Video MLLMs on Momentary Visual Events",
+    authors: "Xiaolin Liu, Yilun Zhu, Xiangyu Zhao, Xuehui Wang, Yan Li, Xin Li, Haoyu Cao, Xing Sun, Shaofeng Zhang, Xu Yang, Zhihang Zhong, Xue Yang",
+    affil: "Multiple institutions (includes ByteDance Seed contributors)",
+    link: "https://arxiv.org/abs/2606.02522",
+    tags: ["Video MLLM", "Benchmark", "Temporal Understanding", "Short Video"],
+    method_en: "Moment-Video: 1,000 human-verified video QA pairs, 7 domains, 25 subcategories, 4 task types — Temporal Occurrence, Temporal Counting, Action Description, Temporal Reasoning. Each question is anchored to a momentary visual event (a few frames) that cannot be answered via global scene context or language priors. Tests whether models can notice, count, or reason about transient evidence after sparse sampling / token compression.",
+    method_zh: "Moment-Video：1000 条人工核验 QA 对，7 场景，25 子类，4 类任务——时间发生、时间计数、动作描述、时间推理。每题锚定于仅持续几帧的瞬时事件，不能靠全局场景或语言先验作答。专为诊断稀疏采样/视觉token压缩对瞬时证据的破坏而设计。33 个模型评估，最优 39.6%。",
+    innov_en: "First benchmark specifically probing momentary (few-frame) visual event understanding. Exposes blind spot of sparse sampling and token compression. Comprehensive 33-model evaluation including Seed-2.0-Pro (best at 39.6%), GPT-5.4 (26.9%). All models significantly below human performance.",
+    innov_zh: "首个专注于瞬时（几帧）视觉事件理解的基准；揭示稀疏采样和 token 压缩盲点；33模型大规模评估（含Seed-2.0-Pro 39.6%为最优，GPT-5.4 26.9%），全面量化现有差距。",
+    metrics: [
+      { dataset: "Moment-Video", metric: "Overall Acc (best)", best: "39.6% (Seed-2.0-Pro)", baseline: "GPT-5.4: 26.9%" },
+      { dataset: "Open-source models", metric: "Overall Acc", best: "<25% (mostly)", baseline: "—" }
+    ],
+    scores: [
+      { label: "Innovation", val: 20, max: 30 },
+      { label: "SOTA Delta", val: 7, max: 15 },
+      { label: "Exp Quality", val: 13, max: 15 },
+      { label: "Efficiency", val: 3, max: 10 },
+      { label: "Generalization", val: 4, max: 5 },
+      { label: "Domain Relevance", val: 17, max: 25 }
+    ]
+  }
+];
+
+/* ─── State ─── */
+let currentLang = 'en';
+
+/* ─── Language ─── */
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.querySelectorAll('.method-en, .method-zh').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.method-' + lang).forEach(el => el.classList.add('show'));
+}
+
+/* ─── Score Color ─── */
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+/* ─── SVG Figure Generator ─── */
+function makeFig(paper) {
+  const figs = {
+    pasbench_video: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" class="fig-svg">
+      <rect width="480" height="140" fill="#f0fdf4"/>
+      <!-- Input stream -->
+      <rect x="10" y="50" width="80" height="40" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="50" y="66" text-anchor="middle" font-size="9" fill="#15803d" font-weight="600">Streaming</text>
+      <text x="50" y="78" text-anchor="middle" font-size="9" fill="#15803d">Video</text>
+      <text x="50" y="90" text-anchor="middle" font-size="9" fill="#15803d">t₀…tₙ</text>
+      <!-- arrow -->
+      <line x1="90" y1="70" x2="115" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Causal Observer -->
+      <rect x="115" y="45" width="85" height="50" rx="6" fill="#dbeafe" stroke="#3b5bdb" stroke-width="1.5"/>
+      <text x="157" y="64" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="600">Causal</text>
+      <text x="157" y="76" text-anchor="middle" font-size="9" fill="#1e40af">Observer</text>
+      <text x="157" y="88" text-anchor="middle" font-size="8" fill="#1e40af">(MLLM)</text>
+      <!-- arrow -->
+      <line x1="200" y1="70" x2="225" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Metrics -->
+      <rect x="225" y="25" width="100" height="90" rx="6" fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+      <text x="275" y="43" text-anchor="middle" font-size="9" fill="#92400e" font-weight="600">3-Level Metrics</text>
+      <text x="275" y="58" text-anchor="middle" font-size="8" fill="#374151">① Detection Hit</text>
+      <text x="275" y="72" text-anchor="middle" font-size="8" fill="#374151">② Timed-Hit Rate</text>
+      <text x="275" y="86" text-anchor="middle" font-size="8" fill="#374151">③ Content-Gnd Acc</text>
+      <text x="275" y="105" text-anchor="middle" font-size="8" fill="#b45309">+ FP Rate (safe vids)</text>
+      <!-- arrow -->
+      <line x1="325" y1="70" x2="350" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+      <!-- Result -->
+      <rect x="350" y="50" width="110" height="40" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="405" y="66" text-anchor="middle" font-size="9" fill="#991b1b" font-weight="600">All 13 MLLMs</text>
+      <text x="405" y="80" text-anchor="middle" font-size="9" fill="#991b1b">&lt;20% (strictest)</text>
+      <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#374151"/></marker></defs>
+      <text x="240" y="130" text-anchor="middle" font-size="9" fill="#6b7280">PaSBench-Video Evaluation Pipeline</text>
+    </svg>`,
+
+    expweaver: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" class="fig-svg">
+      <rect width="480" height="140" fill="#eff6ff"/>
+      <!-- Experience Bank -->
+      <rect x="10" y="30" width="90" height="80" rx="6" fill="#dbeafe" stroke="#3b5bdb" stroke-width="1.5"/>
+      <text x="55" y="48" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="600">Experience</text>
+      <text x="55" y="62" text-anchor="middle" font-size="9" fill="#1e40af">Bank</text>
+      <text x="55" y="78" text-anchor="middle" font-size="8" fill="#374151">(Hidden States)</text>
+      <text x="55" y="94" text-anchor="middle" font-size="8" fill="#374151">h_e₁, h_e₂…</text>
+      <!-- Latent retrieval arrow -->
+      <path d="M100 70 C130 40 160 40 175 65" stroke="#3b5bdb" stroke-width="1.5" fill="none" marker-end="url(#arr2)"/>
+      <text x="130" y="35" text-anchor="middle" font-size="8" fill="#3b5bdb">latent query</text>
+      <!-- LLM Decoder -->
+      <rect x="180" y="35" width="120" height="70" rx="6" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="240" y="55" text-anchor="middle" font-size="9" fill="#5b21b6" font-weight="600">LLM Decoder</text>
+      <text x="240" y="70" text-anchor="middle" font-size="8" fill="#374151">Cross-Attn</text>
+      <text x="240" y="83" text-anchor="middle" font-size="8" fill="#374151">+ Gated Residual</text>
+      <text x="240" y="96" text-anchor="middle" font-size="8" fill="#7c3aed">↓ per decoding step</text>
+      <!-- output arrow -->
+      <line x1="300" y1="70" x2="330" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <!-- RL Training -->
+      <rect x="330" y="30" width="90" height="40" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+      <text x="375" y="47" text-anchor="middle" font-size="9" fill="#065f46" font-weight="600">End-to-End RL</text>
+      <text x="375" y="60" text-anchor="middle" font-size="8" fill="#065f46">No separate RAG</text>
+      <!-- result -->
+      <rect x="330" y="85" width="90" height="35" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="375" y="99" text-anchor="middle" font-size="9" fill="#15803d" font-weight="600">12/13 SOTA</text>
+      <text x="375" y="112" text-anchor="middle" font-size="8" fill="#15803d">&gt;6.8% over base</text>
+      <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#374151"/></marker></defs>
+      <text x="240" y="130" text-anchor="middle" font-size="9" fill="#6b7280">ExpWeaver: Latent RAG Agent Architecture</text>
+    </svg>`,
+
+    rcem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" class="fig-svg">
+      <rect width="480" height="140" fill="#fff7ed"/>
+      <!-- Training -->
+      <text x="120" y="18" text-anchor="middle" font-size="9" fill="#92400e" font-weight="600">TRAINING</text>
+      <rect x="10" y="25" width="80" height="35" rx="5" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+      <text x="50" y="40" text-anchor="middle" font-size="8" fill="#9a3412">Dialogue</text>
+      <text x="50" y="52" text-anchor="middle" font-size="8" fill="#9a3412">Query</text>
+      <rect x="10" y="70" width="80" height="35" rx="5" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+      <text x="50" y="85" text-anchor="middle" font-size="8" fill="#92400e">LLM Rewritten</text>
+      <text x="50" y="97" text-anchor="middle" font-size="8" fill="#92400e">Query</text>
+      <line x1="90" y1="42" x2="120" y2="65" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <line x1="90" y1="87" x2="120" y2="75" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- Alignment -->
+      <rect x="120" y="50" width="80" height="35" rx="5" fill="#dbeafe" stroke="#3b5bdb" stroke-width="1.5"/>
+      <text x="160" y="65" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">Alignment</text>
+      <text x="160" y="77" text-anchor="middle" font-size="8" fill="#1e40af">Contrastive</text>
+      <line x1="200" y1="67" x2="230" y2="67" stroke="#374151" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <!-- RCEM Embedder -->
+      <rect x="230" y="45" width="90" height="45" rx="5" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="275" y="63" text-anchor="middle" font-size="9" fill="#5b21b6" font-weight="600">RCEM</text>
+      <text x="275" y="75" text-anchor="middle" font-size="8" fill="#5b21b6">Embedder</text>
+      <text x="275" y="87" text-anchor="middle" font-size="8" fill="#7c3aed">(rewriting implicit)</text>
+      <!-- Inference -->
+      <text x="385" y="18" text-anchor="middle" font-size="9" fill="#065f46" font-weight="600">INFERENCE</text>
+      <line x1="320" y1="67" x2="345" y2="67" stroke="#374151" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <rect x="345" y="45" width="120" height="45" rx="5" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+      <text x="405" y="63" text-anchor="middle" font-size="9" fill="#065f46" font-weight="600">No LLM Rewriting</text>
+      <text x="405" y="75" text-anchor="middle" font-size="8" fill="#065f46">Recall@10 +20%</text>
+      <text x="405" y="87" text-anchor="middle" font-size="8" fill="#065f46">under dist. shift</text>
+      <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#374151"/></marker></defs>
+      <text x="240" y="130" text-anchor="middle" font-size="9" fill="#6b7280">RCEM: Distill LLM Rewriting into Embedding</text>
+    </svg>`,
+
+    cram: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" class="fig-svg">
+      <rect width="480" height="140" fill="#fdf4ff"/>
+      <!-- Input Task -->
+      <rect x="10" y="50" width="70" height="40" rx="5" fill="#e9d5ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="45" y="65" text-anchor="middle" font-size="8.5" fill="#5b21b6" font-weight="600">New Task</text>
+      <text x="45" y="80" text-anchor="middle" font-size="8" fill="#5b21b6">Samples</text>
+      <line x1="80" y1="70" x2="105" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Centroid Router -->
+      <rect x="105" y="40" width="100" height="60" rx="5" fill="#dbeafe" stroke="#3b5bdb" stroke-width="1.5"/>
+      <text x="155" y="60" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="600">Centroid</text>
+      <text x="155" y="73" text-anchor="middle" font-size="9" fill="#1e40af">Routing</text>
+      <text x="155" y="87" text-anchor="middle" font-size="8" fill="#374151">→ nearest cluster</text>
+      <text x="155" y="97" text-anchor="middle" font-size="8" fill="#374151">→ isolate tasks</text>
+      <line x1="205" y1="70" x2="230" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Adaptive MoE -->
+      <rect x="230" y="40" width="110" height="60" rx="5" fill="#bbf7d0" stroke="#059669" stroke-width="1.5"/>
+      <text x="285" y="58" text-anchor="middle" font-size="9" fill="#065f46" font-weight="600">Adaptive Rank</text>
+      <text x="285" y="71" text-anchor="middle" font-size="9" fill="#065f46">MoE</text>
+      <text x="285" y="84" text-anchor="middle" font-size="8" fill="#374151">gap → rank allocation</text>
+      <text x="285" y="96" text-anchor="middle" font-size="8" fill="#374151">low gap → low rank LoRA</text>
+      <line x1="340" y1="70" x2="365" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr4)"/>
+      <!-- Result -->
+      <rect x="365" y="40" width="100" height="60" rx="5" fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+      <text x="415" y="60" text-anchor="middle" font-size="8.5" fill="#92400e" font-weight="600">No Forgetting</text>
+      <text x="415" y="73" text-anchor="middle" font-size="8" fill="#374151">+ Param Efficient</text>
+      <text x="415" y="86" text-anchor="middle" font-size="8" fill="#374151">beats shared params</text>
+      <text x="415" y="98" text-anchor="middle" font-size="8" fill="#374151">&amp; dedicated modules</text>
+      <defs><marker id="arr4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#374151"/></marker></defs>
+      <text x="240" y="130" text-anchor="middle" font-size="9" fill="#6b7280">CRAM: Centroid Routing + Adaptive MoE for MCIT</text>
+    </svg>`,
+
+    moment_video: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 140" class="fig-svg">
+      <rect width="480" height="140" fill="#fff1f2"/>
+      <!-- Video input -->
+      <rect x="10" y="40" width="80" height="60" rx="5" fill="#fecaca" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="50" y="62" text-anchor="middle" font-size="9" fill="#991b1b" font-weight="600">Video</text>
+      <text x="50" y="75" text-anchor="middle" font-size="8" fill="#991b1b">⚡ Momentary</text>
+      <text x="50" y="87" text-anchor="middle" font-size="8" fill="#991b1b">Events</text>
+      <text x="50" y="99" text-anchor="middle" font-size="8" fill="#991b1b">(few frames)</text>
+      <line x1="90" y1="70" x2="115" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr5)"/>
+      <!-- 4 Tasks -->
+      <rect x="115" y="15" width="115" height="110" rx="5" fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+      <text x="172" y="33" text-anchor="middle" font-size="9" fill="#92400e" font-weight="600">4 Task Types</text>
+      <text x="172" y="48" text-anchor="middle" font-size="8" fill="#374151">① Temporal Occurrence</text>
+      <text x="172" y="62" text-anchor="middle" font-size="8" fill="#374151">② Temporal Counting</text>
+      <text x="172" y="76" text-anchor="middle" font-size="8" fill="#374151">③ Action Description</text>
+      <text x="172" y="90" text-anchor="middle" font-size="8" fill="#374151">④ Temporal Reasoning</text>
+      <text x="172" y="114" text-anchor="middle" font-size="8" fill="#b45309">1000 QA / 7 domains</text>
+      <line x1="230" y1="70" x2="260" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#arr5)"/>
+      <!-- Results -->
+      <rect x="260" y="25" width="200" height="90" rx="5" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="360" y="43" text-anchor="middle" font-size="9" fill="#5b21b6" font-weight="600">33 MLLM Evaluation</text>
+      <text x="360" y="58" text-anchor="middle" font-size="8" fill="#374151">Seed-2.0-Pro: 39.6% ← best</text>
+      <text x="360" y="72" text-anchor="middle" font-size="8" fill="#374151">GPT-5.4: 26.9%</text>
+      <text x="360" y="86" text-anchor="middle" font-size="8" fill="#374151">Gemini: 20.4–26%</text>
+      <text x="360" y="100" text-anchor="middle" font-size="8" fill="#dc2626">Open-source: mostly &lt;25%</text>
+      <defs><marker id="arr5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#374151"/></marker></defs>
+      <text x="240" y="130" text-anchor="middle" font-size="9" fill="#6b7280">Moment-Video: Temporal Fidelity Benchmark</text>
+    </svg>`
+  };
+  return figs[paper.id] || `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" class="fig-svg"><rect width="480" height="80" fill="#f9fafb"/><text x="240" y="45" text-anchor="middle" fill="#9ca3af" font-size="12">No figure available</text></svg>`;
+}
+
+/* ─── Build Cards ─── */
+function buildCards() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  papers.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.score = p.score;
+    card.dataset.date = p.date;
+    card.dataset.bucket = p.bucket;
+
+    const scoreC = scoreClass(p.score);
+    const tagsHTML = p.tags.map(t => `<span class="tag tag-domain">${t}</span>`).join('');
+    const metricsHTML = p.metrics.map(m =>
+      `<div class="metric-row"><span class="metric-dataset">${m.dataset}</span><span>${m.metric}:</span><span class="metric-value">${m.best}</span></div>`
+    ).join('');
+    const scoresHTML = p.scores.map(s =>
+      `<div class="score-row"><span class="score-label">${s.label}</span><div class="score-bar-wrap"><div class="score-bar" style="width:${Math.round(s.val/s.max*100)}%"></div></div><span class="score-num">${s.val}/${s.max}</span></div>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="tag ${p.bucket==='STRONG'?'tag-strong':'tag-weak'}">${p.bucket}</span>
+          ${tagsHTML}
+          <span class="date-tag">${p.date}</span>
+          <span class="score-badge ${scoreC}">${p.score}</span>
+        </div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-authors">${p.authors}</div>
+        <div class="card-affil">${p.affil}</div>
+      </div>
+      <div class="card-body">
+        <!-- Figure -->
+        <div class="fig-wrap">${makeFig(p)}</div>
+
+        <!-- Method -->
+        <div>
+          <button class="section-toggle" onclick="toggleSection(this)">Method Overview</button>
+          <div class="section-content">
+            <div class="method-en ${currentLang==='en'?'show':''}">${p.method_en}</div>
+            <div class="method-zh ${currentLang==='zh'?'show':''}">${p.method_zh}</div>
+          </div>
+        </div>
+
+        <!-- Innovation -->
+        <div>
+          <button class="section-toggle collapsed" onclick="toggleSection(this)">Innovation</button>
+          <div class="section-content hidden">
+            <div class="method-en ${currentLang==='en'?'show':''}">${p.innov_en}</div>
+            <div class="method-zh ${currentLang==='zh'?'show':''}">${p.innov_zh}</div>
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div>
+          <button class="section-toggle collapsed" onclick="toggleSection(this)">Key Metrics</button>
+          <div class="section-content hidden">
+            <div class="metrics-block">${metricsHTML}</div>
+          </div>
+        </div>
+
+        <!-- Score Breakdown -->
+        <div>
+          <button class="section-toggle collapsed" onclick="toggleSection(this)">Score Breakdown</button>
+          <div class="section-content hidden">
+            <div class="score-breakdown">
+              <h4>Scoring (Total: ${p.score}/100)</h4>
+              ${scoresHTML}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="btn btn-paper" href="${p.link}" target="_blank">📄 Paper</a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  filterCards();
+}
+
+/* ─── Toggle Section ─── */
+function toggleSection(btn) {
+  btn.classList.toggle('collapsed');
+  const content = btn.nextElementSibling;
+  content.classList.toggle('hidden');
+}
+
+/* ─── Filter ─── */
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  document.getElementById('score-display').textContent = minScore;
+  const dateFilter = document.getElementById('date-picker').value;
+  const bucketFilter = document.getElementById('bucket-filter').value;
+
+  let shown = 0;
+  document.querySelectorAll('.card').forEach(card => {
+    const s = parseInt(card.dataset.score);
+    const d = card.dataset.date;
+    const b = card.dataset.bucket;
+    const ok = s >= minScore
+      && (dateFilter === 'all' || d === dateFilter)
+      && (bucketFilter === 'all' || b === bucketFilter);
+    card.hidden = !ok;
+    if (ok) shown++;
+  });
+
+  document.getElementById('result-count').textContent = `${shown} paper${shown !== 1 ? 's' : ''} shown`;
+
+  const grid = document.getElementById('grid');
+  let empty = grid.querySelector('.empty-state');
+  if (shown === 0) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = 'No papers match the current filters.';
+      grid.appendChild(empty);
+    }
+  } else {
+    if (empty) empty.remove();
+  }
+}
+
+/* ─── Init ─── */
+buildCards();
+setLang('en');
+</script>
+</body>
+</html>
