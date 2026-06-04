@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspection</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --strong: #16a34a;
+    --weak: #d97706;
+    --score-high: #16a34a;
+    --score-mid: #d97706;
+    --score-low: #dc2626;
+    --tag-bg: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'SF Mono','Consolas','Menlo',monospace; background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.6; }
+
+  /* Header */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .logo span { color: var(--text-muted); font-weight: 400; font-size: 12px; margin-left: 8px; }
+
+  .controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .lang-toggle { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .lang-toggle button { padding: 4px 10px; background: none; border: none; cursor: pointer; font-size: 12px; font-family: inherit; color: var(--text-muted); transition: all .15s; }
+  .lang-toggle button.active { background: var(--accent); color: white; }
+
+  .score-filter-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  input[type=range] { width: 100px; accent-color: var(--accent); }
+
+  .date-picker { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 12px; background: var(--surface); cursor: pointer; }
+
+  /* Main layout */
+  main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  .date-header { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; display: flex; gap: 16px; align-items: center; }
+  .date-header strong { color: var(--text); font-size: 14px; }
+
+  /* Card grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+
+  /* Paper card */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s; cursor: default; }
+  .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .card-score { font-size: 20px; font-weight: 700; min-width: 36px; text-align: right; }
+  .card-score.high { color: var(--score-high); }
+  .card-score.mid { color: var(--score-mid); }
+  .card-score.low { color: var(--score-low); }
+
+  .card-title-en { font-size: 12px; font-weight: 600; line-height: 1.4; color: var(--text); flex: 1; }
+  .card-title-zh { font-size: 12px; font-weight: 600; line-height: 1.4; color: var(--text); flex: 1; display: none; }
+
+  .card-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .tag { padding: 2px 7px; border-radius: 100px; font-size: 10px; background: var(--tag-bg); color: var(--text-muted); }
+  .tag.bucket-strong { background: #dcfce7; color: #15803d; }
+  .tag.bucket-weak { background: #fef9c3; color: #a16207; }
+  .tag.has-code { background: #ede9fe; color: #7c3aed; }
+
+  .card-affil { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+
+  .card-body { font-size: 12px; color: var(--text); }
+  .card-body .method-en { display: block; }
+  .card-body .method-zh { display: none; }
+  .card-body .innovation-en { display: block; }
+  .card-body .innovation-zh { display: none; }
+
+  .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin: 8px 0 4px; }
+
+  .toggle-btn { background: none; border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; cursor: pointer; color: var(--text-muted); font-family: inherit; transition: all .15s; margin-top: 8px; margin-right: 6px; }
+  .toggle-btn:hover { background: var(--tag-bg); }
+  .toggle-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+
+  .score-breakdown { display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .score-breakdown.visible { display: block; }
+  .score-row { display: flex; justify-content: space-between; padding: 4px 10px; font-size: 11px; border-bottom: 1px solid var(--border); }
+  .score-row:last-child { border-bottom: none; }
+  .score-row .score-val { font-weight: 600; color: var(--accent); }
+
+  .experiment-block { display: none; margin-top: 10px; background: #f8fafc; border-radius: 6px; padding: 10px; font-size: 11px; }
+  .experiment-block.visible { display: block; }
+  .experiment-block table { width: 100%; border-collapse: collapse; }
+  .experiment-block th { text-align: left; color: var(--text-muted); font-weight: 600; padding: 2px 6px; border-bottom: 1px solid var(--border); }
+  .experiment-block td { padding: 2px 6px; }
+
+  .card-links { display: flex; gap: 8px; margin-top: 10px; }
+  .link-btn { padding: 3px 10px; border-radius: 5px; font-size: 11px; text-decoration: none; font-family: inherit; border: 1px solid var(--border); color: var(--text-muted); transition: all .15s; }
+  .link-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .link-btn.code { background: #ede9fe; color: #7c3aed; border-color: #c4b5fd; }
+  .link-btn.code:hover { background: #7c3aed; color: white; }
+
+  /* SVG figure */
+  .figure-block { display: none; margin-top: 10px; }
+  .figure-block.visible { display: block; }
+  .figure-block svg { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; }
+
+  /* No papers message */
+  .no-papers { text-align: center; padding: 48px; color: var(--text-muted); }
+
+  /* Footer */
+  footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--border); margin-top: 32px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    header { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CCReproduce <span>Daily AI Paper Inspection</span></div>
+  <div class="controls">
+    <div class="lang-toggle">
+      <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+      <button id="btn-zh" onclick="setLang('zh')">中文</button>
+    </div>
+    <div class="score-filter-wrap">
+      <label for="score-slider">Score ≥</label>
+      <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterByScore(this.value)">
+      <span id="score-display">0</span>
+    </div>
+    <div class="date-picker">
+      <label for="date-select">Date:</label>
+      <select id="date-select" onchange="loadDate(this.value)">
+        <option value="2026-06-03" selected>2026-06-03</option>
+        <option value="2026-06-02">2026-06-02</option>
+        <option value="2026-05-30">2026-05-30</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="date-header">
+    <strong id="current-date">2026-06-03</strong>
+    <span>Domain: E-commerce content ecosystem &amp; influencer governance</span>
+    <span id="paper-count">9 papers</span>
+  </div>
+
+  <div class="grid" id="paper-grid"></div>
+  <div class="no-papers" id="no-papers" style="display:none;">No papers match the current score filter.</div>
+</main>
+
+<footer>CCReproduce · Automated daily inspection · Powered by WebSearch + WebFetch · arXiv papers filtered for e-commerce content ecosystem &amp; governance</footer>
+
+<script>
+// ─── Paper database ────────────────────────────────────────────────────────────
+const PAPERS = {
+  "2026-06-03": [
+    {
+      id: "pasbench_video",
+      score: 85,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.02443",
+      code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-03/2026-06-03/code/PaSBench",
+      title_en: "PaSBench-Video: A Streaming Video Benchmark for Proactive Safety Warning",
+      title_zh: "PaSBench-Video：流式视频主动安全预警基准",
+      authors: "(2026-06-01)",
+      affil: "arXiv:2606.02443",
+      tags: ["Video Safety", "MLLM Benchmark", "Content Governance", "Streaming"],
+      method_en: "Proposes the first streaming video benchmark for proactive safety warning. Contains 740 videos (481 risk + 259 no-risk) across 4 domains (driving, healthcare, daily life, industrial). Key innovation: frame-level dual boundary annotation (risk onset + accident boundary) enabling quantitative evaluation of warning timeliness. Causal constraint requires models to issue warnings without looking ahead. 13 MLLMs evaluated — none exceeds 20.0% strict score.",
+      method_zh: "提出首个面向流式视频的主动安全预警评测框架，740段视频覆盖驾驶/医疗/生活/工业4个领域。核心创新在于帧级双边界标注（风险起始时刻+事故边界），在因果约束下要求模型发出时间校准预警。测试13个主流MLLM，严格指标下无模型超过20.0%。",
+      innovation_en: "First benchmark focused on video 'foresight' not just 'understanding'. Dual boundary annotation enables intervention window evaluation. Reveals recall-FPR tight coupling in current MLLMs — core bottleneck for real-world deployment.",
+      innovation_zh: "首个面向视频'预见'而非'理解'的安全基准；双边界标注实现预警时机定量评估；揭示了当前MLLM召回率与误报率紧耦合的核心瓶颈，对直播/短视频内容安全监控有直接指导意义。",
+      scores: [
+        ["Innovation", 25, 30],
+        ["SOTA Delta", 12, 15],
+        ["Exp. Quality", 14, 15],
+        ["Efficiency", 7, 10],
+        ["Generalization", 5, 5],
+        ["Domain Relevance", 22, 25],
+      ],
+      experiments: [
+        ["Metric", "Best Model", "Score"],
+        ["Strict Safety Warning", "Seed-2.0-Pro", "<20.0%"],
+        ["Lenient Warning", "All tested", "Recall∝FPR"],
+        ["Open-source models", "Most", "<25%"],
+      ],
+      figure_svg: `<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="10">
+        <rect width="400" height="200" fill="#f8fafc" rx="6"/>
+        <text x="10" y="18" font-weight="bold" font-size="11" fill="#1e293b">PaSBench-Video Pipeline</text>
+        <!-- Video stream -->
+        <rect x="10" y="30" width="60" height="30" fill="#dbeafe" rx="4" stroke="#93c5fd"/>
+        <text x="40" y="50" text-anchor="middle" fill="#1d4ed8">Video</text>
+        <text x="40" y="60" text-anchor="middle" fill="#1d4ed8">Stream</text>
+        <!-- Arrow -->
+        <line x1="70" y1="45" x2="100" y2="45" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- MLLM -->
+        <rect x="100" y="30" width="70" height="30" fill="#ede9fe" rx="4" stroke="#c4b5fd"/>
+        <text x="135" y="50" text-anchor="middle" fill="#7c3aed">MLLM</text>
+        <text x="135" y="60" text-anchor="middle" fill="#7c3aed">Judge</text>
+        <!-- Arrow -->
+        <line x1="170" y1="45" x2="200" y2="45" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Decision -->
+        <rect x="200" y="30" width="70" height="30" fill="#fef9c3" rx="4" stroke="#fde047"/>
+        <text x="235" y="48" text-anchor="middle" fill="#a16207">Warning?</text>
+        <!-- Arrow -->
+        <line x1="270" y1="45" x2="300" y2="45" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Metric -->
+        <rect x="300" y="30" width="85" height="30" fill="#dcfce7" rx="4" stroke="#86efac"/>
+        <text x="342" y="50" text-anchor="middle" fill="#15803d">Strict Score</text>
+        <!-- Timeline -->
+        <text x="10" y="100" font-weight="bold" fill="#1e293b">Frame Timeline (Risk Video):</text>
+        <line x1="10" y1="115" x2="390" y2="115" stroke="#cbd5e1" stroke-width="1.5"/>
+        <rect x="80" y="108" width="4" height="14" fill="#f59e0b" rx="1"/>
+        <text x="82" y="138" text-anchor="middle" fill="#a16207" font-size="9">risk_onset</text>
+        <rect x="200" y="108" width="4" height="14" fill="#ef4444" rx="1"/>
+        <text x="202" y="138" text-anchor="middle" fill="#dc2626" font-size="9">accident</text>
+        <rect x="140" y="104" width="60" height="22" fill="#bbf7d0" fill-opacity=".5" rx="2" stroke="#4ade80" stroke-dasharray="3,2"/>
+        <text x="170" y="152" text-anchor="middle" fill="#16a34a" font-size="9">Intervention Window</text>
+        <text x="10" y="170" fill="#64748b" font-size="9">Best published result: Seed-2.0-Pro &lt;20.0% strict score (13 models all below threshold)</text>
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      </svg>`
+    },
+    {
+      id: "multimodal_rec",
+      score: 82,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2605.09338",
+      code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-03/2026-06-03/code/MultimodalRecFramework",
+      title_en: "A General Framework for Multimodal LLM-Based Multimedia Understanding in Large-Scale Recommendation Systems",
+      title_zh: "面向大规模推荐系统的多模态LLM多媒体理解通用框架",
+      authors: "Yiming Zhu, Xu Liu et al.",
+      affil: "Meta Platforms — SIGIR 2026",
+      tags: ["Recommendation", "Multimodal LLM", "Large-Scale", "E-commerce", "SIGIR 2026"],
+      method_en: "Proposes a tripartite architecture integrating Multimodal LLMs into industrial-scale recommendation: (1) Content Interpretation — LLaMA2-based model generates descriptive captions from multimedia; (2) Representation Extraction — fuses captions + visual features into semantic embeddings; (3) Pipeline Integration — offline precomputation enables latency-constrained online serving. Validated via online A/B test at Meta scale.",
+      method_zh: "提出三角架构将多模态LLM集成进工业级大规模推荐：①内容解释层（LLaMA2生成描述性caption）→②表示提取层（融合caption+视觉特征为语义向量）→③系统集成层（离线预计算解决延迟约束）。经Meta生产系统在线A/B测试验证。",
+      innovation_en: "Industrial-scale validated (not just academic); complete end-to-end pipeline from MM-LLM to production serving; LLaMA2 caption generation solves modality alignment gap; offline precomputation enables deployment at billion-item scale.",
+      innovation_zh: "工业级落地方案（Meta量级）；LLaMA2 caption生成解决模态语义对齐；离线预计算支持亿级商品部署；三角架构覆盖从内容理解到推荐服务的完整链路。",
+      scores: [
+        ["Innovation", 22, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 13, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 5, 5],
+        ["Domain Relevance", 24, 25],
+      ],
+      experiments: [
+        ["System", "Metric", "Result"],
+        ["Meta Production (A/B)", "Online Metric", "+0.02%"],
+        ["Offline Recall@K", "vs Baseline", "Improved"],
+        ["Latency", "Deployment", "✓ Feasible"],
+      ],
+      figure_svg: `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="10">
+        <rect width="400" height="180" fill="#f8fafc" rx="6"/>
+        <text x="10" y="18" font-weight="bold" font-size="11" fill="#1e293b">Tripartite Framework</text>
+        <rect x="10" y="28" width="110" height="50" fill="#dbeafe" rx="6" stroke="#93c5fd"/>
+        <text x="65" y="50" text-anchor="middle" fill="#1d4ed8" font-weight="bold">① Content</text>
+        <text x="65" y="62" text-anchor="middle" fill="#1d4ed8">Interpretation</text>
+        <text x="65" y="74" text-anchor="middle" fill="#64748b" font-size="9">LLaMA2 Caption</text>
+        <line x1="120" y1="53" x2="148" y2="53" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="148" y="28" width="110" height="50" fill="#ede9fe" rx="6" stroke="#c4b5fd"/>
+        <text x="203" y="50" text-anchor="middle" fill="#7c3aed" font-weight="bold">② Representation</text>
+        <text x="203" y="62" text-anchor="middle" fill="#7c3aed">Extraction</text>
+        <text x="203" y="74" text-anchor="middle" fill="#64748b" font-size="9">Semantic Embedding</text>
+        <line x1="258" y1="53" x2="286" y2="53" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="286" y="28" width="104" height="50" fill="#dcfce7" rx="6" stroke="#86efac"/>
+        <text x="338" y="50" text-anchor="middle" fill="#15803d" font-weight="bold">③ Pipeline</text>
+        <text x="338" y="62" text-anchor="middle" fill="#15803d">Integration</text>
+        <text x="338" y="74" text-anchor="middle" fill="#64748b" font-size="9">Offline+Online</text>
+        <text x="10" y="105" fill="#64748b">Multimedia Input → Caption → [text_emb ⊕ visual_emb] → Rec. Score</text>
+        <text x="10" y="125" fill="#64748b">Online A/B Test: +0.02% metric at Meta scale (billions of impressions)</text>
+        <text x="10" y="145" fill="#dc2626" font-size="9">* SIGIR 2026 — industrial track — latency constraint fully addressed</text>
+        <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      </svg>`
+    },
+    {
+      id: "harmamp_trajsafe",
+      score: 81,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.02423",
+      code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-03/2026-06-03/code/TrajSafe",
+      title_en: "Investigating and Alleviating Harm Amplification in LLM Interactions",
+      title_zh: "LLM多轮交互中的危害放大：研究与缓解（HarmAmp + TrajSafe）",
+      authors: "Ruohao Guo, Wei Xu, Alan Ritter",
+      affil: "Georgia Institute of Technology",
+      tags: ["Content Governance", "LLM Safety", "Multi-turn", "Harm Detection"],
+      method_en: "Systematically defines 'harm amplification' in multi-turn LLM interactions: malicious users exceed their standalone capabilities through extended conversations, via (1) expertise democratization (novice→expert harm) and (2) scale amplification (single→mass operation). Introduces HarmAmp benchmark (12 risk categories, multi-turn scenarios) and TrajSafe proactive monitor trained via tree-based RL to predict and intervene on harmful trajectories.",
+      method_zh: "系统化定义多轮LLM危害放大：恶意用户通过连续对话超越单独能力，分专业知识民主化和规模化有害操作两轴。构建HarmAmp基准（12风险类别，多轮场景），提出TrajSafe主动监控器，基于树状RL预测有害轨迹并提前干预。",
+      innovation_en: "First systematic definition of multi-turn harm amplification. TrajSafe upgrades from passive filtering to proactive trajectory prediction + intervention. Tree-based RL balances recall vs FPR. 12 real-world risk categories.",
+      innovation_zh: "首次系统定义多轮危害放大现象；TrajSafe从被动过滤升级为主动轨迹预测干预；树状RL平衡召回与误报；12类现实威胁场景全覆盖。",
+      scores: [
+        ["Innovation", 25, 30],
+        ["SOTA Delta", 11, 15],
+        ["Exp. Quality", 12, 15],
+        ["Efficiency", 7, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 22, 25],
+      ],
+      experiments: [
+        ["Benchmark", "Metric", "TrajSafe vs Baseline"],
+        ["HarmAmp (12 cats)", "Prevention Rate", "Improved"],
+        ["HarmAmp", "Multi-turn Safety", "vs single-turn monitors"],
+        ["HarmAmp", "FPR", "Controlled via RL reward"],
+      ],
+      figure_svg: `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="10">
+        <rect width="400" height="180" fill="#f8fafc" rx="6"/>
+        <text x="10" y="18" font-weight="bold" font-size="11" fill="#1e293b">TrajSafe: Multi-turn Harm Amplification Monitor</text>
+        <!-- Conversation turns -->
+        <rect x="10" y="28" width="65" height="20" fill="#fee2e2" rx="3" stroke="#fca5a5"/>
+        <text x="42" y="42" text-anchor="middle" fill="#dc2626" font-size="9">Turn 1</text>
+        <rect x="10" y="52" width="65" height="20" fill="#fef9c3" rx="3" stroke="#fde047"/>
+        <text x="42" y="66" text-anchor="middle" fill="#a16207" font-size="9">Turn 2</text>
+        <rect x="10" y="76" width="65" height="20" fill="#fef9c3" rx="3" stroke="#fde047"/>
+        <text x="42" y="90" text-anchor="middle" fill="#a16207" font-size="9">Turn 3</text>
+        <rect x="10" y="100" width="65" height="20" fill="#fca5a5" rx="3" stroke="#ef4444"/>
+        <text x="42" y="114" text-anchor="middle" fill="#991b1b" font-size="9">Turn 4 ⚠️</text>
+        <!-- TrajSafe -->
+        <rect x="100" y="50" width="90" height="60" fill="#ede9fe" rx="6" stroke="#c4b5fd"/>
+        <text x="145" y="75" text-anchor="middle" fill="#7c3aed" font-weight="bold">TrajSafe</text>
+        <text x="145" y="89" text-anchor="middle" fill="#7c3aed" font-size="9">Trajectory</text>
+        <text x="145" y="101" text-anchor="middle" fill="#7c3aed" font-size="9">Predictor</text>
+        <!-- Tree -->
+        <rect x="210" y="38" width="80" height="82" fill="#f0fdf4" rx="6" stroke="#86efac"/>
+        <text x="250" y="60" text-anchor="middle" fill="#15803d" font-weight="bold">Tree RL</text>
+        <text x="250" y="75" text-anchor="middle" fill="#15803d" font-size="9">Branching</text>
+        <text x="250" y="88" text-anchor="middle" fill="#15803d" font-size="9">Rollout</text>
+        <text x="250" y="101" text-anchor="middle" fill="#64748b" font-size="9">R=α·harm-β·FP</text>
+        <!-- Intervention -->
+        <rect x="308" y="50" width="82" height="60" fill="#dbeafe" rx="6" stroke="#93c5fd"/>
+        <text x="349" y="70" text-anchor="middle" fill="#1d4ed8" font-weight="bold">Intervention</text>
+        <text x="349" y="84" text-anchor="middle" fill="#1d4ed8" font-size="9">probe intent</text>
+        <text x="349" y="97" text-anchor="middle" fill="#1d4ed8" font-size="9">steer topic</text>
+        <!-- Arrows -->
+        <line x1="75" y1="80" x2="98" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <line x1="190" y1="80" x2="208" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <line x1="290" y1="80" x2="306" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <text x="10" y="145" fill="#64748b" font-size="9">HarmAmp: 12 risk categories × multi-turn necessity × operational specificity</text>
+        <text x="10" y="160" fill="#64748b" font-size="9">α=1.0 (harm_prevented), β=0.3 (false_positive_penalty)</text>
+        <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      </svg>`
+    },
+    {
+      id: "rcem",
+      score: 75,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.01697",
+      code: null,
+      title_en: "RCEM: Embedder Equipped with Query Rewriting Skill for Robust Conversational Search in Distributional Shift",
+      title_zh: "RCEM：具备查询改写能力的鲁棒对话检索嵌入器",
+      authors: "Kilho Son, Paul Hsu, Cha Zhang, Dinei Florencio",
+      affil: "Microsoft",
+      tags: ["Embeddings", "Conversational Search", "RAG", "Distributional Shift"],
+      method_en: "Distills LLM's query rewriting capability into the embedding model, enabling context-aware retrieval without explicit query rewriting at inference. Aligns conversational-query embeddings with rewritten-query embeddings during training, requiring only (conversational query, rewritten query) pairs — no expensive query-document annotations. Achieves up to +20% improvement under distributional shift on QReCC, TopiOCQA, TREC CAsT.",
+      method_zh: "将LLM的查询改写能力蒸馏进嵌入模型，推理时无需显式改写即可进行上下文感知检索。训练仅需（对话式查询，改写后查询）对，无需昂贵的查询-文档相关性标注。分布偏移下QReCC/TopiOCQA/TREC CAsT最高提升+20%。",
+      innovation_en: "Novel distillation paradigm (rewriting→embedding); zero inference overhead; no query-doc annotation needed; explicitly addresses distributional shift (+20% under OOD conditions).",
+      innovation_zh: "知识蒸馏新范式（改写能力→嵌入）；零推理开销；无需查询-文档标注；分布偏移鲁棒性+20%。",
+      scores: [
+        ["Innovation", 22, 30],
+        ["SOTA Delta", 12, 15],
+        ["Exp. Quality", 12, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 17, 25],
+      ],
+      experiments: [
+        ["Dataset", "Metric", "Gain vs Baseline"],
+        ["QReCC", "MRR@10", "Improved"],
+        ["TopiOCQA", "MRR@10", "Improved"],
+        ["TREC CAsT (dist.shift)", "nDCG@3", "Up to +20%"],
+      ],
+      figure_svg: null
+    },
+    {
+      id: "datashield",
+      score: 74,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.00160",
+      code: "https://github.com/ZJunBo/DataShield",
+      title_en: "DataShield: Safety-degrading Data Filtering for LLM Benign Instruction Fine-Tuning",
+      title_zh: "DataShield：LLM良性指令微调中的安全降级数据过滤",
+      authors: "ZJunBo et al.",
+      affil: "arXiv:2606.00160 | Official Code: github.com/ZJunBo/DataShield",
+      tags: ["Data Quality", "LLM Safety", "Fine-tuning", "Data Filtering"],
+      method_en: "Discovers that even benign fine-tuning data degrades LLM safety alignment. Proposes DataShield with three components: (1) Compliance Vector Extraction capturing the LLM's compliance tendency; (2) Compliance-Aware Score (CAS) for automatic safety-critical layer selection; (3) Safety-degrading Sample Filtering. No safety annotations needed. Validated on Llama3-8B, Llama3.1-8B, Qwen2.5-7B with Alpaca/Dolly datasets.",
+      method_zh: "发现良性微调数据也会降低LLM安全对齐能力，提出DataShield通过合规向量提取和合规感知评分（CAS）高效识别并过滤安全降级样本，无需任何安全标注。在Llama3/Qwen2.5多模型上验证，官方代码已开源。",
+      innovation_en: "Uses compliance behavior as proxy for safety risk (novel signal). Automatic layer selection via CAS. Zero safety annotation dependency. Empirical finding: open-ended QA + long responses are high-risk signals.",
+      innovation_zh: "首次用合规行为作为安全风险代理信号；自动层选择；零安全标注依赖；发现开放式QA+长响应是安全降级高风险信号。",
+      scores: [
+        ["Innovation", 22, 30],
+        ["SOTA Delta", 11, 15],
+        ["Exp. Quality", 11, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 18, 25],
+      ],
+      experiments: [
+        ["Model", "Dataset", "Safety Preserved"],
+        ["Llama3-8B", "Alpaca", "✓"],
+        ["Llama3.1-8B", "Dolly", "✓"],
+        ["Qwen2.5-7B", "Alpaca", "✓"],
+      ],
+      figure_svg: null
+    },
+    {
+      id: "phf_user_modeling",
+      score: 70,
+      bucket: "strong",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.02300",
+      code: null,
+      title_en: "Beyond Isolated Behaviors: Hierarchical User Modeling for LLM Personalization",
+      title_zh: "超越孤立行为：LLM个性化的层次化用户建模（PHF框架）",
+      authors: "Liang Wang, Xinyi Mou, Xiaoyou Liu, Tiannan Wang, Yuqing Wang, Zhongyu Wei",
+      affil: "Fudan University · Shanghai Innovation Institute · OPPO",
+      tags: ["User Modeling", "LLM Personalization", "Recommendation", "Sociological AI"],
+      method_en: "Proposes PHF (Practice-Habitus-Field), a sociologically-grounded hierarchical user modeling framework based on Bourdieu's Theory of Practice. Three levels: (1) Practice — individual interactions; (2) Habitus — temporal accumulation into stable dispositions; (3) Field — shared regularities across similar users. At inference, users are assigned to nearest Field cluster centroid, requiring no access to other users' data.",
+      method_zh: "提出PHF（实践-惯习-场域）框架，基于布迪厄实践论，将LLM个性化建模为三层次：实践（单次行为）→惯习（时序积累的稳定倾向）→场域（跨用户共性规律）。推理时基于聚类质心分配用户，无需访问他人数据。",
+      innovation_en: "Sociological grounding (Bourdieu) for LLM personalization is novel and theoretically principled. Three-level hierarchy more expressive than flat aggregation. Privacy-friendly inference. Naturally maps to e-commerce creator ecosystems.",
+      innovation_zh: "社会学布迪厄理论驱动的用户建模框架，理论有根基；三层次比扁平聚合更具表达力；隐私友好推理；与电商达人生态自然对应。",
+      scores: [
+        ["Innovation", 20, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 10, 15],
+        ["Efficiency", 6, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 20, 25],
+      ],
+      experiments: [
+        ["Task", "Metric", "PHF vs Flat"],
+        ["Personalized Text Gen", "ROUGE", "Improved"],
+        ["User Pref Alignment", "Human Rating", "Improved"],
+      ],
+      figure_svg: null
+    },
+    {
+      id: "mllm_judge_bias",
+      score: 68,
+      bucket: "weak",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.02578",
+      code: null,
+      title_en: "Mitigating Perceptual Judgment Bias in Multimodal LLM-as-a-Judge via Perceptual Perturbation and Reward Modeling",
+      title_zh: "通过感知扰动和奖励建模缓解多模态LLM-as-a-Judge的感知判断偏差",
+      authors: "Seojeong Park, Jiho Choi, Junyong Kang, Seonho Lee, Jaeyo Shin, Hyunjung Shim",
+      affil: "arXiv:2606.02578",
+      tags: ["MLLM", "Automated Judging", "Reward Modeling", "Content Quality"],
+      method_en: "Identifies 'Perceptual Judgment Bias' in MLLM judges: when visual evidence conflicts with textual cues, MLLMs reward plausible narratives over perceptually correct answers. Builds Perceptually Perturbed Judgment Dataset (PPJD) via minimally edited counterfactual responses. Trains via GRPO reward + batch-ranking objective to make judges rely on visual perception.",
+      method_zh: "发现MLLM评判者的感知判断偏差（倾向奖励文本合理性而非视觉正确性），构建感知扰动判断数据集（PPJD），结合GRPO奖励与批排序目标训练更可靠的视觉感知judge。",
+      innovation_en: "First systematic definition of perceptual judgment bias in MLLM judges. PPJD counterfactual dataset design. GRPO + batch-ranking combination. Direct applications in content quality scoring.",
+      innovation_zh: "首次定义量化MLLM感知判断偏差；最小化编辑反事实样本；GRPO+批排序组合训练；对内容质量自动评估有直接价值。",
+      scores: [
+        ["Innovation", 22, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 10, 15],
+        ["Efficiency", 6, 10],
+        ["Generalization", 3, 5],
+        ["Domain Relevance", 17, 25],
+      ],
+      experiments: [
+        ["Dataset", "Metric", "Trained vs Vanilla"],
+        ["PPJD (perturbed)", "Perceptual Accuracy", "Improved"],
+        ["Visual QA Bench", "Judge Agreement", "More aligned w/ human"],
+      ],
+      figure_svg: null
+    },
+    {
+      id: "skilladaptor",
+      score: 62,
+      bucket: "weak",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.01311",
+      code: null,
+      title_en: "SkillAdaptor: Self-Adapting Skills for LLM Agents from Trajectories",
+      title_zh: "SkillAdaptor：从轨迹自适应更新LLM Agent技能",
+      authors: "(2026-06-01 submission)",
+      affil: "arXiv:2606.01311",
+      tags: ["LLM Agents", "Skill Adaptation", "Training-free", "WebShop"],
+      method_en: "Training-free step-level failure attribution framework for LLM agents. Given a failed trajectory, identifies the first actionable fault step, links responsibility to candidate skills, applies targeted updates under explicit acceptance checks. Improves over full-trajectory adaptation baselines on WebShop (+1.7), PinchBench (+1.5), Claw-Eval (+1.8) with Kimi-K2.5, GLM-5, GPT-5.2.",
+      method_zh: "训练无关的步骤级失败归因框架，精确定位失败轨迹中的第一可操作失败步骤并关联责任技能，靶向精准修订。WebShop+1.7、PinchBench+1.5、Claw-Eval+1.8（多backbone验证）。",
+      innovation_en: "Step-level attribution (vs full-trajectory); explicit acceptance checks; training-free; WebShop e-commerce benchmark shows direct applicability.",
+      innovation_zh: "步骤级失败归因（vs全轨迹）；明确验收检查；训练无关；WebShop电商基准直接相关。",
+      scores: [
+        ["Innovation", 21, 30],
+        ["SOTA Delta", 9, 15],
+        ["Exp. Quality", 10, 15],
+        ["Efficiency", 8, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 10, 25],
+      ],
+      experiments: [
+        ["Benchmark", "Metric", "Gain"],
+        ["WebShop", "Success Rate", "+1.7"],
+        ["PinchBench", "Avg Score%", "+1.5"],
+        ["Claw-Eval", "Avg Score", "+1.8"],
+      ],
+      figure_svg: null
+    },
+    {
+      id: "moment_video",
+      score: 61,
+      bucket: "weak",
+      date: "2026-06-03",
+      arxiv: "https://arxiv.org/abs/2606.02522",
+      code: null,
+      title_en: "Moment-Video: Diagnosing Temporal Fidelity of Video MLLMs on Momentary Visual Events",
+      title_zh: "Moment-Video：视频MLLM瞬时视觉事件时序忠实度诊断基准",
+      authors: "Xiaolin Liu, Yilun Zhu, et al.",
+      affil: "Shanghai Jiao Tong University · Shandong University · Southeast University · Tencent Youtu Lab",
+      tags: ["Video MLLM", "Benchmark", "Temporal Reasoning", "Short Video"],
+      method_en: "Benchmark for diagnosing temporal fidelity of video MLLMs on momentary visual events — localized actions/state transitions lasting only a few frames. 1,000 human-verified video-QA pairs across 7 domains (sports, cooking, surveillance, etc.) and 25 subcategories. 4 task types: Temporal Occurrence, Counting, Action Description, Temporal Reasoning. Best model Seed-2.0-Pro achieves 39.6%; most open-source models <25%.",
+      method_zh: "专门测试视频MLLM对瞬时视觉事件（仅数帧）的感知能力，1000个人工验证video-QA对，7个领域25个子类别，4类任务。Seed-2.0-Pro最优39.6%，多数开源模型低于25%。",
+      innovation_en: "First benchmark focused on sampling-sensitive momentary events. Reveals token compression/sparse sampling as fundamental limitations. Seed-2.0-Pro only 39.6% — large headroom.",
+      innovation_zh: "首个专注采样敏感瞬时事件的基准；揭示token压缩/稀疏采样是核心缺陷；Seed-2.0-Pro仅39.6%表明大量提升空间。",
+      scores: [
+        ["Innovation", 18, 30],
+        ["SOTA Delta", 10, 15],
+        ["Exp. Quality", 11, 15],
+        ["Efficiency", 5, 10],
+        ["Generalization", 4, 5],
+        ["Domain Relevance", 13, 25],
+      ],
+      experiments: [
+        ["Model", "Overall Accuracy", "Notes"],
+        ["Seed-2.0-Pro", "39.6%", "Best commercial"],
+        ["Open-source avg", "<25%", "Large gap to human"],
+      ],
+      figure_svg: null
+    },
+  ]
+};
+
+// ─── State ──────────────────────────────────────────────────────────────────
+let currentLang = 'en';
+let currentDate = '2026-06-03';
+let scoreThreshold = 0;
+
+// ─── Language toggle ─────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.querySelectorAll('.card-title-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.card-title-zh').forEach(el => el.style.display = lang === 'zh' ? '' : 'none');
+  document.querySelectorAll('.method-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.method-zh').forEach(el => el.style.display = lang === 'zh' ? '' : 'none');
+  document.querySelectorAll('.innovation-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.innovation-zh').forEach(el => el.style.display = lang === 'zh' ? '' : 'none');
+}
+
+// ─── Score filter ─────────────────────────────────────────────────────────────
+function filterByScore(val) {
+  scoreThreshold = parseInt(val);
+  document.getElementById('score-display').textContent = val;
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const show = score >= scoreThreshold;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('no-papers').style.display = visible === 0 ? '' : 'none';
+  document.getElementById('paper-count').textContent = visible + ' papers';
+}
+
+// ─── Date picker ─────────────────────────────────────────────────────────────
+function loadDate(date) {
+  currentDate = date;
+  document.getElementById('current-date').textContent = date;
+  renderPapers(date);
+}
+
+// ─── Toggle helpers ───────────────────────────────────────────────────────────
+function toggleSection(btn, targetClass) {
+  const card = btn.closest('.card');
+  const target = card.querySelector('.' + targetClass);
+  const visible = target.classList.toggle('visible');
+  btn.classList.toggle('active', visible);
+}
+
+// ─── Score color ─────────────────────────────────────────────────────────────
+function scoreClass(s) {
+  if (s >= 80) return 'high';
+  if (s >= 65) return 'mid';
+  return 'low';
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function renderPapers(date) {
+  const papers = PAPERS[date] || [];
+  const grid = document.getElementById('paper-grid');
+  grid.innerHTML = '';
+
+  if (papers.length === 0) {
+    document.getElementById('no-papers').style.display = '';
+    document.getElementById('paper-count').textContent = '0 papers';
+    return;
+  }
+
+  document.getElementById('no-papers').style.display = 'none';
+
+  papers.sort((a, b) => b.score - a.score).forEach(p => {
+    const scoreBreakdownHTML = p.scores.map(([dim, val, max]) =>
+      `<div class="score-row"><span>${dim}</span><span class="score-val">${val}/${max}</span></div>`
+    ).join('');
+
+    const expHTML = p.experiments ? `
+      <table>
+        <tr>${p.experiments[0].map(h => `<th>${h}</th>`).join('')}</tr>
+        ${p.experiments.slice(1).map(row => `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+      </table>
+    ` : '';
+
+    const figureHTML = p.figure_svg ? `
+      <div class="figure-block" id="fig-${p.id}">${p.figure_svg}</div>
+    ` : '';
+
+    const codeLink = p.code
+      ? `<a href="${p.code}" class="link-btn code" target="_blank">📦 Code</a>` : '';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.score = p.score;
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-title-en">${p.title_en}</div>
+          <div class="card-title-zh" style="display:none">${p.title_zh}</div>
+        </div>
+        <div class="card-score ${scoreClass(p.score)}">${p.score}</div>
+      </div>
+      <div class="card-affil">${p.authors} &nbsp;·&nbsp; ${p.affil}</div>
+      <div class="card-meta">
+        <span class="tag bucket-${p.bucket}">${p.bucket.toUpperCase()}</span>
+        ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        ${p.code ? '<span class="tag has-code">Code ✓</span>' : ''}
+      </div>
+      <div class="card-body">
+        <div class="section-label">${currentLang === 'en' ? 'Method' : '方法'}</div>
+        <span class="method-en">${p.method_en}</span>
+        <span class="method-zh" style="display:none">${p.method_zh}</span>
+        <div class="section-label" style="margin-top:8px">${currentLang === 'en' ? 'Innovation' : '创新点'}</div>
+        <span class="innovation-en">${p.innovation_en}</span>
+        <span class="innovation-zh" style="display:none">${p.innovation_zh}</span>
+      </div>
+      <div>
+        <button class="toggle-btn" onclick="toggleSection(this,'score-breakdown')">Score</button>
+        ${p.experiments ? `<button class="toggle-btn" onclick="toggleSection(this,'experiment-block')">Experiments</button>` : ''}
+        ${p.figure_svg ? `<button class="toggle-btn" onclick="toggleSection(this,'figure-block')">Figure</button>` : ''}
+      </div>
+      <div class="score-breakdown">${scoreBreakdownHTML}</div>
+      ${p.experiments ? `<div class="experiment-block">${expHTML}</div>` : ''}
+      ${figureHTML}
+      <div class="card-links">
+        <a href="${p.arxiv}" class="link-btn" target="_blank">📄 arXiv</a>
+        ${codeLink}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('paper-count').textContent = papers.length + ' papers';
+  setLang(currentLang);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+renderPapers(currentDate);
+</script>
+</body>
+</html>
