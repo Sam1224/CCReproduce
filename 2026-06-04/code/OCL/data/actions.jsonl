@@ -1,0 +1,1000 @@
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.08372275711508634}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.08372275711508634, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.2827191798766582}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2827191798766582, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.03178267948178359}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03178267948178359, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.4501792403142346}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4501792403142346, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2204406220406967}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2204406220406967, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.41409178740762775}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.41409178740762775, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4188836369929361}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4188836369929361, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.09671637683346401}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09671637683346401, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.07880019807845817}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.07880019807845817, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "currency", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.19179803993733413}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.19179803993733413, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6356844442644002}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6356844442644002, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "payment_days", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2773561271106694}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2773561271106694, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.433523084857433}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.433523084857433, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.488073281233943}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.488073281233943, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.26774087597570273}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.26774087597570273, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.547881674511327}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.547881674511327, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.39563190106066426}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.39563190106066426, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5777646554666653}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5777646554666653, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.376467625021854}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.376467625021854, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.18437230132079985}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.18437230132079985, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.2884534564104295}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2884534564104295, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.29073659044251965}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.29073659044251965, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.7261054840337282}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7261054840337282, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.09170356112978088}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09170356112978088, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3236274180717754}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3236274180717754, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.6210116394865679}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6210116394865679, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5268057595224243}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5268057595224243, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.662954476691394}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.662954476691394, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8160232534200885}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8160232534200885, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.39585049364842045}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.39585049364842045, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9643629060074552}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9643629060074552, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8996140846429455}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8996140846429455, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.12100419586826572}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.12100419586826572, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.038415537795806955}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.038415537795806955, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.14129394953157326}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.14129394953157326, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3530640686462106}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3530640686462106, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.6864110623855479}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6864110623855479, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.6486720208098047}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6486720208098047, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.16708635837872818}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16708635837872818, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2142368073704386}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2142368073704386, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4340115395285825}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4340115395285825, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.470771654574452}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.470771654574452, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.1904099143618777}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1904099143618777, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.254372399223461}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.254372399223461, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.7030197214767782}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.7030197214767782, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.402149865727543}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.402149865727543, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.32177145234620663}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.32177145234620663, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.2531289839006425}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2531289839006425, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8080222447317026}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8080222447317026, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.750394011655602}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.750394011655602, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.09978666636234841}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09978666636234841, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.4813584179710395}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4813584179710395, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9024428655105486}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9024428655105486, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.22738387138614966}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.22738387138614966, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.26520305817215195}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.26520305817215195, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2852492289469203}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2852492289469203, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.15479682527406413}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15479682527406413, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.3967608966065026}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3967608966065026, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.7197722603776744}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.7197722603776744, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.5028503829195136}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5028503829195136, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.04111279962227541}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04111279962227541, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.28034008576654434}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.28034008576654434, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24226533079096646}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24226533079096646, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.12924013546260404}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.12924013546260404, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.1593687075188123}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1593687075188123, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4030141337759828}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4030141337759828, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.06674316381026224}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.06674316381026224, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.06021504656260368}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06021504656260368, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.6235403312091348}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6235403312091348, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.21485511569471072}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21485511569471072, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.5516804211263913}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5516804211263913, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.5609068647747464}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5609068647747464, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.6796098238819728}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6796098238819728, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.025097314901314702}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.025097314901314702, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4092400129863459}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4092400129863459, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.973837022637289}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.973837022637289, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5187634177319783}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5187634177319783, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5288497227979946}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5288497227979946, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.5130229385308689}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5130229385308689, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.18793324384490506}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.18793324384490506, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5737492021404507}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5737492021404507, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.11974369801545112}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11974369801545112, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.34965842444591866}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.34965842444591866, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.13375412832348538}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.13375412832348538, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.615453197037716}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.615453197037716, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6062088533061433}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6062088533061433, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.3340564541346729}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3340564541346729, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.03187255770653663}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03187255770653663, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2185328830687585}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2185328830687585, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.718199177554103}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.718199177554103, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.32618290485739987}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.32618290485739987, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.11510405579408849}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11510405579408849, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3693089495708283}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3693089495708283, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.793735399106002}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.793735399106002, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.3459417520111561}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3459417520111561, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.08841237734746361}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.08841237734746361, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.4082519294746398}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4082519294746398, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6112739730606801}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6112739730606801, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.07133413059185734}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.07133413059185734, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3996528628765377}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3996528628765377, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.39363480666707046}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.39363480666707046, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.6282557219381866}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6282557219381866, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.44547265082772003}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.44547265082772003, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.10553200902391899}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10553200902391899, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.0918492704534325}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0918492704534325, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.06966107924772391}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.06966107924772391, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6675777325863531}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6675777325863531, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6126523227617628}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6126523227617628, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.830569169721415}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.830569169721415, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.44619326529575093}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.44619326529575093, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.4500697572469081}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4500697572469081, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5039177327051524}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5039177327051524, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership", "installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.07748335386473582}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.07748335386473582, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.09049839480785195}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09049839480785195, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6939498122990523}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6939498122990523, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.4075993696665867}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4075993696665867, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.46906497677694364}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.46906497677694364, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.38947681266694123}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.38947681266694123, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5707712516862948}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5707712516862948, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.708386651894555}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.708386651894555, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.21942163462143616}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21942163462143616, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.48564199379850037}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.48564199379850037, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.33612954369838244}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33612954369838244, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9195416206689759}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9195416206689759, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.5918927756279109}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5918927756279109, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.18172902651343215}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18172902651343215, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.32684580488130854}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.32684580488130854, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.278256615638806}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.278256615638806, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2522715317823806}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2522715317823806, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.047509062059124973}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.047509062059124973, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.4499728793774318}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4499728793774318, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.7193787723455822}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7193787723455822, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5035373077707589}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5035373077707589, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2841366365676768}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2841366365676768, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.10235133108803063}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10235133108803063, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.27902039006113244}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.27902039006113244, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5788324638204526}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5788324638204526, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.12589557201478974}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.12589557201478974, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "ownership", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.47396354656033934}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.47396354656033934, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5593210031993239}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5593210031993239, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.10553887064399858}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10553887064399858, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "installments", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.4402771824080351}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4402771824080351, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.4355744930038943}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4355744930038943, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.33639661989137526}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.33639661989137526, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8509528363124591}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8509528363124591, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2925299594348066}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2925299594348066, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.4138303194037121}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4138303194037121, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.48857784684878736}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.48857784684878736, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4143656036679138}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4143656036679138, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.7929328681323174}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7929328681323174, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.3292230698872043}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3292230698872043, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6917871552952018}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6917871552952018, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "currency", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.996631463959332}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.996631463959332, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.3886097018225665}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3886097018225665, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.4431627921053704}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4431627921053704, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "arbitration", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.5322053813233087}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5322053813233087, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.18136055326826134}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18136055326826134, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3827217930635565}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3827217930635565, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.10258764678776067}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10258764678776067, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.11850275140213162}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11850275140213162, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.478714208606398}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.478714208606398, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.491746560291068}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.491746560291068, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5572367888784697}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5572367888784697, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.7902689963363523}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7902689963363523, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.0929168553882056}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0929168553882056, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6063176512429628}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6063176512429628, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2973531325173874}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2973531325173874, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.3753090182439619}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3753090182439619, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "installments", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.3311953473466554}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3311953473466554, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.0016054335617314397}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0016054335617314397, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6893711357847689}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6893711357847689, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2912592890310276}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2912592890310276, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.17286293375621356}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17286293375621356, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "payment_days", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.07129980593692586}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.07129980593692586, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5345235372468405}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5345235372468405, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.12435365817470823}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.12435365817470823, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9426762407440408}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9426762407440408, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.08044185189930098}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.08044185189930098, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.6230766228679259}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6230766228679259, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.577146661315702}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.577146661315702, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.7993158670039222}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7993158670039222, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.2823004939509801}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2823004939509801, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.6347847194540869}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6347847194540869, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9690552360657037}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9690552360657037, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.34796105629465046}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.34796105629465046, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.19788219814737923}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.19788219814737923, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.2967725485277314}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2967725485277314, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.2522566183730064}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2522566183730064, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.4998679337687566}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4998679337687566, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "arbitration", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.16023374296375947}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16023374296375947, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5566036565066687}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5566036565066687, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8808466173578056}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8808466173578056, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.12142608336261984}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.12142608336261984, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4258696950601555}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4258696950601555, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.44047894487074457}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.44047894487074457, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.06168336931394658}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.06168336931394658, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.23633550205401388}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.23633550205401388, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.29902530282431716}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.29902530282431716, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9802446326033755}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9802446326033755, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2740718836393881}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2740718836393881, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.23015160794828993}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.23015160794828993, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5184161606571529}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5184161606571529, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2679284358259167}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2679284358259167, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.34512394169300753}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.34512394169300753, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.4553446168665011}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4553446168665011, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.34307858519094064}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.34307858519094064, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5136077855924269}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5136077855924269, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.04364729909730192}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04364729909730192, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.38607875249098234}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.38607875249098234, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9648244383709104}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9648244383709104, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3013746900797795}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3013746900797795, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5987045984868933}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5987045984868933, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.09971169774197841}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09971169774197841, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.015347597915260636}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.015347597915260636, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24598717184781863}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24598717184781863, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.048815038424428914}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.048815038424428914, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8723830173985363}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8723830173985363, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.18793513856435706}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18793513856435706, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3786966101127843}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3786966101127843, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.10564564492299888}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.10564564492299888, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.41659150879082474}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.41659150879082474, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.16636478672922517}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16636478672922517, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.318699790889256}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.318699790889256, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.10199018944085843}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10199018944085843, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.17518685902165887}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17518685902165887, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6197103685374153}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6197103685374153, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2986003514207706}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2986003514207706, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6379046310035685}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6379046310035685, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.25532670815915404}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25532670815915404, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.6382536507205137}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6382536507205137, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.901209423598883}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.901209423598883, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.09323234623389687}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.09323234623389687, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "ownership", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8453039251425987}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8453039251425987, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5996241393001075}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5996241393001075, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.10665326742236092}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10665326742236092, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.5719226923507389}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5719226923507389, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.10548642712911838}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10548642712911838, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.6569871259499369}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6569871259499369, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.37253469787818244}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.37253469787818244, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.37694886221213897}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.37694886221213897, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "installments", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.47190768661830307}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.47190768661830307, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "currency", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.05066977783568749}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.05066977783568749, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5747887759905878}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5747887759905878, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5160843581392931}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5160843581392931, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9672697473000323}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9672697473000323, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.013918655100901178}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.013918655100901178, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "currency", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.2797384886005152}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2797384886005152, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.025024649646482322}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.025024649646482322, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.21664627580470253}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21664627580470253, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.909387638427892}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.909387638427892, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "payment_days", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.714018452611114}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.714018452611114, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5323555851171013}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5323555851171013, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.23318749869008548}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.23318749869008548, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5312482703397476}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5312482703397476, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.6156522140511563}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6156522140511563, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.950555169851427}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.950555169851427, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.27588144086158684}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.27588144086158684, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.7184172612194202}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7184172612194202, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.09167342381752086}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09167342381752086, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.38502268033993053}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.38502268033993053, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.4588713447273869}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4588713447273869, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5932925423648531}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5932925423648531, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4878317886726353}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4878317886726353, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.19713573205933824}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.19713573205933824, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.47318625256656566}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.47318625256656566, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5925163826197034}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5925163826197034, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.06595580873366133}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06595580873366133, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5891148327009641}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5891148327009641, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.3930644400543932}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3930644400543932, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.44827521426988415}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.44827521426988415, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6433406842054887}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6433406842054887, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.7026793480087907}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.7026793480087907, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8472985431672427}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8472985431672427, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6860974960622327}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6860974960622327, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.7124013148970963}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7124013148970963, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.0734907157664505}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0734907157664505, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.2846210884058783}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2846210884058783, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.039409339992068346}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.039409339992068346, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9946277558609236}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9946277558609236, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.46895374896263387}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.46895374896263387, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5644683796729202}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5644683796729202, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2580419649998318}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2580419649998318, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24828814270614805}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24828814270614805, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3987301842569533}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3987301842569533, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.3125235711418678}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3125235711418678, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.6540403386143222}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6540403386143222, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.6508318372741162}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6508318372741162, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.3913423507070064}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3913423507070064, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.13834413238316312}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.13834413238316312, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership", "payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.1246696294237678}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1246696294237678, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.09283810551495686}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09283810551495686, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.22424486910756558}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.22424486910756558, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.2398176092460942}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2398176092460942, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.16396223322763487}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16396223322763487, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5219176239218629}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5219176239218629, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5730005533579702}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5730005533579702, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.3937788192091307}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3937788192091307, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.22571664342209316}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.22571664342209316, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3408959817693328}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3408959817693328, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5510721545528187}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5510721545528187, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.3646354503260497}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3646354503260497, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.24772343123062102}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.24772343123062102, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.3468056478712811}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3468056478712811, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.4471705031959607}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4471705031959607, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.18085161721106205}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18085161721106205, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4604097163851624}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4604097163851624, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.004183474218677041}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.004183474218677041, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.1756948018758423}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1756948018758423, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.5325823478674238}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5325823478674238, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.30015740793372786}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.30015740793372786, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.16468612120432424}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.16468612120432424, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.06439319942995991}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.06439319942995991, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5793760217793062}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5793760217793062, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.7094989615689342}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7094989615689342, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.28951520558575816}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.28951520558575816, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.02085655902474881}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02085655902474881, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.8320259130717071}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8320259130717071, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.41069364028362615}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.41069364028362615, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.16677328502506727}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.16677328502506727, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.04582762648381269}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.04582762648381269, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.0616827166666577}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0616827166666577, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6811334783148337}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6811334783148337, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.06828625849575609}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06828625849575609, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6313851200254293}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6313851200254293, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "currency", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.21001984081629954}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.21001984081629954, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.18401342146491773}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18401342146491773, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9090499565736645}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9090499565736645, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.07916302557585397}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.07916302557585397, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.40361004224274527}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.40361004224274527, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9909860226468875}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9909860226468875, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2183387758114277}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2183387758114277, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.27249479181163394}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.27249479181163394, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.20001722163633395}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.20001722163633395, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.3570247368909449}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3570247368909449, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.30466898013446253}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.30466898013446253, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6434932633613195}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6434932633613195, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.09296710376664287}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09296710376664287, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.0973483272530703}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0973483272530703, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4327097986832562}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4327097986832562, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.1426262216055465}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1426262216055465, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6105954221258157}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6105954221258157, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.32040668981895665}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.32040668981895665, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.4616799784409892}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4616799784409892, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9662681532059473}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9662681532059473, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.48075553449092856}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.48075553449092856, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5238011520356083}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5238011520356083, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.22588645792711537}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.22588645792711537, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "liability", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.09171356965909339}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09171356965909339, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4900219535133003}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4900219535133003, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.16567365524760347}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.16567365524760347, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.20013972253157186}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.20013972253157186, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.2901041992804301}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2901041992804301, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5426820601785691}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5426820601785691, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.082559752635523}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.082559752635523, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.7695937841424474}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.7695937841424474, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5009778595694285}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5009778595694285, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.4418762122166344}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4418762122166344, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.18069071675173198}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18069071675173198, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.41849679446428373}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.41849679446428373, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.06280715101106382}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06280715101106382, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.596739042818947}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.596739042818947, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.21112790722102792}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21112790722102792, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.17476319266515472}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17476319266515472, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.18369533244152103}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.18369533244152103, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3423982296134573}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3423982296134573, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.39862278104520543}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.39862278104520543, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.03757529228513812}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03757529228513812, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8733314385275176}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8733314385275176, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.21707326634980806}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21707326634980806, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.439764612870385}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.439764612870385, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4868986091085638}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4868986091085638, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.34567209215391137}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.34567209215391137, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.03698379019977571}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03698379019977571, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.026283765395473856}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.026283765395473856, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.531474231370863}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.531474231370863, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.4052654701101839}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4052654701101839, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.1716665373309292}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1716665373309292, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5852772433248921}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5852772433248921, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8894865170122814}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8894865170122814, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3390366284081606}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3390366284081606, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2977219359222136}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2977219359222136, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.36734692695968196}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.36734692695968196, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.3633301189482172}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3633301189482172, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.11102855679448498}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.11102855679448498, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3272846384067822}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3272846384067822, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "arbitration", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.41385888506729174}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.41385888506729174, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "installments", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5092015859823207}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5092015859823207, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5980319611163932}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5980319611163932, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.4671092241041192}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4671092241041192, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.16815172616765683}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.16815172616765683, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5763120313589958}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5763120313589958, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.37707977516708424}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.37707977516708424, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.517745274208392}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.517745274208392, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership", "installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2001783409911202}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2001783409911202, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5116957742305935}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5116957742305935, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.17265636398404105}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17265636398404105, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.496821149372211}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.496821149372211, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.14204171057212228}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.14204171057212228, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.026284026808265692}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.026284026808265692, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8036617262885865}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8036617262885865, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.6948030315722143}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6948030315722143, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9995950439343869}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9995950439343869, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.769164550374698}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.769164550374698, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "ownership", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.526776090990247}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.526776090990247, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.460668982414594}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.460668982414594, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.25957097188918493}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25957097188918493, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.5302252903480662}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5302252903480662, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.0971801757335398}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0971801757335398, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.3990315056288015}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3990315056288015, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.10272037383347539}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10272037383347539, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.6700434321706082}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6700434321706082, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8889968814489544}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8889968814489544, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.26376329995224657}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.26376329995224657, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.46444215777533504}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.46444215777533504, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "currency", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.37204532087330816}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.37204532087330816, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.0845265810049101}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0845265810049101, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.3356607920481576}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3356607920481576, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8641638503624308}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8641638503624308, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2482702803811866}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2482702803811866, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4880867078636697}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4880867078636697, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.4578728250831771}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4578728250831771, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.9959694110954168}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9959694110954168, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.49875970839765416}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.49875970839765416, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.5054444630237716}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5054444630237716, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.12908665351574466}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.12908665351574466, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "arbitration", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5294734385511557}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5294734385511557, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.365937352517563}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.365937352517563, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.0511576873830083}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0511576873830083, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.5042555291232047}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5042555291232047, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.5941385748972557}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5941385748972557, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.16975405963422863}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.16975405963422863, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": true}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": -0.5807418022919674}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5807418022919674, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.3637563134422825}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3637563134422825, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.9906157375611401}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9906157375611401, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8157488332438242}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8157488332438242, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.5837021418487863}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5837021418487863, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.2655304369857213}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2655304369857213, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.17051206174665934}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17051206174665934, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.14777570830033182}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.14777570830033182, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.49474507547691626}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.49474507547691626, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3136924834458552}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3136924834458552, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24777606587335582}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24777606587335582, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24622644559362303}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24622644559362303, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.3365320637451836}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3365320637451836, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.31375259873781713}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.31375259873781713, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.2757981192117519}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2757981192117519, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "currency", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.5744024377160629}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5744024377160629, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments", "arbitration"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["installments", "ownership", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.3488031742013066}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3488031742013066, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.11756288619783217}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.11756288619783217, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8183774601305623}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8183774601305623, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.17427159119576133}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.17427159119576133, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["payment_days", "currency", "ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.21398680807700754}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.21398680807700754, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.065535948942648}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.065535948942648, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.030459257974478415}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.030459257974478415, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.03149466410367767}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.03149466410367767, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.3302936234873388}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3302936234873388, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.1005449047773479}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1005449047773479, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.003108867844278018}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.003108867844278018, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.24414447092813008}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24414447092813008, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.4774485204408965}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4774485204408965, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.45354663564524367}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.45354663564524367, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["currency", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.24367796867052727}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.24367796867052727, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.3210913661361628}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3210913661361628, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": 0.661167561071764}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.661167561071764, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.2507309893470032}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2507309893470032, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5603535663469201}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5603535663469201, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "price_update", "delta_pct": 0.795474884941616}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.795474884941616, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.7879606298758379}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7879606298758379, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5619652468666576}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5619652468666576, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["liability", "payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.510635843146798}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.510635843146798, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.27283708149799246}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.27283708149799246, 0.0, 0.0], "label": 0}
+{"action": {"type": "price_update", "delta_pct": -0.27090544506914316}, "features": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.27090544506914316, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["installments", "payment_days", "currency"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "installments", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.8269898252763096}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8269898252763096, 0.0, 0.0], "label": 0}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.6692558534099542}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6692558534099542, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.5890111154643232}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5890111154643232, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.3236016700850828}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3236016700850828, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.004098072323733271}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.004098072323733271, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "refund_request", "amount_pct": 0.2355212528015339}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2355212528015339, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["currency", "installments", "payment_days"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["ownership"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": true}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], "label": 1}
+{"action": {"type": "contract_modify", "fields": ["liability", "installments"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "discount_apply", "discount_pct": 0.574416322113136}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.574416322113136, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.1531855646891792}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1531855646891792, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "contract_modify", "fields": ["arbitration", "liability"]}, "features": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "refund_request", "amount_pct": 0.757350523304326}, "features": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.757350523304326, 0.0, 0.0], "label": 0}
+{"action": {"type": "order_confirm", "price_disputed": false}, "features": [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}
+{"action": {"type": "discount_apply", "discount_pct": 0.40820515195163876}, "features": [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.40820515195163876, 0.0, 0.0, 0.0, 0.0], "label": 1}
+{"action": {"type": "message_send", "contains_threat": false}, "features": [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "label": 0}

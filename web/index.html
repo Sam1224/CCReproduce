@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Hub</title>
+<style>
+  :root {
+    --bg: #fafafa; --surface: #fff; --border: #e5e7eb;
+    --text: #1a1a2e; --muted: #6b7280; --accent: #3b82f6;
+    --accent-dark: #1d4ed8; --success: #10b981; --warn: #f59e0b;
+    --strong: #7c3aed; --weak: #0891b2;
+    --card-shadow: 0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  header h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  header .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .lang-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: var(--surface); font-size: 12px; font-weight: 500; }
+  .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .controls { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .control-group { display: flex; align-items: center; gap: 10px; }
+  .control-group label { font-size: 12px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+  input[type=range] { width: 120px; accent-color: var(--accent); }
+  input[type=date] { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+  select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+  #score-display { font-size: 12px; font-weight: 600; color: var(--accent); min-width: 30px; }
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+  .stats-bar { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 12px; transition: box-shadow .15s; }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-title { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .card-title a { color: inherit; text-decoration: none; }
+  .card-title a:hover { color: var(--accent); }
+  .score-badge { display: flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; border-radius: 10px; font-size: 16px; font-weight: 800; flex-shrink: 0; }
+  .score-badge.s80 { background: #dcfce7; color: #15803d; }
+  .score-badge.s70 { background: #dbeafe; color: #1d4ed8; }
+  .score-badge.s60 { background: #fef3c7; color: #b45309; }
+  .score-badge.s50 { background: #f3f4f6; color: var(--muted); }
+  .meta { font-size: 11px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .meta .arxiv { color: var(--accent); font-weight: 600; }
+  .bucket-tag { padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; letter-spacing: .5px; }
+  .bucket-STRONG { background: #ede9fe; color: var(--strong); }
+  .bucket-WEAK { background: #e0f2fe; color: var(--weak); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { padding: 2px 8px; background: #f3f4f6; border-radius: 9999px; font-size: 11px; color: var(--muted); }
+  .section-toggle { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 12px; text-decoration: underline; padding: 0; }
+  .collapsible { display: none; }
+  .collapsible.open { display: block; }
+  .method-block { background: #f8fafc; border-left: 3px solid var(--accent); border-radius: 4px; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+  .metrics-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+  .metrics-table td, .metrics-table th { padding: 4px 8px; border: 1px solid var(--border); }
+  .metrics-table th { background: #f3f4f6; font-weight: 600; }
+  .score-chart { display: flex; flex-direction: column; gap: 4px; }
+  .score-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+  .score-row .dim { width: 120px; color: var(--muted); white-space: nowrap; }
+  .score-bar-bg { flex: 1; background: #f3f4f6; border-radius: 4px; height: 6px; }
+  .score-bar { height: 6px; border-radius: 4px; background: var(--accent); transition: width .3s; }
+  .score-val { min-width: 30px; text-align: right; color: var(--text); font-weight: 600; }
+  .code-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--success); font-weight: 600; text-decoration: none; border: 1px solid var(--success); padding: 3px 10px; border-radius: 6px; }
+  .code-link:hover { background: #ecfdf5; }
+  .no-results { text-align: center; padding: 80px; color: var(--muted); font-size: 16px; }
+  @media (max-width: 640px) { main { padding: 16px; } .grid { grid-template-columns: 1fr; } header { padding: 12px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📄 CCReproduce — Daily AI Paper Hub</h1>
+    <div class="subtitle">E-commerce Content Ecosystem &amp; Influencer Governance · 电商内容生态 &amp; 达人治理</div>
+  </div>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')" id="btn-zh">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>📅 Date</label>
+    <select id="date-picker" onchange="filterCards()">
+      <option value="all">All Dates</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>⭐ Min Score: <span id="score-display">0</span></label>
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="onSlider(this.value)">
+  </div>
+  <div class="control-group">
+    <label>🪣 Bucket</label>
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>🏷️ Tag</label>
+    <select id="tag-filter" onchange="filterCards()">
+      <option value="all">All Tags</option>
+    </select>
+  </div>
+</div>
+
+<main>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="grid" id="card-grid"></div>
+  <div class="no-results" id="no-results" style="display:none">No papers match the current filters.</div>
+</main>
+
+<script>
+let papers = [];
+let lang = 'en';
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', l === 'zh');
+  renderAll();
+}
+
+function onSlider(v) {
+  document.getElementById('score-display').textContent = v;
+  filterCards();
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 's80';
+  if (s >= 70) return 's70';
+  if (s >= 60) return 's60';
+  return 's50';
+}
+
+const DIM_LABELS = {
+  en: { innovation: 'Innovation', sota_delta: 'SOTA Delta', ablation: 'Ablation', efficiency: 'Efficiency', generalization: 'Generalization', domain: 'Domain Fit' },
+  zh: { innovation: '创新性', sota_delta: '实验指标', ablation: '实验质量', efficiency: '方法效率', generalization: '泛化性', domain: '领域相关性' }
+};
+const DIM_MAX = { innovation: 30, sota_delta: 15, ablation: 15, efficiency: 10, generalization: 5, domain: 25 };
+
+function renderCard(p) {
+  const sc = p.score_breakdown || {};
+  const scoreRows = Object.entries(DIM_MAX).map(([k, max]) => {
+    const val = sc[k] ?? 0;
+    const pct = Math.round(val / max * 100);
+    const label = DIM_LABELS[lang]?.[k] || k;
+    return `<div class="score-row">
+      <span class="dim">${label}</span>
+      <div class="score-bar-bg"><div class="score-bar" style="width:${pct}%"></div></div>
+      <span class="score-val">${val}/${max}</span>
+    </div>`;
+  }).join('');
+
+  const tagsHtml = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+  const method = lang === 'zh' ? p.method_zh : p.method_en;
+  const innovation = lang === 'zh' ? p.innovation_zh : p.innovation_en;
+  const titleDisplay = lang === 'zh' && p.title_zh ? p.title_zh : p.title;
+  const id = p.slug;
+
+  return `<div class="card" data-score="${p.score}" data-bucket="${p.bucket}" data-date="${p.date}" data-tags="${(p.tags||[]).join('|')}">
+    <div class="card-header">
+      <div>
+        <div class="card-title"><a href="${p.arxiv_url}" target="_blank">${titleDisplay}</a></div>
+        <div class="meta" style="margin-top:6px">
+          <span class="arxiv">${p.arxiv_id}</span>
+          <span class="bucket-tag bucket-${p.bucket}">${p.bucket}</span>
+          <span>📅 ${p.date}</span>
+        </div>
+      </div>
+      <div class="score-badge ${scoreClass(p.score)}">${p.score}</div>
+    </div>
+    <div class="meta" style="font-size:11px">${p.authors}</div>
+    <div class="meta">${p.affiliation}</div>
+    <div class="tags">${tagsHtml}</div>
+    ${p.has_code ? `<a class="code-link" href="https://github.com/Sam1224/CCReproduce/tree/main/${p.code_path}" target="_blank">⚙️ Reproduction Code</a>` : ''}
+    <div>
+      <button class="section-toggle" onclick="toggleSection('method-${id}', this)">▶ ${lang==='zh'?'方法概述':'Method Overview'}</button>
+      <div class="collapsible" id="method-${id}">
+        <div class="method-block" style="margin-top:8px">${method}</div>
+      </div>
+    </div>
+    <div>
+      <button class="section-toggle" onclick="toggleSection('innov-${id}', this)">▶ ${lang==='zh'?'创新性分析':'Innovation Analysis'}</button>
+      <div class="collapsible" id="innov-${id}">
+        <div class="method-block" style="margin-top:8px;border-left-color:#7c3aed">${innovation}</div>
+      </div>
+    </div>
+    <div>
+      <button class="section-toggle" onclick="toggleSection('metrics-${id}', this)">▶ ${lang==='zh'?'关键指标':'Key Metrics'}</button>
+      <div class="collapsible" id="metrics-${id}">
+        <div style="margin-top:8px;font-size:12px;padding:8px;background:#f8fafc;border-radius:6px">${p.key_metrics}</div>
+      </div>
+    </div>
+    <div>
+      <button class="section-toggle" onclick="toggleSection('score-${id}', this)">▶ ${lang==='zh'?'评分详情':'Score Breakdown'}</button>
+      <div class="collapsible" id="score-${id}">
+        <div class="score-chart" style="margin-top:8px">${scoreRows}
+          <div class="score-row" style="border-top:1px solid #e5e7eb;padding-top:4px;margin-top:2px">
+            <span class="dim" style="font-weight:700">${lang==='zh'?'总分':'Total'}</span>
+            <div class="score-bar-bg"><div class="score-bar" style="width:${p.score}%;background:#1d4ed8"></div></div>
+            <span class="score-val" style="color:#1d4ed8;font-weight:800">${p.score}/100</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleSection(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  btn.textContent = btn.textContent.replace(/[▶▼]/, open ? '▼' : '▶');
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const bucket = document.getElementById('bucket-filter').value;
+  const date = document.getElementById('date-picker').value;
+  const tag = document.getElementById('tag-filter').value;
+
+  const grid = document.getElementById('card-grid');
+  const cards = grid.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(c => {
+    const show = (
+      parseInt(c.dataset.score) >= minScore &&
+      (bucket === 'all' || c.dataset.bucket === bucket) &&
+      (date === 'all' || c.dataset.date === date) &&
+      (tag === 'all' || c.dataset.tags.split('|').includes(tag))
+    );
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('no-results').style.display = visible === 0 ? '' : 'none';
+  updateStats(visible);
+}
+
+function updateStats(visible) {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const filtered = papers.filter(p => p.score >= minScore);
+  const strong = filtered.filter(p => p.bucket === 'STRONG').length;
+  const reproduced = filtered.filter(p => p.has_code).length;
+  const avgScore = filtered.length ? Math.round(filtered.reduce((a, p) => a + p.score, 0) / filtered.length) : 0;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><div class="stat-val">${visible}</div><div class="stat-label">${lang==='zh'?'显示论文':'Papers Shown'}</div></div>
+    <div class="stat"><div class="stat-val">${strong}</div><div class="stat-label">STRONG</div></div>
+    <div class="stat"><div class="stat-val">${reproduced}</div><div class="stat-label">${lang==='zh'?'已复现':'Reproduced'}</div></div>
+    <div class="stat"><div class="stat-val">${avgScore}</div><div class="stat-label">${lang==='zh'?'平均分':'Avg Score'}</div></div>
+  `;
+}
+
+function renderAll() {
+  const grid = document.getElementById('card-grid');
+  grid.innerHTML = papers.map(renderCard).join('');
+  filterCards();
+}
+
+function populateDatePicker() {
+  const dates = [...new Set(papers.map(p => p.date))].sort().reverse();
+  const sel = document.getElementById('date-picker');
+  dates.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+  if (dates.length > 0) {
+    sel.value = dates[0];
+  }
+}
+
+function populateTagFilter() {
+  const tags = [...new Set(papers.flatMap(p => p.tags || []))].sort();
+  const sel = document.getElementById('tag-filter');
+  tags.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t; opt.textContent = t;
+    sel.appendChild(opt);
+  });
+}
+
+// Load papers from embedded JSON (no server needed)
+fetch('papers.json')
+  .then(r => r.json())
+  .then(data => {
+    papers = data.sort((a, b) => b.score - a.score);
+    populateDatePicker();
+    populateTagFilter();
+    renderAll();
+  })
+  .catch(() => {
+    document.getElementById('card-grid').innerHTML =
+      '<div class="no-results">Could not load papers.json. Serve with: python -m http.server 8080</div>';
+  });
+</script>
+</body>
+</html>
