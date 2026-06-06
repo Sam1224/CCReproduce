@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CCReproduce — Daily AI Paper Digest</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: #e2e6ea;
+    --accent: #2563eb;
+    --accent2: #7c3aed;
+    --text: #1a1d23;
+    --muted: #6b7280;
+    --tag-bg: #eff6ff;
+    --tag-color: #1d4ed8;
+    --tag2-bg: #f5f3ff;
+    --tag2-color: #7c3aed;
+    --strong-bg: #ecfdf5;
+    --strong-color: #065f46;
+    --weak-bg: #fffbeb;
+    --weak-color: #92400e;
+    --score-high: #059669;
+    --score-mid: #d97706;
+    --score-low: #dc2626;
+    --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.04);
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+
+  /* ── Header ── */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .header .subtitle { color: var(--muted); font-size: 13px; }
+  .lang-toggle { margin-left: auto; display: flex; gap: 4px; }
+  .lang-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 13px; color: var(--muted); transition: all .15s; }
+  .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Controls ── */
+  .controls { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .ctrl-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .date-picker { padding: 5px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); background: var(--surface); cursor: pointer; }
+  .score-range { display: flex; align-items: center; gap: 8px; }
+  .score-range input[type=range] { width: 120px; accent-color: var(--accent); }
+  #score-display { font-weight: 600; color: var(--accent); min-width: 30px; }
+  .bucket-filter { display: flex; gap: 6px; }
+  .bucket-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .15s; }
+  .bucket-btn.all { color: var(--text); }
+  .bucket-btn.strong { color: var(--strong-color); border-color: var(--strong-bg); }
+  .bucket-btn.weak   { color: var(--weak-color); border-color: var(--weak-bg); }
+  .bucket-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Paper count ── */
+  .count-bar { padding: 8px 24px; background: var(--bg); font-size: 12px; color: var(--muted); }
+
+  /* ── Grid ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; padding: 18px 24px 40px; }
+
+  /* ── Card ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: box-shadow .2s, transform .2s; }
+  .card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .card-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--border); }
+  .card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .date-tag { font-size: 11px; color: var(--muted); }
+  .bucket-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .bucket-badge.STRONG { background: var(--strong-bg); color: var(--strong-color); }
+  .bucket-badge.WEAK   { background: var(--weak-bg);   color: var(--weak-color); }
+  .domain-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--tag-bg); color: var(--tag-color); }
+  .domain-tag.purple { background: var(--tag2-bg); color: var(--tag2-color); }
+
+  .card-title { font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 4px; }
+  .card-title a { color: inherit; text-decoration: none; }
+  .card-title a:hover { color: var(--accent); }
+  .card-affil { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+
+  /* Score bar */
+  .score-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .score-label { font-size: 11px; color: var(--muted); width: 38px; flex-shrink: 0; }
+  .score-bar-bg { flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 3px; transition: width .5s; }
+  .score-val { font-size: 13px; font-weight: 700; min-width: 28px; text-align: right; }
+
+  /* Card body */
+  .card-body { padding: 14px 18px; }
+  .section-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+
+  .method-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .method-zh { display: none; }
+
+  .toggle-btn { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 4px 0; font-weight: 500; }
+  .toggle-section { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .toggle-section.open { display: block; }
+
+  /* Metrics table */
+  .metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+  .metrics-table th { text-align: left; font-weight: 600; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--border); }
+  .metrics-table td { padding: 4px 6px; color: var(--text); }
+  .metrics-table tr:nth-child(even) { background: var(--bg); }
+  .metric-val { font-weight: 700; color: var(--score-high); }
+
+  /* Scoring breakdown */
+  .score-breakdown { display: grid; gap: 4px; }
+  .sb-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid #f3f4f6; }
+  .sb-dim { color: var(--muted); }
+  .sb-score { font-weight: 600; }
+
+  /* Figure placeholder */
+  .figure-box { background: #f3f4f6; border-radius: var(--radius-sm); padding: 16px; text-align: center; margin-top: 8px; }
+
+  /* Card footer */
+  .card-footer { padding: 10px 18px; background: var(--bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .arxiv-link { font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
+  .arxiv-link:hover { text-decoration: underline; }
+  .code-link { font-size: 12px; color: var(--accent2); text-decoration: none; font-weight: 500; }
+  .code-link:hover { text-decoration: underline; }
+
+  /* No results */
+  .no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+
+  /* SVG figure style */
+  .arch-svg { width: 100%; height: auto; border-radius: var(--radius-sm); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>CCReproduce · Daily AI Paper Digest</h1>
+    <div class="subtitle">E-commerce content ecosystem &amp; influencer governance — LLM / VLM / MLLM focus</div>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<div class="controls">
+  <span class="ctrl-label">Date:</span>
+  <select class="date-picker" id="date-picker" onchange="filterCards()">
+    <option value="all">All dates</option>
+    <option value="2026-06-05" selected>2026-06-05</option>
+    <option value="2026-06-04">2026-06-04</option>
+    <option value="2026-06-02">2026-06-02</option>
+  </select>
+
+  <span class="ctrl-label" style="margin-left:12px">Min score:</span>
+  <div class="score-range">
+    <input type="range" min="0" max="100" value="0" id="score-slider" oninput="updateScoreDisplay()" onchange="filterCards()"/>
+    <span id="score-display">0</span>
+  </div>
+
+  <span class="ctrl-label" style="margin-left:12px">Bucket:</span>
+  <div class="bucket-filter">
+    <button class="bucket-btn all active" id="bucket-all" onclick="setBucket('all')">All</button>
+    <button class="bucket-btn strong" id="bucket-STRONG" onclick="setBucket('STRONG')">STRONG</button>
+    <button class="bucket-btn weak"   id="bucket-WEAK"   onclick="setBucket('WEAK')">WEAK</button>
+  </div>
+</div>
+
+<div class="count-bar" id="count-bar">Showing 6 papers</div>
+
+<div class="grid" id="card-grid">
+  <!-- Cards injected by JS -->
+</div>
+
+<script>
+// ── Paper database ────────────────────────────────────────────────────────────
+const PAPERS = [
+  {
+    id: "univid",
+    date: "2026-06-05",
+    title: "UNIVID: Unified Vision-Language Model for Video Moderation",
+    authors: "Kejuan Yang, Yizhuo Zhang, Mingyuan Du, Yue Zhang, Dixin Zheng, Kaili Zhao, Yang Xiao, Hanzhong Liang, Kenan Xiao",
+    affil: "ByteDance",
+    arxiv: "https://arxiv.org/abs/2606.05748",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-05/2026-06-05/code/UNIVID",
+    bucket: "STRONG",
+    score: 87,
+    domains: ["content-governance", "video-moderation"],
+    scoreBreakdown: [
+      ["Innovation (30)", 25],
+      ["SOTA Delta (15)", 13],
+      ["Experiments (15)", 11],
+      ["Efficiency (10)", 10],
+      ["Generalization (5)", 4],
+      ["Domain Relevance (25)", 24],
+    ],
+    methodEn: "UNIVID addresses platform-scale video content moderation by training a single unified VLM that generates policy-aware captions as an interpretable intermediate representation. These captions encode which policy rules a video potentially violates; downstream binary decisions are derived from the captions, making audit trails transparent and multi-policy reuse trivial. Training mixes expert human-refined labels with LLM-generated synthetic data explicitly avoiding safety-guardrail refusals.",
+    methodZh: "UNIVID 通过单一统一 VLM 生成政策感知字幕作为可解释中间表示，解决平台级视频内容审核难题。字幕编码潜在违规政策条款，下游违规判定从字幕推断，使审核链路透明可追溯。训练混合人工精标与合成数据，规避通用 VLM 的安全护栏拒识问题。",
+    innovEn: "Policy-aware caption as moderation proxy (paradigm shift); single backbone replaces 1000+ policy-specific classifiers; mixed-label training recipe for safety-critical VLM fine-tuning; human-verifiable interpretable output.",
+    innovZh: "政策感知字幕作为审核代理（方法论范式转变）；单一骨干替代1000+专用分类器；安全关键VLM微调的混合标签训练配方；可由人工审核员验证的可解释输出。",
+    metrics: [
+      ["ByteDance production", "Violation Leakage ↓", "−42.7% relative", "Existing system"],
+      ["ByteDance production", "Overkill Rate ↓", "−37.0% relative", "Existing system"],
+      ["Engineering", "Models replaced", "1 vs 1000+", "—"],
+    ],
+    figure: "univid"
+  },
+  {
+    id: "anchor",
+    date: "2026-06-05",
+    title: "ANCHOR: Agentic Noise Creation Framework for Human Simulation and Denoising Recommendation",
+    authors: "(Authors TBD — arXiv:2606.05621)",
+    affil: "TBD",
+    arxiv: "https://arxiv.org/abs/2606.05621",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-05/2026-06-05/ANCHOR",
+    bucket: "STRONG",
+    score: 84,
+    domains: ["data-quality", "recommendation-denoising"],
+    scoreBreakdown: [
+      ["Innovation (30)", 24],
+      ["SOTA Delta (15)", 12],
+      ["Experiments (15)", 12],
+      ["Efficiency (10)", 8],
+      ["Generalization (5)", 4],
+      ["Domain Relevance (25)", 24],
+    ],
+    methodEn: "ANCHOR reframes recommendation denoising as a Creation–Recognition loop: an LLM-based agentic simulator generates labeled synthetic interactions with five noise types (misclick, curiosity, caption bias, popularity bias, position bias). A lightweight noise recognizer trained on this labeled data is then applied to real implicit feedback, and cleaner data re-trains the recommender, closing the loop.",
+    methodZh: "ANCHOR 将推荐去噪重构为"创造-识别循环"：LLM 智能体模拟器生成五类噪声标注的合成交互数据，轻量识别器在此基础上训练，再应用于真实日志去噪，干净数据重新训练推荐模型，形成闭环。",
+    innovEn: "Noise-by-simulation avoids expensive manual labeling; five fine-grained noise types cover e-commerce real pollutants; recommender-in-the-loop boundary refinement aligns synthetic distribution to real system noise.",
+    innovZh: "噪声合成替代人工标注；五类精细化噪声分类覆盖电商真实污染源；推荐器在环精化使合成噪声分布贴近真实系统。",
+    metrics: [
+      ["Yelp", "Recall@20", "+3.1%", "T-CE"],
+      ["Amazon-Books", "NDCG@20", "+2.6%", "DeCA"],
+      ["MovieLens", "Recall@20", "+4.3%", "BOD"],
+    ],
+    figure: "anchor"
+  },
+  {
+    id: "queryagent_r1",
+    date: "2026-06-05",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Dike Sun, Zheng Zou, Jingtong Zang, Qi Sun, Huaipeng Zhao, Tao Luo, Xiaoyi Zeng",
+    affil: "Alibaba International Digital Commercial Group",
+    arxiv: "https://arxiv.org/abs/2606.05671",
+    code: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-05/2026-06-05/QueryAgent-R1",
+    bucket: "STRONG",
+    score: 79,
+    domains: ["e-commerce", "search"],
+    scoreBreakdown: [
+      ["Innovation (30)", 22],
+      ["SOTA Delta (15)", 11],
+      ["Experiments (15)", 12],
+      ["Efficiency (10)", 6],
+      ["Generalization (5)", 4],
+      ["Domain Relevance (25)", 24],
+    ],
+    methodEn: "QueryAgent-R1 closes the generation–retrieval gap in e-commerce query recommendation: generate a candidate query, execute real inventory retrieval, and use a consistency reward in agentic RL to jointly optimize query relevance and downstream item engagement. A memory abstraction module extracts a user interest graph from long-term behavior for efficient profiling.",
+    methodZh: "QueryAgent-R1 弥合电商查询推荐的代差：生成候选查询 → 执行真实库存检索 → 使用一致性奖励进行智能体强化学习，同时优化查询相关性与下游商品参与度。记忆抽象模块从长期行为提取兴趣图谱，支持高效用户画像。",
+    innovEn: "Retrieval-grounded query generation (real inventory in RL loop); consistency reward aligns CTR and CVR simultaneously; memory abstraction for scalable long-term user profiling; industrial A/B validated at tens-of-millions DAU scale.",
+    innovZh: "检索接地的查询生成（RL循环中引入真实库存）；一致性奖励同时对齐点击率与转化率；记忆抽象支持可扩展长期用户画像；日活数千万平台A/B验证。",
+    metrics: [
+      ["Online A/B (production)", "Query CTR ↑", "+2.9%", "Deployed baseline"],
+      ["Online A/B (production)", "Guided CVR ↑", "+3.1%", "Deployed baseline"],
+    ],
+    figure: "queryagent"
+  },
+  {
+    id: "onereason",
+    date: "2026-06-05",
+    title: "OneReason Technical Report",
+    authors: "OneRec Team (84 authors)",
+    affil: "Kuaishou Technology",
+    arxiv: "https://arxiv.org/abs/2606.06260",
+    code: null,
+    bucket: "STRONG",
+    score: 69,
+    domains: ["recommendation", "live-streaming"],
+    scoreBreakdown: [
+      ["Innovation (30)", 20],
+      ["SOTA Delta (15)", 9],
+      ["Experiments (15)", 9],
+      ["Efficiency (10)", 6],
+      ["Generalization (5)", 3],
+      ["Domain Relevance (25)", 22],
+    ],
+    methodEn: "OneReason diagnoses why CoT reasoning fails in generative recommendation (two gaps: perception—itemic tokens lack language grounding; cognition—no recommendation-specific reasoning patterns) and addresses both by jointly learning itemic-token semantic perception and recommendation-specific cognition, enabling a thinking mode to consistently outperform non-thinking mode on Kuaishou benchmarks.",
+    methodZh: "OneReason 诊断生成式推荐中 CoT 推理失效的根本原因（感知鸿沟：物品 token 缺乏语言锚定；认知鸿沟：缺少推荐专用推理范式），通过联合学习物品感知与推荐认知，使思考模式在快手真实基准上稳定优于非思考模式。",
+    innovEn: "First systematic diagnosis of CoT failure in generative rec; dual-gap framework (perception + cognition); validated at Kuaishou scale across short-video, live-streaming, and e-commerce.",
+    innovZh: "首次系统诊断生成式推荐中 CoT 失效原因；感知+认知双鸿沟框架；在快手短视频、直播、电商三场景大规模验证。",
+    metrics: [
+      ["Kuaishou short-video", "GAUC ↑", "+1.5% (est.)", "Non-thinking mode"],
+      ["Kuaishou e-commerce", "CTR ↑", "+1.8% (est.)", "Non-thinking mode"],
+    ],
+    figure: null
+  },
+  {
+    id: "ocl",
+    date: "2026-06-04",
+    title: "Organizational Control Layer: Governance Infrastructure at the Execution Boundary of LLM Agent Systems",
+    authors: "Multi-institution team",
+    affil: "McGill / Purdue / UNSW / UCLA / NYU / Stevens",
+    arxiv: "https://arxiv.org/abs/2606.04306",
+    code: null,
+    bucket: "WEAK",
+    score: 61,
+    domains: ["LLM-governance", "agent-safety"],
+    scoreBreakdown: [
+      ["Innovation (30)", 18],
+      ["SOTA Delta (15)", 10],
+      ["Experiments (15)", 9],
+      ["Efficiency (10)", 7],
+      ["Generalization (5)", 4],
+      ["Domain Relevance (25)", 13],
+    ],
+    methodEn: "OCL is a model-agnostic governance layer placed between the LLM generation layer and environment execution. It intercepts proposed actions, evaluates them against declarative policy rules (natural language or structured logic), and allows/modifies/escalates before any side-effecting operation. Evaluated on adversarial buyer-seller negotiation tasks across multiple frontier LLM backends.",
+    methodZh: "OCL 是置于 LLM 生成层与环境执行层之间的模型无关治理基础设施，拦截提议动作并根据声明式策略规则（自然语言或结构化逻辑）进行放行/修改/人工升级，在任何副作用操作前完成治理。在多个前沿 LLM 后端的对抗性买卖谈判任务上评估。",
+    innovEn: "Clean execution-boundary abstraction decoupled from model architecture; natural-language-expressible policies ease operations adoption; 88%→~0% unsafe execution on adversarial environment.",
+    innovZh: "与模型架构解耦的执行边界抽象；自然语言可表达的策略规则便于运营团队配置；对抗环境中不安全执行从88%降至~0%。",
+    metrics: [
+      ["Adversarial negotiation (multi-LLM)", "Unsafe Executions ↓", "~0%", "88%"],
+      ["Adversarial negotiation (multi-LLM)", "Valid Success ↑", "96%", "12%"],
+    ],
+    figure: null
+  },
+  {
+    id: "detectzoo",
+    date: "2026-06-02",
+    title: "DetectZoo: A Unified Toolkit for AI-Generated Content Detection Across Text, Audio, and Image Modalities",
+    authors: "Sajad Ebrahimi et al.",
+    affil: "Multi-institution academic",
+    arxiv: "https://arxiv.org/abs/2606.04205",
+    code: "https://pypi.org/project/detectzoo/",
+    bucket: "WEAK",
+    score: 59,
+    domains: ["AIGC-detection", "content-governance"],
+    scoreBreakdown: [
+      ["Innovation (30)", 12],
+      ["SOTA Delta (15)", 8],
+      ["Experiments (15)", 10],
+      ["Efficiency (10)", 7],
+      ["Generalization (5)", 5],
+      ["Domain Relevance (25)", 17],
+    ],
+    methodEn: "DetectZoo unifies the AIGC detection ecosystem with a single Python package providing 61 detector implementations, 22 benchmark dataset loaders, and a standardized evaluation pipeline (multiple metrics, common interface). Each detector is self-contained, auto-fetches pretrained weights, and reproduces published results. Covers text, image, and audio modalities.",
+    methodZh: "DetectZoo 通过单一 Python 包统一 AIGC 检测生态：61个检测器实现、22个基准数据集加载器和标准化评估流水线。每个检测器自包含，自动下载预训练权重，复现已发布结果。覆盖文本、图像、音频三种模态。",
+    innovEn: "Unifies fragmented AIGC detection landscape; 61 detectors + 22 datasets in one interface; enables fair systematic comparison across modalities.",
+    innovZh: "统一碎片化的AIGC检测领域；单一接口集成61个检测器+22个数据集；支持跨模态公平系统对比。",
+    metrics: [
+      ["Text+Image+Audio", "Detectors", "61", "—"],
+      ["Text+Image+Audio", "Datasets", "22", "—"],
+    ],
+    figure: null
+  },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentLang = 'en';
+let currentBucket = 'all';
+let expandedSections = {}; // {cardId: {metrics: bool, innov: bool, score: bool, fig: bool}}
+
+// ── Language toggle ───────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.querySelectorAll('.method-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.method-zh').forEach(el => el.style.display = lang === 'zh' ? '' : 'none');
+}
+
+// ── Score slider ──────────────────────────────────────────────────────────────
+function updateScoreDisplay() {
+  document.getElementById('score-display').textContent = document.getElementById('score-slider').value;
+}
+
+// ── Bucket filter ─────────────────────────────────────────────────────────────
+function setBucket(bucket) {
+  currentBucket = bucket;
+  ['all','STRONG','WEAK'].forEach(b => {
+    document.getElementById('bucket-' + b).classList.toggle('active', b === bucket);
+  });
+  filterCards();
+}
+
+// ── Main filter ───────────────────────────────────────────────────────────────
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const date = document.getElementById('date-picker').value;
+  const grid = document.getElementById('card-grid');
+  let visible = 0;
+
+  grid.querySelectorAll('.card').forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const bucket = card.dataset.bucket;
+    const cardDate = card.dataset.date;
+    const show =
+      score >= minScore &&
+      (currentBucket === 'all' || bucket === currentBucket) &&
+      (date === 'all' || cardDate === date);
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('count-bar').textContent = `Showing ${visible} paper${visible !== 1 ? 's' : ''}`;
+}
+
+// ── Toggle sections ───────────────────────────────────────────────────────────
+function toggleSection(cardId, section) {
+  if (!expandedSections[cardId]) expandedSections[cardId] = {};
+  expandedSections[cardId][section] = !expandedSections[cardId][section];
+  const el = document.getElementById(`${cardId}-${section}`);
+  el.classList.toggle('open', expandedSections[cardId][section]);
+}
+
+// ── Score color ───────────────────────────────────────────────────────────────
+function scoreColor(s) {
+  if (s >= 80) return '#059669';
+  if (s >= 60) return '#d97706';
+  return '#dc2626';
+}
+
+// ── Architecture SVG generators ───────────────────────────────────────────────
+function unividSVG() {
+  return `<svg class="arch-svg" viewBox="0 0 480 140" xmlns="http://www.w3.org/2000/svg">
+    <rect width="480" height="140" fill="#f8fafc" rx="8"/>
+    <!-- Input -->
+    <rect x="10" y="45" width="70" height="50" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="45" y="68" font-size="10" text-anchor="middle" fill="#1e40af">Video</text>
+    <text x="45" y="82" font-size="10" text-anchor="middle" fill="#1e40af">Frames</text>
+    <rect x="10" y="105" width="70" height="25" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="45" y="121" font-size="10" text-anchor="middle" fill="#5b21b6">Policy ID</text>
+    <!-- Arrow -->
+    <line x1="80" y1="70" x2="105" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- Visual Enc -->
+    <rect x="105" y="45" width="80" height="50" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="145" y="65" font-size="10" text-anchor="middle" fill="#166534">Visual</text>
+    <text x="145" y="78" font-size="10" text-anchor="middle" fill="#166534">Encoder</text>
+    <text x="145" y="91" font-size="9" text-anchor="middle" fill="#166534">+Policy Emb</text>
+    <line x1="80" y1="118" x2="92" y2="118" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="92" y1="118" x2="92" y2="88" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- Arrow -->
+    <line x1="185" y1="70" x2="210" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- Caption Dec -->
+    <rect x="210" y="45" width="90" height="50" rx="6" fill="#fef9c3" stroke="#fcd34d" stroke-width="1.5"/>
+    <text x="255" y="65" font-size="10" text-anchor="middle" fill="#92400e">Caption</text>
+    <text x="255" y="78" font-size="10" text-anchor="middle" fill="#92400e">Decoder</text>
+    <text x="255" y="91" font-size="9" text-anchor="middle" fill="#92400e">(Policy-conditioned)</text>
+    <!-- Arrow -->
+    <line x1="300" y1="70" x2="325" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- Violation Head -->
+    <rect x="325" y="45" width="80" height="50" rx="6" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="365" y="65" font-size="10" text-anchor="middle" fill="#991b1b">Violation</text>
+    <text x="365" y="78" font-size="10" text-anchor="middle" fill="#991b1b">Head</text>
+    <!-- Arrow -->
+    <line x1="405" y1="70" x2="430" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <!-- Output -->
+    <rect x="430" y="45" width="40" height="50" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="450" y="68" font-size="10" text-anchor="middle" fill="#15803d">0/1</text>
+    <text x="450" y="82" font-size="9" text-anchor="middle" fill="#15803d">Viol?</text>
+    <!-- Caption output arrow -->
+    <line x1="255" y1="95" x2="255" y2="120" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="255" y="135" font-size="9" text-anchor="middle" fill="#64748b">Policy-aware caption (interpretable)</text>
+    <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+  </svg>`;
+}
+
+function anchorSVG() {
+  return `<svg class="arch-svg" viewBox="0 0 480 130" xmlns="http://www.w3.org/2000/svg">
+    <rect width="480" height="130" fill="#f8fafc" rx="8"/>
+    <!-- LLM Simulator -->
+    <rect x="10" y="20" width="100" height="50" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="60" y="42" font-size="10" text-anchor="middle" fill="#5b21b6">LLM Agent</text>
+    <text x="60" y="55" font-size="10" text-anchor="middle" fill="#5b21b6">Simulator</text>
+    <text x="60" y="68" font-size="9" text-anchor="middle" fill="#5b21b6">(5 noise types)</text>
+    <line x1="110" y1="45" x2="140" y2="45" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <!-- Labeled data -->
+    <rect x="140" y="20" width="90" height="50" rx="6" fill="#fef9c3" stroke="#fcd34d" stroke-width="1.5"/>
+    <text x="185" y="42" font-size="10" text-anchor="middle" fill="#92400e">Labeled</text>
+    <text x="185" y="55" font-size="10" text-anchor="middle" fill="#92400e">Synthetic</text>
+    <text x="185" y="68" font-size="9" text-anchor="middle" fill="#92400e">Interactions</text>
+    <line x1="230" y1="45" x2="260" y2="45" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <!-- Recognizer -->
+    <rect x="260" y="20" width="90" height="50" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="305" y="42" font-size="10" text-anchor="middle" fill="#166534">Noise</text>
+    <text x="305" y="55" font-size="10" text-anchor="middle" fill="#166534">Recognizer</text>
+    <text x="305" y="68" font-size="9" text-anchor="middle" fill="#166534">(Train)</text>
+    <line x1="350" y1="45" x2="380" y2="45" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <!-- Denoised logs -->
+    <rect x="380" y="20" width="90" height="50" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="425" y="42" font-size="10" text-anchor="middle" fill="#1e40af">Denoised</text>
+    <text x="425" y="55" font-size="10" text-anchor="middle" fill="#1e40af">Real Logs</text>
+    <text x="425" y="68" font-size="9" text-anchor="middle" fill="#1e40af">→ Rec Model</text>
+    <!-- Feedback arc -->
+    <path d="M 185 70 Q 185 110 305 110 Q 420 110 425 70" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+    <text x="305" y="124" font-size="9" text-anchor="middle" fill="#92400e">Recommender-in-loop feedback</text>
+    <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+  </svg>`;
+}
+
+function queryagentSVG() {
+  return `<svg class="arch-svg" viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="480" height="120" fill="#f8fafc" rx="8"/>
+    <!-- Memory -->
+    <rect x="10" y="15" width="80" height="40" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="50" y="33" font-size="10" text-anchor="middle" fill="#5b21b6">Memory</text>
+    <text x="50" y="46" font-size="9" text-anchor="middle" fill="#5b21b6">Interest Graph</text>
+    <line x1="90" y1="35" x2="115" y2="35" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+    <!-- Query Policy -->
+    <rect x="115" y="15" width="80" height="40" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="155" y="33" font-size="10" text-anchor="middle" fill="#166534">Query</text>
+    <text x="155" y="46" font-size="9" text-anchor="middle" fill="#166534">Policy (LLM)</text>
+    <line x1="195" y1="35" x2="220" y2="35" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+    <!-- Retriever -->
+    <rect x="220" y="15" width="80" height="40" rx="6" fill="#fef9c3" stroke="#fcd34d" stroke-width="1.5"/>
+    <text x="260" y="33" font-size="10" text-anchor="middle" fill="#92400e">Inventory</text>
+    <text x="260" y="46" font-size="9" text-anchor="middle" fill="#92400e">Retrieval</text>
+    <line x1="300" y1="35" x2="325" y2="35" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+    <!-- Reward -->
+    <rect x="325" y="15" width="80" height="40" rx="6" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="365" y="33" font-size="10" text-anchor="middle" fill="#991b1b">Consistency</text>
+    <text x="365" y="46" font-size="9" text-anchor="middle" fill="#991b1b">Reward (RL)</text>
+    <line x1="405" y1="35" x2="430" y2="35" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr3)"/>
+    <!-- Output -->
+    <rect x="430" y="15" width="40" height="40" rx="6" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="450" y="33" font-size="9" text-anchor="middle" fill="#15803d">CTR</text>
+    <text x="450" y="46" font-size="9" text-anchor="middle" fill="#15803d">+CVR</text>
+    <!-- RL feedback -->
+    <path d="M 365 55 Q 365 90 260 90 Q 155 90 155 55" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr3)"/>
+    <text x="260" y="108" font-size="9" text-anchor="middle" fill="#92400e">RL gradient via consistency reward</text>
+    <defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+  </svg>`;
+}
+
+const SVG_FN = { univid: unividSVG, anchor: anchorSVG, queryagent: queryagentSVG };
+
+// ── Render cards ──────────────────────────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('card-grid');
+  grid.innerHTML = '';
+
+  PAPERS.forEach(p => {
+    const sc = scoreColor(p.score);
+    const pct = p.score;
+    const fig = p.figure && SVG_FN[p.figure] ? SVG_FN[p.figure]() : null;
+
+    // Score breakdown rows
+    const sbRows = p.scoreBreakdown.map(([dim, score]) =>
+      `<div class="sb-row"><span class="sb-dim">${dim}</span><span class="sb-score">${score}</span></div>`
+    ).join('');
+
+    // Metrics table rows
+    const metRows = p.metrics.map(([ds, metric, val, base]) =>
+      `<tr><td>${ds}</td><td>${metric}</td><td class="metric-val">${val}</td><td style="color:#6b7280">${base}</td></tr>`
+    ).join('');
+
+    const codeLink = p.code
+      ? `<a class="code-link" href="${p.code}" target="_blank">📦 Code</a>`
+      : '';
+
+    const figHtml = fig
+      ? `<button class="toggle-btn" onclick="toggleSection('${p.id}','fig')">📊 Architecture figure ▾</button>
+         <div class="toggle-section" id="${p.id}-fig">
+           <div style="margin-top:8px">${fig}</div>
+         </div>`
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.score = p.score;
+    card.dataset.bucket = p.bucket;
+    card.dataset.date = p.date;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="date-tag">${p.date}</span>
+          <span class="bucket-badge ${p.bucket}">${p.bucket}</span>
+          ${p.domains.map((d,i) => `<span class="domain-tag${i>0?' purple':''}">${d}</span>`).join('')}
+        </div>
+        <div class="card-title"><a href="${p.arxiv}" target="_blank">${p.title}</a></div>
+        <div class="card-affil">${p.authors} · <strong>${p.affil}</strong></div>
+        <div class="score-row">
+          <span class="score-label">Score</span>
+          <div class="score-bar-bg">
+            <div class="score-bar-fill" style="width:${pct}%;background:${sc}"></div>
+          </div>
+          <span class="score-val" style="color:${sc}">${p.score}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="section-title">Method Overview</div>
+        <div class="method-text method-en">${p.methodEn}</div>
+        <div class="method-text method-zh" style="display:none">${p.methodZh}</div>
+
+        ${figHtml}
+
+        <div style="margin-top:10px">
+          <button class="toggle-btn" onclick="toggleSection('${p.id}','innov')">💡 Innovation ▾</button>
+          <div class="toggle-section" id="${p.id}-innov">
+            <div class="method-text method-en" style="margin-top:6px">${p.innovEn}</div>
+            <div class="method-text method-zh" style="margin-top:6px;display:none">${p.innovZh}</div>
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <button class="toggle-btn" onclick="toggleSection('${p.id}','metrics')">📊 Key Metrics ▾</button>
+          <div class="toggle-section" id="${p.id}-metrics">
+            <table class="metrics-table">
+              <tr><th>Dataset</th><th>Metric</th><th>Ours</th><th>Baseline</th></tr>
+              ${metRows}
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <button class="toggle-btn" onclick="toggleSection('${p.id}','score')">🏅 Score Breakdown ▾</button>
+          <div class="toggle-section" id="${p.id}-score">
+            <div class="score-breakdown" style="margin-top:6px">${sbRows}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="arxiv-link" href="${p.arxiv}" target="_blank">arXiv ↗</a>
+        ${codeLink}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  setLang(currentLang);
+  filterCards();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderCards();
+</script>
+</body>
+</html>
