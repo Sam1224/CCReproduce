@@ -1,0 +1,227 @@
+{
+  "inspection_date": "2026-06-07",
+  "papers": [
+    {
+      "id": "2606.06481",
+      "title": "Operation-Guided Progressive Human-to-AI Text Transformation Benchmark for Multi-Granularity AI-Text Detection",
+      "authors": [
+        "Sondos Mahmoud Bsharat",
+        "Jiacheng Liu",
+        "Xiaohan Zhao",
+        "Tianjun Yao",
+        "Xinyi Shang",
+        "Yi Tang",
+        "Jiacheng Cui",
+        "Ahmed Elhagry",
+        "Salwa K. Al Khatib",
+        "Hao Li",
+        "Salman Khan",
+        "Zhiqiang Shen"
+      ],
+      "affiliations": [
+        "Mohamed bin Zayed University of Artificial Intelligence",
+        "University College London"
+      ],
+      "published_date": "2026-06-04",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.06481",
+        "pdf": "https://arxiv.org/pdf/2606.06481",
+        "code": "https://github.com/VILA-Lab/OpAI-Bench"
+      },
+      "tags": ["AI文本检测", "内容治理", "数据集/Benchmark"],
+      "method_overview_zh": "提出 OpAI-Bench：从人类原稿出发，按固定 AI 覆盖比例与 5 类编辑操作（润色/改写/风格重写/压缩/扩写）逐步生成 v0–v8 的累积修订轨迹，并保留文档/句子/Token/Span 多粒度溯源标注。基于该轨迹系统评估多类 AI 文本检测器，发现可检测性并非随 AI 覆盖单调提升，而与操作类型、领域、修订历史强相关，且在“中等覆盖+压缩”阶段出现明显退化。",
+      "method_overview_en": "OpAI-Bench builds cumulative human→AI revision trajectories (v0–v8) by progressively applying five edit operations (polish/paraphrase/style rewrite/compress/expand) under controlled AI coverage, while preserving provenance labels at document/sentence/token/span levels. It benchmarks detectors across granularities and shows detectability is not monotonic w.r.t. AI coverage; it depends strongly on operation type, domain, and revision history, with a notable degradation around intermediate-coverage compression.",
+      "innovation_zh": "创新点在于：把“修订轨迹”作为一等公民（累积版本而非独立采样），并提供覆盖率×操作类型×多粒度溯源三位一体的可控评测框架，使得检测器在混合作者区间的非单调行为可被稳定复现与分析。",
+      "innovation_en": "Key novelty: treating the revision trajectory (cumulative version-to-version edits) as the benchmark unit, combined with controlled AI coverage, explicit edit-operation types, and multi-granularity provenance—enabling reproducible analysis of non-monotonic detector behavior in mixed-authorship regions.",
+      "key_metrics": [
+        "RADAR 在 essays 上 F1-AI：v1=50.4 → v8=71.5（但在 reports/news/abstracts 基本接近 0）。",
+        "Fast-DetectGPT 在 reports/news 早期 v1 的 F1-AI 分别为 61.3/65.0，但随修订推进下降到 v8 的 29.1/35.2。",
+        "Gemini-Flash（LLM-as-detector）在 essays 上 F1-AI：v1=9.5 → v3=71.5 → v4=53.6 → v8=57.9。"
+      ],
+      "score_breakdown": {
+        "innovation": 25,
+        "metrics": 10,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 5,
+        "relevance": 22,
+        "total": 82
+      },
+      "score_rationale_zh": "强相关于内容治理中的 AI 生成/改写检测与溯源评估；提供可控轨迹与多粒度标注，实验揭示了压缩阶段的关键失效模式，工程价值高。"
+    },
+    {
+      "id": "2606.05622",
+      "title": "AdaPlanBench: Evaluating Adaptive Planning in Large Language Model Agents under World and User Constraints",
+      "authors": [
+        "Jiayu Liu",
+        "Cheng Qian",
+        "Zhenhailong Wang",
+        "Bingxuan Li",
+        "Jiateng Liu",
+        "Heng Wang",
+        "Jeonghwan Kim",
+        "Yumeng Wang",
+        "Xiusi Chen",
+        "Yi R. (May) Fung",
+        "Heng Ji"
+      ],
+      "affiliations": ["University of Illinois Urbana-Champaign"],
+      "published_date": "2026-06-03",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.05622",
+        "pdf": "https://arxiv.org/pdf/2606.05622",
+        "code": "https://github.com/JiayuJeff/AdaPlanBench",
+        "dataset": "https://huggingface.co/datasets/JiayuJeff/AdaPlanBench"
+      },
+      "tags": ["Agent规划", "交互式约束", "Benchmark"],
+      "method_overview_zh": "提出 AdaPlanBench：面向 307 个家庭任务的交互式规划基准，同时包含“世界约束”（资源/环境限制）与“用户约束”（偏好/禁忌），且约束不会一次性给出，而是在 agent 提交违反约束的计划后才逐步揭示，迫使其在多轮中反复修订计划并累积约束记忆。数据构建上使用可扩展的约束生成流水线，为每个任务自动派生双约束画像，并用多轮协议评测 agent 的自适应重规划能力。",
+      "method_overview_en": "AdaPlanBench is a dynamic interactive benchmark of 307 household tasks with dual constraints: world constraints (resource/environment limits) and user constraints (preferences/aversion). Constraints are not given upfront; they are progressively disclosed only when an agent proposes a violating plan, forcing iterative re-planning while tracking accumulated feedback. The dataset is built with a scalable pipeline that augments each task with dual-constraint profiles and evaluates agents under a multi-turn protocol.",
+      "innovation_zh": "创新点在于把“用户偏好约束”与“世界可行性约束”统一到同一套可扩展构造与评测协议中，并通过违约后揭示的机制让“约束归纳/跟踪”成为评测核心，而不是仅比拼一次性规划文本质量。",
+      "innovation_en": "Novelty: a unified, scalable construction and evaluation protocol for both user-preference and world-feasibility constraints, where constraint induction/tracking becomes central via violation-triggered progressive disclosure.",
+      "key_metrics": [
+        "307 个 household 任务构成的交互式基准。",
+        "在 10 个主流 LLM 上评测，最佳模型准确率仅 67.75%，且约束累积越多性能越差，用户约束更具挑战。"
+      ],
+      "score_breakdown": {
+        "innovation": 25,
+        "metrics": 10,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 80
+      },
+      "score_rationale_zh": "对“治理类 Agent”很关键：约束通常来自规则/用户偏好/环境能力边界且逐步暴露。该基准把约束归纳与重规划难点量化，适合用于评估策略代理在治理工作流中的可靠性。"
+    },
+    {
+      "id": "2606.06260",
+      "title": "OneReason Technical Report",
+      "authors": ["OneRec Team"],
+      "affiliations": ["Kuaishou"],
+      "published_date": "2026-06-04",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.06260",
+        "pdf": "https://arxiv.org/pdf/2606.06260"
+      },
+      "tags": ["推荐系统", "电商/内容", "大模型推理", "工业落地"],
+      "method_overview_zh": "围绕“生成式推荐如何真正推理”，提出 OneReason：先在预训练阶段强化 item token 的语义感知（perception），再在 SFT 中引入三层认知增强 CoT 格式（cognition-enhanced CoT），并用 specialize-then-unify 的 RL 训练配方提升思考模式下的命中率。作者报告其在快手多个线上业务基准上，思考模式能够稳定优于非思考模式，并可通过 Fast–Slow Thinking 的在线架构兼顾效果与延迟。",
+      "method_overview_en": "OneReason studies how to activate reasoning in generative recommendation. It strengthens item-token semantic perception during pre-training, introduces a three-level cognition-enhanced CoT format in SFT, and uses a specialize-then-unify RL recipe to improve thinking-mode recommendation. The report also proposes a Fast–Slow Thinking online deployment architecture to balance quality and latency, and reports gains on real-world Kuaishou benchmarks.",
+      "innovation_zh": "将“推荐推理”明确拆解为感知→认知两阶段能力，并给出可落地的三层 CoT 格式与在线 Fast/Slow 双流水架构，把推理收益与在线时延约束联动考虑。",
+      "innovation_en": "It frames recommendation reasoning as a perception→cognition pathway and provides concrete artifacts: a three-level CoT format plus a Fast/Slow online architecture that explicitly couples reasoning gains with latency constraints.",
+      "key_metrics": [
+        "线上 A/B（表 19）：Combined 方案 Conv +12.643%，Click +1.709%，CVR +1.865%，CTR +0.519%，Retrieval Share 27.2%。",
+        "用户分层（表 20）：Low-Active 用户 Revenue +13.323%。"
+      ],
+      "score_breakdown": {
+        "innovation": 27,
+        "metrics": 13,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 79
+      },
+      "score_rationale_zh": "对电商/内容推荐强相关且有明确线上收益，但作为 Technical Report，可复现性与开源程度仍需后续验证，因此压低到 80 以下。"
+    },
+    {
+      "id": "2606.05275",
+      "title": "Personal AI Agent for Camera Roll VQA",
+      "authors": ["Thao Nguyen", "Krishna Kumar Singh", "Donghyun Kim", "Yong Jae Lee", "Yuheng Li"],
+      "affiliations": ["University of Wisconsin-Madison", "Korea University", "Adobe Research"],
+      "published_date": "2026-06-03",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.05275",
+        "pdf": "https://arxiv.org/pdf/2606.05275",
+        "project": "https://thaoshibe.github.io/camroll"
+      },
+      "tags": ["VLM/MLLM", "长上下文", "视觉记忆", "Agent"],
+      "method_overview_zh": "研究“个人相册（camera roll）上的 VQA”：assistant 需要在跨多年、上万张个人照片的长时间视觉流中检索证据并回答问题。作者构建 camroll 数据集（50 用户、31,476 张图、2,500 QA），并提出 camroll-agent：带层级记忆与最小工具集的对话式 agent，通过迭代式检索与浏览来定位关键证据图，再由多模态模型作答。实验显示该 agent 在效果与 token 成本上显著优于一次性 RAG/memory 方法。",
+      "method_overview_en": "The paper studies personal camera-roll VQA, where an assistant must navigate a long-horizon, highly personalized visual stream (thousands of photos across years) to retrieve evidence and answer questions. It introduces the camroll dataset (50 users, 31,476 images, 2,500 QA pairs) and proposes camroll-agent, a conversational agent with hierarchical memory and a minimal tool set for iterative navigation/retrieval over large personal visual memory. Experiments show strong gains over one-shot RAG/memory baselines with far fewer tokens.",
+      "innovation_zh": "将“个人视觉记忆”作为独立于通用长文本记忆的研究对象：提供真实用户长期相册数据+可量化的 agent 评测指标（Recall/Acc/Judge/Token），并在结构化检索轨迹上展示显著的效率优势。",
+      "innovation_en": "It formalizes personalized visual memory as a distinct long-context regime, provides a real-user camera-roll dataset, and evaluates agents with explicit efficiency metrics (tokens) alongside recall/accuracy—showing large efficiency gains from structured retrieval trajectories.",
+      "key_metrics": [
+        "camroll 数据集：50 users，31,476 images，2,500 QA pairs。",
+        "camroll-agent 多选题 Recall=88.5、Acc=70.5；free-form Recall=83.1、Judge=4.11；总 token 约 3.2k。",
+        "All images 基线需要约 750k tokens。"
+      ],
+      "score_breakdown": {
+        "innovation": 23,
+        "metrics": 11,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 20,
+        "total": 79
+      },
+      "score_rationale_zh": "对内容理解与多模态检索强相关，且在 token 成本上优势明显；但主要面向个人相册场景，直接迁移到电商内容治理仍需任务适配。"
+    },
+    {
+      "id": "2606.06443",
+      "title": "Revising Context, Shifting Simulated Stance: Auditing LLM-Based Stance Simulation in Online Discussions",
+      "authors": ["Xinnong Zhang", "Wanting Shan", "Hanjia Lyu", "Zhongyu Wei", "Jiebo Luo"],
+      "affiliations": ["Fudan University", "University of Rochester"],
+      "published_date": "2026-06-04",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.06443",
+        "pdf": "https://arxiv.org/pdf/2606.06443"
+      },
+      "tags": ["社媒理解", "立场检测", "多模态", "审计/评估"],
+      "method_overview_zh": "提出一种“反事实上下文修订”审计框架，用于评估 LLM 在社媒讨论中的立场模拟是否对上下文变化过度敏感：先在原对话上下文中模拟目标用户对话题的立场，再通过多种受控策略（纯文本修订与引入 meme 的多模态修订）改写上下文后重新模拟立场，比较立场转移率与方向性偏移。作者在 Reddit 上收集 1,821 段关于 DeepSeek/Claude/Llama 的讨论进行实验分析。",
+      "method_overview_en": "The paper proposes counterfactual context revision to audit LLM-based stance simulation in online discussions. It first infers a target user’s stance from the original conversation context, then applies controlled text-only and meme-based multimodal revision strategies to the context and re-simulates the stance, measuring stance transition rate and directional shift. Experiments are conducted on 1,821 Reddit conversations about DeepSeek/Claude/Llama.",
+      "innovation_zh": "把“上下文可控修订→立场变化”作为审计维度，并引入 meme 等多模态上下文来比较其相对文本描述的额外影响，形成可复用的模拟审计流程。",
+      "innovation_en": "It introduces an audit dimension based on controlled context revisions and extends it to meme-based multimodal context, enabling systematic comparison between text-only and multimodal influence on simulated stance.",
+      "key_metrics": [
+        "原始立场模拟：Overall Accuracy=77.64，Macro F1=78.10。",
+        "数据规模：1,821 个 Reddit conversation instances。"
+      ],
+      "score_breakdown": {
+        "innovation": 18,
+        "metrics": 8,
+        "exp_quality": 10,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 15,
+        "total": 61
+      },
+      "score_rationale_zh": "为“社媒观点/舆情模拟”提供审计框架，有助于治理类分析；但与电商内容理解/违规检测的直接方法迁移较弱，更适合作为评估与风险分析工具。"
+    },
+    {
+      "id": "2606.06492",
+      "title": "Code2LoRA: Hypernetwork-Generated Adapters for Code Language Models under Software Evolution",
+      "authors": ["Liliana Hotsko", "Yinxi Li", "Yuntian Deng", "Pengyu Nie"],
+      "affiliations": ["University of Waterloo"],
+      "published_date": "2026-06-04",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.06492",
+        "pdf": "https://arxiv.org/pdf/2606.06492",
+        "code": "https://anonymous.4open.science/r/code2lora-6857",
+        "models": "https://huggingface.co/code2lora"
+      },
+      "tags": ["代码LLM", "PEFT/LoRA", "超网络", "软件演化"],
+      "method_overview_zh": "提出 Code2LoRA：用超网络把“整个代码仓库”编码为固定向量，再一次性生成针对该仓库的 LoRA 适配器，从而把仓库知识注入模型参数并实现 0 推理 token 额外开销。针对演化中的仓库，Code2LoRA-Evo 用 GRU 累积 commit diff 的隐藏状态并持续更新 adapter，避免静态 LoRA 随代码漂移失效。作者同时构建 RepoPeftBench（604 个 Python 仓库）用于评测。",
+      "method_overview_en": "Code2LoRA encodes an entire repository into a fixed embedding and uses a hypernetwork to generate repository-specific LoRA adapters in one pass, injecting repo knowledge into weights with zero inference-time token overhead. For evolving codebases, Code2LoRA-Evo maintains a GRU hidden state updated by commit diffs to refresh the adapter over time, mitigating staleness. The paper also introduces RepoPeftBench (604 Python repos) for evaluation.",
+      "innovation_zh": "把超网络生成 LoRA 从“短文本/单文档条件”扩展到“全仓库条件”，并进一步提出按 commit diff 逐步更新的演化版本，使 adapter 更新成本从“重训”降为“轻量增量”。",
+      "innovation_en": "It extends hypernetwork-generated LoRA from short text/document conditioning to full repository conditioning, and further introduces an evolution-aware variant that updates adapters incrementally via commit diffs.",
+      "key_metrics": [
+        "静态轨道：Cross-repo EM=63.8%，In-repo EM=66.2%。",
+        "演化轨道：Cross-repo EM=60.3%，比单一共享 LoRA +5.2pp。"
+      ],
+      "score_breakdown": {
+        "innovation": 26,
+        "metrics": 12,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 9,
+        "total": 72
+      },
+      "score_rationale_zh": "方法与实验都很强，但直接面向代码仓库理解，与电商内容理解/达人治理弱相关；更适合作为“治理工作流里的工程生产力组件”。"
+    }
+  ]
+}
