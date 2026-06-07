@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Digest</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #e1e4e8;
+    --accent: #0969da;
+    --accent-light: #ddf4ff;
+    --text: #1c2128;
+    --muted: #656d76;
+    --strong-tag: #1a7f37;
+    --weak-tag: #9a6700;
+    --score-high: #1a7f37;
+    --score-mid: #9a6700;
+    --score-low: #cf222e;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-size: 18px; font-weight: 700; color: var(--text); }
+  .logo span { color: var(--accent); }
+  .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .lang-toggle {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 10px; cursor: pointer;
+    font-size: 13px; font-weight: 500;
+  }
+  .lang-toggle:hover { background: var(--accent-light); border-color: var(--accent); }
+  .lang-toggle.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  /* MAIN */
+  main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+  /* CONTROLS BAR */
+  .controls {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .controls label { font-weight: 600; font-size: 13px; color: var(--muted); }
+  .score-slider { display: flex; align-items: center; gap: 8px; }
+  .score-slider input[type=range] { width: 160px; cursor: pointer; }
+  #scoreDisplay {
+    background: var(--accent); color: #fff;
+    border-radius: 12px; padding: 2px 10px;
+    font-weight: 700; font-size: 13px; min-width: 40px; text-align: center;
+  }
+  select, input[type="date"] {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-size: 13px; background: var(--bg);
+  }
+  select:focus, input[type="date"]:focus { outline: none; border-color: var(--accent); }
+  /* STATS BAR */
+  .stats {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .stat-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 14px;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+  }
+  .stat-chip .num { color: var(--text); font-size: 16px; font-weight: 700; margin-right: 4px; }
+  /* GRID */
+  .paper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  /* CARD */
+  .paper-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: var(--card-shadow);
+    display: flex; flex-direction: column;
+    overflow: hidden; transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .paper-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .card-header { padding: 16px 16px 12px; border-bottom: 1px solid var(--border); }
+  .card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .date-chip {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 7px;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+  }
+  .bucket-chip {
+    border-radius: 4px; padding: 2px 7px;
+    font-size: 11px; font-weight: 700;
+  }
+  .bucket-STRONG { background: #d1f0d1; color: var(--strong-tag); }
+  .bucket-WEAK   { background: #fff3cd; color: var(--weak-tag); }
+  .domain-tag {
+    background: var(--accent-light); color: var(--accent);
+    border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600;
+  }
+  .paper-title {
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .paper-authors { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .paper-affil { font-size: 12px; color: var(--accent); font-weight: 600; }
+  /* SCORE RING */
+  .card-score-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-ring {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800; flex-shrink: 0;
+  }
+  .score-high { background: #d1f0d1; color: var(--score-high); }
+  .score-mid  { background: #fff3cd; color: var(--score-mid); }
+  .score-low  { background: #ffd7d5; color: var(--score-low); }
+  .score-breakdown { flex: 1; }
+  .score-breakdown-row {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .score-dim {
+    font-size: 10px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 3px; padding: 1px 5px; color: var(--muted);
+  }
+  .score-dim span { font-weight: 700; color: var(--text); }
+  /* BODY */
+  .card-body { padding: 14px 16px; flex: 1; }
+  .section-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px;
+  }
+  .method-text { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 10px; }
+  .story-arc { font-style: italic; color: var(--accent); font-size: 12px; margin-bottom: 10px; }
+  /* FIGURE */
+  .figure-block {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px; margin-bottom: 10px; font-size: 11px; color: var(--muted);
+    overflow: hidden;
+  }
+  .figure-block svg { width: 100%; height: auto; display: block; }
+  /* METRICS TABLE */
+  .metrics-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px; }
+  .metrics-table th { background: var(--bg); padding: 5px 8px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--muted); }
+  .metrics-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); }
+  .metrics-table tr:last-child td { border-bottom: none; }
+  .metric-value { font-weight: 700; color: var(--score-high); }
+  /* TOGGLES */
+  .toggle-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .toggle-btn {
+    font-size: 11px; padding: 3px 10px; border-radius: 4px;
+    border: 1px solid var(--border); background: var(--bg); cursor: pointer;
+    color: var(--muted); font-weight: 600;
+  }
+  .toggle-btn.open { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .collapsible { display: none; }
+  .collapsible.open { display: block; }
+  /* CARD FOOTER */
+  .card-footer {
+    padding: 10px 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .arxiv-link {
+    background: var(--accent); color: #fff; text-decoration: none;
+    border-radius: 5px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  }
+  .arxiv-link:hover { opacity: 0.85; }
+  .code-link {
+    background: #1c2128; color: #fff; text-decoration: none;
+    border-radius: 5px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  }
+  .code-link:hover { opacity: 0.8; }
+  /* HIDDEN */
+  .hidden { display: none !important; }
+  /* CHINESE */
+  .zh { display: none; }
+  .en { display: block; }
+  body.lang-zh .zh { display: block; }
+  body.lang-zh .en { display: none; }
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+    grid-column: 1 / -1;
+  }
+  .empty-state h3 { font-size: 18px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CC<span>Reproduce</span> · Daily AI Paper Digest</div>
+  <div class="header-controls">
+    <button class="lang-toggle active" id="btnZh" onclick="setLang('zh')">中文</button>
+    <button class="lang-toggle" id="btnEn" onclick="setLang('en')">English</button>
+  </div>
+</header>
+
+<main>
+  <div class="controls">
+    <div class="score-slider">
+      <label>Min Score</label>
+      <input type="range" id="scoreSlider" min="0" max="100" value="0" oninput="filterCards()">
+      <div id="scoreDisplay">0</div>
+    </div>
+    <div>
+      <label>Date &nbsp;</label>
+      <input type="date" id="datePicker" value="2026-06-06" onchange="filterCards()">
+    </div>
+    <div>
+      <label>Bucket &nbsp;</label>
+      <select id="bucketFilter" onchange="filterCards()">
+        <option value="">All</option>
+        <option value="STRONG">STRONG</option>
+        <option value="WEAK">WEAK</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-chip"><span class="num" id="statTotal">3</span> papers</div>
+    <div class="stat-chip"><span class="num" id="statShown">3</span> shown</div>
+    <div class="stat-chip"><span class="num">2</span> with code</div>
+    <div class="stat-chip"><span class="num">2026-06-06</span> GMT+8</div>
+  </div>
+
+  <div class="paper-grid" id="paperGrid">
+    <!-- Cards injected by JS -->
+  </div>
+</main>
+
+<script>
+// ============================================================
+// PAPER DATA
+// ============================================================
+const PAPERS = [
+  {
+    id: "univid",
+    date: "2026-06-06",
+    bucket: "STRONG",
+    title: "UNIVID: Unified Vision-Language Model for Video Moderation",
+    authors: "Kejuan Yang, Yizhuo Zhang, Mingyuan Du, Yue Zhang, Dixin Zheng, Kaili Zhao, Yang Xiao, Hanzhong Liang, Kenan Xiao",
+    affiliation: "ByteDance",
+    arxiv: "https://arxiv.org/abs/2606.05748",
+    codeLink: "https://github.com/Sam1224/CCReproduce/tree/main/2026-06-06/code/UNIVID",
+    score: 87,
+    scoreDims: { Innovation: 25, "SOTA Δ": 13, "Exp Quality": 11, Efficiency: 9, Generalization: 4, "Domain": 25 },
+    domains: ["content-moderation", "VLM", "video", "e-commerce"],
+    story_en: "Existing moderation platforms run 1,000+ fragmented black-box classifiers → UNIVID replaces them with a single VLM that generates policy-aware captions as an interpretable intermediate, enabling cascaded risk filtering, RAG-based recall, and embedding-driven trend detection.",
+    story_zh: "传统内容审核平台依赖1000+碎片化黑盒分类器 → UNIVID用单一VLM生成政策感知字幕作为可解释中间表示，支撑级联风险过滤、RAG召回和嵌入向量趋势检测。",
+    method_en: "UNIVID trains a VLM with a specialized data recipe (expert labels + synthetic data) to generate structured policy-aware captions per video. A three-stage pipeline follows: (A) Risk Filter fuses caption embedding with visual/audio signals; (B) Moderation Actor runs UNIVID-Lite (high-throughput) and UNIVID-RAG (retrieval-augmented recall of prior violations); (C) Trend Governance clusters cached caption embeddings to surface emerging violation trends. The single backbone replaces over 1,000 specialized models.",
+    method_zh: "UNIVID使用专家标注+合成数据的混合配方训练VLM，为每个视频生成结构化政策感知字幕。三级级联流水线：(A) Risk Filter融合字幕嵌入与视觉/音频信号；(B) Moderation Actor运行UNIVID-Lite（高吞吐量审核）和UNIVID-RAG（基于历史违规的检索增强召回）；(C) Trend Governance对缓存字幕嵌入进行聚类以发现新兴违规趋势。单一主干替代1000+专项模型。",
+    metrics: [
+      { dataset: "Production A/B", metric: "Violation Leakage Rate ↓", value: "−42.7% (relative)", baseline: "—" },
+      { dataset: "Production A/B", metric: "Overkill Rate ↓", value: "−37.0% (relative)", baseline: "—" },
+      { dataset: "Operational", metric: "Models retired", value: ">1,000", baseline: "1,000+ separate" },
+    ],
+    scoreJustification_en: "Industrial-scale content governance with strong novelty (caption-as-intermediate paradigm) and production A/B validation. ByteDance platform deployment.",
+    scoreJustification_zh: "工业级内容治理，字幕作为中间表示范式新颖，生产A/B验证充分，字节跳动平台部署。",
+    hasCode: true,
+  },
+  {
+    id: "queryagent-r1",
+    date: "2026-06-06",
+    bucket: "STRONG",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Dike Sun, Zheng Zou, Jingtong Zang, Qi Sun, Huaipeng Zhao, Tao Luo, Xiaoyi Zeng",
+    affiliation: "Alibaba International Digital Commercial Group",
+    arxiv: "https://arxiv.org/abs/2606.05671",
+    codeLink: "https://github.com/Sam1224/CCReproduce/tree/main/2026-06-06/code/QueryAgent-R1",
+    score: 80,
+    scoreDims: { Innovation: 22, "SOTA Δ": 12, "Exp Quality": 11, Efficiency: 7, Generalization: 3, "Domain": 25 },
+    domains: ["e-commerce", "RL-agent", "query-recommendation", "retrieval"],
+    story_en: "Existing query recommendation methods optimize click-through rate but ignore whether retrieved products match user purchase intent, leading to high CTR but low CVR → QueryAgent-R1 grounds query generation in real inventory retrieval via a chain-of-retrieval RL loop with a consistency reward that jointly optimizes CTR and CVR.",
+    story_zh: "现有查询推荐方法只优化点击率，忽视检索商品是否匹配购买意图，导致CTR高但CVR低 → QueryAgent-R1通过链式检索RL循环将查询生成接地于真实库存检索，一致性奖励同时优化CTR和CVR。",
+    method_en: "QueryAgent-R1 is a memory-augmented RL agent. A user memory module aggregates historical interaction embeddings into a preference vector. The query generator (LLM backbone) produces candidate query tokens conditioned on this preference. Each RL step retrieves real products via the chain-of-retrieval loop. A consistency reward combines: (1) estimated CTR (click probability) and (2) cosine similarity between mean retrieved product embedding and user preference vector. REINFORCE training with this joint reward teaches the agent to generate queries whose products align with downstream purchase intent.",
+    method_zh: "QueryAgent-R1是记忆增强强化学习Agent。用户记忆模块将历史交互嵌入聚合为偏好向量，查询生成器（LLM主干）基于此偏好生成候选查询词。每步RL训练包含真实商品库检索（链式检索）。一致性奖励结合(1)估计CTR和(2)检索商品均值嵌入与用户偏好的余弦相似度。REINFORCE训练使Agent学会生成检索商品符合购买意图的查询词。",
+    metrics: [
+      { dataset: "Alibaba Production A/B", metric: "Query CTR ↑", value: "+2.9%", baseline: "control" },
+      { dataset: "Alibaba Production A/B", metric: "Guided CVR ↑", value: "+3.1%", baseline: "control" },
+      { dataset: "Offline (public)", metric: "NDCG", value: "Consistent SOTA", baseline: "multiple baselines" },
+    ],
+    scoreJustification_en: "Strong industrial e-commerce agent paper with real A/B validation at Alibaba scale. Joint CTR+CVR optimization via chain-of-retrieval RL is the core novelty.",
+    scoreJustification_zh: "强工业电商Agent论文，阿里巴巴规模A/B测试验证，链式检索RL同时优化CTR+CVR是核心创新。",
+    hasCode: true,
+  },
+  {
+    id: "ocl",
+    date: "2026-06-06",
+    bucket: "STRONG",
+    title: "Organizational Control Layer: Governance Infrastructure at the Execution Boundary of LLM Agent Systems",
+    authors: "Tianyu Shi, Yang Mo, Yiou Liu, Zhuonan Hao, Yin Wang, Wenzhuo Hu, Nan Yu, Meng Zhou, Jiangbo Yu",
+    affiliation: "McGill / Purdue / UNSW / UCLA / NYU / Stevens / Aimaikj Research",
+    arxiv: "https://arxiv.org/abs/2606.04306",
+    codeLink: null,
+    score: 70,
+    scoreDims: { Innovation: 21, "SOTA Δ": 11, "Exp Quality": 10, Efficiency: 7, Generalization: 4, "Domain": 17 },
+    domains: ["LLM-agents", "governance", "safety", "multi-agent"],
+    story_en: "LLM agents deployed in workflows can directly trigger state-changing actions, yet existing systems lack hard enforcement between generation and execution → OCL inserts a model-agnostic middleware layer at the execution boundary that deterministically enforces organizational policies, reducing unsafe executions from 88% to near-zero.",
+    story_zh: "LLM Agent的输出可直接触发高风险操作，但现有系统缺乏执行边界的硬性约束 → OCL在执行边界插入与模型无关的中间件，确定性执行组织策略，将非法执行率从88%降至接近零。",
+    method_en: "OCL is a model-agnostic governance middleware inserted between LLM proposal generation and environment-facing execution. It intercepts every proposed action and runs through: (1) Policy Checker — validates against organizational rules; (2) Constraint Enforcer — clamps values to acceptable ranges; (3) Escalation Engine — routes uncorrectable violations to human review; (4) Deterministic Replanner — generates a compliant alternative action without re-querying the LLM. Evaluated on adversarial buyer-seller negotiation (AgenticPay benchmark) across GPT-5.4, Gemini-3.1, and Qwen-3.5.",
+    method_zh: "OCL是插入在LLM生成与环境执行之间的与模型无关治理中间件。拦截每个待执行动作，依次经过：(1)策略检查器—验证合规性；(2)约束执行器—将数值夹紧到允许范围；(3)升级引擎—将无法纠正的违规路由到人工审核；(4)确定性重规划器—无需重新查询LLM即生成合规替代动作。在对抗性买卖博弈场景（AgenticPay基准）中于GPT-5.4、Gemini-3.1、Qwen-3.5三个后端上评估。",
+    metrics: [
+      { dataset: "AgenticPay (GPT-5.4)", metric: "Unsafe execution rate ↓", value: "~0%", baseline: "88%" },
+      { dataset: "AgenticPay (GPT-5.4)", metric: "Valid success rate ↑", value: "96%", baseline: "12%" },
+      { dataset: "Adversarial (GPT-5.4)", metric: "Intercept rate", value: "94%", baseline: "—" },
+      { dataset: "Adversarial (Gemini-3.1)", metric: "Intercept rate", value: "82%", baseline: "—" },
+    ],
+    scoreJustification_en: "Execution-boundary governance framing is architecturally important; below reproduction threshold (70). Relevant for building safe e-commerce agent systems.",
+    scoreJustification_zh: "执行边界治理架构重要，低于复现阈值(70)，适用于构建安全电商Agent系统。",
+    hasCode: false,
+  },
+];
+
+// ============================================================
+// RENDER
+// ============================================================
+let currentLang = 'zh';
+setLang('zh');
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('lang-zh', lang === 'zh');
+  document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function renderFigure(paper) {
+  if (paper.id === 'univid') {
+    return `<div class="figure-block">
+      <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;font-size:10px">
+        <!-- Input -->
+        <rect x="5" y="40" width="70" height="40" rx="5" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+        <text x="40" y="57" text-anchor="middle" fill="#0969da" font-weight="bold">Video</text>
+        <text x="40" y="70" text-anchor="middle" fill="#0969da">Frames+Audio</text>
+        <!-- arrow -->
+        <line x1="75" y1="60" x2="100" y2="60" stroke="#656d76" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- UNIVID Box -->
+        <rect x="100" y="30" width="80" height="60" rx="5" fill="#1a7f37" stroke="#1a7f37"/>
+        <text x="140" y="53" text-anchor="middle" fill="white" font-weight="bold" font-size="11">UNIVID</text>
+        <text x="140" y="67" text-anchor="middle" fill="#d1f0d1" font-size="9">Policy-aware</text>
+        <text x="140" y="78" text-anchor="middle" fill="#d1f0d1" font-size="9">Captioner</text>
+        <!-- arrow to stages -->
+        <line x1="180" y1="60" x2="205" y2="60" stroke="#656d76" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Stage A -->
+        <rect x="205" y="10" width="75" height="30" rx="4" fill="#fff3cd" stroke="#9a6700" stroke-width="1.2"/>
+        <text x="242" y="25" text-anchor="middle" fill="#9a6700" font-weight="bold" font-size="9">(A) Risk Filter</text>
+        <text x="242" y="37" text-anchor="middle" fill="#9a6700" font-size="8">Multi-modal funnel</text>
+        <!-- Stage B -->
+        <rect x="205" y="52" width="75" height="30" rx="4" fill="#d1f0d1" stroke="#1a7f37" stroke-width="1.2"/>
+        <text x="242" y="67" text-anchor="middle" fill="#1a7f37" font-weight="bold" font-size="9">(B) Mod Actor</text>
+        <text x="242" y="79" text-anchor="middle" fill="#1a7f37" font-size="8">Lite + RAG</text>
+        <!-- Stage C -->
+        <rect x="205" y="94" width="75" height="22" rx="4" fill="#ffd7d5" stroke="#cf222e" stroke-width="1.2"/>
+        <text x="242" y="108" text-anchor="middle" fill="#cf222e" font-weight="bold" font-size="9">(C) Trend Gov</text>
+        <!-- Connecting lines -->
+        <line x1="205" y1="25" x2="195" y2="25" stroke="#9a6700" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="195" y1="25" x2="195" y2="60" stroke="#9a6700" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="205" y1="67" x2="200" y2="67" stroke="#1a7f37" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="200" y1="67" x2="200" y2="60" stroke="#1a7f37" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="205" y1="105" x2="190" y2="105" stroke="#cf222e" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="190" y1="105" x2="190" y2="60" stroke="#cf222e" stroke-width="1" stroke-dasharray="3"/>
+        <!-- Output -->
+        <rect x="295" y="40" width="70" height="40" rx="5" fill="#1c2128" stroke="#1c2128"/>
+        <text x="330" y="57" text-anchor="middle" fill="white" font-weight="bold">Decision</text>
+        <text x="330" y="70" text-anchor="middle" fill="#8b949e" font-size="9">+ Caption</text>
+        <line x1="280" y1="25" x2="330" y2="40" stroke="#9a6700" stroke-width="1" stroke-dasharray="3"/>
+        <line x1="280" y1="67" x2="295" y2="60" stroke="#1a7f37" stroke-width="1" stroke-dasharray="3"/>
+        <!-- Embeddings cache -->
+        <rect x="380" y="85" width="90" height="28" rx="4" fill="#f0f6ff" stroke="#0969da" stroke-width="1"/>
+        <text x="425" y="97" text-anchor="middle" fill="#0969da" font-size="8.5" font-weight="bold">Embedding Cache</text>
+        <text x="425" y="108" text-anchor="middle" fill="#0969da" font-size="8">Trend clustering</text>
+        <line x1="280" y1="105" x2="380" y2="99" stroke="#cf222e" stroke-width="1" stroke-dasharray="3"/>
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#656d76"/></marker></defs>
+      </svg>
+      <div style="text-align:center;margin-top:4px">Figure: UNIVID three-stage moderation pipeline</div>
+    </div>`;
+  }
+  if (paper.id === 'queryagent-r1') {
+    return `<div class="figure-block">
+      <svg viewBox="0 0 480 130" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;font-size:10px">
+        <!-- User Memory -->
+        <rect x="5" y="10" width="80" height="50" rx="5" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+        <text x="45" y="30" text-anchor="middle" fill="#0969da" font-weight="bold" font-size="11">Memory</text>
+        <text x="45" y="43" text-anchor="middle" fill="#0969da" font-size="9">User History</text>
+        <text x="45" y="56" text-anchor="middle" fill="#0969da" font-size="9">→ User Pref</text>
+        <!-- arrow to gen -->
+        <line x1="85" y1="35" x2="115" y2="35" stroke="#656d76" stroke-width="1.5" marker-end="url(#a2)"/>
+        <!-- Query Generator -->
+        <rect x="115" y="15" width="80" height="40" rx="5" fill="#1a7f37" stroke="#1a7f37"/>
+        <text x="155" y="32" text-anchor="middle" fill="white" font-weight="bold" font-size="11">Query Gen</text>
+        <text x="155" y="46" text-anchor="middle" fill="#d1f0d1" font-size="9">LLM backbone</text>
+        <!-- arrow to retrieval -->
+        <line x1="195" y1="35" x2="225" y2="35" stroke="#656d76" stroke-width="1.5" marker-end="url(#a2)"/>
+        <!-- Retrieval -->
+        <rect x="225" y="15" width="80" height="40" rx="5" fill="#fff3cd" stroke="#9a6700" stroke-width="1.5"/>
+        <text x="265" y="30" text-anchor="middle" fill="#9a6700" font-weight="bold" font-size="10">Retrieval</text>
+        <text x="265" y="43" text-anchor="middle" fill="#9a6700" font-size="9">Chain-of-Retrieval</text>
+        <text x="265" y="54" text-anchor="middle" fill="#9a6700" font-size="8">Live Inventory</text>
+        <!-- arrow to reward -->
+        <line x1="305" y1="35" x2="335" y2="35" stroke="#656d76" stroke-width="1.5" marker-end="url(#a2)"/>
+        <!-- Reward -->
+        <rect x="335" y="15" width="80" height="40" rx="5" fill="#cf222e"/>
+        <text x="375" y="30" text-anchor="middle" fill="white" font-weight="bold" font-size="10">Reward</text>
+        <text x="375" y="43" text-anchor="middle" fill="#ffd7d5" font-size="8">α·CTR + (1-α)·CVR</text>
+        <text x="375" y="54" text-anchor="middle" fill="#ffd7d5" font-size="8">Consistency</text>
+        <!-- feedback arrow -->
+        <path d="M375,55 Q375,100 155,100 Q155,90 155,56" stroke="#0969da" stroke-width="1.5" fill="none" stroke-dasharray="4" marker-end="url(#a2)"/>
+        <text x="265" y="115" text-anchor="middle" fill="#0969da" font-size="9" font-weight="bold">REINFORCE policy gradient</text>
+        <defs><marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#656d76"/></marker></defs>
+      </svg>
+      <div style="text-align:center;margin-top:4px">Figure: QueryAgent-R1 chain-of-retrieval RL loop</div>
+    </div>`;
+  }
+  if (paper.id === 'ocl') {
+    return `<div class="figure-block">
+      <svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;font-size:10px">
+        <rect x="5" y="25" width="70" height="40" rx="4" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+        <text x="40" y="43" text-anchor="middle" fill="#0969da" font-weight="bold">LLM Agent</text>
+        <text x="40" y="57" text-anchor="middle" fill="#0969da" font-size="9">proposal</text>
+        <line x1="75" y1="45" x2="100" y2="45" stroke="#656d76" stroke-width="1.5" marker-end="url(#a3)"/>
+        <rect x="100" y="10" width="160" height="70" rx="5" fill="#fff3cd" stroke="#9a6700" stroke-width="1.5"/>
+        <text x="180" y="28" text-anchor="middle" fill="#9a6700" font-weight="bold" font-size="11">Organizational Control Layer</text>
+        <text x="180" y="41" text-anchor="middle" fill="#9a6700" font-size="9">① Policy Checker  ② Constraint Enforcer</text>
+        <text x="180" y="54" text-anchor="middle" fill="#9a6700" font-size="9">③ Escalation Engine  ④ Deterministic Replanner</text>
+        <text x="180" y="67" text-anchor="middle" fill="#9a6700" font-size="8">[model-agnostic middleware]</text>
+        <line x1="260" y1="45" x2="285" y2="45" stroke="#656d76" stroke-width="1.5" marker-end="url(#a3)"/>
+        <rect x="285" y="25" width="80" height="40" rx="4" fill="#1a7f37" stroke="#1a7f37"/>
+        <text x="325" y="43" text-anchor="middle" fill="white" font-weight="bold">Execution</text>
+        <text x="325" y="56" text-anchor="middle" fill="#d1f0d1" font-size="9">Compliant Action</text>
+        <defs><marker id="a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#656d76"/></marker></defs>
+      </svg>
+      <div style="text-align:center;margin-top:4px">Figure: OCL governance middleware at execution boundary</div>
+    </div>`;
+  }
+  return '';
+}
+
+function renderCard(paper) {
+  const sc = scoreClass(paper.score);
+  const dims = Object.entries(paper.scoreDims).map(([k,v]) =>
+    `<span class="score-dim">${k}: <span>${v}</span></span>`
+  ).join('');
+  const metrics = paper.metrics.map(m =>
+    `<tr><td>${m.dataset}</td><td>${m.metric}</td><td class="metric-value">${m.value}</td><td style="color:var(--muted)">${m.baseline}</td></tr>`
+  ).join('');
+  const codeBtn = paper.hasCode
+    ? `<a href="${paper.codeLink}" class="code-link" target="_blank">💻 Code</a>`
+    : `<span style="font-size:12px;color:var(--muted)">Code: not reproduced</span>`;
+  const tags = paper.domains.map(d => `<span class="domain-tag">${d}</span>`).join('');
+  const fig = renderFigure(paper);
+
+  return `
+  <div class="paper-card" data-score="${paper.score}" data-date="${paper.date}" data-bucket="${paper.bucket}" id="card-${paper.id}">
+    <div class="card-header">
+      <div class="card-meta">
+        <span class="date-chip">${paper.date}</span>
+        <span class="bucket-chip bucket-${paper.bucket}">${paper.bucket}</span>
+        ${tags}
+      </div>
+      <div class="paper-title">${paper.title}</div>
+      <div class="paper-authors">${paper.authors}</div>
+      <div class="paper-affil">${paper.affiliation}</div>
+    </div>
+
+    <div class="card-score-row">
+      <div class="score-ring ${sc}">${paper.score}</div>
+      <div class="score-breakdown">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px">Score Breakdown</div>
+        <div class="score-breakdown-row">${dims}</div>
+        <div class="en" style="font-size:11px;color:var(--muted);margin-top:4px">${paper.scoreJustification_en}</div>
+        <div class="zh" style="font-size:11px;color:var(--muted);margin-top:4px">${paper.scoreJustification_zh}</div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="section-label en">Story Arc</div>
+      <div class="section-label zh">故事弧线</div>
+      <div class="story-arc en">${paper.story_en}</div>
+      <div class="story-arc zh">${paper.story_zh}</div>
+
+      <div class="toggle-row">
+        <button class="toggle-btn" onclick="toggleSection('method-${paper.id}', this)">
+          <span class="en">Method ▾</span><span class="zh">方法 ▾</span>
+        </button>
+        <button class="toggle-btn" onclick="toggleSection('figure-${paper.id}', this)">
+          <span class="en">Figure ▾</span><span class="zh">图示 ▾</span>
+        </button>
+        <button class="toggle-btn" onclick="toggleSection('metrics-${paper.id}', this)">
+          <span class="en">Results ▾</span><span class="zh">指标 ▾</span>
+        </button>
+      </div>
+
+      <div class="collapsible" id="method-${paper.id}">
+        <div class="section-label en">Method Overview</div>
+        <div class="section-label zh">方法概述</div>
+        <div class="method-text en">${paper.method_en}</div>
+        <div class="method-text zh">${paper.method_zh}</div>
+      </div>
+
+      <div class="collapsible" id="figure-${paper.id}">
+        ${fig}
+      </div>
+
+      <div class="collapsible" id="metrics-${paper.id}">
+        <div class="section-label en">Key Metrics</div>
+        <div class="section-label zh">关键指标</div>
+        <table class="metrics-table">
+          <thead><tr><th>Dataset</th><th>Metric</th><th>UNIVID/Model</th><th>Baseline</th></tr></thead>
+          <tbody>${metrics}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <a href="${paper.arxiv}" class="arxiv-link" target="_blank">📄 arXiv</a>
+      ${codeBtn}
+    </div>
+  </div>`;
+}
+
+function toggleSection(id, btn) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('scoreSlider').value);
+  const date = document.getElementById('datePicker').value;
+  const bucket = document.getElementById('bucketFilter').value;
+  document.getElementById('scoreDisplay').textContent = minScore;
+
+  const cards = document.querySelectorAll('.paper-card');
+  let shown = 0;
+  cards.forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const d = card.dataset.date;
+    const b = card.dataset.bucket;
+    const visible = score >= minScore
+      && (date === '' || d === date)
+      && (bucket === '' || b === bucket);
+    card.classList.toggle('hidden', !visible);
+    if (visible) shown++;
+  });
+  document.getElementById('statShown').textContent = shown;
+}
+
+// Initial render
+const grid = document.getElementById('paperGrid');
+grid.innerHTML = PAPERS.map(renderCard).join('');
+document.getElementById('statTotal').textContent = PAPERS.length;
+document.getElementById('statShown').textContent = PAPERS.length;
+</script>
+</body>
+</html>
