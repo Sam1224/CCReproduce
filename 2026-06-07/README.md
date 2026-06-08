@@ -1,23 +1,77 @@
-# 2026-06-07 Paper 巡检记录
+# 2026-06-07 Daily AI Paper Inspection
+**Domain:** E-commerce Content Ecosystem & Influencer (达人) Governance
+**GMT+8 Date:** 2026-06-07 | **Run Time:** 08:30 GMT+8
 
-本日巡检的结构化结果已固化在 `papers.json`，用于后续自动化汇总与 Web 展示。
+---
 
-## 本日精选（含评分）
+## Source Coverage
 
-- **82/100** — OpAI-Bench (arXiv:2606.06481)：渐进式人→AI 编辑轨迹 + 多粒度溯源，用于评测 AI 文本检测器在混合作者区间的非单调失效模式。
-- **80/100** — AdaPlanBench (arXiv:2606.05622)：双约束（世界+用户）渐进披露的交互式规划基准，评测 LLM agent 的自适应重规划与约束归纳能力。
-- **79/100** — OneReason (arXiv:2606.06260)：生成式推荐推理范式（感知→认知 + 三层 CoT + RL 配方），报告线上显著收益。
-- **79/100** — camroll-agent / Camera Roll VQA (arXiv:2606.05275)：个人视觉记忆长时序检索 + agent，展示高召回与极低 token 成本。
-- **72/100** — Code2LoRA (arXiv:2606.06492)：超网络生成 repo 级 LoRA，包含演化版（diff→GRU→adapter）以对抗代码漂移。
-- **61/100** — Stance Simulation Audit (arXiv:2606.06443)：反事实上下文修订审计框架，用于评估 LLM 立场模拟对上下文的敏感性。
+| Source | Category | Attempted | HTTP Status / Error | Candidates Yielded |
+|--------|----------|-----------|---------------------|--------------------|
+| arxiv cs.CL/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| arxiv cs.CV/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| arxiv cs.IR/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| arxiv cs.MM/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| arxiv cs.LG/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| arxiv cs.AI/new | aggregator | yes | 403 Forbidden | 0 (WebSearch fallback) |
+| HuggingFace papers/date/2026-06-07 | aggregator | yes | 403 Forbidden | 0 |
+| HuggingFace papers/trending | aggregator | yes | 403 Forbidden | 0 |
+| Google DeepMind blog | blog | yes | 403 Forbidden | 0 |
+| Google Research blog | blog | yes | 403 Forbidden | 0 |
+| Meta AI Research | blog | yes | 403 Forbidden | 0 |
+| Anthropic News | blog | yes | 403 Forbidden | 0 |
+| ByteDance Seed Research | blog | yes | 403 Forbidden | 0 |
+| Meituan Tech | blog | yes | 403 Forbidden | 0 |
+| Qwen Blog | blog | yes | 403 Forbidden | 0 |
+| 量子位 QbitAI | wechat | yes | 403 Forbidden | 0 |
+| Semantic Scholar Graph API | API | yes | 403 Forbidden | 0 |
+| 机器之心 (WebSearch fallback) | wechat | yes | 200 (search) | 0 directly (older articles indexed) |
+| 新智元 (WebSearch fallback) | wechat | yes | 200 (search) | 0 directly |
+| OpenAI News (WebSearch fallback) | blog | yes | 200 (search) | 0 directly |
+| DeepSeek (WebSearch fallback) | blog | yes | 200 (search) | 0 directly |
+| Kuaishou Tech (WebSearch fallback) | blog | yes | 200 (search) | 1 (OneReason arXiv:2606.06260) |
+| Tencent Hunyuan (WebSearch fallback) | blog | yes | 200 (search) | 0 directly |
+| Xiaohongshu / RedTech (WebSearch fallback) | blog | yes | 200 (search) | 0 directly |
+| arXiv 2606.* WebSearch (Tier-3 fallback) | aggregator | yes | 200 (search) | 8 candidates discovered |
+| OpenReview ICLR/NeurIPS 2026 | conf | no | not yet active | 0 |
 
-## 评分机制（百分制）
+**Discovery note:** arXiv listing pages and HuggingFace returned HTTP 403 for all direct WebFetch calls. All paper discovery relied on targeted WebSearch over 2606.XXXXX arXiv IDs with domain-focused query terms. Eight unique papers were found; two additional papers (QueryAgent-R1, AITDNA) were added beyond the prior-session baseline.
 
-总分 = 方法创新性(30) + 实验指标(15) + 实验质量(15) + 方法效率(10) + 方法泛化性(5) + 论文相关性(25)。
+---
 
-## 代码复现说明（>=80）
+## Selected Papers — Sorted by Score
 
-- OpAI-Bench：作者已提供完整代码仓库（GitHub: VILA-Lab/OpAI-Bench），无需重复实现。
-- AdaPlanBench：作者已提供完整代码与数据集入口（GitHub: JiayuJeff/AdaPlanBench），无需重复实现。
+| Rank | Paper | ArXiv ID | Score | Bucket | Tags |
+|------|-------|----------|-------|--------|------|
+| 🥇 | [QueryAgent-R1](papers/query_agent_r1.md) | 2606.05671 | **82** | STRONG | e-commerce, agent, RL, retrieval |
+| 🥇 | [OpAI-Bench](papers/opai_bench.md) | 2606.06481 | **82** | STRONG | AIGC-detection, content-governance |
+| 🥈 | [AdaPlanBench](papers/adaplan_bench.md) | 2606.05622 | **80** | WEAK→MEDIUM | agent, planning, benchmark |
+| 🥉 | [OneReason](papers/one_reason.md) | 2606.06260 | **79** | STRONG | e-commerce, rec-sys, RL |
+| 🥉 | [camroll-agent](papers/camroll_agent.md) | 2606.05275 | **79** | WEAK | VLM, agent, retrieval |
+| — | [Code2LoRA](papers/code2lora.md) | 2606.06492 | **72** | WEAK | code, PEFT, hypernetwork |
+| — | [Your AI Text is not Mine (AITDNA)](papers/aitdna.md) | 2606.04906 | **70** | MEDIUM | AIGC-detection, benchmark |
+| — | [Stance Simulation Audit](papers/stance_simulation_audit.md) | 2606.06443 | **61** | WEAK | stance, audit, multimodal |
 
-> 注：若后续发现代码仓库为空/缺少核心实现，将在本目录下新增对应的 toy 复现工程。
+---
+
+## Score Rubric
+
+| Dimension | Max |
+|-----------|-----|
+| Innovation | 30 |
+| Experimental SOTA delta | 15 |
+| Experimental quality / ablations | 15 |
+| Efficiency | 10 |
+| Generalization | 5 |
+| Domain relevance (ecom + governance) | 25 |
+| **Total** | **100** |
+
+---
+
+## Code Reproduction (score ≥ 80)
+
+| Paper | Score | Official Code | Reproduction |
+|-------|-------|--------------|--------------|
+| QueryAgent-R1 | 82 | None found | ✅ Reproduced → `code/QueryAgentR1/` |
+| OpAI-Bench | 82 | [VILA-Lab/OpAI-Bench](https://github.com/VILA-Lab/OpAI-Bench) | Authors provided; see link |
+| AdaPlanBench | 80 | [JiayuJeff/AdaPlanBench](https://github.com/JiayuJeff/AdaPlanBench) | Authors provided; see link |

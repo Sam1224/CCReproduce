@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CCReproduce — Daily AI Paper Hub</title>
+<style>
+:root {
+  --bg: #f8f9fa; --card-bg: #fff; --text: #1a1a2e;
+  --accent: #4361ee; --accent2: #7209b7; --meta: #6c757d;
+  --border: #dee2e6; --tag-bg: #e9ecef; --shadow: 0 2px 8px rgba(0,0,0,.08);
+  --strong: #2d6a4f; --weak: #6c757d; --medium: #e76f51;
+  --score-hi: #2d6a4f; --score-mid: #f4a261; --score-lo: #6c757d;
+}
+[data-theme="dark"] {
+  --bg: #0f0f1a; --card-bg: #1a1a2e; --text: #e0e0ef;
+  --accent: #6c8efb; --accent2: #b07de8; --meta: #9a9ab0;
+  --border: #2a2a4a; --tag-bg: #2a2a4a; --shadow: 0 2px 12px rgba(0,0,0,.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Georgia', serif; font-size: 15px; line-height: 1.65; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Header ─── */
+header {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  color: #fff; padding: 32px 24px 24px; text-align: center;
+}
+header h1 { font-size: 1.9rem; letter-spacing: -.5px; }
+header p { margin-top: 6px; opacity: .85; font-size: .95rem; }
+.header-meta { margin-top: 10px; font-size: .8rem; opacity: .7; }
+
+/* ─── Controls ─── */
+.controls {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  padding: 16px 24px; background: var(--card-bg);
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow);
+}
+.controls label { font-size: .85rem; color: var(--meta); white-space: nowrap; }
+.controls input[type=range] { width: 140px; accent-color: var(--accent); }
+#score-display { font-weight: 700; color: var(--accent); min-width: 30px; }
+.controls select, .controls input[type=date] {
+  font-size: .85rem; padding: 4px 8px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--card-bg); color: var(--text);
+}
+.btn {
+  padding: 6px 14px; border-radius: 6px; font-size: .85rem; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+  transition: background .15s;
+}
+.btn:hover { background: var(--tag-bg); }
+.btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.lang-toggle { margin-left: auto; }
+
+/* ─── Grid ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px; padding: 20px 24px;
+}
+.card {
+  background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);
+  box-shadow: var(--shadow); overflow: hidden; transition: transform .15s, box-shadow .15s;
+  display: flex; flex-direction: column;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+
+/* Score badge */
+.card-header { padding: 16px 16px 12px; display: flex; align-items: flex-start; gap: 12px; }
+.score-badge {
+  min-width: 48px; height: 48px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 1.15rem; flex-shrink: 0;
+}
+.score-hi { background: #d8f3dc; color: #1b4332; }
+.score-mid { background: #fff3e0; color: #7c4a00; }
+.score-lo { background: #f1f3f5; color: #555; }
+.score-label { font-size: .5rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.card-title a { font-size: .95rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+
+/* Tags */
+.tags { padding: 0 16px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  padding: 2px 8px; border-radius: 20px; font-size: .72rem;
+  background: var(--tag-bg); color: var(--meta); font-family: monospace;
+}
+.tag.strong { background: #d8f3dc; color: #1b4332; }
+.tag.medium { background: #fff3e0; color: #7c4a00; }
+
+/* Card body */
+.card-body { padding: 0 16px 12px; flex: 1; }
+.card-body p { font-size: .85rem; color: var(--meta); margin-bottom: 8px; }
+.section-toggle {
+  background: none; border: none; color: var(--accent); font-size: .8rem;
+  cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;
+}
+.section-toggle:hover { text-decoration: underline; }
+.expandable { display: none; }
+.expandable.open { display: block; }
+.method-text { font-size: .83rem; line-height: 1.55; margin-top: 6px; color: var(--text); }
+
+/* Metrics table */
+.metrics-table { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: 8px; }
+.metrics-table th { text-align: left; color: var(--meta); font-weight: 600; padding: 3px 6px; border-bottom: 1px solid var(--border); }
+.metrics-table td { padding: 3px 6px; border-bottom: 1px solid var(--border); }
+.metrics-table tr:last-child td { border-bottom: none; }
+
+/* Score breakdown */
+.score-breakdown { margin-top: 10px; }
+.score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: .78rem; }
+.score-dim { flex: 0 0 160px; color: var(--meta); }
+.score-bar-bg { flex: 1; height: 6px; background: var(--tag-bg); border-radius: 3px; }
+.score-bar-fill { height: 6px; border-radius: 3px; background: var(--accent); }
+.score-val { flex: 0 0 40px; text-align: right; font-weight: 600; color: var(--text); }
+
+/* Figure placeholder */
+.figure-area { margin: 8px 0; }
+.figure-placeholder {
+  width: 100%; height: 140px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--tag-bg) 0%, var(--border) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: var(--meta); text-align: center; padding: 10px;
+}
+
+/* Card footer */
+.card-footer {
+  padding: 10px 16px 14px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.card-footer a { font-size: .78rem; }
+.date-chip { font-size: .72rem; color: var(--meta); margin-left: auto; }
+
+/* Empty state */
+.empty { text-align: center; padding: 80px 24px; color: var(--meta); }
+.empty h2 { font-size: 1.2rem; margin-bottom: 8px; }
+
+/* Footer */
+footer { text-align: center; padding: 24px; font-size: .8rem; color: var(--meta); border-top: 1px solid var(--border); }
+
+@media (max-width: 600px) {
+  header h1 { font-size: 1.4rem; }
+  .grid { grid-template-columns: 1fr; padding: 12px; }
+  .controls { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <h1>CCReproduce · Daily AI Paper Hub</h1>
+  <p>E-commerce Content Ecosystem &amp; Influencer Governance — LLM / VLM / Agent / RAG</p>
+  <div class="header-meta">Updated daily at 08:30 GMT+8 · Scores out of 100</div>
+</header>
+
+<div class="controls">
+  <label>Min Score: <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()"> <span id="score-display">0</span></label>
+  <label>Date:
+    <select id="date-picker" onchange="filterCards()">
+      <option value="all">All Dates</option>
+      <option value="2026-06-07" selected>2026-06-07</option>
+    </select>
+  </label>
+  <label>Bucket:
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="MEDIUM">MEDIUM</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </label>
+  <button class="btn lang-toggle" onclick="toggleLang()" id="lang-btn">中文</button>
+  <button class="btn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <h2>No papers match the current filters</h2>
+    <p>Try lowering the minimum score or changing the bucket filter.</p>
+  </div>
+</main>
+
+<footer>CCReproduce · Daily AI Paper Inspection · Domain: E-commerce &amp; Influencer Governance</footer>
+
+<script>
+const lang = { current: 'en' };
+
+function toggleLang() {
+  lang.current = lang.current === 'en' ? 'zh' : 'en';
+  document.getElementById('lang-btn').textContent = lang.current === 'en' ? '中文' : 'English';
+  renderCards();
+}
+
+function toggleTheme() {
+  const body = document.body;
+  body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// ─── Paper data ───
+const PAPERS = [
+  {
+    id: "2606.05671",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Dike Sun, Zheng Zou, Jingtong Zang, et al.",
+    affiliations: "Alibaba International Digital Commerce Group",
+    date: "2026-06-07",
+    score: 82,
+    bucket: "STRONG",
+    tags: ["e-commerce", "agent", "RL", "retrieval", "query-rec"],
+    method_en: "QueryAgent-R1 introduces a Chain-of-Retrieval loop: the agent generates a query, executes it against the real product inventory, observes retrieved products, and refines the query based on alignment with user preferences. A Consistency Reward jointly optimizes CTR proxy and CVR proxy, eliminating the classic click-conversion tension. An Interest Graph memory module compresses long-term user history into a compact representation.",
+    method_zh: "QueryAgent-R1 设计"检索接地"的 Chain-of-Retrieval 循环：生成 query → 在真实商品库执行检索 → 基于检索结果反思并精炼 query。训练中引入 Consistency Reward 同时优化 CTR 与 CVR 代理信号，打破两者对立；记忆模块（Interest Graph）将用户长期交互历史压缩为高效画像。",
+    innovation_en: "First to inject real product retrieval results into the RL reward signal for query recommendation. Closes the query-product alignment gap between CTR and CVR objectives.",
+    innovation_zh: "首次将真实商品库检索结果纳入查询推荐的 RL 奖励信号，从根本上解决"高 CTR 低 CVR"的优化目标错位问题。",
+    metrics: [["Online A/B", "Query CTR", "+2.9%"], ["Online A/B", "Guided CVR", "+3.1%"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.05671", code: "code/QueryAgentR1/" },
+    score_breakdown: { Innovation: [23,30], "SOTA Delta": [13,15], "Exp Quality": [12,15], Efficiency: [7,10], Generalization: [3,5], Relevance: [24,25] },
+    story_arc: "Query recommendation optimizes CTR but ignores CVR → ground query generation in real retrieval + consistency reward aligns both objectives"
+  },
+  {
+    id: "2606.06481",
+    title: "Operation-Guided Progressive Human-to-AI Text Transformation Benchmark for Multi-Granularity AI-Text Detection",
+    authors: "Sondos Mahmoud Bsharat, Jiacheng Liu, Zhiqiang Shen, et al.",
+    affiliations: "MBZUAI, UCL",
+    date: "2026-06-07",
+    score: 82,
+    bucket: "STRONG",
+    tags: ["AIGC-detection", "content-governance", "benchmark", "multi-granularity"],
+    method_en: "OpAI-Bench constructs cumulative revision trajectories (v0–v8) by progressively applying 5 edit operations (polish/paraphrase/style-rewrite/compress/expand) at controlled AI coverage levels, preserving multi-granularity provenance (document/sentence/token/span). 17 detectors are benchmarked, revealing non-monotonic detectability patterns.",
+    method_zh: "OpAI-Bench 将"修订轨迹"作为 benchmark 基本单元，从人类原稿出发按 5 类 AI 编辑操作和固定覆盖比例生成 v0–v8 版本，保留文档/句子/Token/Span 四粒度溯源标注。在 4 个领域评测 17 类检测器，揭示"非单调可检测性"现象。",
+    innovation_en: "Treats revision trajectories (not just final outputs) as benchmark units, enabling controlled analysis of how edit operation type, AI coverage, and revision history shape detectability. Reveals non-monotonic patterns missed by all existing benchmarks.",
+    innovation_zh: "将"修订轨迹"作为 benchmark 一等公民，首次揭示"中等覆盖+压缩操作"往往比全 AI 生成更难检测的非单调性，对平台 AIGC 治理策略有直接指导意义。",
+    metrics: [["reports", "Fast-DetectGPT F1-AI v1", "61.3"], ["reports", "Fast-DetectGPT F1-AI v8", "29.1 (↓ non-monotonic)"], ["essays", "Gemini-Flash peak F1-AI", "71.5 (v3)"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.06481", code: "https://github.com/VILA-Lab/OpAI-Bench" },
+    score_breakdown: { Innovation: [25,30], "SOTA Delta": [12,15], "Exp Quality": [13,15], Efficiency: [5,10], Generalization: [5,5], Relevance: [22,25] },
+    story_arc: "Existing AIGC benchmarks ignore revision trajectory → build trajectory-based benchmark revealing non-monotonic detection failure in mixed-authorship"
+  },
+  {
+    id: "2606.05622",
+    title: "AdaPlanBench: Evaluating Adaptive Planning in Large Language Model Agents under World and User Constraints",
+    authors: "Jiayu Liu, Cheng Qian, Heng Ji, et al.",
+    affiliations: "UIUC",
+    date: "2026-06-07",
+    score: 80,
+    bucket: "WEAK",
+    tags: ["agent", "planning", "benchmark", "constraints", "LLM"],
+    method_en: "AdaPlanBench augments 307 household tasks with dual constraints (world: resource/environment; user: preferences/taboos) using a scalable pipeline. Constraints are not given upfront — they are disclosed only when an agent's plan violates them, forcing iterative replanning with constraint tracking. 10 leading LLMs are evaluated.",
+    method_zh: "AdaPlanBench 为 307 个家庭任务配备双约束（世界约束+用户约束），约束仅在 agent 提出违规计划时才揭示，迫使 agent 多轮修订并跟踪累积约束。在 10 个主流 LLM 上评测，最优模型准确率仅 67.75%。",
+    innovation_en: "Makes constraint induction and tracking explicit measurable skills via violation-triggered progressive disclosure. Dual-constraint construction pipeline is reusable for governance-relevant benchmarks.",
+    innovation_zh: "将"约束归纳"与"约束跟踪"从规划能力的隐含前提提升为可量化维度，违约驱动的渐进揭示机制更贴近真实 agent 部署场景（如平台合规 agent）。",
+    metrics: [["Dual-constraint", "Best Model Accuracy", "67.75%"], ["All models", "Constraint accumulation", "Monotonically ↓"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.05622", code: "https://github.com/JiayuJeff/AdaPlanBench" },
+    score_breakdown: { Innovation: [25,30], "SOTA Delta": [10,15], "Exp Quality": [13,15], Efficiency: [6,10], Generalization: [4,5], Relevance: [22,25] },
+    story_arc: "Existing benchmarks give all constraints upfront → violation-triggered progressive disclosure makes constraint induction/tracking measurable"
+  },
+  {
+    id: "2606.06260",
+    title: "OneReason Technical Report",
+    authors: "OneRec Team (83+ authors)",
+    affiliations: "Kuaishou Inc., ByteDance",
+    date: "2026-06-07",
+    score: 79,
+    bucket: "STRONG",
+    tags: ["recommendation", "e-commerce", "reasoning", "RL", "deployed"],
+    method_en: "OneReason investigates why naive thinking-mode fails in generative recommendation (item tokens lack semantic grounding for CoT) and proposes: (1) perception-enhanced pre-training aligning item tokens with language semantics; (2) 3-level cognition-enhanced CoT (intent → item evaluation → decision); (3) specialize-then-unify RL recipe; (4) Fast-Slow Thinking online architecture balancing quality and latency.",
+    method_zh: "揭示生成式推荐中 thinking-mode 失效原因（item token 缺乏语义感知），提出感知增强预训练+三层认知增强 CoT+Specialize-then-Unify RL 训练+Fast-Slow Thinking 在线架构，在快手多个业务线上实现显著线上收益。",
+    innovation_en: "Diagnoses item token semantic poverty as root cause of thinking-mode failure; provides a complete perception→cognition pathway with Fast-Slow online deployment.",
+    innovation_zh: "首次明确诊断'推荐 item token 语义空洞→thinking-mode 无效'的根本原因，并提供系统性解决方案。Fast-Slow 双路架构直接响应工业效果-延迟 Pareto 前沿。",
+    metrics: [["Online A/B (Kuaishou)", "Conv", "+12.643%"], ["Online A/B", "CVR", "+1.865%"], ["Low-active users", "Revenue", "+13.323%"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.06260" },
+    score_breakdown: { Innovation: [27,30], "SOTA Delta": [13,15], "Exp Quality": [11,15], Efficiency: [7,10], Generalization: [4,5], Relevance: [17,25] },
+    story_arc: "Thinking-mode doesn't work in generative recommendation → diagnose item token semantic poverty → perception-enhanced CoT + Fast-Slow architecture"
+  },
+  {
+    id: "2606.05275",
+    title: "Personal AI Agent for Camera Roll VQA",
+    authors: "Thao Nguyen, Krishna Kumar Singh, Donghyun Kim, Yong Jae Lee, Yuheng Li",
+    affiliations: "U. Wisconsin-Madison, Korea University, Adobe Research",
+    date: "2026-06-07",
+    score: 79,
+    bucket: "WEAK",
+    tags: ["VLM", "agent", "retrieval", "visual-memory", "efficiency"],
+    method_en: "Introduces the camroll dataset (50 users, 31,476 images, 2,500 QA pairs) for personal camera-roll VQA. camroll-agent uses hierarchical memory (event-level summaries + image-level metadata) and a minimal tool set for iterative navigation, reducing token cost from ~750K to ~3.2K (234× compression) vs. naive all-images baseline.",
+    method_zh: "构建 camroll 数据集（50 用户、31,476 张图、2,500 QA 对），提出 camroll-agent：层级记忆+最小工具集的对话式 agent，通过迭代式精确检索将 token 成本从约 750K 压缩至约 3.2K（234× 压缩）。",
+    innovation_en: "Formalizes personal visual memory as a distinct research regime; hierarchical memory design transferable to e-commerce influencer content retrieval and user purchase history understanding.",
+    innovation_zh: "将"个人视觉记忆"作为独立研究对象，层级记忆设计可迁移至达人历史内容检索、用户视觉购买历史理解等电商场景。token 效率量化（234×）为大规模多模态 agent 部署提供工程参考。",
+    metrics: [["MC", "Recall", "88.5%"], ["MC", "Accuracy", "70.5%"], ["Tokens", "camroll-agent vs naive", "3.2K vs 750K (234×)"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.05275", demo: "https://thaoshibe.github.io/camroll" },
+    score_breakdown: { Innovation: [23,30], "SOTA Delta": [11,15], "Exp Quality": [12,15], Efficiency: [10,10], Generalization: [3,5], Relevance: [20,25] },
+    story_arc: "Personalized visual memory requires different handling than general long-context → hierarchical memory agent achieves 234× token reduction with high recall"
+  },
+  {
+    id: "2606.06492",
+    title: "Code2LoRA: Hypernetwork-Generated Adapters for Code Language Models under Software Evolution",
+    authors: "Liliana Hotsko, Yinxi Li, Yuntian Deng, Pengyu Nie",
+    affiliations: "University of Waterloo",
+    date: "2026-06-07",
+    score: 72,
+    bucket: "WEAK",
+    tags: ["code-LM", "LoRA", "hypernetwork", "PEFT", "software-evolution"],
+    method_en: "Code2LoRA encodes a repository into a fixed embedding and uses a hypernetwork to generate repo-specific LoRA adapters in one pass, with zero inference-time token overhead. Code2LoRA-Evo maintains a GRU hidden state updated by commit diffs for evolving codebases.",
+    method_zh: "用超网络将整个代码仓库编码为固定向量，一次性生成仓库专属 LoRA 适配器（0 推理 token 额外开销）。演化版（Code2LoRA-Evo）用 GRU 累积 commit diff 的隐状态，增量更新 adapter 以应对代码漂移。",
+    innovation_en: "Extends hypernetwork-generated LoRA from short-text/document conditioning to full-repository conditioning; evolution-aware incremental adapter updates.",
+    innovation_zh: "将超网络 LoRA 从短文本/单文档条件扩展到全仓库条件，并提出演化感知的增量更新机制，解决仓库知识随 commit 漂移的问题。",
+    metrics: [["Static, Cross-repo", "EM", "63.8%"], ["Evo, Cross-repo", "EM vs shared LoRA", "+5.2pp"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.06492", code: "https://anonymous.4open.science/r/code2lora-6857" },
+    score_breakdown: { Innovation: [26,30], "SOTA Delta": [12,15], "Exp Quality": [13,15], Efficiency: [8,10], Generalization: [4,5], Relevance: [9,25] },
+    story_arc: "Code LMs need repo context but long-input/per-repo-finetuning is costly → hypernetwork generates repo-LoRA in one pass with zero inference overhead"
+  },
+  {
+    id: "2606.04906",
+    title: "'Your AI Text is not Mine': Redefining and Evaluating AI-generated Text Detection under Realistic Assumptions",
+    authors: "Nils Dycke, Marina Sakharova, Nico Daheim, Iryna Gurevych",
+    affiliations: "TU Darmstadt / UKP Lab",
+    date: "2026-06-07",
+    score: 70,
+    bucket: "MEDIUM",
+    tags: ["AIGC-detection", "benchmark", "content-governance", "realistic"],
+    method_en: "Systematically defines multiple AIGC text notions (full generation, AI-assisted writing, AI rewriting, etc.) and collects AITDNA, a benchmark of real human-AI co-authored texts annotated with full genesis information (edit history + AI interaction logs). Shows existing detectors fail on realistic mixed-authorship.",
+    method_zh: "系统定义多种 AIGC 文本概念，收集真实人机共同创作文本，标注完整 genesis 信息（edit history + AI 交互历史），构建 AITDNA Benchmark。揭示现有检测器在"现实混合创作"场景下的普遍失效。",
+    innovation_en: "Definitional clarity: establishes a taxonomy of AIGC notions before building benchmarks. AITDNA's genesis annotation captures the full creation process — the most granular real-world AIGC dataset.",
+    innovation_zh: "定义先行——厘清'什么是 AIGC'的共识性框架，与 OpAI-Bench 互补：后者关注受控渐进修订，AITDNA 关注真实多样创作模式。",
+    metrics: [["AITDNA", "Dataset Scale", "1,821 conversations"], ["Stance simulation", "Accuracy", "77.64 / Macro-F1 78.10"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.04906" },
+    score_breakdown: { Innovation: [22,30], "SOTA Delta": [10,15], "Exp Quality": [11,15], Efficiency: [5,10], Generalization: [4,5], Relevance: [18,25] },
+    story_arc: "AIGC detection benchmarks use implicit inconsistent assumptions → systematically define AIGC notions and build AITDNA with full genesis annotations"
+  },
+  {
+    id: "2606.06443",
+    title: "Revising Context, Shifting Simulated Stance: Auditing LLM-Based Stance Simulation in Online Discussions",
+    authors: "Xinnong Zhang, Wanting Shan, Hanjia Lyu, Zhongyu Wei, Jiebo Luo",
+    affiliations: "Fudan University, University of Rochester",
+    date: "2026-06-07",
+    score: 61,
+    bucket: "WEAK",
+    tags: ["stance-detection", "audit", "multimodal", "social-media"],
+    method_en: "Proposes counterfactual context revision to audit LLM stance simulation: simulate stance under original context, apply controlled text-only or meme-based multimodal revisions, re-simulate, and measure transition rate. 1,821 Reddit conversations about AI models.",
+    method_zh: "提出"反事实上下文修订"审计框架：在原对话上下文中模拟用户立场，通过受控文本或多模态（meme）修订改变上下文后重新模拟，测量立场转移率与方向性偏移。数据：1,821 段 Reddit 对话。",
+    innovation_en: "Introduces counterfactual context revision + meme-based multimodal extension as an audit dimension for LLM stance simulation reliability.",
+    innovation_zh: "为'LLM 作为社会意见模拟器'提供系统性审计工具，引入 meme 等多模态上下文，揭示 LLM 立场模拟对语义无关上下文变化的高度敏感性。",
+    metrics: [["Reddit", "Dataset size", "1,821 conversations"], ["Base simulation", "Accuracy", "77.64"], ["Base simulation", "Macro F1", "78.10"]],
+    links: { arxiv: "https://arxiv.org/abs/2606.06443" },
+    score_breakdown: { Innovation: [18,30], "SOTA Delta": [8,15], "Exp Quality": [10,15], Efficiency: [7,10], Generalization: [3,5], Relevance: [15,25] },
+    story_arc: "LLM stance simulation may reflect context bias not user beliefs → counterfactual context revision reveals high sensitivity to semantically independent changes"
+  }
+];
+
+function scoreColor(score) {
+  if (score >= 80) return 'score-hi';
+  if (score >= 65) return 'score-mid';
+  return 'score-lo';
+}
+
+function bucketTag(bucket) {
+  if (bucket === 'STRONG') return 'strong';
+  if (bucket === 'MEDIUM') return 'medium';
+  return '';
+}
+
+function renderCard(paper) {
+  const isZh = lang.current === 'zh';
+  const scoreClass = scoreColor(paper.score);
+  const cardId = `card-${paper.id.replace('.', '_')}`;
+
+  const metricsRows = paper.metrics.map(([ds, metric, val]) =>
+    `<tr><td>${ds}</td><td>${metric}</td><td><strong>${val}</strong></td></tr>`
+  ).join('');
+
+  const breakdownRows = Object.entries(paper.score_breakdown).map(([dim, [val, max]]) => {
+    const pct = val / max * 100;
+    return `<div class="score-row">
+      <span class="score-dim">${dim}</span>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <span class="score-val">${val}/${max}</span>
+    </div>`;
+  }).join('');
+
+  const links = Object.entries(paper.links || {}).map(([name, url]) =>
+    `<a href="${url}" target="_blank">[${name}]</a>`
+  ).join(' ');
+
+  return `<div class="card" id="${cardId}" data-score="${paper.score}" data-date="${paper.date}" data-bucket="${paper.bucket}">
+    <div class="card-header">
+      <div class="score-badge ${scoreClass}">
+        <span>${paper.score}</span>
+        <span class="score-label">Score</span>
+      </div>
+      <div>
+        <div class="card-title"><a href="${paper.links?.arxiv || '#'}" target="_blank">${paper.title}</a></div>
+        <div style="font-size:.78rem; color:var(--meta); margin-top:4px">${paper.authors}</div>
+        <div style="font-size:.75rem; color:var(--meta)">${paper.affiliations}</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag ${bucketTag(paper.bucket)}">${paper.bucket}</span>
+      ${paper.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+    <div class="card-body">
+      <p style="font-size:.78rem;font-style:italic;color:var(--meta)">${paper.story_arc}</p>
+
+      <button class="section-toggle" onclick="toggle('method-${cardId}')">▶ ${isZh ? '方法概述' : 'Method Overview'}</button>
+      <div class="expandable" id="method-${cardId}">
+        <div class="method-text">${isZh ? paper.method_zh : paper.method_en}</div>
+      </div>
+
+      <button class="section-toggle" onclick="toggle('innov-${cardId}')" style="margin-top:6px">▶ ${isZh ? '创新点' : 'Innovation'}</button>
+      <div class="expandable" id="innov-${cardId}">
+        <div class="method-text">${isZh ? paper.innovation_zh : paper.innovation_en}</div>
+      </div>
+
+      <button class="section-toggle" onclick="toggle('metrics-${cardId}')" style="margin-top:6px">▶ ${isZh ? '关键指标' : 'Key Metrics'}</button>
+      <div class="expandable" id="metrics-${cardId}">
+        <table class="metrics-table">
+          <thead><tr><th>Dataset</th><th>Metric</th><th>Value</th></tr></thead>
+          <tbody>${metricsRows}</tbody>
+        </table>
+      </div>
+
+      <button class="section-toggle" onclick="toggle('score-${cardId}')" style="margin-top:6px">▶ ${isZh ? '评分明细' : 'Score Breakdown'}</button>
+      <div class="expandable" id="score-${cardId}">
+        <div class="score-breakdown">${breakdownRows}</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      ${links}
+      <span class="date-chip">${paper.date} · arXiv:${paper.id}</span>
+    </div>
+  </div>`;
+}
+
+function toggle(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  const btn = el.previousElementSibling;
+  if (btn) btn.textContent = btn.textContent.replace(/^[▶▼]/, el.classList.contains('open') ? '▼' : '▶');
+}
+
+function renderCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const selDate = document.getElementById('date-picker').value;
+  const selBucket = document.getElementById('bucket-filter').value;
+
+  document.getElementById('score-display').textContent = minScore;
+
+  const filtered = PAPERS.filter(p => {
+    if (p.score < minScore) return false;
+    if (selDate !== 'all' && p.date !== selDate) return false;
+    if (selBucket !== 'all' && !p.bucket.startsWith(selBucket)) return false;
+    return true;
+  });
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty-state');
+  grid.innerHTML = filtered.map(renderCard).join('');
+  empty.style.display = filtered.length ? 'none' : 'block';
+}
+
+function filterCards() { renderCards(); }
+
+// Initial render
+renderCards();
+</script>
+</body>
+</html>
