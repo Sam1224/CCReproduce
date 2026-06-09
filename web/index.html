@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Inspector</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --card-bg: #ffffff;
+    --accent: #2d5a8e;
+    --accent-light: #e8f0fb;
+    --strong: #1a7a4a;
+    --weak: #7a5a1a;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #ddd;
+    --tag-bg: #eef2f7;
+    --score-high: #1a7a4a;
+    --score-mid: #e07b00;
+    --score-low: #999;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: 'Georgia', serif; color: var(--text); font-size: 15px; }
+
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+  header .subtitle { font-size: 0.82rem; opacity: 0.8; margin-top: 3px; }
+  .lang-toggle {
+    display: flex; gap: 6px;
+  }
+  .lang-btn {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    color: white; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.82rem;
+    transition: background 0.2s;
+  }
+  .lang-btn.active, .lang-btn:hover { background: rgba(255,255,255,0.3); }
+
+  .controls {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 12px 32px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+  }
+  .controls label { font-size: 0.82rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .controls input[type=range] { width: 120px; accent-color: var(--accent); }
+  .controls select, .controls input[type=date] {
+    border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px;
+    font-size: 0.82rem; color: var(--text); background: white;
+  }
+  #score-display { font-weight: 700; color: var(--accent); min-width: 24px; }
+
+  .main { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+
+  .date-header {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px;
+  }
+  .date-header h2 { font-size: 1.1rem; color: var(--accent); }
+  .date-header .count { font-size: 0.82rem; color: var(--muted); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+
+  .card {
+    background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .card.hidden { display: none; }
+
+  .card-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--border); }
+  .card-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-title { font-size: 0.97rem; font-weight: 700; line-height: 1.35; flex: 1; }
+  .score-badge {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; color: white;
+  }
+  .score-high { background: var(--score-high); }
+  .score-mid  { background: var(--score-mid); }
+  .score-low  { background: var(--score-low); }
+
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag {
+    font-size: 0.72rem; padding: 2px 8px; border-radius: 12px;
+    background: var(--tag-bg); color: var(--muted);
+  }
+  .tag.strong { background: #d4edda; color: #155724; }
+  .tag.weak   { background: #fff3cd; color: #856404; }
+
+  .card-body { padding: 14px 18px; flex: 1; }
+  .section-label {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .card-text { font-size: 0.87rem; color: #333; line-height: 1.55; }
+  .expand-btn {
+    background: none; border: none; color: var(--accent);
+    font-size: 0.8rem; cursor: pointer; padding: 2px 0; text-decoration: underline;
+  }
+
+  .figure-block {
+    background: #f8f9fa; border-radius: 6px; padding: 12px; margin: 10px 0;
+    font-family: 'Courier New', monospace; font-size: 0.75rem; color: #444;
+    white-space: pre; overflow-x: auto;
+  }
+
+  .metrics-block {
+    margin-top: 10px; background: var(--accent-light); border-radius: 6px; padding: 10px 12px;
+  }
+  .metrics-block table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .metrics-block th { text-align: left; color: var(--muted); font-weight: 600; padding-bottom: 4px; }
+  .metrics-block td { padding: 2px 8px 2px 0; }
+  .metrics-val { font-weight: 700; color: var(--score-high); }
+
+  .score-breakdown {
+    margin-top: 10px; font-size: 0.8rem;
+  }
+  .score-row { display: flex; justify-content: space-between; padding: 3px 0;
+    border-bottom: 1px dashed var(--border); }
+  .score-row:last-child { border: none; font-weight: 700; color: var(--accent); }
+
+  .card-footer { padding: 10px 18px; background: #fafafa; border-top: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+  .card-footer a { font-size: 0.8rem; color: var(--accent); text-decoration: none; }
+  .card-footer a:hover { text-decoration: underline; }
+  .code-link { background: var(--accent-light); padding: 3px 10px; border-radius: 4px; }
+  .affil { font-size: 0.75rem; color: var(--muted); }
+
+  .toggle-section {
+    display: flex; gap: 10px; margin-top: 10px; font-size: 0.78rem; flex-wrap: wrap;
+  }
+  .toggle-btn {
+    background: var(--tag-bg); border: none; cursor: pointer;
+    padding: 3px 10px; border-radius: 4px; color: var(--muted);
+  }
+  .toggle-btn.active { background: var(--accent-light); color: var(--accent); }
+
+  .collapsible { overflow: hidden; }
+  .collapsible.collapsed { max-height: 0; }
+
+  .no-papers {
+    grid-column: 1/-1; text-align: center; padding: 48px; color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .coverage-table {
+    width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;
+  }
+  .coverage-table th { background: var(--accent); color: white; padding: 8px 12px; text-align: left; }
+  .coverage-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+  .coverage-table tr:nth-child(even) td { background: #f8f9fa; }
+  .ok  { color: var(--score-high); font-weight: 600; }
+  .err { color: #dc3545; }
+
+  details summary { cursor: pointer; color: var(--accent); font-size: 0.85rem; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce — Daily AI Paper Inspector</h1>
+    <div class="subtitle">Domain: E-commerce Content Ecosystem &amp; Influencer Governance</div>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')" id="btn-zh">中文</button>
+  </div>
+</header>
+
+<div class="controls">
+  <label>
+    Min Score:
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()">
+    <span id="score-display">0</span>
+  </label>
+  <label>
+    Date:
+    <input type="date" id="date-picker" value="2026-06-08" onchange="filterCards()">
+  </label>
+  <label>
+    Domain:
+    <select id="domain-filter" onchange="filterCards()">
+      <option value="">All</option>
+      <option value="content-moderation">Content Moderation</option>
+      <option value="recommendation">Recommendation</option>
+      <option value="sentiment">Sentiment Analysis</option>
+      <option value="governance">Platform Governance</option>
+    </select>
+  </label>
+</div>
+
+<div class="main">
+
+  <div class="date-header">
+    <h2>2026-06-08 · GMT+8</h2>
+    <span class="count" id="visible-count">4 papers found</span>
+  </div>
+
+  <!-- Source Coverage -->
+  <details>
+    <summary>Source Coverage Table (28 sources)</summary>
+    <table class="coverage-table">
+      <thead><tr><th>Source</th><th>Category</th><th>Attempted</th><th>Status</th><th>Candidates</th></tr></thead>
+      <tbody>
+        <tr><td>arxiv cs.CL/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>arxiv cs.CV/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>arxiv cs.IR/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>arxiv cs.MM/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>arxiv cs.LG/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>arxiv cs.AI/new</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>HuggingFace papers/date/2026-06-08</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>HuggingFace papers/trending</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>Google DeepMind blog</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>Google Research blog</td><td>blog</td><td>no</td><td>not attempted</td><td>0</td></tr>
+        <tr><td>Meta AI Research</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>Anthropic News</td><td>blog</td><td>no</td><td>not attempted</td><td>0</td></tr>
+        <tr><td>ByteDance Seed Research</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>Meituan Tech</td><td>blog</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>Qwen Blog (low prio)</td><td>blog</td><td>no</td><td>not attempted</td><td>0</td></tr>
+        <tr><td>量子位 QbitAI</td><td>wechat</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>机器之心 jiqizhixin.com</td><td>wechat</td><td>yes (WebSearch)</td><td>no June 8 match</td><td>0</td></tr>
+        <tr><td>新智元 mp.weixin.qq.com</td><td>wechat</td><td>yes (WebSearch)</td><td>no June 8 match</td><td>0</td></tr>
+        <tr><td>OpenAI News (WebSearch)</td><td>blog</td><td>yes</td><td>200 OK</td><td>0</td></tr>
+        <tr><td>DeepSeek (WebSearch)</td><td>blog</td><td>yes</td><td>200 OK</td><td>0</td></tr>
+        <tr><td>Xiaohongshu/RedTech (WebSearch)</td><td>wechat</td><td>yes</td><td>no papers found</td><td>0</td></tr>
+        <tr><td>Kuaishou Tech (WebSearch)</td><td>wechat</td><td>yes</td><td class="ok">200 OK</td><td>1</td></tr>
+        <tr><td>Tencent Hunyuan (WebSearch)</td><td>blog</td><td>yes</td><td>no papers found</td><td>0</td></tr>
+        <tr><td>Semantic Scholar API</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>intoai.pub weekly digest</td><td>aggregator</td><td>yes</td><td class="err">403 Forbidden</td><td>0</td></tr>
+        <tr><td>WebSearch fallback (arxiv 2606.*)</td><td>aggregator</td><td>yes</td><td class="ok">200 OK</td><td>4</td></tr>
+        <tr><td>OpenReview ICLR 2026</td><td>conf</td><td>no</td><td>not yet active</td><td>0</td></tr>
+        <tr><td>OpenReview NeurIPS 2026</td><td>conf</td><td>no</td><td>not yet active</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Paper Cards -->
+  <div class="cards" id="cards-container"></div>
+
+</div>
+
+<script>
+const PAPERS = [
+  {
+    id: "univid",
+    date: "2026-06-08",
+    arxiv: "2606.05748",
+    bucket: "STRONG",
+    score: 87,
+    domains: ["content-moderation", "governance"],
+    title: "UNIVID: Unified Vision-Language Model for Video Moderation",
+    authors: "Kejuan Yang, Yizhuo Zhang, Mingyuan Du, Yue Zhang, Dixin Zheng, Kaili Zhao, Yang Xiao, Hanzhong Liang, Kenan Xiao",
+    affil: "ByteDance",
+    method_en: "UNIVID replaces 1,000+ policy-specific models with a single VLM backbone that generates <em>policy-aware captions</em> as an interpretable intermediate representation. The caption embedding drives a three-stage production pipeline: (1) Risk Filter for high-throughput early screening, (2) Moderation Actor with two fine-tuned variants (precision- and recall-oriented), and (3) Trend Governance that clusters cached caption embeddings to detect emerging violations. Training uses a hybrid strategy combining expert annotations with high-quality synthetic data.",
+    method_zh: "UNIVID 用单一政策感知 VLM 主干（LLaVA-OV 架构）替代千余个违规专项模型。模型生成政策感知字幕，驱动三阶段审核流水线：①风险过滤（嵌入相似度快速筛查）、②违规判决（精准/召回两种变体）、③趋势治理（字幕嵌入聚类发现新兴话题）。训练采用人工标注与高质量合成数据混合策略。",
+    innovation_en: "First industrial-scale report of a single captioning VLM unifying cross-category video moderation. Policy-aware captions serve as a reusable intermediate that enables human verification, multi-task reuse, and trend clustering simultaneously.",
+    innovation_zh: "首次以单一字幕 VLM 统一跨类别视频审核；政策感知字幕作为可复用中间层，同时支持人工核查、多任务复用和趋势聚类。",
+    figure: `Video + Policy Text
+      │
+ ┌────▼─────────────────────┐
+ │  UNIVID VLM              │
+ │  Visual Encoder          │
+ │  + LLM Backbone          │
+ │  + Policy Conditioning   │
+ └────────────────┬─────────┘
+    Policy-Aware Caption
+    Caption Embedding
+         │
+  ┌──────┴──────────┬──────────────┐
+  │Risk Filter      │Moderation    │Trend
+  │(embedding sim)  │Actor (cls)   │Governance
+  └─────────────────┴──────────────┘`,
+    metrics: [
+      {dataset:"TikTok Production", metric:"Violation Leakage ↓", value:"-42.7% (rel)", baseline:"Prior system"},
+      {dataset:"TikTok Production", metric:"Overkill Rate ↓",     value:"-37.0% (rel)", baseline:"Prior system"},
+      {dataset:"Engineering",       metric:"# Models",             value:"1 backbone",  baseline:"1,000+ models"},
+    ],
+    score_breakdown: [
+      {dim:"Innovation (30)",      score:26},
+      {dim:"SOTA Delta (15)",      score:13},
+      {dim:"Exp. Quality (15)",    score:11},
+      {dim:"Efficiency (10)",      score:9},
+      {dim:"Generalization (5)",   score:4},
+      {dim:"Domain Relevance (25)",score:24},
+    ],
+    code_path: "2026-06-08/code/UNIVID/",
+    github: "https://github.com/Sam1224/CCReproduce/tree/daily/2026-06-08/2026-06-08/code/UNIVID",
+  },
+  {
+    id: "queryagent_r1",
+    date: "2026-06-08",
+    arxiv: "2606.05671",
+    bucket: "STRONG",
+    score: 77,
+    domains: ["recommendation"],
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Dike Sun, Zheng Zou, Jingtong Zang, Qi Sun, Huaipeng Zhao, Tao Luo, Xiaoyi Zeng",
+    affil: "Alibaba International Digital Commercial Group",
+    method_en: "QueryAgent-R1 is a memory-augmented agentic RL framework for e-commerce query recommendation. The agent generates candidate queries, validates them via real-time product retrieval (Chain-of-Retrieval), and is trained with a Consistency Reward that jointly optimises query CTR and product CVR. User long-term interests are encoded as an Interest Graph for efficient personalisation.",
+    method_zh: "QueryAgent-R1 是记忆增强的 Agentic RL 框架。Agent 生成候选查询 → 调用真实商品检索引擎验证（Chain-of-Retrieval）→ 一致性奖励同时优化查询点击率（CTR）和商品转化率（CVR）。用户长期行为以兴趣图抽象存储支持高效个性化。",
+    innovation_en: "Chain-of-Retrieval closes the query-product feedback loop: the agent observes actual inventory before committing to a query. Consistency Reward eliminates the structural CTR-CVR decoupling that plagues existing query recommendation systems.",
+    innovation_zh: "Chain-of-Retrieval 将商品检索闭合进查询生成推理链；一致性奖励解决 CTR 与 CVR 优化目标分离的结构性缺陷。",
+    figure: `User History → Interest Graph
+                  │
+      ┌───────────▼───────────────────┐
+      │  QueryAgent-R1 (LLM Agent)   │
+      │  1. Generate candidate query  │
+      │  2. Retrieve products (live)  │◄─ Chain-of-Retrieval
+      │  3. Validate & refine         │
+      └───────────────────────────────┘
+                  │  Consistency Reward
+          RL: CTR + CVR_signal
+                  │
+          Final Query Recs`,
+    metrics: [
+      {dataset:"AIDC Platform (tens-of-millions DAU)",metric:"CTR + CVR",value:"Joint improvement",baseline:"Prior system"},
+      {dataset:"AIDC Proprietary + Public",           metric:"Offline Metrics",value:"Improved",  baseline:"Existing methods"},
+    ],
+    score_breakdown: [
+      {dim:"Innovation (30)",      score:24},
+      {dim:"SOTA Delta (15)",      score:9},
+      {dim:"Exp. Quality (15)",    score:10},
+      {dim:"Efficiency (10)",      score:7},
+      {dim:"Generalization (5)",   score:4},
+      {dim:"Domain Relevance (25)",score:23},
+    ],
+    code_path: null,
+  },
+  {
+    id: "onereason",
+    date: "2026-06-08",
+    arxiv: "2606.06260",
+    bucket: "STRONG",
+    score: 73,
+    domains: ["recommendation", "governance"],
+    title: "OneReason Technical Report",
+    authors: "OneRec Team (Kuaishou, 83 contributors)",
+    affil: "Kuaishou Technology",
+    method_en: "Technical report on exploring reasoning capabilities in the OneRec family of generative recommenders deployed at Kuaishou (short-video, live-streaming, ads, e-commerce). The study finds that Chain-of-Thought reasoning (OneRec-Think) applied to item-token sequences offers no significant advantage over the non-thinking baseline. The report diagnoses root causes and charts a roadmap for mixed item-text reasoning.",
+    method_zh: "系统报告快手 OneRec 生成式推荐族（已覆盖短视频/直播/广告/电商）中推理能力的探索。发现 Chain-of-Thought 推理（OneRec-Think）在 item token 空间中无法构造有效 CoT，线上 A/B 实验显示 thinking mode 相对 non-thinking mode 无显著优势。",
+    innovation_en: "First public industrial report revealing that CoT reasoning provides no significant gain in generative recommendation. Diagnoses why item-only token sequences cannot carry meaningful reasoning chains, guiding future research toward hybrid item-text CoT.",
+    innovation_zh: "首次公开"CoT 推理在生成式推荐中无显著优势"的工业级负向结论，指导学术界和工业界未来研究方向。",
+    figure: `User Sequence
+     [item1, item2, ..., itemN]
+           │
+   ┌───────▼────────────────────┐
+   │  OneRec (Generative Rec)  │
+   │  ─────────────────────    │
+   │  Thinking mode:           │
+   │  [think]...[/think] item  │
+   │  ≈ Non-thinking mode?     │  ← KEY FINDING
+   └───────────────────────────┘
+   Key: item tokens lack semantic
+   density for meaningful CoT`,
+    metrics: [
+      {dataset:"Kuaishou (online A/B)",metric:"App Stay Time",value:"+0.159%",baseline:"OneRec base"},
+      {dataset:"Kuaishou (online A/B)",metric:"Watch Time",   value:"+0.169%",baseline:"OneRec base"},
+      {dataset:"Kuaishou (online A/B)",metric:"Follows",      value:"+0.431%",baseline:"OneRec base"},
+      {dataset:"Amazon Beauty (offline)",metric:"Recall@5",  value:"0.0563",  baseline:"0.0460"},
+    ],
+    score_breakdown: [
+      {dim:"Innovation (30)",      score:20},
+      {dim:"SOTA Delta (15)",      score:9},
+      {dim:"Exp. Quality (15)",    score:10},
+      {dim:"Efficiency (10)",      score:7},
+      {dim:"Generalization (5)",   score:5},
+      {dim:"Domain Relevance (25)",score:22},
+    ],
+    code_path: null,
+  },
+  {
+    id: "beyond_generative",
+    date: "2026-06-08",
+    arxiv: "2606.05713",
+    bucket: "WEAK",
+    score: 55,
+    domains: ["sentiment"],
+    title: "Beyond Generative Decoding: Discriminative Hidden-State Readout from a Native Omni-Modal LLM for Multimodal Sentiment Analysis",
+    authors: "Bin Wen, Tien-Ping Tan",
+    affil: "Universiti Sains Malaysia",
+    method_en: "Instead of prompting an omni-modal LLM to generate a sentiment score as text tokens, the method attaches a linear regression head directly to the final-layer hidden state of the last non-padding token, outputting a continuous sentiment score in a single forward pass. The backbone is Qwen2.5-Omni-7B (audio+video+text). Fine-tuned via QLoRA (4-bit, 1.14% trainable params) on a single RTX 5090.",
+    method_zh: "将情感分析从生成式解码改为判别式隐藏态读取：在 Qwen2.5-Omni-7B 末层隐藏态接线性回归头，单次前向传播直接输出连续情感分值。QLoRA 微调（4-bit，1.14% 可训参数），单卡 RTX 5090 即可训练完整 7B 流水线。",
+    innovation_en: "Elegant reformulation of LMM sentiment regression: avoids autoregressive decoding entirely by reading the hidden state directly. Practical contribution: a 7B omni-modal model trainable on consumer hardware.",
+    innovation_zh: "绕过自回归解码，直接从隐藏态读取情感回归值；使 7B 全模态模型在消费级 GPU 上可训。",
+    figure: `[Video frames + Audio + Text]
+           │
+    Qwen2.5-Omni-7B (Thinker)
+    ┌──────────────────────────┐
+    │  Audio Enc   Video Enc  │
+    │  Text Enc               │
+    │         LLM Layers      │
+    └──────────────┬───────────┘
+    last token hidden state h∈ℝᵈ
+           │
+    Linear Head: W·h + b
+           │
+    sentiment score ∈ ℝ`,
+    metrics: [
+      {dataset:"CMU-MOSI / CMU-MOSEI",metric:"MAE, Acc-7, F1",value:"Competitive",baseline:"Prior SOTA"},
+      {dataset:"Hardware",            metric:"Peak VRAM",       value:"10-21 GB",   baseline:"RTX 5090 (32GB)"},
+      {dataset:"Training",            metric:"Trainable Params",value:"1.14%",      baseline:"Full finetune ~100%"},
+    ],
+    score_breakdown: [
+      {dim:"Innovation (30)",      score:20},
+      {dim:"SOTA Delta (15)",      score:7},
+      {dim:"Exp. Quality (15)",    score:7},
+      {dim:"Efficiency (10)",      score:9},
+      {dim:"Generalization (5)",   score:2},
+      {dim:"Domain Relevance (25)",score:10},
+    ],
+    code_path: null,
+  },
+];
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  renderCards();
+}
+
+function filterCards() {
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  document.getElementById('score-display').textContent = minScore;
+  const domain = document.getElementById('domain-filter').value;
+  const dateVal = document.getElementById('date-picker').value;
+
+  let visible = 0;
+  document.querySelectorAll('.card').forEach(card => {
+    const score = parseInt(card.dataset.score);
+    const domains = JSON.parse(card.dataset.domains);
+    const date = card.dataset.date;
+    const show = score >= minScore
+      && (domain === '' || domains.includes(domain))
+      && (dateVal === '' || date === dateVal);
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('visible-count').textContent = `${visible} paper${visible !== 1 ? 's' : ''} shown`;
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = '';
+  PAPERS.forEach(p => {
+    const methodHtml = currentLang === 'en' ? p.method_en : p.method_zh;
+    const innHtml    = currentLang === 'en' ? p.innovation_en : p.innovation_zh;
+    const scoreRows  = p.score_breakdown.map(r =>
+      `<div class="score-row"><span>${r.dim}</span><span>${r.score}</span></div>`
+    ).join('');
+    const total = p.score_breakdown.reduce((a,r) => a+r.score, 0);
+    const metricRows = p.metrics.map(m =>
+      `<tr><td>${m.dataset}</td><td>${m.metric}</td><td class="metrics-val">${m.value}</td><td>${m.baseline}</td></tr>`
+    ).join('');
+    const codeHtml = p.code_path
+      ? `<a href="${p.github}" target="_blank" class="code-link">📂 Code</a>`
+      : '';
+    const card = `
+<div class="card" data-score="${p.score}" data-domains='${JSON.stringify(p.domains)}' data-date="${p.date}">
+  <div class="card-header">
+    <div class="card-meta">
+      <div class="card-title">${p.title}</div>
+      <div class="score-badge ${scoreClass(p.score)}">${p.score}</div>
+    </div>
+    <div class="card-tags">
+      <span class="tag ${p.bucket.toLowerCase()}">${p.bucket}</span>
+      ${p.domains.map(d => `<span class="tag">${d}</span>`).join('')}
+      <span class="tag">${p.date}</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="section-label">${currentLang==='en'?'Method':'方法'}</div>
+    <div class="card-text">${methodHtml}</div>
+
+    <div style="margin-top:10px">
+      <div class="section-label">${currentLang==='en'?'Innovation':'创新点'}</div>
+      <div class="card-text">${innHtml}</div>
+    </div>
+
+    <div class="toggle-section">
+      <button class="toggle-btn" onclick="toggle(this,'fig-${p.id}')">${currentLang==='en'?'Figure':'图示'}</button>
+      <button class="toggle-btn" onclick="toggle(this,'met-${p.id}')">${currentLang==='en'?'Metrics':'指标'}</button>
+      <button class="toggle-btn" onclick="toggle(this,'scr-${p.id}')">${currentLang==='en'?'Scores':'评分'}</button>
+    </div>
+
+    <div id="fig-${p.id}" class="collapsible collapsed">
+      <div class="figure-block">${p.figure}</div>
+    </div>
+
+    <div id="met-${p.id}" class="collapsible collapsed">
+      <div class="metrics-block">
+        <table>
+          <thead><tr><th>Dataset</th><th>Metric</th><th>Result</th><th>Baseline</th></tr></thead>
+          <tbody>${metricRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="scr-${p.id}" class="collapsible collapsed">
+      <div class="score-breakdown">
+        ${scoreRows}
+        <div class="score-row"><span>Total (100)</span><span>${total}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <span class="affil">👤 ${p.authors.split(',').slice(0,2).join(', ')}… · ${p.affil}</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      ${codeHtml}
+      <a href="https://arxiv.org/abs/${p.arxiv}" target="_blank">📄 arXiv:${p.arxiv}</a>
+    </div>
+  </div>
+</div>`;
+    container.insertAdjacentHTML('beforeend', card);
+  });
+  filterCards();
+}
+
+function toggle(btn, id) {
+  const el = document.getElementById(id);
+  const collapsed = el.classList.toggle('collapsed');
+  btn.classList.toggle('active', !collapsed);
+  if (!collapsed) el.style.maxHeight = el.scrollHeight + 'px';
+  else el.style.maxHeight = '0';
+}
+
+renderCards();
+</script>
+</body>
+</html>
