@@ -1,0 +1,46 @@
+from __future__ import annotations
+
+import json
+import os
+import random
+from dataclasses import asdict, dataclass
+
+import numpy as np
+import torch
+
+
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
+
+
+@dataclass
+class Checkpoint:
+    config: dict
+    model_state: dict
+
+
+def save_checkpoint(path: str, *, config: dict, model: torch.nn.Module) -> None:
+    ensure_dir(os.path.dirname(path))
+    payload = {
+        "config": config,
+        "model_state": model.state_dict(),
+    }
+    torch.save(payload, path)
+
+
+def load_checkpoint(path: str, device: torch.device) -> tuple[dict, dict]:
+    payload = torch.load(path, map_location=device)
+    return payload["config"], payload["model_state"]
+
+
+def save_json(path: str, data: dict) -> None:
+    ensure_dir(os.path.dirname(path))
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)

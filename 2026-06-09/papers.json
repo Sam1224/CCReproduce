@@ -1,0 +1,411 @@
+{
+  "inspection_date": "2026-06-09",
+  "papers": [
+    {
+      "id": "2606.08480",
+      "title": "Adaptive Loss Balancing for Noise-Robust GRPO in Generative Recommendation",
+      "authors": ["Kewei Xu", "Junbo Qi", "Yanyan Zou", "Pengfei Zhang", "Xingzhi Yao", "Shengjie Li"],
+      "affiliations": ["JD.com", "University of Electronic Science and Technology of China", "Waseda University"],
+      "published_date": "2026-06-07",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.08480",
+        "pdf": "https://arxiv.org/pdf/2606.08480",
+        "reproduce": "https://github.com/Sam1224/CCReproduce/tree/main/2026-06-09/AdaGRPO"
+      },
+      "tags": ["推荐系统", "生成式召回", "RL/GRPO", "工业落地"],
+      "method_overview_zh": "面向生成式召回（GR）引入 RL 微调时，论文指出生产 ranker 作为 reward model 会因曝光偏置而在不同样本上呈现不一致的可靠性，导致“统一施加 GRPO”在部分样本上变成噪声或反向梯度。AdaGRPO 把 reward-guided 优化改为“选择性准入”：以 NLL/SFT 作为全局锚点，仅当同时满足 policy-side difficulty（模型对该样本不确定）与 reward discriminability（ranker 能把 GT 与负例拉开）时才启用 GRPO 更新，从而提升稳定性与线上收益。",
+      "method_overview_en": "AdaGRPO studies RL post-training for generative retrieval under a noisy production ranker reward. It reframes reward-guided optimization as selective admission: SFT (NLL) anchors every instance, while GRPO updates are gated by (1) policy-side difficulty and (2) reward discriminability, so policy gradients are applied only when the reward model is locally trustworthy.",
+      "story_zh": "现有做法：用生产 ranker 作为 reward 对 generative retrieval 做 GRPO 微调，但 ranker 受曝光偏置影响，对长尾/困难样本打分失真 → 统一 RL 会产生 reward hacking 或把模型推离 GT。为此需要一种“可在训练时判断 reward 可信度”的机制。AdaGRPO 设计两个可由 rollout 直接计算的诊断信号（难度+可分性），并把 GRPO 变为按样本门控的 loss，从根上减少无效/有害更新。",
+      "story_en": "Problem: GRPO fine-tuning with a production ranker reward suffers from sample-dependent reward unreliability (exposure bias), making uniform RL noisy or harmful. Need a training-time trust test. AdaGRPO uses two rollout-derived diagnostics (difficulty + discriminability) to gate GRPO per instance, reducing harmful updates.",
+      "innovation_zh": "创新点在于把 PPO/GRPO 的“信任域”从 ratio 层面提升到“样本准入”层面：不是限制更新幅度，而是限制哪些样本允许产生 policy gradient；同时用可计算的难度+可分性信号把“ranker 可信度”操作化，避免拍脑袋调权。",
+      "innovation_en": "Key novelty: moving the trust-region concept from update magnitude to sample admission (which instances are allowed to contribute policy gradients), and operationalizing reward trust via computable difficulty+discriminability signals.",
+      "key_metrics": [
+        "离线：最佳 checkpoint HR@10 11.01%→12.18%，hallucination ≤0.22%；最终 checkpoint HR@10=11.63%，hallucination=0.27%。",
+        "线上 A/B（AdaGRPO）：Eff. IPV +0.43%*，UCTR +0.27%*，Dwell time +0.23%*（* p<0.05）。"
+      ],
+      "score_breakdown": {
+        "innovation": 25,
+        "metrics": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 23,
+        "total": 85
+      },
+      "score_rationale_zh": "强相关于电商推荐/召回与线上效果；提出的门控机制简单但击中工业 ranker 奖励不可靠这一关键痛点，且给出离线诊断+线上 A/B 的闭环证据。"
+    },
+    {
+      "id": "2606.09293",
+      "title": "One Model, Multiple Goals: Adaptive Multi-Objective Learning for E-commerce Dialogue Systems",
+      "authors": ["Mingzhe Li", "Jing Xiang", "Enguo Zhou", "Lang Gao", "Tai Li", "Qishen Zhang", "Xiangliang Zhang", "Xiuying Chen"],
+      "affiliations": ["ByteDance", "MBZUAI", "University of Notre Dame"],
+      "published_date": "2026-06-08",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.09293",
+        "pdf": "https://arxiv.org/pdf/2606.09293",
+        "reproduce": "https://github.com/Sam1224/CCReproduce/tree/main/2026-06-09/MORE"
+      },
+      "tags": ["电商对话", "多目标RL", "减少幻觉", "线上A/B"],
+      "method_overview_zh": "论文研究电商对话系统的多目标矛盾：既要对用户 profile（额度/资格等）做正确推理并给出可信答案，又要生成自然、贴近人类客服的表达。MORE 发现直接把 reasoning reward 与 generation reward 做固定加权会产生振荡与不稳定，于是把 reasoning 作为训练脚手架/约束来引导策略更新，同时对多种生成质量信号（流畅/自然/忠实等）做基于梯度反馈的自适应 reweight；推理在训练期增强，但推理步骤在推理期不显式输出以避免额外开销。",
+      "method_overview_en": "MORE targets multi-objective e-commerce dialogue: (1) correct reasoning over user profiles and (2) natural, faithful responses. It shows naive fixed-weight reward mixing is unstable, and instead treats reasoning as a constraint/scaffold while adaptively reweighting generation-quality rewards via gradient feedback; inference produces responses directly without explicit reasoning steps.",
+      "story_zh": "现有方案要么偏规则/推理保证正确但话术僵硬，要么偏生成自然但容易在额度/资格等关键事实处出错 → 多目标 RL 的固定混合权重在不同样本上梯度方向冲突导致训练振荡。MORE 的思路是：先把“事实正确”当硬约束/脚手架稳定住策略，再在满足约束后自适应地优化生成质量，从而在不增加推理时延的前提下同时提升 correctness 与 naturalness。",
+      "story_en": "Existing systems trade off correctness (rigid but accurate) vs naturalness (fluent but error-prone). Fixed-weight multi-reward RL yields conflicting gradients and oscillation. MORE stabilizes learning by treating factual reasoning as a constraint/scaffold, then adaptively optimizing generation quality once constraints are satisfied—without adding explicit reasoning at inference.",
+      "innovation_zh": "创新点在于把“推理正确”从一个普通 reward 提升为约束式目标，并在此之上引入自适应 multi-reward 聚合，避免固定权重在不同样本/阶段失效；同时强调“训练期推理、推理期直出”，将收益与线上时延约束绑定。",
+      "innovation_en": "Novelty: elevating reasoning correctness from a standard reward to a constraint-like objective, combined with adaptive multi-reward aggregation; and the training-time reasoning / inference-time direct generation design for latency-sensitive production.",
+      "key_metrics": [
+        "MultiWOZ2.2：Inform 92.5（+0.9%），Success 84.8（+1.8%），Combined 107.35（+3.8%）。",
+        "线上 A/B（14 天）：Overall conversion +16.53%，Reached conversion +30.09%；Customer Service 用户满意度 +1.12%，转人工率 -1.83%。"
+      ],
+      "score_breakdown": {
+        "innovation": 22,
+        "metrics": 14,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 83
+      },
+      "score_rationale_zh": "电商对话强相关且有扎实的离线指标+线上转化提升；方法侧更偏训练配方/目标设计而非新模型结构，创新性略弱于顶会 SOTA 架构类工作。"
+    },
+    {
+      "id": "2606.09659",
+      "title": "End-to-End Context Compression at Scale",
+      "authors": ["Ang Li", "Sean McLeish", "Haozhe Chen", "Nimit Kalra", "Zaiqian Chen", "Artem Gazizov", "Micah Goldblum", "Pavel Izmailov"],
+      "affiliations": ["New York University", "University of Maryland", "Princeton University", "Columbia University", "Harvard University"],
+      "published_date": "2026-06-08",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.09659",
+        "pdf": "https://arxiv.org/pdf/2606.09659",
+        "code": "https://github.com/LeonLixyz/LCLM",
+        "models": "https://huggingface.co/latent-context"
+      },
+      "tags": ["长上下文", "上下文压缩", "Agent记忆", "系统优化"],
+      "method_overview_zh": "论文重新审视 encoder-decoder 软 token 压缩路线，指出现有方法要么质量掉得多、要么压缩成本太高且难以集成到现代推理引擎。作者做了体系化架构搜索与分阶段训练，在 0.6B encoder + 4B decoder 规模上持续预训练（每个 ratio 超过 350B tokens），在 1:4/1:8/1:16 三种压缩比下得到 LCLM（Latent Context Language Models），并展示在 RULER/LongBench 等长上下文评测上建立新的速度-质量 Pareto 前沿，同时可作为长时序 agent 的 backbone（先 skim 再按需展开）。",
+      "method_overview_en": "The paper revisits encoder-decoder soft-token compression and closes the gap with KV-cache compression. It performs architectural search and large-scale staged training (0.6B encoder + 4B decoder, >350B tokens per ratio) to build LCLMs at 1:4/1:8/1:16 compression ratios, improving the speed/quality/memory Pareto frontier and enabling long-horizon agents to skim compressed context and selectively expand relevant segments.",
+      "story_zh": "KV cache 压缩要么需要先完整 prefilling（成本高），要么对推理引擎不友好；软 token 压缩理论上兼容但以往质量/泛化不够。LCLM 通过架构搜索+大规模 staged 训练把软 token 压缩推到可用区间，并进一步用 agent harness 展示“压缩浏览+按需展开”的长任务闭环。",
+      "story_en": "KV-cache compression is often prefill-heavy and engine-unfriendly; soft-token compression is engine-compatible but previously underperformed. LCLMs use architecture search and large-scale staged training to make soft-token compression competitive, then demonstrate an agent loop that skims compressed context and expands on demand.",
+      "innovation_zh": "创新点在于把软 token 压缩从“小规模/任务特化”推进到“端到端大规模训练的通用压缩器”，并用系统性搜索把可行的结构与训练 recipe 固化下来，进一步连接到长时序 agent 的记忆管理范式。",
+      "innovation_en": "Novelty: scaling soft-token compression into an end-to-end, large-scale, general-purpose compressor via systematic architecture/training recipe search, and connecting it to long-horizon agent memory management.",
+      "key_metrics": [
+        "模型规模：0.6B encoder + 4B decoder；压缩比：1:4 / 1:8 / 1:16；每个 ratio 训练 >350B tokens。",
+        "开源：HuggingFace 提供模型权重与推理入口；GitHub 提供训练/评测代码。"
+      ],
+      "score_breakdown": {
+        "innovation": 24,
+        "metrics": 13,
+        "exp_quality": 14,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 14,
+        "total": 78
+      },
+      "score_rationale_zh": "对电商内容/治理是“弱相关但高潜价值”的基础设施型工作：长上下文压缩可直接降低治理 Agent/RAG 的成本；但论文本身不聚焦电商任务，因此相关性分不高。"
+    },
+    {
+      "id": "2606.04557",
+      "title": "Cartridges at Scale: Training Modular KV Caches over Large Document Collections",
+      "authors": ["Momchil Hardalov", "Gonzalo Iglesias", "Adrià de Gispert"],
+      "affiliations": ["Amazon AGI"],
+      "published_date": "2026-06-03",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.04557",
+        "pdf": "https://arxiv.org/pdf/2606.04557"
+      },
+      "tags": ["RAG", "KV cache", "上下文压缩", "企业知识库"],
+      "method_overview_zh": "Cartridges 通过把文档集合蒸馏为可复用 KV cache 来避免重复 prefilling，但原方案是“单块大 cartridge”且不可组合。CAS（Cartridges at Scale）提出联合训练与混合可见性（加入 distractor cartridges）来避免“独立训练后拼接导致性能崩溃”，并用 GPU↔持久化存储轮换与预算管理实现上百个 per-document cartridge 的可扩展训练；结合检索做 cartridge 选择后，能在更少 prompt tokens 下匹配甚至超过文本 RAG。",
+      "method_overview_en": "CAS makes Cartridges modular and scalable. It uses mixed-visibility joint training with distractor cartridges to prevent catastrophic interference when composing independently trained KV caches, plus a memory-budget manager that swaps hundreds of per-document cartridges between GPU and storage. With retrieval-based cartridge selection, it matches or exceeds text RAG using fewer prompt tokens.",
+      "story_zh": "长上下文推理的成本主要来自重复 prefilling；Cartridge 思路很好但单块缓存不易扩展且更新困难。把每文档做成 cartridge 又会出现“拼接即崩溃”的干扰问题。CAS 用混合可见性联合训练让模型学会在多 cartridge 前缀里选择性注意，同时用系统工程手段把训练扩展到百万 token 级文档集合。",
+      "story_en": "Prefilling dominates long-context cost. A monolithic cartridge doesn’t scale or update well; per-document cartridges cause interference when naively concatenated. CAS fixes this via mixed-visibility joint training and system-level memory budgeting to scale to large document collections.",
+      "innovation_zh": "在方法层面把“可组合 KV 缓存”问题显式化，并给出训练范式（distractor mixing）解决干扰；在系统层面给出可实现的训练/存储轮换方案，让该范式能在真实规模上跑起来。",
+      "innovation_en": "It formalizes composable KV-cache cartridges and resolves interference via distractor-mixed training, plus a practical system design for training/swapping hundreds of cartridges.",
+      "key_metrics": [
+        "相同 token budget 下相对单块 cartridge 提升 10–31 点；Oracle cartridge 与 full ICL 差距 2–6 点。",
+        "结合检索做 cartridge 选择：匹配/超过文本 RAG，同时 prompt tokens 减少 3–4×。"
+      ],
+      "score_breakdown": {
+        "innovation": 23,
+        "metrics": 12,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 3,
+        "relevance": 15,
+        "total": 74
+      },
+      "score_rationale_zh": "对治理/RAG 的长上下文成本优化很有价值，但更偏基础设施与系统论文，电商特定任务相关性一般。"
+    },
+    {
+      "id": "2606.05633",
+      "title": "Answer Presence Drives RAG Rewriting Gains",
+      "authors": ["Yuejie Li", "Yueying Hua", "Ke Yang", "Li Zhang", "Yueping He", "Ruiqi Li", "Bolin Chen", "Tao Wang"],
+      "affiliations": ["Ant Group"],
+      "published_date": "2026-06-04",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.05633",
+        "pdf": "https://arxiv.org/pdf/2606.05633"
+      },
+      "tags": ["RAG", "评估/审计", "数据泄漏", "多跳问答"],
+      "method_overview_zh": "很多 RAG QA pipeline 在检索后会用大模型对证据做 rewrite/compile，再交给小 reader，F1 往往提升很大；论文质疑该提升是否主要来自“rewrite 把 gold answer 字符串直接写进上下文”。作者用受控因果干预审计：对同一份 rewrite 结果做“移除答案 / placebo 替换等长非答案 / 给缺失答案的样本注入答案（前缀/中间）”，在多 reader、多数据集、多编排下测 reader 的 F1 变化，并指出传统单 sentinel（[MASK]）检测本身对 sentinel 选择极其脆弱。",
+      "method_overview_en": "The paper audits whether compile-then-read RAG gains are driven by the gold answer string appearing in rewritten context rather than evidence curation. It runs controlled interventions (remove answer, placebo replace, insert answer) across multiple reader families/datasets/compiler setups, and shows the common single-sentinel [MASK] leakage probe is sentinel-fragile.",
+      "story_zh": "现象：rewrite 让 reader F1 大幅提升，但提升原因可能混杂了“证据更好”与“答案泄漏”。已有做法用 [MASK] 替换答案测试泄漏，但这一 probe 可能本身引入伪信号。论文用更严格的对照干预（remove vs placebo vs insert）把“答案出现”因素单独剥离出来，从而让后续 RAG 重写方法的收益声明可被可重复审计。",
+      "story_en": "Rewriter gains may conflate better evidence with answer leakage. The common [MASK] probe can be misleading due to sentinel artifacts. The paper proposes a stricter intervention design (remove vs placebo vs insert) to isolate answer presence effects and make rewriter-gain claims auditable.",
+      "innovation_zh": "创新点主要在评估方法：用因果干预把“答案出现”作为可控变量，并揭示 sentinel 选择带来的评估伪影，为治理场景中“RAG 是否走捷径/信息泄漏”的审计提供标准化工具。",
+      "innovation_en": "Main novelty is methodological: causal interventions treat answer presence as a controllable variable and reveal sentinel-induced evaluation artifacts—useful for auditing shortcut/leakage in RAG pipelines.",
+      "key_metrics": [
+        "移除 gold answer 相对 placebo 额外导致 reader F1 下降 28–64；给缺失答案样本前缀注入答案在 12 组对比中的 10 组提升 +0.7～+9.7 F1。",
+        "单 [MASK] probe 在 2Wiki 上的“+4.12 F1 residual”在换 4 种 sentinel 后变为 -3.33～-7.81。"
+      ],
+      "score_breakdown": {
+        "innovation": 20,
+        "metrics": 10,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 18,
+        "total": 71
+      },
+      "score_rationale_zh": "对治理类 RAG（尤其内容理解、违规证据链）非常实用：它不提出新模型，但提供了识别“答案泄漏/走捷径”的可执行审计范式。"
+    },
+    {
+      "id": "2606.09623",
+      "title": "Constrained user-item allocation for e-commerce marketing campaigns",
+      "authors": ["Maja Lindström", "Natalija Glisovic", "Jan von Pichowski", "Tommy Löfstedt", "Martin Rosvall"],
+      "affiliations": ["Umeå University", "KTH Royal Institute of Technology", "University of Würzburg"],
+      "published_date": "2026-06-08",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.09623",
+        "pdf": "https://arxiv.org/pdf/2606.09623"
+      },
+      "tags": ["营销投放", "电商", "双聚类", "组合优化"],
+      "method_overview_zh": "论文把营销活动的“选品+定向”建模为一个耦合的 auto-targeting 问题：同时为 K 个活动选择一组 items 与一组 users，并满足每个用户/商品仅出现一次、每个活动商品数固定、用户数在区间等约束。为求解该组合优化问题，作者提出三类方法：带约束的谱双聚类（从 user-item affinity 矩阵中找高密度块）、交替 greedy + swap 的局部搜索、以及多臂 bandit 用探索逃离局部最优。",
+      "method_overview_en": "The paper formulates campaign auto-targeting as a coupled optimization that jointly allocates users and items into multiple disjoint campaigns under size constraints. It proposes constrained spectral biclustering, alternating greedy local search with swaps, and a multi-armed bandit strategy to escape local optima.",
+      "story_zh": "传统做法往往先选品再定向或反之，忽略了“谁被选中”与“选哪些商品”之间的双向依赖，导致无法发现由交互结构自然涌现的 campaign cohort。论文用矩阵块结构（bicluster）把弱信号聚合成活动簇，并在工程规模上给出 bandit 替代以平衡质量与运行时间。",
+      "story_en": "Decoupled item selection and audience targeting misses bidirectional dependency and emergent cohorts. The paper leverages bicluster structure to aggregate weak signals into coherent campaigns, and uses bandit-based alternatives to trade off solution quality vs runtime.",
+      "innovation_zh": "创新点更多是问题定义与可行的求解组合：把营销投放的结构约束与 user-item affinity 的块结构结合，给出可扩展的 biclustering + 约束选择流程，并显式评估 lift 与公平性分布。",
+      "innovation_en": "Novelty is in problem formulation plus a practical mix of constrained biclustering and scalable optimization, with explicit lift and fairness metrics.",
+      "key_metrics": [
+        "在商业数据上：biclustering 选中的矩阵单元中 92.4% 落在全局 top 1% 的 affinity，同时覆盖仅 0.0038% 的矩阵；活动级 lift 相对全局均值在 60～171 范围。"
+      ],
+      "score_breakdown": {
+        "innovation": 18,
+        "metrics": 10,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 20,
+        "total": 70
+      },
+      "score_rationale_zh": "电商强相关，但方法偏传统优化/聚类方向，和内容理解/治理的直接结合需要进一步工程化（如与 embedding / uplift 模型结合）。"
+    },
+    {
+      "id": "2606.08146",
+      "title": "SAGE: An LLM-driven Self Reflective Agentic Framework for Fraud Detection",
+      "authors": ["Yichen Chen", "Siying Li", "Yuhang Liang", "Lijun Wang", "Renyang Liu"],
+      "affiliations": ["National University of Singapore", "University of Chinese Academy of Sciences", "China Mobile"],
+      "published_date": "2026-06-06",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.08146",
+        "pdf": "https://arxiv.org/pdf/2606.08146",
+        "code": "https://github.com/yichenC1c/SAGE"
+      },
+      "tags": ["风控/反欺诈", "Agent", "表格建模", "可解释性"],
+      "method_overview_zh": "SAGE 试图把“反欺诈分类器构建”自动化为一个 LLM 多 agent 工作流：Profiling Agent 用 Data Diagnostic Tree（DDT）把超长表格特征语义化；Planning Agent 基于 DDT 选算法/搭初始模型；Optimization Agent 把代码优化建模为有限时域 MDP，用自然语言梯度驱动迭代改代码，在 precision/recall 约束下优化。",
+      "method_overview_en": "SAGE automates tabular fraud detector construction via an LLM-driven multi-agent workflow: a profiling agent builds a Data Diagnostic Tree (DDT) to summarize long feature tables; a planning agent selects algorithms and drafts a classifier; an optimization agent treats code edits as a finite-horizon MDP guided by natural-language gradients under fraud-specific constraints.",
+      "story_zh": "现实反欺诈多是个体级表格特征，AutoML 缺少语义诊断、GNN 需要图且不够可解释、通用 coding agent 又不理解业务约束 → 需要一个能“先理解数据→再规划→再在代码空间闭环优化”的专用 agent。SAGE 用 DDT 缩短上下文并把优化过程结构化为 MDP，从而让 agent 在约束下稳定迭代。",
+      "story_en": "Tabular fraud detection needs instance-level accuracy, interpretability, and constraint-aware optimization. AutoML lacks semantic diagnostics; GNNs require graphs; generic coding agents ignore business constraints. SAGE structures the workflow with DDT + constraint-guided code-edit MDP.",
+      "innovation_zh": "创新点在于把“表格建模+约束优化”转写为可执行的 agentic pipeline，并明确给出用于上下文压缩的 DDT 与自然语言梯度→代码修改的闭环。",
+      "innovation_en": "Novelty: a concrete agentic pipeline for tabular modeling with DDT-based context compression and an NL-gradient-to-code-edit optimization loop.",
+      "key_metrics": [
+        "在 5 个 fraud 数据集 × 5 个 LLM backbone 上：赢下 96% 的 method-dataset 对比；平均 F1 相对 baseline 提升 40.86%。"
+      ],
+      "score_breakdown": {
+        "innovation": 20,
+        "metrics": 12,
+        "exp_quality": 10,
+        "efficiency": 4,
+        "generalization": 3,
+        "relevance": 18,
+        "total": 67
+      },
+      "score_rationale_zh": "对平台治理（反欺诈/风控）有直接价值且开源；但 agent 方案计算/工程成本较高，且与内容理解（图文视频）方向是并行赛道。"
+    },
+    {
+      "id": "2606.08572",
+      "title": "OmniCap-IF: Benchmarking and Improving Instruction Following Abilities for Omni-Video Captioning",
+      "authors": ["Jiahao Wang", "An Ping", "Yanghai Wang", "Yuanxing Zhang", "Shihao Li", "Jiaheng Liu"],
+      "affiliations": ["Nanjing University", "Kuaishou Technology"],
+      "published_date": "2026-06-07",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.08572",
+        "pdf": "https://arxiv.org/pdf/2606.08572",
+        "code": "https://github.com/NJU-LINK/OmniCap-IF",
+        "dataset": "https://huggingface.co/datasets/NJU-LINK/OmniCap-IF"
+      },
+      "tags": ["视频理解", "Caption", "指令跟随", "评测/数据集"],
+      "method_overview_zh": "OmniCap-IF 关注 omni-modal（音频+视觉）captioning 的复杂指令跟随能力，提出一个包含 50 类约束的系统化框架，将评测拆为 format correctness 与 content correctness，并结合 temporal grounding（t-IoU）评估时间定位精度。作者构建 1,920 条高质量样本进行评测，并进一步提供 54K 的指令微调数据集与基线模型 OmniCaptioner-IF 来改善指令遵循与通用 caption 质量。",
+      "method_overview_en": "OmniCap-IF benchmarks omni-modal (audio+visual) captioning instruction-following with a taxonomy of 50 constraint types. It evaluates format correctness and content correctness, and adds temporal grounding (t-IoU) for spatio-temporal precision. The work includes a 1,920-sample benchmark and a 54K instruction-tuning set with a baseline OmniCaptioner-IF.",
+      "story_zh": "电商内容理解/治理往往需要可控输出（结构化 caption、证据对齐、时间定位），但现有评测偏“整体描述”而非“复杂约束执行”。OmniCap-IF 把约束拆解为可验证 checklist，并揭示 format 约束越强、content 推理越弱的 tradeoff，为后续“可控多模态生成”提供诊断抓手。",
+      "story_en": "Many real applications need controllable outputs (structured captions, aligned evidence, temporal localization), but benchmarks focus on holistic description. OmniCap-IF builds verifiable constraints/checklists and exposes a format–content tradeoff to diagnose controllable multimodal generation.",
+      "innovation_zh": "创新在于把 omni-modal 指令跟随评测系统化（50 约束类型）并引入“工具校验 + judge LLM”的双机制，使 format/时间约束更可客观验证；同时给出可训练数据集与 baseline。",
+      "innovation_en": "Novelty: a systematic constraint taxonomy for omni-modal instruction following plus a hybrid evaluation protocol (tools + judge LLM) for objective format/temporal checks, and paired training data/baseline.",
+      "key_metrics": [
+        "Benchmark：1,920 样本；50 类约束；引入 temporal grounding/t-IoU。",
+        "训练数据：OmniCap-IF-54K；代码与数据均开源。"
+      ],
+      "score_breakdown": {
+        "innovation": 19,
+        "metrics": 10,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 17,
+        "total": 68
+      },
+      "score_rationale_zh": "对视频内容理解（caption/时间定位）强相关，适合用于电商视频治理的“描述/证据对齐”能力评测；但更偏 benchmark 工作，直接算法创新有限。"
+    },
+    {
+      "id": "2606.08415",
+      "title": "CoVEBench: Can Video Editing Models Handle Complex Instructions?",
+      "authors": ["Jiangtao Wu", "Jiaming Wang", "Yiwen He", "Yuanxing Zhang", "Shihao Li", "Jiaheng Liu"],
+      "affiliations": ["Nanjing University", "Kuaishou Technology"],
+      "published_date": "2026-06-07",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.08415",
+        "pdf": "https://arxiv.org/pdf/2606.08415",
+        "code": "https://github.com/NJU-LINK/CoVEBench",
+        "dataset": "https://huggingface.co/datasets/NJU-LINK/CoVEBench"
+      },
+      "tags": ["视频编辑", "指令跟随", "评测/数据集"],
+      "method_overview_zh": "CoVEBench 聚焦 text-guided 视频编辑在“组合式指令”下的真实能力差距：一次请求往往包含多步耦合编辑（主体/动作/镜头/保留约束等），而现有 benchmark 多是单一编辑+粗指标。作者构建 416 个源视频、626 条多点编辑指令，并把每条指令分解为 9,990 个可核对 checklist item，用 MLLM judge 评估指令遵循、保真与质量，系统揭示当前模型在多步编辑时常见漏改/破坏保留/引入伪影等问题。",
+      "method_overview_en": "CoVEBench evaluates compositional instruction-guided video editing beyond single-edit benchmarks. It contains 416 source videos, 626 multi-point editing instructions, and 9,990 fine-grained checklist items. An MLLM judge measures instruction compliance, fidelity, and quality, revealing frequent omissions, preservation violations, and artifacts under multi-operation requests.",
+      "story_zh": "电商内容生态里“生成/编辑视频”越来越常见，治理侧也需要理解复杂编辑指令的可控性与风险；但评测体系跟不上现实多步骤工作流。CoVEBench 用 checklist 让“每一步是否执行/是否破坏未指定内容”可被诊断，从而为模型能力边界与治理策略提供依据。",
+      "story_en": "Real workflows require multi-step coupled edits with preservation constraints, but benchmarks lag behind. CoVEBench makes each atomic edit verifiable via checklist items, enabling diagnosis of omission and preservation failures—useful for understanding controllability and risks.",
+      "innovation_zh": "创新点在于把视频编辑评测从“整体相似度”推进到“组合指令的可分解核验”，并提供规模化 checklist 与多维指标体系。",
+      "innovation_en": "Novelty: shifting evaluation from coarse global similarity to decomposed verification for compositional editing instructions, backed by large-scale checklists and multi-dimensional metrics.",
+      "key_metrics": [
+        "数据规模：416 源视频，626 组合编辑指令，9,990 checklist items。",
+        "结论：现有模型在多步编辑下经常漏改、破坏保留约束或引入伪影。"
+      ],
+      "score_breakdown": {
+        "innovation": 18,
+        "metrics": 9,
+        "exp_quality": 13,
+        "efficiency": 5,
+        "generalization": 3,
+        "relevance": 16,
+        "total": 64
+      },
+      "score_rationale_zh": "适合做“可控多模态生成/编辑”的诊断基准，但与内容治理的直接指标（违规/风险）还需要任务侧映射。"
+    },
+    {
+      "id": "2606.09809",
+      "title": "Evaluation Cards: An Interpretive Layer for AI Evaluation Reporting",
+      "authors": ["Avijit Ghosh", "Anka Reuel", "Jenny Chim", "Wm. Matthew Kennedy", "Yacine Jernite", "Stella Biderman", "Irene Solaiman"],
+      "affiliations": ["Hugging Face", "Stanford University", "EleutherAI"],
+      "published_date": "2026-06-08",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.09809",
+        "pdf": "https://arxiv.org/pdf/2606.09809",
+        "project": "https://evalcards.evalevalai.com"
+      },
+      "tags": ["评测治理", "报告标准化", "可追溯"],
+      "method_overview_zh": "Evaluation Cards 关注“评测结果产出很多但报告不一致导致不可比较/不可追溯”的系统性问题。作者从 52 篇论文与利益相关者访谈中抽象出 reporting schema，并实现 4 类解释性信号（可复现性、文档完整性、来源/风险、可比性），再通过监控工具把这些信号应用到 5,816 个模型、635 个 benchmark、101,843 条结果上，揭示当前公共评测报告的结构性缺失。",
+      "method_overview_en": "Evaluation Cards proposes an operational reporting layer that unifies benchmark metadata, run data, and model metadata into a single interpretable record. It defines a schema from literature+stakeholder interviews, implements four interpretive signals (reproducibility, completeness, provenance/risk, comparability), and applies them at scale to 5,816 models, 635 benchmarks, and 101,843 results.",
+      "story_zh": "治理与落地决策依赖评测，但当前 leaderboard/model card/blog 的字段缺失与格式不一致让“结果可信度/可比性”难以判断。Evaluation Cards 把评测证据结构化、把关键信号自动化计算出来，并提供面向不同读者（research/policy）的呈现模式，从而降低解释成本。",
+      "story_en": "Deployment and governance decisions depend on evaluation, but inconsistent reporting makes reliability and comparability unclear. Evaluation Cards structures evidence and computes interpretive signals automatically, with reader modes for different audiences.",
+      "innovation_zh": "创新在于把“评测报告”从静态模板推进到“可运行的抽取+监控基础设施”，并把可复现性/完整性/可比性等治理指标落到可计算信号上。",
+      "innovation_en": "Novelty lies in turning reporting artifacts into an executable extraction+monitoring infrastructure with computable governance signals.",
+      "key_metrics": [
+        "规模：5,816 models / 635 benchmarks / 101,843 results。",
+        "发现：96.5% 的结果缺少至少一个最小可复现字段；benchmark 级文档完整性中位数约 10.7%。"
+      ],
+      "score_breakdown": {
+        "innovation": 21,
+        "metrics": 8,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 15,
+        "total": 69
+      },
+      "score_rationale_zh": "对“模型评测治理/上线准入”很有参考价值，但与内容理解/算法本身弱相关，更像治理基础设施。"
+    },
+    {
+      "id": "2606.07297",
+      "title": "SWE-Explore: Benchmarking How Coding Agents Explore Repositories",
+      "authors": ["Shaoqiu Zhang", "Yuhang Wang", "Jialiang Liang", "Yuling Shi", "Wenhao Zeng", "Xiaodong Gu"],
+      "affiliations": ["Shanghai Jiao Tong University", "University of Illinois Urbana-Champaign"],
+      "published_date": "2026-06-05",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.07297",
+        "pdf": "https://arxiv.org/pdf/2606.07297",
+        "code": "https://github.com/Qiushao-E/SWE-Explore-Bench",
+        "dataset": "https://huggingface.co/datasets/SWE-Explore-Bench/SWE-Explore-Bench"
+      },
+      "tags": ["Agent评测", "代码检索", "Benchmark"],
+      "method_overview_zh": "SWE-Explore 把 SWE-bench 这类端到端修复评测拆解出“仓库探索/定位”这一关键子能力：给定 repo + issue，让 explorer 输出固定行数预算下的相关代码区域排序，并用来自成功 agent 轨迹的 line-level 读取区域作为 ground truth。它覆盖 10 种语言、203 个仓库、848 个 issue，同时还提供受限上下文的下游修复验证来证明探索指标与修复成功相关。",
+      "method_overview_en": "SWE-Explore isolates repository exploration as a standalone evaluation target: given a repo and issue, an explorer outputs a ranked list of code regions under a line budget, scored against line-level ground truth distilled from successful agent trajectories. It spans 10 languages, 203 repos, and 848 issues, and validates that exploration metrics track downstream repair success under restricted context.",
+      "story_zh": "端到端修复的 pass/fail 掩盖了失败到底发生在“没找到证据”还是“有证据但写不出 patch”。SWE-Explore 通过轨迹抽取把“探索到哪些行”量化，从而能更精细地评估与改进 agent 的检索/定位能力（这对治理/平台研发工作流也常见）。",
+      "story_en": "End-to-end pass/fail conflates exploration vs synthesis failures. SWE-Explore quantifies which lines were explored via trajectory-grounded supervision, enabling fine-grained evaluation of retrieval/localization behavior.",
+      "innovation_zh": "创新点在于用“成功轨迹的读取集合”自动蒸馏 line-level ground truth，把探索质量变成可比较的排序任务，并提供受限上下文的外部有效性检验。",
+      "innovation_en": "Novelty: trajectory-grounded line-level supervision that turns exploration into a comparable ranked-region task, plus restricted-context validation as external validity.",
+      "key_metrics": [
+        "数据规模：10 语言、203 repo、848 issues。",
+        "评测形式：固定 line budget 的 ranked regions + 下游受限上下文修复验证。"
+      ],
+      "score_breakdown": {
+        "innovation": 18,
+        "metrics": 8,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 12,
+        "total": 62
+      },
+      "score_rationale_zh": "与电商内容治理弱相关，但对“治理工程化/自动化修复”与代码智能体的能力拆解很有用。"
+    },
+    {
+      "id": "2606.09079",
+      "title": "FlashMemory-DeepSeek-V4: Lightning Index Ultra-Long Context via Lookahead Sparse Attention",
+      "authors": ["Yan Wang", "Qifan Zhang", "Jiachen Yu", "Tian Liang", "Dongyang Ma", "Xiang Hu", "Dong Yu"],
+      "affiliations": ["Tencent"],
+      "published_date": "2026-06-08",
+      "source": "arXiv",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.09079",
+        "pdf": "https://arxiv.org/pdf/2606.09079"
+      },
+      "tags": ["长上下文", "注意力稀疏化", "系统优化"],
+      "method_overview_zh": "FlashMemory-DeepSeek-V4 观察到长上下文推理时，大量 KV cache 在多数 decoding step 并不需要，造成 GPU 内存浪费。论文提出 Lookahead Sparse Attention（LSA）：用一个轻量的 Neural Memory Indexer 周期性预测“未来需要哪些历史 chunk”，只把关键 chunk 拉入 GPU 内存；Indexer 采用与 backbone 解耦的双塔结构，可在不加载大模型的情况下独立训练。",
+      "method_overview_en": "FlashMemory proposes Lookahead Sparse Attention (LSA) to reduce KV-cache memory for ultra-long contexts. A lightweight neural memory indexer periodically predicts which historical chunks will be needed and fetches only query-critical KV blocks into GPU memory. The indexer is decoupled (dual-encoder) and trained independently without loading the massive backbone.",
+      "story_zh": "矛盾：要支持 100K～500K 的长上下文全局推理，但绝大多数 step 只依赖最近局部信息，导致“为少数需要全局的 step”长期背着巨大的 KV cache。LSA 用“预测式取数”把 KV cache 变成按需常驻，从而把系统成本从线性膨胀拉回可控区间。",
+      "story_en": "Contradiction: long-context reasoning needs global memory for a minority of steps, but conventional serving keeps the full KV cache resident all the time. LSA turns this into predictive, on-demand KV chunk fetching to tame memory growth.",
+      "innovation_zh": "创新点在于把 KV cache 常驻改为“可预测的按需调度”，并通过 decoupled indexer 训练把工程落地成本压到可接受水平。",
+      "innovation_en": "Novelty: predictive on-demand scheduling of KV chunks, enabled by a decoupled indexer training strategy for practicality.",
+      "key_metrics": [
+        "在 LongBench-v2 / LongMemEval / RULER 上：平均物理 KV cache 占用压到 baseline 的 13.5%，准确率平均 +0.6%。",
+        "在 500K context 下 KV cache overhead 降幅可达 90%。"
+      ],
+      "score_breakdown": {
+        "innovation": 22,
+        "metrics": 12,
+        "exp_quality": 10,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 12,
+        "total": 69
+      },
+      "score_rationale_zh": "对长上下文治理/RAG 成本优化有潜在价值，但与电商内容理解任务本身弱相关，且更像技术报告型系统工作。"
+    }
+  ]
+}
