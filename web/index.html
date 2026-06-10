@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — AI 论文巡检</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --primary: #1a73e8;
+    --accent: #fbbc04;
+    --text: #202124;
+    --sub: #5f6368;
+    --border: #e0e0e0;
+    --strong-color: #137333;
+    --weak-color: #1967d2;
+    --font: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; }
+  header { background: var(--primary); color: #fff; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 22px; font-weight: 700; }
+  header .subtitle { font-size: 13px; opacity: 0.85; }
+  .toolbar { padding: 14px 32px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .toolbar label { font-size: 13px; color: var(--sub); }
+  .toolbar input[type=range] { width: 160px; cursor: pointer; }
+  .toolbar select, .toolbar input[type=date] { border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; font-size: 13px; }
+  .lang-btn { cursor: pointer; border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 13px; background: #fff; }
+  .lang-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .score-display { font-weight: 600; color: var(--primary); min-width: 30px; }
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+  .date-section { margin-bottom: 32px; }
+  .date-section h2 { font-size: 18px; border-left: 4px solid var(--primary); padding-left: 12px; margin-bottom: 16px; color: var(--text); }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 18px; transition: box-shadow .2s; display: flex; flex-direction: column; gap: 10px; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+  .card-header { display: flex; align-items: flex-start; gap: 10px; }
+  .score-badge { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: #fff; }
+  .card-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+  .card-authors { font-size: 12px; color: var(--sub); }
+  .card-affil { font-size: 12px; color: var(--sub); font-style: italic; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 12px; background: #e8f0fe; color: var(--primary); }
+  .tag.strong { background: #e6f4ea; color: var(--strong-color); }
+  .method-block { font-size: 13px; line-height: 1.6; color: #333; }
+  .section-toggle { cursor: pointer; font-size: 12px; color: var(--primary); user-select: none; }
+  .collapsible { display: none; margin-top: 8px; }
+  .collapsible.open { display: block; }
+  .metrics-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .metrics-table th { background: #f1f3f4; padding: 5px 8px; text-align: left; }
+  .metrics-table td { padding: 4px 8px; border-top: 1px solid var(--border); }
+  .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 12px; }
+  .score-row { display: flex; justify-content: space-between; padding: 2px 0; }
+  .score-row .s-val { font-weight: 600; color: var(--primary); }
+  .card-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .card-link { font-size: 12px; text-decoration: none; color: var(--primary); border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; }
+  .card-link:hover { background: var(--primary); color: #fff; }
+  .hidden { display: none !important; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
+  .figure-placeholder { background: linear-gradient(135deg, #e8f0fe 0%, #fce8b2 100%); border-radius: 8px; padding: 24px; text-align: center; font-size: 12px; color: var(--sub); }
+  footer { text-align: center; padding: 24px; color: var(--sub); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce — AI 论文巡检</h1>
+    <div class="subtitle">E-commerce Content Ecosystem & Influencer Governance · Daily Paper Watch</div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="lang-btn active" id="btnZh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="toolbar">
+  <label>
+    最低评分 / Min Score:
+    <input type="range" id="scoreSlider" min="0" max="100" value="40" oninput="filterCards()">
+    <span class="score-display" id="scoreVal">40</span>
+  </label>
+  <label>
+    日期 / Date:
+    <select id="dateSelect" onchange="filterCards()">
+      <option value="all">全部 / All</option>
+      <option value="2026-06-09" selected>2026-06-09</option>
+    </select>
+  </label>
+  <label>
+    类型 / Bucket:
+    <select id="bucketSelect" onchange="filterCards()">
+      <option value="all">全部 / All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </label>
+</div>
+
+<main id="main">
+  <div class="date-section" data-date="2026-06-09">
+    <h2>2026-06-09</h2>
+    <div class="cards-grid" id="cards-2026-06-09"></div>
+  </div>
+</main>
+
+<footer>
+  CCReproduce · 每日 08:30 GMT+8 自动巡检 · 数据来源: arXiv / HuggingFace / SIGIR 2026
+</footer>
+
+<script>
+const papers = [
+  {
+    date: "2026-06-09",
+    arxiv: "2605.21832",
+    title: "FLUID: From Ephemeral IDs to Multimodal Semantic Codes for Industrial-Scale Livestreaming Recommendation",
+    authors: "Xinhang Yuan, Zexi Huang, Anjia Cao, Xudong Lu, et al.",
+    affil: "Industrial E-commerce Platform",
+    bucket: "STRONG",
+    score: 88,
+    tags: ["直播推荐", "多模态", "语义ID", "工业落地", "无ID推荐"],
+    method_zh: "FLUID 首次在工业级直播推荐排序中完全退役 item ID，以跨域多模态编码器 LUCID 产生的离散层次语义编码（LUCID 码）取代 ID embedding。跨短视频+直播联合训练的 LUCID 解决了直播间"永久冷启动"问题，staged warmup 保障在线增量训练稳定性。",
+    method_en: "FLUID fully retires item IDs from production-scale livestreaming ranking, replacing them with hierarchical discrete LUCID codes from a cross-domain multimodal encoder jointly trained on short videos and livestreams. Staged warmup stabilizes online incremental training.",
+    innovation_zh: "首个生产级直播无 ID 推荐框架；LUCID 跨域联合训练建立短视频→直播语义桥接；staged warmup 解决增量训练稳定性。",
+    innovation_en: "First production-scale ID-free livestreaming ranker; cross-domain LUCID bridges short-video and livestreaming semantics; staged warmup for online incremental training stability.",
+    metrics: [
+      ["工业直播 A/B", "CTR", "显著提升", "ID-based"],
+      ["工业直播 A/B", "Dwell Time", "显著提升", "ID-based"],
+      ["新直播间 Recall@20", "跨域泛化", "大幅优于", "ID-based"],
+    ],
+    scores: {innovation:26, metrics:12, quality:12, efficiency:8, generalization:4, relevance:26},
+    link: "https://arxiv.org/abs/2605.21832",
+    code: "code/FLUID/",
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2605.14434",
+    title: "Efficient Generative Retrieval for E-commerce Search with Semantic Cluster IDs and Expert-Guided RL",
+    authors: "Jianbo Zhu, et al. (8 authors)",
+    affil: "Chinese E-commerce Platform",
+    bucket: "STRONG",
+    score: 84,
+    tags: ["电商搜索", "生成式召回", "语义聚类ID", "强化学习", "GRPO"],
+    method_zh: "CQ-SID 以类目感知+查询-商品双约束对比学习结合 RQ-VAE 生成层次语义聚类 ID，大幅压缩 beam search 空间；EG-GRPO 以专家引导奖励实现生成式召回与下游排序目标对齐，将 GR 定位为工业召回阶段补充。",
+    method_en: "CQ-SID generates hierarchical semantic cluster IDs via category-aware + query-item contrastive learning with RQ-VAE, drastically reducing beam search complexity. EG-GRPO aligns generative retrieval with downstream ranking via expert-guided rewards.",
+    innovation_zh: "双约束 SID（类目+查询）设计更贴近业务；EG-GRPO 解决奖励稀疏；务实定位为召回补充降低落地风险。",
+    innovation_en: "Dual-constraint SID (category + query) better aligns with business semantics; EG-GRPO solves sparse reward; pragmatic positioning as recall supplement reduces deployment risk.",
+    metrics: [
+      ["工业电商搜索", "Recall@50", "显著提升", "标准GR"],
+      ["beam search", "复杂度", "大幅降低", "标准GR"],
+      ["下游排序对齐", "NDCG", "优于普通GR", "—"],
+    ],
+    scores: {innovation:23, metrics:12, quality:12, efficiency:9, generalization:3, relevance:25},
+    link: "https://arxiv.org/abs/2605.14434",
+    code: "code/CQ-SID/",
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2606.05671",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Ant Group / Alibaba Research",
+    affil: "Ant Group / Alibaba",
+    bucket: "STRONG",
+    score: 74,
+    tags: ["电商", "查询推荐", "Agent", "chain-of-retrieval", "GRPO"],
+    method_zh: "QueryAgent-R1 提出 chain-of-retrieval：查询生成过程中实时检索真实商品库存，以一致性奖励联合优化 CTR（查询点击率）和 CVR（商品转化率），通过 GRPO 策略优化解决查询推荐 CTR-CVR 脱节问题。",
+    method_en: "QueryAgent-R1 introduces chain-of-retrieval: query generation is grounded in real inventory retrieval, jointly optimizing CTR (query click rate) and CVR (product conversion rate) via a consistency reward and GRPO policy optimization.",
+    innovation_zh: "将 chain-of-thought 延伸为 chain-of-retrieval，强制查询必须"可达"高质量商品；记忆模块缓存检索结果提升效率。",
+    innovation_en: "Extends chain-of-thought to chain-of-retrieval, enforcing generated queries to be 'reachable' to high-quality products; memory module caches retrieval results for efficiency.",
+    metrics: [
+      ["电商查询推荐", "Query CTR", "+提升", "baseline"],
+      ["电商查询推荐", "Product CVR", "+显著提升", "baseline"],
+      ["在线 A/B", "综合参与度", "+有效提升", "—"],
+    ],
+    scores: {innovation:19, metrics:11, quality:10, efficiency:6, generalization:3, relevance:25},
+    link: "https://arxiv.org/abs/2606.05671",
+    code: null,
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2605.17366",
+    title: "Text-Guided Visual Representation Learning for Robust Multimodal E-Commerce Recommendation",
+    authors: "E-commerce Research Team",
+    affil: "E-commerce Research",
+    bucket: "STRONG",
+    score: 72,
+    tags: ["多模态推荐", "视觉表征", "Q-Former", "电商", "文本引导"],
+    method_zh: "TGQ-Former 以商品结构化元数据（标题、属性）为 Query，通过跨注意力从图像 token 中提取语义对齐的视觉特征，同时保留互补视觉证据（颜色、材质），降低背景噪声对推荐的干扰。",
+    method_en: "TGQ-Former uses structured product metadata as Query in a cross-attention mechanism to extract semantically aligned visual tokens from product images, while preserving complementary visual evidence like color and texture.",
+    innovation_zh: "在特征提取阶段实现跨模态对齐（而非后期融合）；以业务元数据为 Q-Former query 零额外标注成本。",
+    innovation_en: "Achieves cross-modal alignment at feature extraction stage rather than late fusion; uses business metadata as Q-Former query with zero additional annotation cost.",
+    metrics: [
+      ["电商多模态推荐", "HR@K", "+提升", "CLIP baseline"],
+      ["电商多模态推荐", "NDCG@K", "+提升", "CLIP baseline"],
+      ["噪声鲁棒性", "性能下降幅度", "显著更低", "baseline"],
+    ],
+    scores: {innovation:19, metrics:11, quality:11, efficiency:7, generalization:3, relevance:21},
+    link: "https://arxiv.org/abs/2605.17366",
+    code: null,
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2605.09338",
+    title: "A General Framework for Multimodal LLM-Based Multimedia Understanding in Large-Scale Recommendation Systems",
+    authors: "Meta Platforms Research",
+    affil: "Meta Platforms",
+    bucket: "STRONG",
+    score: 72,
+    tags: ["MLLM", "推荐系统", "多媒体理解", "工业落地", "Meta"],
+    method_zh: "Meta 提出三部架构：离线 LLaMA2-based MLLM 生成多媒体内容描述 caption → tokenize 为离散类目特征 → 无缝注入现有推荐管道，以零在线延迟增量将 MLLM 语义理解能力引入工业推荐。",
+    method_en: "Meta proposes a tripartite architecture: offline LLaMA2-based MLLM generates multimedia captions → tokenized into discrete categorical features → seamlessly injected into existing recommendation pipelines with zero online latency overhead.",
+    innovation_zh: "离线-在线解耦设计满足工业延迟约束；离散化使 MLLM 语义特征兼容现有特征工程体系；Meta 工业验证可信度高。",
+    innovation_en: "Offline-online decoupling satisfies industrial latency constraints; discretization makes MLLM semantic features compatible with existing feature engineering; validated at Meta production scale.",
+    metrics: [
+      ["Meta 工业推荐", "CTR", "+提升", "传统特征"],
+      ["Meta 工业推荐", "用户参与度", "+提升", "—"],
+    ],
+    scores: {innovation:18, metrics:11, quality:10, efficiency:9, generalization:4, relevance:20},
+    link: "https://arxiv.org/abs/2605.09338",
+    code: null,
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2606.09730",
+    title: "SearchSwarm: Towards Delegation Intelligence in Agentic LLMs for Long-Horizon Deep Research",
+    authors: "Pu Ning, Quan Chen, Jun Zhou, et al.",
+    affil: "Tsinghua, PKU, Ant Group, RUC",
+    bucket: "WEAK",
+    score: 68,
+    tags: ["Agent", "委派推理", "长程任务", "ICML 2026", "开源"],
+    method_zh: "SearchSwarm 提出委派智能（Delegation Intelligence）：主 Agent 将任务分解并委派给子 Agent，子 Agent 只返回摘要，保护主 Agent 上下文预算。构建专用训练数据弥补开源社区委派智能空白，微调 30B-A3B 模型达 BrowseComp SOTA。",
+    method_en: "SearchSwarm introduces Delegation Intelligence: a main agent decomposes tasks and dispatches to sub-agents that return only summaries, protecting the main agent's context budget. Purpose-built training data fills the open-source gap in delegation capability.",
+    innovation_zh: "将'委派'操作化为可训练能力；BrowseComp 同规模 SOTA；ICML 2026 SCALE 研讨会口头报告。",
+    innovation_en: "Operationalizes 'delegation' as a trainable capability; SOTA on BrowseComp at 30B scale; ICML 2026 SCALE Workshop oral.",
+    metrics: [
+      ["BrowseComp", "Score", "68.1", "同规模开源 SOTA"],
+      ["BrowseComp-ZH", "Score", "73.3", "同规模开源 SOTA"],
+    ],
+    scores: {innovation:20, metrics:12, quality:10, efficiency:7, generalization:3, relevance:16},
+    link: "https://arxiv.org/abs/2606.09730",
+    code: null,
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2606.08265",
+    title: "Unintended Consequences of Recommender System Interventions: Evidence from a Field Experiment",
+    authors: "Shilei Luo, Song Yao, Dennis J. Zhang",
+    affil: "University Research with Industry Collaboration",
+    bucket: "WEAK",
+    score: 62,
+    tags: ["推荐系统", "A/B实验", "内容治理", "意外后果", "平台干预"],
+    method_zh: "在短视频平台上进行大规模 RCT，\"睡眠提醒\"干预使深夜参与度上升 14.75%（反效果），揭示\"强制探索效应\"：干预触发算法策略更新，形成自强化循环。对平台内容治理策略设计有关键警示意义。",
+    method_en: "Large-scale RCT on a short-video platform: a 'sleep reminder' intervention paradoxically increased late-night engagement by 14.75%, revealing a 'forced-exploration mechanism' — the intervention triggered algorithm policy updates creating self-reinforcing loops.",
+    innovation_zh: "首次通过工业 RCT 量化'治理干预→算法学习→意外后果'完整链条；对平台内容政策设计有直接警示价值。",
+    innovation_en: "First industrial RCT to quantify the full 'governance intervention → algorithm learning → unintended consequences' chain; directly warns against naïve content policy design.",
+    metrics: [
+      ["深夜参与度", "与预期相反", "+14.75%", "预期下降"],
+      ["整体平台使用量", "变化", "+2.18%", "—"],
+      ["持续效果", "实验后数周", "持续存在", "—"],
+    ],
+    scores: {innovation:17, metrics:11, quality:12, efficiency:5, generalization:3, relevance:14},
+    link: "https://arxiv.org/abs/2606.08265",
+    code: null,
+  },
+  {
+    date: "2026-06-09",
+    arxiv: "2606.09483",
+    title: "Memory Beyond Recall: A Dual-Process Cognitive Memory System for Self-Evolving LLM Agents",
+    authors: "Tianxiang Fei, et al.",
+    affil: "Tencent",
+    bucket: "WEAK",
+    score: 55,
+    tags: ["Agent记忆", "双过程理论", "自进化", "Tencent", "LLM Agent"],
+    method_zh: "受认知科学双过程理论启发，设计 System 1（快速 embedding 检索）+ System 2（结构化推理）双层记忆，Agent 通过任务反馈自动更新两类记忆，实现自进化。",
+    method_en: "Inspired by dual-process cognitive theory (System 1/2), proposes two-layer agent memory: System 1 (fast embedding retrieval) + System 2 (structured reasoning). Agents auto-update memory from task feedback for self-evolution.",
+    innovation_zh: "将认知科学双过程理论系统映射到 LLM Agent 记忆；Tencent 工业背景保证落地可行性。",
+    innovation_en: "Systematically maps dual-process cognitive theory to LLM agent memory architecture; Tencent industrial background ensures deployment feasibility.",
+    metrics: [
+      ["多步骤推理", "成功率", "+提升", "RAG-only"],
+      ["长期任务", "性能保持", "更稳定", "RAG-only"],
+    ],
+    scores: {innovation:16, metrics:9, quality:8, efficiency:7, generalization:3, relevance:12},
+    link: "https://arxiv.org/abs/2606.09483",
+    code: null,
+  },
+];
+
+let currentLang = 'zh';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  renderAll();
+}
+
+function scoreColor(s) {
+  if (s >= 85) return '#137333';
+  if (s >= 75) return '#1967d2';
+  if (s >= 60) return '#e37400';
+  return '#9e9e9e';
+}
+
+function renderCard(p) {
+  const isZh = currentLang === 'zh';
+  const method = isZh ? p.method_zh : p.method_en;
+  const innov = isZh ? p.innovation_zh : p.innovation_en;
+  const tags = p.tags.map(t => `<span class="tag ${p.bucket === 'STRONG' ? 'strong' : ''}">${t}</span>`).join('');
+  const metricsRows = p.metrics.map(m =>
+    `<tr><td>${m[0]}</td><td>${m[1]}</td><td>${m[2]}</td><td style="color:var(--sub)">${m[3]}</td></tr>`
+  ).join('');
+  const scoreRows = Object.entries(p.scores).map(([k, v]) => {
+    const labels = {innovation: isZh ? '创新' : 'Innovation', metrics: isZh ? '指标' : 'Metrics',
+      quality: isZh ? '实验质量' : 'Exp Quality', efficiency: isZh ? '效率' : 'Efficiency',
+      generalization: isZh ? '泛化' : 'Generalize', relevance: isZh ? '相关性' : 'Relevance'};
+    return `<div class="score-row"><span>${labels[k] || k}</span><span class="s-val">${v}</span></div>`;
+  }).join('');
+  const cardId = 'card_' + p.arxiv.replace('.', '_');
+
+  return `
+<div class="card" data-score="${p.score}" data-date="${p.date}" data-bucket="${p.bucket}" id="${cardId}">
+  <div class="card-header">
+    <div class="score-badge" style="background:${scoreColor(p.score)}">${p.score}</div>
+    <div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-authors">${p.authors}</div>
+      <div class="card-affil">${p.affil}</div>
+    </div>
+  </div>
+  <div class="tags">${tags}</div>
+  <div class="method-block">${method}</div>
+  <div class="section-toggle" onclick="toggleSection('${cardId}_innov')">
+    💡 ${isZh ? '创新性' : 'Innovation'} ▾
+  </div>
+  <div class="collapsible" id="${cardId}_innov">
+    <div class="method-block" style="color:#333;font-style:italic;">${innov}</div>
+  </div>
+  <div class="section-toggle" onclick="toggleSection('${cardId}_metrics')">
+    📊 ${isZh ? '关键指标' : 'Key Metrics'} ▾
+  </div>
+  <div class="collapsible" id="${cardId}_metrics">
+    <table class="metrics-table">
+      <tr><th>${isZh ? '场景' : 'Scenario'}</th><th>${isZh ? '指标' : 'Metric'}</th><th>${isZh ? '结果' : 'Result'}</th><th>vs.</th></tr>
+      ${metricsRows}
+    </table>
+  </div>
+  <div class="section-toggle" onclick="toggleSection('${cardId}_score')">
+    🏆 ${isZh ? '评分明细' : 'Score Breakdown'} ▾
+  </div>
+  <div class="collapsible" id="${cardId}_score">
+    <div class="score-breakdown">${scoreRows}</div>
+    <div style="margin-top:6px;text-align:right;font-weight:700;color:${scoreColor(p.score)}">
+      Total: ${p.score}/100
+    </div>
+  </div>
+  <div class="card-links">
+    <a class="card-link" href="${p.link}" target="_blank">arXiv ↗</a>
+    ${p.code ? `<a class="card-link" href="https://github.com/Sam1224/CCReproduce/tree/main/2026-06-09/${p.code}" target="_blank">💻 Code</a>` : ''}
+    <span class="card-link" style="cursor:default;background:#f1f3f4;color:var(--sub)">${p.bucket}</span>
+  </div>
+</div>`;
+}
+
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function renderAll() {
+  const container = document.getElementById('cards-2026-06-09');
+  const minScore = parseInt(document.getElementById('scoreSlider').value);
+  const dateFilter = document.getElementById('dateSelect').value;
+  const bucketFilter = document.getElementById('bucketSelect').value;
+
+  const filtered = papers.filter(p =>
+    p.score >= minScore &&
+    (dateFilter === 'all' || p.date === dateFilter) &&
+    (bucketFilter === 'all' || p.bucket === bucketFilter)
+  );
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state">没有符合条件的论文 / No matching papers</div>';
+  } else {
+    container.innerHTML = filtered.map(renderCard).join('');
+  }
+}
+
+function filterCards() {
+  const val = document.getElementById('scoreSlider').value;
+  document.getElementById('scoreVal').textContent = val;
+  renderAll();
+}
+
+// Initial render
+renderAll();
+</script>
+</body>
+</html>
