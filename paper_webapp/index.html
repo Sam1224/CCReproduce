@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daily Paper Radar</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-title">Daily Paper Radar</div>
+        <div class="brand-subtitle">E-commerce Content Ecology & Creator Governance</div>
+      </div>
+
+      <div class="controls">
+        <label class="control">
+          <span class="control-label" id="label-date">日期</span>
+          <select id="dateSelect"></select>
+        </label>
+
+        <label class="control">
+          <span class="control-label" id="label-score">最低分</span>
+          <div class="slider">
+            <input id="scoreSlider" type="range" min="0" max="100" value="40" />
+            <span id="scoreValue" class="mono">40</span>
+          </div>
+        </label>
+
+        <button id="langToggle" class="btn">EN</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="status" class="status">Loading…</div>
+      <section id="grid" class="grid" aria-live="polite"></section>
+    </main>
+
+    <template id="paperCardTpl">
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <div class="title"></div>
+            <div class="meta"></div>
+          </div>
+          <div class="score">
+            <div class="score-num"></div>
+            <div class="score-sub">/ 100</div>
+          </div>
+        </div>
+
+        <div class="tags"></div>
+
+        <div class="links"></div>
+
+        <div class="section">
+          <div class="section-title" data-i18n="method">方法概览</div>
+          <div class="section-body method"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title" data-i18n="innovation">创新点</div>
+          <div class="section-body innovation"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title" data-i18n="rationale">评分依据</div>
+          <div class="section-body rationale"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary toggle-figure" data-i18n="toggleFigure">显示/隐藏 Method Figure</button>
+          <button class="btn btn-secondary toggle-exp" data-i18n="toggleExp">显示/隐藏 亮眼实验</button>
+        </div>
+
+        <div class="collapsible figure-wrap hidden">
+          <img class="figure" alt="method figure" loading="lazy" />
+        </div>
+
+        <div class="collapsible exp-wrap hidden">
+          <div class="exp"></div>
+        </div>
+      </article>
+    </template>
+  </body>
+</html>

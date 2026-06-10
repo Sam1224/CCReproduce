@@ -1,0 +1,334 @@
+[
+  {
+    "id": "2606.11023",
+    "title": "GenAIR: LLM-Generated User Archetypes for Item Representation Learning in Sequential Recommendation",
+    "authors": ["Santiago B. Velasco", "Clement Clement", "et al."],
+    "affiliations": ["The Chinese University of Hong Kong", "McGill University", "Tongji University"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11023",
+      "pdf": "https://arxiv.org/pdf/2606.11023"
+    },
+    "tags": ["推荐系统", "序列推荐", "LLM表征", "电商"],
+    "summary": {
+      "zh": {
+        "method_overview": "GenAIR 用 LLM 为每个 item 生成一组可解释的用户原型（archetypes），把 item 表征从‘仅依赖交互序列的隐向量’升级为‘面向不同用户意图/偏好的多视角描述’。训练时，它通过把用户历史行为映射到原型权重，得到动态的 item 表征，再与序列推荐模型（如 SASRec/BERT4Rec）联合优化。相比直接用 LLM 文本向量或静态 item embedding，GenAIR 的高光点是把 LLM 生成能力用于构造可控、可组合的原型空间，并用行为校准让原型与真实点击偏好对齐。",
+        "story": "现有序列推荐的 item embedding 往往是静态、不可解释，难以表达同一商品对不同人群的多样价值；直接用 LLM 文本 embedding 又容易与真实行为偏好错位。GenAIR 的思路是先用 LLM 生成一组可解释的用户原型，再用用户行为在原型空间里做加权组合，得到‘因人而异’的 item 表征，从而提升推荐效果并增强解释性。",
+        "innovation": "1) 用 LLM 生成可解释的 item-原型描述作为中间语义层；2) 用用户行为对原型权重进行校准与训练，使语义原型与点击偏好对齐；3) 以较低工程侵入方式接入主流序列推荐框架。",
+        "key_metrics": "在多数据集上，GenAIR 在 HR@10/NDCG@10 上相对强基线（SASRec、BERT4Rec 及其文本增强版本）取得稳定提升（具体提升幅度依数据集不同）。"
+      },
+      "en": {
+        "method_overview": "GenAIR generates interpretable user archetypes for each item with an LLM, and learns item representations as a behavior-calibrated mixture over archetypes conditioned on the user’s interaction history. It plugs into standard sequential recommenders (e.g., SASRec/BERT4Rec) and improves top-K ranking metrics while providing controllable semantics.",
+        "innovation": "LLM-generated archetype space + behavior-calibrated mixture item representations for sequential recommendation."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 79,
+      "rationale_zh": "方法把 LLM 生成语义‘落地’到可训练的原型混合，思路清晰且对推荐可解释性有价值；但实验/指标提升幅度相对中等，且与电商治理的直接关联偏弱，主要价值在电商推荐/内容分发。"
+    }
+  },
+  {
+    "id": "2606.10921",
+    "title": "DocTrace: Tracing Evidence Selection in Long Document QA with Multi-Agent Systems",
+    "authors": ["Zaixu Zhang", "Xueguang Ma", "et al."],
+    "affiliations": ["UNSW", "CSIRO", "University of Wollongong"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10921",
+      "pdf": "https://arxiv.org/pdf/2606.10921",
+      "project": "https://zaixjun.github.io/DocTrace/"
+    },
+    "tags": ["RAG", "长文档理解", "多Agent", "证据选择", "数据质量"],
+    "summary": {
+      "zh": {
+        "method_overview": "DocTrace 针对长文档 QA 中‘证据选错/选不全’导致的幻觉与成本问题，提出可追踪（traceable）的多智能体证据选择框架。系统把任务拆成检索、证据筛选、证据聚合与回答等角色，并显式记录每一步证据流转与选择理由，便于诊断与迭代。其高光点是把“可解释的证据链追踪”作为一等公民，同时用多角色协作降低无效上下文与 token 消耗。",
+        "story": "长文档 QA 往往需要从大量段落里选出少量关键证据；传统 RAG/单模型链式方法在证据选择上不可控，容易把噪声带入生成并推高成本。DocTrace 通过多 Agent 分工 + 证据链追踪机制，把‘证据选择’做成可审计流程，从而提升答案质量并显著降低成本。",
+        "innovation": "1) 可追踪的多 Agent 证据选择流水线（显式记录证据链）；2) 以证据选择过程为中心的诊断与优化接口；3) 在保持/提升指标的同时显著降低推理成本。",
+        "key_metrics": "在 NarrativeQA 上，DocTrace 的 F1/EM 达到 40.28/23.00（相比 ComoRAG 31.43/18.60 提升明显）；在多个长文档 QA 任务上整体推理成本下降约 53.32%。"
+      },
+      "en": {
+        "method_overview": "DocTrace is a traceable multi-agent framework for long-document QA that explicitly logs and audits evidence selection across retrieval, filtering, aggregation, and answering agents. It improves answer quality while substantially reducing inference cost.",
+        "innovation": "Traceable evidence-selection pipeline + multi-agent role decomposition for long-document QA."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 21,
+      "total": 81,
+      "rationale_zh": "证据链可追踪对内容治理/审核链路同样有迁移价值；同时把成本大幅降下来很实用。论文创新点偏系统/工程范式，实验覆盖与诊断价值较强，因此给到 80+。"
+    }
+  },
+  {
+    "id": "2606.10697",
+    "title": "SuperFashion: Attribute-Specific Fashion Retrieval with Superpixel Tokens",
+    "authors": ["Yaozong Lin", "Lingxiao Meng", "et al."],
+    "affiliations": ["Institute of Information Engineering, Chinese Academy of Sciences", "University of Chinese Academy of Sciences"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10697",
+      "pdf": "https://arxiv.org/pdf/2606.10697"
+    },
+    "tags": ["电商搜索", "服饰", "细粒度属性检索", "视觉表征", "Tokenization"],
+    "summary": {
+      "zh": {
+        "method_overview": "SuperFashion 聚焦电商服饰场景的细粒度属性检索（例如只匹配‘袖型/领型/图案’等单一属性），提出用超像素（superpixel）作为视觉 token 来替代固定网格 patch token。模型先将服饰图像分割为语义更一致的超像素区域，对每个区域提取特征并作为 token 输入 Transformer；同时引入属性条件机制，让模型在检索时聚焦目标属性相关区域。它的高光点是：token 粒度与服饰边界更对齐，天然减少背景/跨区域混叠，对属性定位更友好。",
+        "story": "传统基于 patch token 的 Transformer 在服饰属性检索中常出现 token 覆盖多个语义区域（衣服+背景、不同部位混在一起），导致模型难以对齐‘某个属性’的局部证据。SuperFashion 通过超像素 token 把视觉输入变成‘更像对象部件’的序列，再用属性条件去做注意力聚焦，从而提升属性特定检索的准确性。",
+        "innovation": "1) 用超像素 token 替代 patch token，提升与服饰边界对齐；2) 属性条件化的检索表征学习，强化目标属性相关区域；3) 在多个服饰检索基准上验证鲁棒性与跨数据集效果。",
+        "key_metrics": "在 FashionAI 属性检索上，mAP 达到 72.46（对比 patch-token 方案 71.15）；在 DARN 上整体 mAP 达到 62.15（对比 56.88），提升显著。"
+      },
+      "en": {
+        "method_overview": "SuperFashion introduces superpixel tokens for attribute-specific fashion retrieval, replacing fixed-grid patches with semantically coherent regions. A Transformer encoder with attribute conditioning learns attribute-focused representations, improving mAP on FashionAI and DARN.",
+        "innovation": "Superpixel tokenization + attribute-conditioned retrieval representation learning."
+      }
+    },
+    "score": {
+      "innovation": 25,
+      "results": 12,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 21,
+      "total": 81,
+      "rationale_zh": "强电商相关（服饰检索/商品理解），方法在视觉 tokenization 上有明确动机且提升可观；实现可复现性高，适合落地到电商内容理解/检索链路。"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-06-10/SuperFashion"
+    }
+  },
+  {
+    "id": "2606.10759",
+    "title": "miniReranker: Tiny Multimodal Reranker, Massive Speedup via Visual Cache Reuse",
+    "authors": ["Binyuan Hui", "Zhou Hong", "et al."],
+    "affiliations": ["Eastern Institute of Technology", "Netmind.ai", "Munich Center for Machine Learning (LMU)"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10759",
+      "pdf": "https://arxiv.org/pdf/2606.10759"
+    },
+    "tags": ["多模态检索", "重排", "效率优化", "电商搜索"],
+    "summary": {
+      "zh": {
+        "method_overview": "miniReranker 关注多模态重排（query 文本 + 商品图像）在生产中‘昂贵且重复’的问题，提出通过视觉缓存复用（visual cache reuse）大幅降低推理成本。核心思路是：候选商品图片在不同 query 下会反复出现，因此可以预先/按需缓存图像侧的中间表示；在线重排时只需计算轻量的 query 条件模块并与缓存融合即可。它的高光点是把系统层面的“候选复用”转化为模型/算子层面的可复用表示，从而实现 >99% 的运行时加速且几乎不掉点。",
+        "story": "多模态重排在电商检索里效果很好但成本高，尤其当候选集规模大、商品图像反复出现时，图像编码的重复计算非常浪费。miniReranker 通过将视觉侧计算结果缓存并复用，把在线成本从‘每次都过一遍视觉编码器’降为‘大部分时候只做轻量融合’，在保证效果的同时显著降本。",
+        "innovation": "1) 视觉中间表示缓存复用的模型化实现（而非仅工程缓存）；2) 轻量 query 条件化融合以适配不同查询意图；3) 在大规模评测上展示几乎无损的极致加速。",
+        "key_metrics": "在 MMEB-v2 上，miniReranker 取得约 96.3% 的效果保持（相对 Qwen3-VL-2B-reranker 的 73.0，miniReranker 达到 70.3），同时在 1.49M query 上运行时减少 >99%。"
+      },
+      "en": {
+        "method_overview": "miniReranker achieves massive speedups for multimodal reranking by reusing cached visual representations of candidate images across queries, and only computing lightweight query-conditioned fusion online, retaining ~96% of the baseline quality with >99% runtime reduction.",
+        "innovation": "Visual cache reuse + lightweight query-conditioned fusion for multimodal reranking."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 20,
+      "total": 78,
+      "rationale_zh": "工程/系统创新强、降本极有价值；但方法本身更偏系统设计而非新任务/新模型，且与治理强相关度一般，因此总分略低于 80。"
+    }
+  },
+  {
+    "id": "2606.10621",
+    "title": "STORM: Reward-Guided Beam Search for Improved Query Expansion in Multimodal Retrieval",
+    "authors": ["Chuo Liu", "Nora Belrose", "et al."],
+    "affiliations": ["Mila", "Université Paris-Saclay", "et al."],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10621",
+      "pdf": "https://arxiv.org/pdf/2606.10621"
+    },
+    "tags": ["检索", "Query Expansion", "多模态检索", "电商搜索"],
+    "summary": {
+      "zh": {
+        "method_overview": "STORM 针对检索中的 query expansion（扩写/改写查询）常见的‘扩错方向’问题，提出用奖励函数引导的 beam search 来生成更有用的扩展查询。方法将扩展生成视为搜索问题：通过检索奖励（例如对下游检索质量的代理信号）对候选扩展进行打分，并在 beam 内选择最优扩展序列。其高光点是把扩写从纯生成转为‘面向检索指标的搜索’，更稳定地提升多模态/跨语言检索效果。",
+        "story": "传统 query expansion 通常只在语言层面更流畅，但未必提升检索；甚至会引入偏移和噪声。STORM 通过定义与检索目标对齐的 reward，把生成过程变成 reward-guided 搜索，在生成阶段就约束扩写方向，从而提升最终检索指标。",
+        "innovation": "1) 用 reward 引导 beam search 生成 query expansion；2) 将生成与检索闭环，直接为检索指标服务；3) 对多模态与跨域检索具有较好泛化。",
+        "key_metrics": "在 TREC-DL-20 上，nDCG@10 达到 67.3（对比 BM25 的 48.0）；在多个 out-of-domain 检索设置下也取得一致收益。"
+      },
+      "en": {
+        "method_overview": "STORM formulates query expansion as reward-guided beam search, scoring candidate expansions with retrieval-aligned rewards to improve downstream retrieval metrics, yielding consistent gains in in-domain and out-of-domain settings.",
+        "innovation": "Reward-guided beam search for retrieval-oriented query expansion."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 18,
+      "total": 75,
+      "rationale_zh": "对电商搜索（query 改写/扩展）直接有参考价值；但与内容治理关联较弱，且核心贡献偏方法组合与目标对齐。"
+    }
+  },
+  {
+    "id": "2606.10572",
+    "title": "Latent Memory: Building Multimodal Memory for RAG via Latent Compression",
+    "authors": ["Zhao Zhang", "et al."],
+    "affiliations": ["National University of Singapore"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10572",
+      "pdf": "https://arxiv.org/pdf/2606.10572",
+      "code": "https://github.com/zz1358m/Latent-Memory-Master"
+    },
+    "tags": ["多模态RAG", "长上下文压缩", "VLM", "Agent"],
+    "summary": {
+      "zh": {
+        "method_overview": "Latent Memory 解决多模态 RAG 中上下文 token 成本高的问题：把检索到的多模态证据（文本+图像）压缩为少量 latent token，再交给生成模型使用。其核心是一个可训练的压缩器，把长证据序列映射到固定长度的 latent 表示，并在下游回答/推理任务上端到端优化。高光点在于：在保持（甚至略提升）效果的同时，把证据输入 token 降到一个数量级，特别适合内容理解/审核这类需要大量证据的任务。",
+        "story": "多模态 RAG 往往需要把多段文本和多张图片拼接进上下文，推理成本会随证据长度线性上升，难以规模化。Latent Memory 通过学习式压缩，把证据先‘变成少量 latent 记忆’再喂给生成器，实现更低成本的多模态证据利用。",
+        "innovation": "1) 面向多模态证据的 latent 压缩记忆；2) 固定长度 latent token 作为 RAG 的‘可控上下文接口’；3) 在跨域与多任务上验证 token 效率优势。",
+        "key_metrics": "在 Out-of-domain（2Wiki+MuSiQue）上，Latent Memory 以约 71 tokens 达到 F1≈28.0，优于 BM25 k=5 的 F1≈26.2（需约 209 tokens）；在 WebQA 上以 82 tokens 达到 F1≈69.4，优于无压缩方案。"
+      },
+      "en": {
+        "method_overview": "Latent Memory compresses retrieved multimodal evidence into a small number of trainable latent tokens, enabling multimodal RAG with an order-of-magnitude fewer input tokens while maintaining or improving performance.",
+        "innovation": "Trainable latent compression of multimodal evidence for token-efficient RAG."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 20,
+      "total": 81,
+      "rationale_zh": "压缩式记忆对内容审核/检索增强理解非常实用，能显著降低上下文成本；论文方法清晰且指标+效率兼顾，因此给到 80+。"
+    }
+  },
+  {
+    "id": "2606.10677",
+    "title": "Infini Memory: Long-Term Memory for LLM Agents via Topic-Document Graph",
+    "authors": ["Yujie Zhang", "et al."],
+    "affiliations": ["Infinigence AI", "Tsinghua University", "Shanghai Jiao Tong University"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10677",
+      "pdf": "https://arxiv.org/pdf/2606.10677",
+      "code": "https://github.com/infinigence/Infini-Memory"
+    },
+    "tags": ["Agent", "长期记忆", "RAG", "知识组织"],
+    "summary": {
+      "zh": {
+        "method_overview": "Infini Memory 面向 LLM Agent 的长期记忆问题，提出用 Topic-Document Graph（主题-文档图）来组织、检索与写回记忆。系统把交互中产生的内容归并到主题节点下，并维护文档级别的可检索单元；当 Agent 需要回忆时，先在主题层定位相关簇，再在文档层做精检索与压缩返回。高光点是将记忆从‘扁平向量库’升级为‘可演化的层级图结构’，更利于长期维护与可控遗忘。",
+        "story": "把所有历史都塞进向量库会导致检索噪声、主题漂移、以及随着时间增长的成本失控。Infini Memory 通过主题聚类把记忆分层组织，并用图结构维护主题与文档的关系，使 Agent 能更稳定地找到真正相关的长期信息，同时保持可扩展性。",
+        "innovation": "1) Topic-Document Graph 的层级记忆组织；2) 主题层检索 + 文档层精检索的两阶段回忆；3) 面向长期交互的写回、合并与遗忘策略接口。",
+        "key_metrics": "在 MemoryAgentBench 上总体达到 64.7%；在 Accurate Retrieval 子任务上达到 81.2%，展示较强的长期检索与记忆组织能力。"
+      },
+      "en": {
+        "method_overview": "Infini Memory organizes long-term agent memory with a Topic-Document Graph, retrieving memories in a two-stage manner (topic-level then document-level) to reduce noise and improve scalability over flat vector stores.",
+        "innovation": "Hierarchical topic-document graph memory for long-term LLM agents."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 11,
+      "exp_quality": 11,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 18,
+      "total": 74,
+      "rationale_zh": "对治理场景可作为‘多轮处置/案件记忆’的参考，但更偏通用 Agent 记忆；实验指标不错但未到绝对 SOTA，因此分数在 70+。"
+    }
+  },
+  {
+    "id": "2606.10907",
+    "title": "From Prompt to Purchase: Evaluating LLM Brand Recommendations on the Open Web",
+    "authors": ["Daniel Klymentov", "et al."],
+    "affiliations": ["Scrunch AI"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10907",
+      "pdf": "https://arxiv.org/pdf/2606.10907"
+    },
+    "tags": ["电商", "营销/品牌", "LLM评测", "开放网络"],
+    "summary": {
+      "zh": {
+        "method_overview": "该论文从“用户提问→LLM 推荐品牌→用户跳转/购买”的链路出发，系统评估 LLM 在开放网络上的品牌推荐质量与影响。作者构建了面向品牌推荐的评测集与观测指标，分析不同提示、不同 LLM 以及不同垂类在推荐准确性、覆盖度与潜在偏置上的表现。高光点是把品牌推荐问题做成可量化评测，并从实际转化链路角度讨论 LLM 推荐对消费决策的影响。",
+        "story": "随着 LLM 直接影响用户的品牌与商品选择，‘推荐是否准确、是否存在偏置、是否可被操控’变成现实问题。论文通过构建评测与观测框架，把这个问题从定性讨论拉回到可测量的实验范式，为电商治理与广告合规提供基础量化工具。",
+        "innovation": "1) 面向开放网络品牌推荐的评测框架；2) 分析提示与模型对推荐偏置/覆盖的影响；3) 连接到真实用户行为（搜索/点击/购买）视角的讨论。",
+        "key_metrics": "论文报告了多个模型/提示设置下的品牌推荐命中与转化相关指标，并对不同垂类差异做了系统分析（不同设置下增益幅度不一）。"
+      },
+      "en": {
+        "method_overview": "The paper evaluates LLM-driven brand recommendations on the open web with a benchmark and metrics that connect prompts to downstream user behaviors, analyzing accuracy, coverage, and potential biases across models and categories.",
+        "innovation": "Benchmarking and analysis framework for LLM brand recommendations on the open web."
+      }
+    },
+    "score": {
+      "innovation": 18,
+      "results": 9,
+      "exp_quality": 10,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 18,
+      "total": 64,
+      "rationale_zh": "强电商相关但更偏评测与现象分析，方法创新有限；对‘品牌推荐合规/可操控性’讨论有参考价值。"
+    }
+  },
+  {
+    "id": "2606.11188",
+    "title": "ARM: Discrete Visual Tokenization for Autoregressive Multimodal Models",
+    "authors": ["Haonian Wang", "et al."],
+    "affiliations": ["Fudan University", "ByteDance TikTok", "ByteDance Seed"],
+    "date": "2026-06-10",
+    "published": "2026-06-09",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11188",
+      "pdf": "https://arxiv.org/pdf/2606.11188",
+      "code": "https://github.com/wdrink/ARM"
+    },
+    "tags": ["MLLM", "离散视觉token", "多模态生成", "基座模型"],
+    "summary": {
+      "zh": {
+        "method_overview": "ARM 研究自回归多模态模型中的视觉离散 tokenization：通过学习离散视觉码本，把图像映射为可预测的离散 token 序列，从而统一到语言模型的自回归建模框架。其关键在于设计更适合自回归训练的离散化策略与训练目标，使得同一模型既能做多模态理解也能做生成/编辑。高光点是把视觉 token 的离散化与自回归建模对齐，减少理解与生成之间的割裂。",
+        "story": "连续视觉特征与自回归语言建模存在接口不一致，导致多模态模型在理解/生成之间常需要不同分支或复杂对齐。ARM 用离散视觉 token 把视觉输入变成语言模型友好的序列，使统一自回归范式成为可能，从而兼顾理解与生成能力。",
+        "innovation": "1) 面向自回归 MLLM 的离散视觉 tokenization 设计；2) 统一理解与生成的训练范式；3) 在多模态理解与生成基准上验证有效性。",
+        "key_metrics": "论文报告：POPE 87.3，MMMU 40.2，GenEval 0.86，WISE 0.56，GEdit 6.68 等多项指标，体现较强的理解与生成能力。"
+      },
+      "en": {
+        "method_overview": "ARM proposes discrete visual tokenization tailored for autoregressive multimodal models, mapping images into discrete token sequences that align with LLM-style autoregressive training, enabling strong multimodal understanding and generation.",
+        "innovation": "Autoregressive-aligned discrete visual tokenization for unified multimodal understanding and generation."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 17,
+      "total": 75,
+      "rationale_zh": "基座能力强、对内容理解与生成都有潜在价值，但与电商治理是‘可迁移’而非直接任务相关；论文更多是通用 MLLM 技术栈贡献。"
+    }
+  }
+]
