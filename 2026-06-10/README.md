@@ -2,6 +2,13 @@
 
 本日共整理 9 篇候选论文（均为 2026-06-09 近 24 小时 arXiv 更新，按与电商内容理解/检索/治理的相关性与热度筛选）。
 
+## 推荐补充的 paper sources（便于每日抓新）
+- 论文聚合：Papers with Code（Trending / Latest）、arXiv-sanity、Connected Papers。
+- arXiv 入口：除关键词检索外，建议固定订阅 cs.IR/cs.CL/cs.CV/cs.LG 的 daily listing（或 RSS），再用关键词二次过滤。
+- 会议/评审：OpenReview（ICLR/NeurIPS/ICML/ACL 等）按「最近提交/最新决定」筛选；会议 accepted list 页面（CVPR/ICCV/ECCV、KDD/SIGIR、SIGMOD/VLDB）。
+- 学术检索：Semantic Scholar（Latest + topic alerts）、Google Scholar Alerts、OpenAlex（concept + date filter）。
+- 工业界产出：Google Research/DeepMind、Meta AI、Microsoft Research、Amazon Science、NVIDIA Research、ByteDance Seed、Qwen、Hunyuan 等官方 blog/RSS。
+
 ## 评分机制（100 分）
 - 方法创新性：30
 - 实验指标：15
