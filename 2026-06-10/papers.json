@@ -70,6 +70,10 @@
       "relevance": 21,
       "total": 81,
       "rationale_zh": "证据链可追踪对内容治理/审核链路同样有迁移价值；同时把成本大幅降下来很实用。论文创新点偏系统/工程范式，实验覆盖与诊断价值较强，因此给到 80+。"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-06-10/DocTrace"
     }
   },
   {
