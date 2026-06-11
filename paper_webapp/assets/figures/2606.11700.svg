@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">CompRank</text>
+  <text class="s" x="76" y="118">Token-level compression + decoding-free LLM reranking</text>
+
+  <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
+
+  <rect x="92" y="230" width="300" height="150" rx="16" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="262">1) Query + candidates</text>
+  <text class="p" x="112" y="292">retrieve N docs/items</text>
+  <text class="p" x="112" y="318">long context, too costly</text>
+
+  <rect x="430" y="220" width="360" height="180" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="450" y="252">2) Token compressor</text>
+  <text class="p" x="450" y="282">keep salient tokens per doc</text>
+  <text class="p" x="450" y="308">drop redundancy (budget B)</text>
+  <text class="m" x="450" y="342">doc → compressed tokens</text>
+
+  <rect x="430" y="430" width="360" height="150" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="450" y="462">3) Decoding-free scoring</text>
+  <text class="p" x="450" y="492">single forward pass</text>
+  <text class="p" x="450" y="518">attention/logit-based score</text>
+
+  <rect x="830" y="260" width="290" height="280" rx="16" fill="#faf5ff" stroke="#e9d5ff"/>
+  <text class="h" x="850" y="292">4) Reranked list</text>
+  <text class="p" x="850" y="322">score(q, doc_i)</text>
+  <text class="p" x="850" y="348">top-K for downstream</text>
+  <text class="p" x="850" y="388">benefit:</text>
+  <text class="p" x="870" y="416">• lower tokens</text>
+  <text class="p" x="870" y="442">• no autoregressive decode</text>
+  <text class="p" x="870" y="468">• near-LM quality</text>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 392 305 L 430 305"/>
+    <path d="M 610 400 L 610 430"/>
+    <path d="M 790 505 L 830 505"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="425,305 413,298 413,312"/>
+    <polygon points="610,430 603,418 617,418"/>
+    <polygon points="825,505 813,498 813,512"/>
+  </g>
+</svg>

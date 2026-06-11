@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#fef3c7"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">Tail-Aware Adaptive-k</text>
+  <text class="s" x="76" y="118">Query-adaptive context selection for RAG using tail modeling + knee detection</text>
+
+  <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
+
+  <rect x="92" y="250" width="250" height="140" rx="16" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="282">1) Query</text>
+  <text class="p" x="112" y="312">user question</text>
+  <text class="p" x="112" y="338">constraints (budget)</text>
+
+  <rect x="370" y="230" width="280" height="180" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="390" y="262">2) Retriever</text>
+  <text class="p" x="390" y="292">top-N passages</text>
+  <text class="p" x="390" y="318">scores s1 ≥ s2 ≥ ...</text>
+  <text class="m" x="390" y="352">N can be large</text>
+
+  <rect x="680" y="220" width="330" height="200" rx="16" fill="#fefce8" stroke="#fde68a"/>
+  <text class="h" x="700" y="252">3) Tail-aware selector</text>
+  <text class="p" x="700" y="282">fit score tail (EVT)</text>
+  <text class="p" x="700" y="308">detect knee / cutoff</text>
+  <text class="m" x="700" y="342">k = f(query, score curve)</text>
+  <text class="p" x="700" y="372">keep informative context only</text>
+
+  <rect x="680" y="450" width="330" height="150" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="700" y="482">4) RAG generation</text>
+  <text class="p" x="700" y="512">use top-k passages</text>
+  <text class="p" x="700" y="538">higher quality under budget</text>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 342 320 L 370 320"/>
+    <path d="M 650 320 L 680 320"/>
+    <path d="M 845 420 L 845 450"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="365,320 353,313 353,327"/>
+    <polygon points="675,320 663,313 663,327"/>
+    <polygon points="845,450 838,438 852,438"/>
+  </g>
+</svg>

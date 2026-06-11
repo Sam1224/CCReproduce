@@ -1,0 +1,332 @@
+[
+  {
+    "date": "2026-06-11",
+    "id": "2606.12215",
+    "title": "MLT-Dedup: Efficient Large-Scale Online Video Deduplication via Multi-Level Representations and Spatial-Temporal Matching",
+    "authors": [
+      "David Yuchen Wang",
+      "Haoying Li",
+      "Hailun Xu",
+      "Wei Chee Yew",
+      "Zirui Zhu",
+      "Sanjay Saha",
+      "Hao Hei",
+      "Kanchan Sarkar",
+      "Kun Xu"
+    ],
+    "affiliations": [
+      "TikTok Singapore",
+      "TikTok San Jose",
+      "National University of Singapore"
+    ],
+    "published": "2026-06-10",
+    "source": "arXiv / KDD'26",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12215",
+      "pdf": "https://arxiv.org/pdf/2606.12215v1",
+      "project": "https://doi.org/10.1145/3770855.3818450"
+    },
+    "tags": ["内容治理", "视频去重", "多模态表征", "KDD"],
+    "summary": {
+      "zh": {
+        "method_overview": "MLT-Dedup 面向 UGC 平台的海量视频近重复治理，提出“粗检索 + 精匹配”的两级体系。它用 Multi-Level Video Encoder（ML-VE）一次前向同时产出稀疏 clip-level 向量与细粒度 frame-level 向量：前者进 ANN 索引做大规模候选召回，后者按需从磁盘加载做精准核验。匹配阶段提出 DiF-SiM：在逐帧特征基础上引入差分特征（Δf_t）建模运动/时序变化，并输出重复片段的时序定位与重叠比例，用于“覆盖率阈值”等策略化判定。亮点是把“索引预算/覆盖率/召回”与“时序定位/精度”拆开，显著提升线上治理效果。",
+        "story": "传统视频去重要么用 frame-level 密集向量导致索引容量受限、候选覆盖不足（召回低），要么用 clip-level 粗向量导致精度不足、难以处理局部重叠。MLT-Dedup 的思路是：先用 ML-VE 生成可索引的稀疏 clip embedding 解决“候选覆盖/索引容量”，再在候选上加载 frame embedding 进入 DiF-SiM 做“时序重叠定位 + 相似度证据”，最后按重叠比例做策略化去重决策，兼顾召回、精度与工程成本。",
+        "innovation": "1) Multi-level 表征：clip embedding 用于大规模索引召回，frame embedding 用于精匹配，避免“容量 vs 精度”硬权衡；2) DiF-SiM 用差分特征显式引入运动/时序线索，并输出重复片段定位与覆盖率证据，天然契合治理策略；3) 用线上 A/B + 公共基准（VCSL）证明“工程可落地 + 标准化可比”。",
+        "key_metrics": "线上 A/B（90% precision）：相对 baseline（Swin-L + cosine matcher），ML-VE + DiF-SiM 总体把 repetition rate 降低 91%，同时索引容量提升 5×。\n召回（in-house Recall@5）：ML-VE=87.59，高于 Dinov2-Large=85.49 等开源表征。\n公开基准 VCSL：DiF-SiM F-score=74.31，Precision=71.21，Recall=77.68（优于 RTR+pre-training 的 70.73）。"
+      },
+      "en": {
+        "method_overview": "MLT-Dedup is a large-scale online video near-duplicate detection system that separates retrieval and verification. A multi-level encoder (ML-VE) outputs compact clip embeddings for ANN indexing and frame embeddings for on-demand verification. The matcher (DiF-SiM) leverages differential features to localize duplicated temporal segments and supports policy-driven decisions via overlap ratio.",
+        "innovation": "Multi-level retrieval+verification under strict index budgets, plus a differential-feature matcher that provides temporal localization evidence for governance policies, validated by online A/B and VCSL benchmark results."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 14,
+      "exp_quality": 14,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 88,
+      "rationale_zh": "治理场景强相关（UGC 重复内容直接影响推荐体验/版权风险/存储成本），方法把索引容量与精匹配分层解耦且指标非常硬（线上 -91% repetition@P90、索引 5×、VCSL SOTA），实验覆盖线上+公开基准，工程可落地性强。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-11/MLT-Dedup"}
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.12245",
+    "title": "DiffCold: A Diffusion-based Generative Model for Cold-Start Item Recommendation",
+    "authors": [
+      "Kangning Zhang",
+      "Jianghao Lin",
+      "Yingjie Qin",
+      "Weinan Zhang",
+      "Yong Yu"
+    ],
+    "affiliations": [
+      "Shanghai Jiao Tong University",
+      "Xiaohongshu Inc."
+    ],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12245",
+      "pdf": "https://arxiv.org/pdf/2606.12245v1"
+    },
+    "tags": ["推荐系统", "冷启动", "扩散模型", "表征对齐"],
+    "summary": {
+      "zh": {
+        "method_overview": "DiffCold 聚焦 cold-start item recommendation 的“跷跷板问题”：很多方法提升 cold item 会牺牲 warm item。作者把根因归结为 warm（行为 manifold）与 cold（语义 manifold）分布不一致，强行映射会破坏 warm embedding。方法用条件扩散模型（DDPM）去学习 warm manifold 的“逐步破坏/重建”，训练时以内容特征为条件去重建 warm embedding，从而建立从语义到行为空间的柔性生成桥。为适配 cold-start，提出两点关键设计：① Retrieval-enhanced Aggregator：用内容相似 warm item 的 embedding 聚合作为扩散生成的更好起点，避免纯噪声导致个性化信息丢失；② Simulation-based Representation Alignment：用 warm item 模拟 cold 生成过程，并用对齐/对比学习把生成分布拉回 warm 分布，提升一致性。",
+        "story": "现有冷启动往往要么把 warm embedding 也拉到内容空间（warm 退化），要么用 GAN/VAE 直接回归生成（难以覆盖 warm manifold 的复杂分布）。DiffCold 的故事线是：先承认 warm/cold 的分布差异是主要矛盾 → 用扩散的“逐步重建”去逼近 warm manifold → 用检索增强的初始化解决 cold 的起点问题 → 再用模拟对齐确保生成分布与真实 warm embedding 一致，从而同时提升 cold 与 warm。",
+        "innovation": "1) 把 cold-start 的 seesaw 现象明确建模为“语义 manifold vs 行为 manifold 的分布差异”；2) 首次将条件扩散用于 cold item embedding 生成，通过多步重建更好拟合 warm manifold；3) 检索增强起点 + 训练期模拟对齐，专门针对扩散在 cold-start 场景的“起点/分布一致性”两大难点。",
+        "key_metrics": "三数据集、三 backbone 上均同时提升 Overall/Cold/Warm。以 MF 为例：Movielens Overall R@20/N@20=0.1463/0.1966，Cold R@20/N@20=0.2148/0.2052，Warm R@20/N@20=0.2593/0.2225；Citeulike Overall=0.2054/0.1593，Cold=0.3295/0.1953，Warm=0.2873/0.1797；Xing Overall=0.2844/0.2309，Cold=0.3657/0.2594，Warm=0.4775/0.3064（对最佳 baseline 的总体提升最高到 22%+）。"
+      },
+      "en": {
+        "method_overview": "DiffCold addresses the cold-start ‘seesaw dilemma’ by viewing warm-item embeddings as a behavioral manifold and cold items as a semantic manifold. It trains a content-conditioned diffusion model to reconstruct warm embeddings, then generates cold embeddings via iterative denoising.",
+        "innovation": "Retrieval-enhanced initialization for diffusion sampling plus simulation-based alignment to match the warm embedding distribution, enabling cold improvement without degrading warm items."
+      }
+    },
+    "score": {
+      "innovation": 26,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 86,
+      "rationale_zh": "电商推荐的 cold-start 直击业务痛点；扩散生成 + 检索增强起点的组合能更好覆盖 warm manifold，并且给出充分 ablation/效率分析，最关键的是同时提升 cold/warm，避免常见 warm 退化。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-11/DiffCold"}
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.12198",
+    "title": "LLM-Based User Personas for Recommendations at Scale",
+    "authors": [
+      "Haoting Wang",
+      "Haokai Lu",
+      "Zheyun Feng",
+      "Jenny Huang",
+      "Yifat Amir",
+      "Gregory Hinkson",
+      "Ben Most",
+      "Zelong Zhao",
+      "Kelly (Yixin) Cui",
+      "Rein Zhang",
+      "Fabio Soldo",
+      "Yu Xia",
+      "Nihar Bhupalam",
+      "Minmin Chen",
+      "Konstantina Christakopoulou",
+      "Lichan Hong",
+      "Ed H. Chi"
+    ],
+    "affiliations": ["Google", "Google DeepMind", "GNucleus AI"],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12198",
+      "pdf": "https://arxiv.org/pdf/2606.12198v1"
+    },
+    "tags": ["推荐系统", "LLM", "用户画像", "线上系统"],
+    "summary": {
+      "zh": {
+        "method_overview": "论文在一个“十亿级用户”的短视频推荐平台里，把 LLM 用作在线 user understanding：实时生成自然语言用户兴趣画像（persona），并把画像作为高层语义策略，去约束/引导下游的 ID-based 推荐召回与排序。核心点是让 persona 同时包含“总结型兴趣”（强化 exploitation）与“探索型兴趣”（显式驱动 exploration，缓解反馈回路）。为满足在线成本与延迟，作者用 teacher→student 的知识蒸馏、异步生成管线（把推理解耦出在线关键路径）、量化与结构化输入等工程手段实现可部署。",
+        "story": "传统工业推荐多是 ID/序列模型，语义可解释性差且难以快速捕捉用户意图；而直接把 LLM 同步塞进在线推荐链路又会被成本/延迟打爆。本文的解决路线是：先把推荐拆成“语言层规划（persona）→ 物品层策略（NN 检索+序列模型）”，让 LLM 产出可解释的兴趣信号；再通过蒸馏把大模型推理能力迁移到小模型；最后用异步推理把 persona 生成从在线流量中解耦，形成“可规模化上线”的闭环。",
+        "innovation": "1) 把 persona 从离线分析提升为在线 serving 时生成的“可执行语义策略”，并显式把 exploration 写进 persona；2) 用结构化输入 + 蒸馏 + 异步推理把 LLM persona 做到十亿级规模可部署；3) 不只离线指标，而是用长期线上实验直接验证 viewer value 与探索收益。",
+        "key_metrics": "线上 30+ 天实验：watch time +0.04%（p<0.05），active users +0.03%（p<0.05）。兴趣探索指标：engaged topics +0.04%，multiple lasting engaged topics users +0.03%（均 p<0.05）。在探索兴趣上：曝光更少（impressions -40.91%），但一旦曝光，被观看概率 +13.6%。"
+      },
+      "en": {
+        "method_overview": "The paper deploys LLM-generated natural-language user interest personas in a billion-user recommendation system. Personas are generated online (via distillation + asynchronous inference) and used as high-level semantic intents to guide downstream retrieval and ranking.",
+        "innovation": "Production-grade architecture for LLM personas at scale, explicitly combining summarization intents (exploitation) and exploration intents, validated by long-running live A/B experiments."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 10,
+      "exp_quality": 13,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 81,
+      "rationale_zh": "与内容生态分发强相关，且给出可落地的线上系统与 30+ 天 live experiment；相对提升幅度在百分之零点级别（符合大盘尺度），方法创新性更多体现在“工程化落地与语义层规划”，因此结果分与创新分略保守。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-11/LLMUserPersonas"}
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.11700",
+    "title": "CompRank: Efficient LLM Reranking via Token-Level Compression and Decoding-Free Scoring",
+    "authors": [
+      "Xuan Lu",
+      "Haohang Huang",
+      "Yingqi Fan",
+      "Junlong Tong",
+      "Yuxuan Zhang",
+      "Ping Nie",
+      "Rui Meng",
+      "Xiaoyu Shen"
+    ],
+    "affiliations": [
+      "Shanghai Jiao Tong University",
+      "Eastern Institute of Technology, Ningbo",
+      "University of British Columbia",
+      "University of Waterloo"
+    ],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11700",
+      "pdf": "https://arxiv.org/pdf/2606.11700v1"
+    },
+    "tags": ["检索", "RAG", "LLM rerank", "效率优化"],
+    "summary": {
+      "zh": {
+        "method_overview": "CompRank 面向长候选列表的 LLM reranking，抓住“排序信号稀疏 + 文档侧可复用”的结构性冗余。它把文档表示与候选顺序/查询上下文解耦（便于复用 KV states），再做 segment-wise token compression（只保留约 10% 文档 token 参与交互），并用 CopyNet-style 目标直接对齐“attention mass → 文档得分”的解码无关（decoding-free）排序。整体把 rerank 从“生成 doc id”的序列解码问题，改造成“注意力打分+排序”的并行问题。",
+        "story": "现有 LLM rerank 在 top-100/top-500 场景成本高：一是长上下文 attention 贵，二是 listwise 生成 doc id 解码慢且易错。CompRank 的路线是：先让文档块彼此不互相注意（降低 N^2），再把文档 token 压缩到很小的子集（降低 query×doc 交互），最后完全不做生成、直接用 attention 得分排序（去掉解码瓶颈），从而在长列表下保持效果并显著提速。",
+        "innovation": "1) 文档块解耦 + 可缓存 KV 的 rerank 结构；2) segment-wise token 压缩在极低 token ratio 下保持 NDCG；3) CopyNet-style 训练让“attention 得分”可直接用于推理排序，避免生成式 listwise 的失败模式。",
+        "key_metrics": "BEIR 7 数据集：Step-10 仅保留 10.2% 文档 token，平均 NDCG@10=39.2（full-token=39.7）。在 TREC-COVID 上 NDCG@10=81.2。长列表扩展：在 30→500 candidate 评测中，相对 decode-ID listwise reranker 获得 4.9×–9.5× 端到端加速，同时保持更稳定的 NDCG。"
+      },
+      "en": {
+        "method_overview": "CompRank speeds up LLM reranking by decoupling document-side representations for reuse, compressing document tokens (≈10% retained), and scoring documents via attention mass without autoregressive decoding.",
+        "innovation": "Token-level compression + decoding-free attention scoring for scalable long-list reranking, with the potential to cache document KV states in agentic RAG settings."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 12,
+      "exp_quality": 11,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 17,
+      "total": 74,
+      "rationale_zh": "对 RAG/检索工程非常有价值，且效率收益明确；但与“达人治理/内容违规检测”属于间接相关（更偏检索基础设施），因此相关性分较保守。"
+    }
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.12400",
+    "title": "Doc-to-Atom: Learning to Compile and Compose Memory Atoms",
+    "authors": [
+      "Xingjian Diao",
+      "Wenbo Li",
+      "Yashas Malur Saidutta",
+      "Avinash Amballa",
+      "Lazar Valkov",
+      "Srinivas Chappidi"
+    ],
+    "affiliations": ["Samsung Electronics AI Center", "Dartmouth College"],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12400",
+      "pdf": "https://arxiv.org/pdf/2606.12400v1"
+    },
+    "tags": ["长文档理解", "参数化记忆", "RAG/Agent"],
+    "summary": {
+      "zh": {
+        "method_overview": "Doc2Atom 是“参数化记忆（parametric memory）”思路的细粒度版本：不再把整篇文档压成一个 monolithic LoRA，而是把文档拆成带类型的知识原子（atoms），每个 atom 编译成 micro-LoRA + provenance key（可检索索引）+ 可选 micro-KV。推理时用两阶段 router 根据 query 只选相关 atoms，并把它们按权重组合成 query-specific adapter 注入冻结基座模型，从而减少无关查询干扰、提升组合召回与长文档可扩展性。",
+        "story": "长文档推理的痛点是：长上下文 attention 成本高且易“注意力稀释”；直接把文档蒸馏进一个 LoRA 虽快，但对不同 query 缺乏选择性，容易把无关知识也写入/激活。Doc2Atom 的解决方式是：先把文档结构化成 atoms → 每个 atom 单独可检索可组合 → query 时只组装需要的 atoms，让参数化记忆具备“像 RAG 一样的选择性”。",
+        "innovation": "1) 把 Doc-to-LoRA 的单适配器范式改造成可组合的 atom-level memory；2) 通过 router 实现 query-conditioned 选择与拒答（unanswerable）能力；3) 在“更新/内化”阶段以更低额外显存换取可扩展的选择性内存。",
+        "key_metrics": "效率（compile/internalization）：Gemma-2-2B-It 上 Doc2Atom 额外显存 13.43GB（vs D2L 24.02GB），Qwen3-4B 上 5.02GB（vs 34.62GB）；更新延迟分别为 2.10s（vs 0.31s）与 1.10s（vs 0.51s）。此外在多基准上拒答 F1 显著更高（多数 >85%，LongBench-2WikiMQA 最高约 97.5）。"
+      },
+      "en": {
+        "method_overview": "Doc2Atom decomposes a document into typed ‘memory atoms’. Each atom is compiled into a micro-LoRA adapter with a retrieval key, and a router assembles only relevant atoms per query into a query-specific adapter injected into a frozen LLM.",
+        "innovation": "Composable parametric memory with query-conditioned routing (and refusal on irrelevant queries), reducing interference and improving scalability versus monolithic document-to-LoRA compression."
+      }
+    },
+    "score": {
+      "innovation": 25,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 17,
+      "total": 77,
+      "rationale_zh": "对长文档理解/RAG/agent 具备直接借鉴价值（尤其是“参数化记忆的选择性”），但与电商治理场景需要结合具体知识库与业务链路落地，因此相关性不打满。"
+    }
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.11907",
+    "title": "Tail-Aware Adaptive-k: Query-Adaptive Context Selection for Retrieval-Augmented Generation",
+    "authors": [
+      "Ziyu Song",
+      "Jiaming Fang",
+      "Kuangyu Li",
+      "Tuo Xia",
+      "Chuanpeng Wang"
+    ],
+    "affiliations": ["AI Lab, 37 Interactive Entertainment", "Wuhan University"],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11907",
+      "pdf": "https://arxiv.org/pdf/2606.11907v1",
+      "project": "https://anonymous.4open.science/r/pkdd2026taak"
+    },
+    "tags": ["RAG", "自适应检索", "效率"],
+    "summary": {
+      "zh": {
+        "method_overview": "TAA-k 解决 RAG 里固定 Top-K 的脆弱性：不同 query 的相似度分布差异大，固定截断要么引入噪声要么丢证据。作者观察到排序相似度曲线常呈“陡-平-陡”形态（相关 head → 过渡 → 噪声 tail），提出两阶段无训练方法：先用 knee detection 在几何上圈定过渡区域，再在该局部窗口做 EVT（GPD）拟合/稳定性检验来判定 tail onset，从而得到 query-adaptive 的 k*。",
+        "story": "全局 EVT 截断理论上优雅，但 O(N^2) 太慢且不稳定；纯启发式 gap rule 又不稳。TAA-k 把“几何先验”作为检索列表结构信息：先快速定位可能的转折点，再在小窗口里做统计检验，既保留 EVT 的严谨性又把复杂度降下来，适合在线 RAG。",
+        "innovation": "1) 把“尾部稳定性”作为 RAG 截断的统计判据，并与相似度曲线几何结构结合；2) knee detection + localized EVT 将 O(N^2) 降到约 O(√(N log N))；3) 在多数据集上验证截断不仅提升检索 F1，也提升 end-to-end QA 准确率。",
+        "key_metrics": "下游 LLM answer accuracy（%）：WebQ/2Wiki/MuSi 平均 61.63（Self-Route 60.35，Adaptive-k 57.75）。最优性：Diff-k 与 Oracle 的误差显著更低（例如 WebQ Diff-k=19.30）。效率：引入几何 prior 后推理延迟从 40.59ms 降至 4.03ms（约 10×）。"
+      },
+      "en": {
+        "method_overview": "TAA-k selects a query-adaptive Top-k for RAG by first detecting the knee region of the ranked similarity curve, then validating tail stability via localized EVT-based diagnostics.",
+        "innovation": "Geometry-guided localized EVT yields near-oracle truncation with ~10× latency reduction, improving end-to-end QA accuracy over fixed or heuristic cutoffs."
+      }
+    },
+    "score": {
+      "innovation": 18,
+      "results": 10,
+      "exp_quality": 10,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 16,
+      "total": 66,
+      "rationale_zh": "RAG 工程很实用且效率收益大，但整体属于“检索策略/统计截断”层，和电商治理的直接业务链路仍需结合（如违规 evidence 召回、知识库问答），因此相关性与结果分偏中等。"
+    }
+  },
+  {
+    "date": "2026-06-11",
+    "id": "2606.12412",
+    "title": "Reroute, Don’t Remove: Recoverable Visual Token Routing for Vision-Language Models",
+    "authors": [
+      "Cheng-Yu Yang",
+      "Shao-Yuan Lo",
+      "Yu-Lun Liu"
+    ],
+    "affiliations": ["National Yang Ming Chiao Tung University", "National Taiwan University"],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12412",
+      "pdf": "https://arxiv.org/pdf/2606.12412v1",
+      "code": "https://github.com/elmma/mllm-reroute"
+    },
+    "tags": ["VLM/MLLM", "token routing", "高效推理"],
+    "summary": {
+      "zh": {
+        "method_overview": "论文指出 VLM 的“score-and-prune（删 token）”范式有根本缺陷：视觉 token 的重要性随 decoder depth 漂移，早期被删掉的 token 可能在深层才变重要，导致 grounding 崩溃。Reroute 提出一种训练无关（training-free）的可恢复路由：每个阶段只让 top-r token 进入 Attn+FFN，其余 token 走旁路但不删除，下一阶段可重新参与竞争，实现“defer → re-enter”。它复用现有的 attention-based scorer 与 schedule，不增加额外参数，在相同 token budget 下显著提升 grounding，同时保持通用 VQA 能力。",
+        "story": "为了降成本，VLM 常剪视觉 token；但剪枝一旦提交就是不可逆，等于假设 token 重要性在各层稳定。Reroute 的思路是把剪枝改造成“路由”：不是删掉，而是暂缓计算，让 token 仍保留在序列状态里，后续层如果需要可以回流，从而在不增加理论成本的情况下避免把关键证据永久丢失。",
+        "innovation": "1) 将不可逆 pruning 改为可恢复 routing（相当于视觉 token 的 mixture-of-depth），专治 depth 漂移；2) training-free：复用现有 attention scorer，不引入学习路由器；3) 在多 backbone、多预算下验证 grounding 提升且 VQA 不显著牺牲。",
+        "key_metrics": "LLaVA-1.5-7B 的 VQA：在 64 token（88.9% reduction）预算下，PDrop+Reroute Avg ratio=91.7%（PDrop=89.7%）。效率：在 128/64 token 下 TFLOPs 和 KV-cache 均显著下降（例如 64 token KV-cache 约从 297.5MB 降至 ~50MB 级）。"
+      },
+      "en": {
+        "method_overview": "Reroute replaces irreversible visual-token pruning with recoverable routing: deferred tokens bypass computation at a stage but can re-enter later when their importance emerges in deeper layers.",
+        "innovation": "Training-free, matched-budget token routing that improves grounding under aggressive token reduction while preserving general VQA performance."
+      }
+    },
+    "score": {
+      "innovation": 21,
+      "results": 11,
+      "exp_quality": 11,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 12,
+      "total": 67,
+      "rationale_zh": "方法对多模态推理/内容理解基础设施有启发，但与电商内容治理更偏“底层加速/推理稳定性”弱相关，且主要价值在 VLM 推理优化。"
+    }
+  }
+]

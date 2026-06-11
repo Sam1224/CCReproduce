@@ -77,8 +77,14 @@ def main() -> None:
             if reproduce and reproduce.get("path"):
                 reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/main/{reproduce['path']}"
 
-            fig_path = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.png"
-            figure_path = f"assets/figures/{p['id']}.png" if fig_path.exists() else None
+            fig_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.svg"
+            fig_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.png"
+            if fig_path_svg.exists():
+                figure_path = f"assets/figures/{p['id']}.svg"
+            elif fig_path_png.exists():
+                figure_path = f"assets/figures/{p['id']}.png"
+            else:
+                figure_path = None
 
             conn.execute(
                 """
