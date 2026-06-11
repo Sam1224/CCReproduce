@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Digest</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #dee2e6;
+    --text: #212529;
+    --muted: #6c757d;
+    --accent: #4361ee;
+    --accent2: #3a0ca3;
+    --strong: #e63946;
+    --weak: #2a9d8f;
+    --score-high: #2dc653;
+    --score-mid: #f4a261;
+    --score-low: #e76f51;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  header { background: var(--accent2); color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+  header p { font-size: 0.85rem; opacity: 0.85; }
+  .toolbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .toolbar label { font-size: 0.85rem; color: var(--muted); }
+  .toolbar input[type=range] { width: 160px; accent-color: var(--accent); }
+  .toolbar select, .toolbar input[type=date] { border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; font-size: 0.85rem; background: white; }
+  .lang-toggle { margin-left: auto; display: flex; gap: 4px; }
+  .lang-btn { padding: 4px 12px; border: 1px solid var(--accent); border-radius: 4px; cursor: pointer; font-size: 0.8rem; background: transparent; color: var(--accent); transition: all 0.15s; }
+  .lang-btn.active { background: var(--accent); color: white; }
+  #score-label { min-width: 30px; font-weight: 600; color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; padding: 24px 32px; max-width: 1600px; margin: 0 auto; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; transition: transform 0.15s, box-shadow 0.15s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+  .card-header { padding: 16px 18px 10px; border-bottom: 1px solid var(--border); }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 99px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tag-strong { background: #fff0f0; color: var(--strong); }
+  .tag-weak { background: #e6f7f5; color: var(--weak); }
+  .tag-domain { background: #eef2ff; color: var(--accent); }
+  .card-title { font-size: 0.95rem; font-weight: 700; line-height: 1.4; margin-bottom: 4px; }
+  .card-title a { color: var(--text); text-decoration: none; }
+  .card-title a:hover { color: var(--accent); }
+  .card-meta { font-size: 0.78rem; color: var(--muted); }
+  .score-badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 700; margin-left: 8px; }
+  .score-high { background: #d4f4d9; color: #1a7a31; }
+  .score-mid { background: #fde8cc; color: #7a4210; }
+  .score-low { background: #fde8cc; color: #7a4210; }
+  .card-body { padding: 14px 18px; }
+  .section-toggle { font-size: 0.78rem; color: var(--accent); cursor: pointer; user-select: none; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px; background: none; border: none; }
+  .section-toggle::before { content: '▸'; transition: transform 0.2s; }
+  .section-toggle.open::before { transform: rotate(90deg); }
+  .collapsible { display: none; }
+  .collapsible.open { display: block; }
+  .method-box { background: #f7f9ff; border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 0 6px 6px 0; font-size: 0.83rem; margin-bottom: 10px; }
+  .innovation-box { background: #fff7ed; border-left: 3px solid #f4a261; padding: 10px 12px; border-radius: 0 6px 6px 0; font-size: 0.83rem; margin-bottom: 10px; }
+  .metrics-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-bottom: 10px; }
+  .metrics-table th { background: #f1f3f5; padding: 5px 8px; text-align: left; font-weight: 600; }
+  .metrics-table td { padding: 4px 8px; border-bottom: 1px solid var(--border); }
+  .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 8px; }
+  .score-row { font-size: 0.78rem; display: flex; justify-content: space-between; }
+  .score-row span:last-child { font-weight: 600; color: var(--accent); }
+  .card-footer { padding: 10px 18px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn { font-size: 0.78rem; padding: 4px 12px; border-radius: 5px; border: 1px solid var(--border); background: white; cursor: pointer; text-decoration: none; color: var(--text); transition: background 0.1s; }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+  .figure-box { text-align: center; padding: 12px; background: #fafafa; border-radius: 6px; margin: 10px 0; }
+  .figure-box svg { max-width: 100%; }
+  .date-badge { font-size: 0.72rem; background: #eef2ff; color: var(--accent); padding: 2px 8px; border-radius: 4px; }
+  .hidden { display: none !important; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; padding: 12px; } header { padding: 14px 16px; } .toolbar { padding: 10px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CCReproduce · Daily AI Paper Digest</h1>
+    <p>E-commerce Content Ecosystem &amp; Influencer Governance | LLM / VLM / Agent / RAG / Governance</p>
+  </div>
+  <div style="font-size:0.82rem;opacity:0.8">
+    Powered by automated daily inspection
+  </div>
+</header>
+
+<div class="toolbar">
+  <label>Min Score:
+    <input type="range" id="score-slider" min="0" max="100" value="0" oninput="filterCards()">
+    <span id="score-label">0</span>
+  </label>
+  <label>Date:
+    <select id="date-picker" onchange="filterCards()"></select>
+  </label>
+  <label>Bucket:
+    <select id="bucket-filter" onchange="filterCards()">
+      <option value="">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </label>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<div class="grid" id="paper-grid"></div>
+
+<script>
+// Embedded paper database
+const PAPERS_DB = {
+  "2026-06-10": [
+    {
+      id: "2606.10921",
+      title: "DocTrace: Tracing Evidence Selection in Long Document QA with Multi-Agent Systems",
+      authors: "Zaixu Zhang, Xueguang Ma, et al.",
+      affiliations: "UNSW Sydney, CSIRO, University of Wollongong",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 81,
+      tags: ["RAG", "Multi-Agent", "Evidence Tracing", "Data Quality"],
+      arxiv: "https://arxiv.org/abs/2606.10921",
+      project: "https://zaixjun.github.io/DocTrace/",
+      code: "2026-06-10/DocTrace",
+      method_zh: "将长文档QA任务拆分为检索、证据筛选、聚合、回答四个Agent角色，系统显式记录每步证据流转与选择理由，实现可审计的证据链追踪。多Agent分工在提升回答质量的同时将推理成本降低约53%。",
+      method_en: "DocTrace is a traceable multi-agent framework for long-document QA that explicitly logs evidence selection across retrieval, filtering, aggregation, and answering agents. It improves answer quality while cutting inference cost by ~53%.",
+      innovation_zh: "首次将"证据链追踪"作为一等公民设计；证据选择流程可审计，对内容治理审核链路有直接迁移价值；效果与效率双优。",
+      innovation_en: "First-class traceable evidence pipeline + multi-agent decomposition; directly applicable to auditable content governance workflows.",
+      metrics: [["NarrativeQA F1", "40.28 vs ComoRAG 31.43"], ["推理成本", "↓53.32%"]],
+      score_breakdown: {Innovation:23, "SOTA Delta":12, "Exp Quality":12, Efficiency:9, Generalization:4, "Domain Rel.":21},
+      score_rationale_zh: "证据链可追踪对内容治理/审核链路有迁移价值；成本大幅下降实用；论文创新偏系统/工程但诊断价值很强。"
+    },
+    {
+      id: "2606.10697",
+      title: "SuperFashion: Attribute-Specific Fashion Retrieval with Superpixel Tokens",
+      authors: "Yaozong Lin, Lingxiao Meng, et al.",
+      affiliations: "Institute of Information Engineering, CAS; UCAS",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 81,
+      tags: ["E-commerce Search", "Fashion", "Fine-Grained Retrieval", "VLM"],
+      arxiv: "https://arxiv.org/abs/2606.10697",
+      code: "2026-06-10/SuperFashion",
+      method_zh: "用超像素（semantically coherent region）替代固定grid patch token，配合属性条件机制，使模型在检索时聚焦目标属性相关区域（袖型、领型、图案等），解决跨区域混叠导致的细粒度属性检索精度不足问题。",
+      method_en: "SuperFashion introduces superpixel tokens for attribute-specific fashion retrieval, replacing fixed-grid patches with semantically coherent regions plus attribute conditioning.",
+      innovation_zh: "超像素token与服饰边界天然对齐，属性条件化检索设计完整；对电商服饰搜索与商品属性理解有直接落地价值。",
+      innovation_en: "Boundary-aligned superpixel tokenization + attribute-conditioned retrieval, directly applicable to e-commerce fine-grained product search.",
+      metrics: [["FashionAI mAP", "72.46 vs patch-token 71.15"], ["DARN mAP", "62.15 vs 56.88 (+9.3%)"]],
+      score_breakdown: {Innovation:25, "SOTA Delta":12, "Exp Quality":13, Efficiency:6, Generalization:4, "Domain Rel.":21},
+      score_rationale_zh: "直接面向电商服饰检索，方法创新明确且提升可观；实现可复现性高。"
+    },
+    {
+      id: "2606.10572",
+      title: "Latent Memory: Building Multimodal Memory for RAG via Latent Compression",
+      authors: "Zhao Zhang, et al.",
+      affiliations: "National University of Singapore",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 81,
+      tags: ["Multimodal RAG", "Latent Compression", "VLM", "Agent", "Efficiency"],
+      arxiv: "https://arxiv.org/abs/2606.10572",
+      code_url: "https://github.com/zz1358m/Latent-Memory-Master",
+      method_zh: "提出可训练的Latent压缩器，将检索到的多模态证据（文本+图像）压缩为少量固定长度latent token，再送入生成模型，实现token数量级下降的同时效果不降甚至略升。",
+      method_en: "Latent Memory compresses retrieved multimodal evidence into a small number of trainable latent tokens, enabling token-efficient multimodal RAG with improved or maintained performance.",
+      innovation_zh: "端到端可训练latent压缩而非规则截断；固定长度latent接口易于与各类RAG系统对接；对内容审核等需大量证据的场景尤为适用。",
+      innovation_en: "Trainable latent compression interface for token-efficient multimodal RAG, ideal for content understanding and moderation at scale.",
+      metrics: [["2Wiki OOD F1", "28.0 vs BM25 26.2 (71 vs 209 tokens)"], ["WebQA F1", "69.4 (82 tokens)"]],
+      score_breakdown: {Innovation:24, "SOTA Delta":12, "Exp Quality":12, Efficiency:9, Generalization:4, "Domain Rel.":20},
+      score_rationale_zh: "压缩式记忆对内容审核/检索增强理解非常实用；方法清晰，指标+效率兼顾。"
+    },
+    {
+      id: "2606.10759",
+      title: "miniReranker: Tiny Multimodal Reranker, Massive Speedup via Visual Cache Reuse",
+      authors: "Binyuan Hui, Zhou Hong, et al.",
+      affiliations: "Eastern Institute of Technology, Netmind.ai, LMU Munich",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 78,
+      tags: ["Multimodal Reranking", "Efficiency", "E-commerce Search", "Cache"],
+      arxiv: "https://arxiv.org/abs/2606.10759",
+      method_zh: "针对电商多模态重排中商品图像反复出现的特点，将图像侧中间表示预先缓存，在线重排时只计算轻量query条件融合模块，实现>99%运行时减少且效果几乎无损。",
+      method_en: "miniReranker caches visual representations of candidate images, only computing lightweight query-conditioned fusion at query time, achieving >99% runtime reduction with ~96% quality retention.",
+      innovation_zh: "将系统层面"候选复用"转化为模型层可复用表示，工程友好；对大规模电商搜索重排系统具有极高实用价值。",
+      innovation_en: "Model-level visual cache reuse for multimodal reranking, massively reducing online inference cost.",
+      metrics: [["MMEB-v2 效果", "70.3 vs 73.0 baseline (96.3% 保持)"], ["运行时", ">99% 减少 (1.49M queries)"]],
+      score_breakdown: {Innovation:22, "SOTA Delta":11, "Exp Quality":12, Efficiency:10, Generalization:3, "Domain Rel.":20},
+      score_rationale_zh: "工程/系统创新强、降本极有价值；方法更偏系统设计而非新任务，与治理直接相关度一般。"
+    },
+    {
+      id: "2606.11023",
+      title: "GenAIR: LLM-Generated User Archetypes for Item Representation Learning in Sequential Recommendation",
+      authors: "Santiago B. Velasco, Clement Clement, et al.",
+      affiliations: "CUHK, McGill University, Tongji University",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 79,
+      tags: ["Sequential Recommendation", "LLM Representation", "E-commerce", "Interpretability"],
+      arxiv: "https://arxiv.org/abs/2606.11023",
+      method_zh: "用LLM为每个item生成一组可解释的用户原型（archetypes），训练时将用户历史行为映射到原型权重，得到动态的"因人而异"item表征，再与SASRec/BERT4Rec联合优化。",
+      method_en: "GenAIR generates interpretable user archetypes for items via LLM, then calibrates archetype weights using behavior data for dynamic, user-personalized item representations in sequential recommendation.",
+      innovation_zh: "LLM语义与行为偏好对齐；原型空间可控可组合；低工程侵入接入主流推荐框架。",
+      innovation_en: "LLM-generated archetype space + behavior-calibrated mixture item representations for interpretable sequential recommendation.",
+      metrics: [["HR@10/NDCG@10", "稳定提升 vs SASRec, BERT4Rec 及文本增强版"]],
+      score_breakdown: {Innovation:24, "SOTA Delta":11, "Exp Quality":12, Efficiency:7, Generalization:3, "Domain Rel.":22},
+      score_rationale_zh: "方法把LLM生成语义'落地'到可训练原型混合，对推荐可解释性有价值；实验提升幅度相对中等。"
+    },
+    {
+      id: "2606.10621",
+      title: "STORM: Reward-Guided Beam Search for Improved Query Expansion in Multimodal Retrieval",
+      authors: "Chuo Liu, Nora Belrose, et al.",
+      affiliations: "Mila, Université Paris-Saclay",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 75,
+      tags: ["Query Expansion", "Retrieval", "Reward-Guided", "Multimodal"],
+      arxiv: "https://arxiv.org/abs/2606.10621",
+      method_zh: "将query expansion视为reward-guided beam search问题，通过检索质量代理信号对候选扩展打分，在beam内选择最优序列，使扩写方向直接服务于检索指标而非语言流畅性。",
+      method_en: "STORM formulates query expansion as reward-guided beam search, scoring candidates with retrieval-aligned rewards for consistently better retrieval across in-domain and out-of-domain settings.",
+      innovation_zh: "把生成与检索闭环是关键创新；对电商搜索query改写有直接参考价值，尤其适合长尾/模糊查询。",
+      innovation_en: "Reward-guided beam search closes the generation-retrieval loop for consistently better query expansion.",
+      metrics: [["TREC-DL-20 nDCG@10", "67.3 vs BM25 48.0"], ["OOD", "一致收益"]],
+      score_breakdown: {Innovation:22, "SOTA Delta":12, "Exp Quality":12, Efficiency:7, Generalization:4, "Domain Rel.":18},
+      score_rationale_zh: "对电商搜索（query改写/扩展）直接有参考价值；与内容治理关联较弱。"
+    },
+    {
+      id: "2606.10677",
+      title: "Infini Memory: Long-Term Memory for LLM Agents via Topic-Document Graph",
+      authors: "Yujie Zhang, et al.",
+      affiliations: "Infinigence AI, Tsinghua University, Shanghai Jiao Tong University",
+      date: "2026-06-10",
+      bucket: "WEAK",
+      score: 74,
+      tags: ["Agent Memory", "RAG", "Knowledge Graph", "Long-Term"],
+      arxiv: "https://arxiv.org/abs/2606.10677",
+      code_url: "https://github.com/infinigence/Infini-Memory",
+      method_zh: "提出Topic-Document Graph将Agent历史记忆层级组织，主题层定位相关簇后文档层精检索，配合写回/合并/遗忘策略，解决向量库记忆检索噪声与扩展性问题。",
+      method_en: "Infini Memory organizes long-term agent memory with a Topic-Document Graph, enabling two-stage retrieval (topic-level then document-level) to reduce noise and improve scalability.",
+      innovation_zh: "层级图结构记忆比扁平向量库更利于长期维护；对治理场景中的多轮处置/案件记忆管理有迁移价值。",
+      innovation_en: "Hierarchical topic-document graph memory for scalable long-term LLM agents.",
+      metrics: [["MemoryAgentBench", "64.7% 总体"], ["Accurate Retrieval", "81.2%"]],
+      score_breakdown: {Innovation:23, "SOTA Delta":11, "Exp Quality":11, Efficiency:7, Generalization:4, "Domain Rel.":18},
+      score_rationale_zh: "对治理场景可作'多轮处置/案件记忆'参考，但更偏通用Agent记忆。"
+    },
+    {
+      id: "2606.11188",
+      title: "ARM: Discrete Visual Tokenization for Autoregressive Multimodal Models",
+      authors: "Haonian Wang, et al.",
+      affiliations: "Fudan University, ByteDance TikTok, ByteDance Seed",
+      date: "2026-06-10",
+      bucket: "WEAK",
+      score: 75,
+      tags: ["MLLM", "Visual Tokenization", "Autoregressive", "Generation"],
+      arxiv: "https://arxiv.org/abs/2606.11188",
+      code_url: "https://github.com/wdrink/ARM",
+      method_zh: "设计适合自回归训练的离散视觉码本，将图像映射为可预测离散token序列，统一多模态理解与生成到同一自回归框架（Fudan + ByteDance合作）。",
+      method_en: "ARM introduces discrete visual tokenization aligned with autoregressive training, enabling a unified framework for multimodal understanding and generation.",
+      innovation_zh: "离散token与自回归范式对齐，是未来MLLM基础技术方向；对电商内容理解/生成有潜在价值。",
+      innovation_en: "Autoregressive-aligned discrete visual tokenization for unified MLLM understanding and generation.",
+      metrics: [["POPE", "87.3"], ["MMMU", "40.2"], ["GenEval", "0.86"]],
+      score_breakdown: {Innovation:24, "SOTA Delta":12, "Exp Quality":12, Efficiency:6, Generalization:4, "Domain Rel.":17},
+      score_rationale_zh: "基座能力强，对内容理解与生成均有潜在价值；与电商治理是可迁移而非直接任务相关。"
+    },
+    {
+      id: "2606.10907",
+      title: "From Prompt to Purchase: Evaluating LLM Brand Recommendations on the Open Web",
+      authors: "Daniel Klymentov, et al.",
+      affiliations: "Scrunch AI",
+      date: "2026-06-10",
+      bucket: "STRONG",
+      score: 64,
+      tags: ["E-commerce", "Brand Recommendation", "LLM Evaluation", "Compliance"],
+      arxiv: "https://arxiv.org/abs/2606.10907",
+      method_zh: "构建面向开放网络品牌推荐的评测框架，分析不同提示/模型在品牌推荐准确性、覆盖度与偏置上的表现，并连接到真实用户搜索/购买行为的影响讨论。",
+      method_en: "A benchmarking framework that evaluates LLM-driven brand recommendations from prompt to purchase, analyzing accuracy, coverage, and potential biases across models and categories.",
+      innovation_zh: "量化了LLM品牌推荐对消费决策的影响；为电商治理中的广告合规与推荐可操控性提供基础分析工具。",
+      innovation_en: "Quantified measurement framework for LLM brand recommendation quality and bias, relevant to e-commerce advertising compliance.",
+      metrics: [["指标", "多模型/提示设置下品牌推荐命中与转化分析（垂类差异显著）"]],
+      score_breakdown: {Innovation:18, "SOTA Delta":9, "Exp Quality":10, Efficiency:6, Generalization:3, "Domain Rel.":18},
+      score_rationale_zh: "强电商相关但更偏评测与现象分析，方法创新有限；对品牌推荐合规讨论有参考价值。"
+    }
+  ]
+};
+
+let currentLang = 'zh';
+let currentDate = '2026-06-10';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  renderCards();
+}
+
+function populateDatePicker() {
+  const sel = document.getElementById('date-picker');
+  Object.keys(PAPERS_DB).sort().reverse().forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    if (d === '2026-06-10') opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function getScoreClass(score) {
+  if (score >= 80) return 'score-high';
+  if (score >= 60) return 'score-mid';
+  return 'score-low';
+}
+
+function makeMetricsTable(metrics) {
+  if (!metrics || metrics.length === 0) return '';
+  let rows = metrics.map(([k, v]) => `<tr><td>${k}</td><td><strong>${v}</strong></td></tr>`).join('');
+  return `<table class="metrics-table"><thead><tr><th>指标</th><th>值</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function makeScoreBreakdown(breakdown) {
+  let rows = Object.entries(breakdown).map(([k, v]) =>
+    `<div class="score-row"><span>${k}</span><span>${v}</span></div>`
+  ).join('');
+  return `<div class="score-breakdown">${rows}</div>`;
+}
+
+function makeArchDiagram(paper) {
+  // Generate a simple SVG diagram showing paper's key flow
+  const id = paper.id.replace('.','_');
+  const flow = paper.tags.slice(0,3);
+  const w = 280, h = 70;
+  const colors = ['#4361ee','#3a0ca3','#e63946','#2a9d8f'];
+  let rects = flow.map((t,i) => {
+    const x = 20 + i * 90;
+    return `<rect x="${x}" y="20" width="80" height="30" rx="6" fill="${colors[i%4]}" opacity="0.15" stroke="${colors[i%4]}" stroke-width="1.5"/>
+            <text x="${x+40}" y="39" text-anchor="middle" font-size="10" fill="${colors[i%4]}" font-weight="600">${t.length>8?t.slice(0,8)+'…':t}</text>`;
+  }).join('');
+  let arrows = flow.slice(0,-1).map((_,i) => {
+    const x = 100 + i * 90;
+    return `<line x1="${x}" y1="35" x2="${x+10}" y2="35" stroke="#aaa" stroke-width="1.5" marker-end="url(#arr${id})"/>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    <defs><marker id="arr${id}" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#aaa"/></marker></defs>
+    ${rects}${arrows}
+  </svg>`;
+}
+
+function makeCard(paper) {
+  const scoreClass = getScoreClass(paper.score);
+  const method = currentLang === 'zh' ? paper.method_zh : paper.method_en;
+  const innovation = currentLang === 'zh' ? paper.innovation_zh : paper.innovation_en;
+  const domainLabel = currentLang === 'zh' ? '领域相关' : 'Domain';
+  const bucketLabel = paper.bucket === 'STRONG' ? (currentLang === 'zh' ? '强相关' : 'STRONG') : (currentLang === 'zh' ? '弱相关' : 'WEAK');
+  const bucketClass = paper.bucket === 'STRONG' ? 'tag-strong' : 'tag-weak';
+
+  const codeLink = paper.code_url
+    ? `<a href="${paper.code_url}" class="btn" target="_blank">💻 Code</a>`
+    : paper.code
+    ? `<span class="btn">💻 ${paper.code}</span>`
+    : '';
+
+  const projectLink = paper.project ? `<a href="${paper.project}" class="btn" target="_blank">🌐 Project</a>` : '';
+
+  return `
+<div class="card" data-score="${paper.score}" data-bucket="${paper.bucket}" data-date="${paper.date}">
+  <div class="card-header">
+    <div class="card-tags">
+      <span class="tag ${bucketClass}">${bucketLabel}</span>
+      ${paper.tags.slice(0,2).map(t => `<span class="tag tag-domain">${t}</span>`).join('')}
+    </div>
+    <div class="card-title">
+      <a href="${paper.arxiv}" target="_blank">${paper.title}</a>
+      <span class="score-badge ${scoreClass}">${paper.score}</span>
+    </div>
+    <div class="card-meta">
+      ${paper.authors} · <span class="date-badge">${paper.date}</span>
+    </div>
+    <div class="card-meta" style="margin-top:2px;font-size:0.75rem;">${paper.affiliations}</div>
+  </div>
+  <div class="card-body">
+    <div class="figure-box">${makeArchDiagram(paper)}</div>
+
+    <button class="section-toggle open" onclick="toggleSection(this)">
+      ${currentLang==='zh'?'方法概述':'Method Overview'}
+    </button>
+    <div class="collapsible open method-box">${method}</div>
+
+    <button class="section-toggle open" onclick="toggleSection(this)">
+      ${currentLang==='zh'?'创新性分析':'Innovation'}
+    </button>
+    <div class="collapsible open innovation-box">${innovation}</div>
+
+    <button class="section-toggle" onclick="toggleSection(this)">
+      ${currentLang==='zh'?'关键指标':'Key Metrics'}
+    </button>
+    <div class="collapsible">${makeMetricsTable(paper.metrics)}</div>
+
+    <button class="section-toggle" onclick="toggleSection(this)">
+      ${currentLang==='zh'?'评分细则':'Score Breakdown'}
+    </button>
+    <div class="collapsible">
+      ${makeScoreBreakdown(paper.score_breakdown)}
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:8px;">${paper.score_rationale_zh||''}</p>
+    </div>
+  </div>
+  <div class="card-footer">
+    <a href="${paper.arxiv}" class="btn btn-primary" target="_blank">📄 arXiv</a>
+    ${projectLink}
+    ${codeLink}
+  </div>
+</div>`;
+}
+
+function toggleSection(btn) {
+  btn.classList.toggle('open');
+  const sibling = btn.nextElementSibling;
+  sibling.classList.toggle('open');
+}
+
+function renderCards() {
+  const grid = document.getElementById('paper-grid');
+  const minScore = parseInt(document.getElementById('score-slider').value);
+  const dateFilter = document.getElementById('date-picker').value;
+  const bucketFilter = document.getElementById('bucket-filter').value;
+
+  document.getElementById('score-label').textContent = minScore;
+
+  const papers = PAPERS_DB[dateFilter] || [];
+  const filtered = papers.filter(p =>
+    p.score >= minScore &&
+    (bucketFilter === '' || p.bucket === bucketFilter)
+  );
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><h3>No papers match the current filters.</h3></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.sort((a,b) => b.score - a.score).map(makeCard).join('');
+}
+
+function filterCards() {
+  currentDate = document.getElementById('date-picker').value;
+  renderCards();
+}
+
+// Init
+populateDatePicker();
+renderCards();
+</script>
+</body>
+</html>
