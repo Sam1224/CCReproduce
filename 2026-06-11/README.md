@@ -1,36 +1,74 @@
-# 2026-06-11 电商内容生态 & 达人治理 — Paper 巡检
+# Daily AI Paper Inspection — 2026-06-11 (GMT+8)
 
-本日巡检窗口：**GMT+8 2026-06-11 00:00–23:59**（对应 **UTC 2026-06-10 16:00–2026-06-11 15:59**）。主要从 arXiv（cs.IR/cs.CL/cs.CV/cs.AI/cs.LG/stat.ML）拉取近 24h 更新，并按“电商内容理解/推荐/检索/去重/治理 + LLM/VLM/RAG/数据”关键词二次筛选，跳过安全/后门方向论文。
+**Domain:** E-commerce content ecosystem & influencer (达人) governance  
+**Run time:** 2026-06-12 08:30 GMT+8  
+**Discovered by:** Claude Code scheduled inspection  
 
-本日共整理 7 篇候选论文，评分与摘要见 `papers.json`。
+---
 
-## 建议关键词池（可每日固定订阅 + 二次过滤）
+## Source Coverage
 
-强相关（电商内容生态&达人治理）：recommendation / recsys、cold-start、ranking / rerank、retrieval / vector database、dedup / near-duplicate、content understanding、caption / multimodal、clustering / similarity、violation detection / moderation、治理 / 审核 / 质量、data cleaning / dedup / labeling。
+| source | category | attempted | http_status_or_error | candidates_yielded |
+|--------|----------|-----------|----------------------|--------------------|
+| arxiv cs.CL/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv cs.CV/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv cs.IR/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv cs.MM/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv cs.LG/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv cs.AI/new (WebFetch) | aggregator | yes | 403 Forbidden | 0 |
+| arxiv 2606 series (WebSearch fallback) | aggregator | yes | 200 OK | 9 |
+| HuggingFace papers/date/2026-06-11 | aggregator | yes | 403 Forbidden | 0 |
+| HuggingFace trending | aggregator | yes | 403 Forbidden | 0 |
+| HuggingFace (WebSearch fallback) | aggregator | yes | 200 OK | 2 |
+| Google DeepMind blog | blog | yes | 403 Forbidden | 0 |
+| Google Research blog | blog | yes | 403 Forbidden | 0 |
+| Meta AI Research | blog | yes | 403 Forbidden | 0 |
+| Anthropic News | blog | yes | 403 Forbidden | 0 |
+| ByteDance Seed Research | blog | yes | 403 Forbidden | 0 |
+| Meituan Tech | blog | yes | 403 Forbidden | 0 |
+| Qwen Blog | blog | yes | 403 Forbidden | 0 |
+| 量子位 QbitAI (WebFetch direct) | wechat | yes | 403 Forbidden | 0 |
+| 量子位 QbitAI (WebSearch fallback) | wechat | yes | 200 OK | 3 |
+| Semantic Scholar Graph API | aggregator | yes | 403 Forbidden | 0 |
+| 机器之心 jiqizhixin (WebSearch Tier-3) | wechat | yes | 200 OK | 1 |
+| 新智元 (WebSearch Tier-3) | wechat | yes | 200 OK | 1 |
+| OpenAI News (WebSearch Tier-3) | blog | yes | 200 OK | 1 |
+| DeepSeek (WebSearch Tier-3) | blog | yes | 200 OK | 0 |
+| Xiaohongshu / RedTech (WebSearch Tier-3) | wechat | yes | 200 OK | 0 |
+| Kuaishou Tech (WebSearch Tier-3) | blog | yes | 200 OK | 1 |
+| Tencent Hunyuan (WebSearch Tier-3) | blog | yes | 200 OK | 0 |
+| OpenReview ICLR/NeurIPS 2026 | conf | no | not yet active | 0 |
 
-弱相关但值得关注（大模型方向）：LLM/VLM/MLLM、RAG/agent、KV-cache / long-context、token pruning / routing、distillation、efficient inference。
+**Note:** arXiv direct pages and all lab blogs blocked with HTTP 403 in this sandbox. Discovery performed entirely via WebSearch fallback, targeting 2606.XXXXX arXiv IDs (June 2026). Paper submission dates verified from search snippet metadata where available.
 
-## 推荐补充的 paper sources（便于每日抓新）
+---
 
-- 论文聚合：HuggingFace Daily Papers、Papers with Code（Trending / Latest）、arXiv-sanity、Connected Papers。
-- arXiv 入口：固定订阅 cs.IR/cs.CL/cs.CV/cs.LG/cs.AI 的 daily listing（或 RSS），再用关键词二次过滤（尤其是 recsys / dedup / RAG / moderation）。
-- 会议/评审：OpenReview（ICLR/NeurIPS/ICML/ACL 等）按「recent submissions / decisions」；会议 accepted list 页面（CVPR/ICCV/ECCV、KDD/SIGIR、SIGMOD/VLDB）。
-- 学术检索：Semantic Scholar（Latest + topic alerts）、Google Scholar Alerts、OpenAlex（concept + date filter）、DBLP（会议/期刊增量）。
-- 工业界产出：Google Research/DeepMind、Meta AI、Microsoft Research、Amazon Science、NVIDIA Research、ByteDance Seed、Qwen、Hunyuan 等官方 blog/RSS。
+## Picked Papers
 
-## 评分机制（100 分）
+| # | Title | ArXiv ID | Score | Bucket | Submission Date |
+|---|-------|----------|-------|--------|----------------|
+| 1 | UNIVID: Unified Vision-Language Model for Video Moderation | 2606.05748 | **84** | STRONG | Jun 4, 2026 |
+| 2 | QueryAgent-R1: E-Commerce Query Recommendation | 2606.05671 | **82** | STRONG | Jun 4, 2026 |
+| 3 | Unintended Consequences of Recommender System Interventions | 2606.08265 | **71** | STRONG | Jun 6, 2026 |
+| 4 | EVID-Bench: Search-Grounded Video Misinformation Detection | 2606.04098 | **70** | STRONG | Jun 3, 2026 |
+| 5 | Active Learning with Foundation Model Priors | 2606.07630 | **64** | WEAK | May 30, 2026 |
+| 6 | Mitigating Perceptual Judgment Bias in MLLM-as-Judge | 2606.02578 | **60** | WEAK | Jun 2, 2026 |
+| 7 | Reroute, Don't Remove: Recoverable Visual Token Routing | 2606.12412 | **59** | WEAK | Jun 11, 2026 |
+| 8 | Context-Driven Incremental Compression for Dialogue | 2606.12411 | **58** | WEAK | Jun 11, 2026 |
+| 9 | InSemRAG: Efficient RAG with Intent-Aware Retrieval | 2606.01240 | **56** | WEAK | Jun 1, 2026 |
 
-- 方法创新性：30
-- 实验指标：15
-- 实验质量：15
-- 方法效率：10
-- 方法泛化性：5
-- 论文相关性：25
+Papers with **Score ≥ 80**: UNIVID, QueryAgent-R1 → code reproductions at `code/UNIVID/` and `code/QueryAgent-R1/`
 
-## 80+ 高质量论文复现
+---
 
-- DiffCold（2606.12245）：已在 `2026-06-11/DiffCold` 提供可运行 toy pipeline（数据/模型/训练/测试），复现“检索增强初始化 + 条件扩散生成 cold item embedding + 对齐损失”的关键思想。
-- MLT-Dedup（2606.12215）：已在 `2026-06-11/MLT-Dedup` 提供可运行 toy pipeline（合成视频序列数据、两级表示检索、差分特征匹配与时序重叠定位）。
-- LLM-Based User Personas（2606.12198）：已在 `2026-06-11/LLMUserPersonas` 提供工程化原型（用户历史聚类、persona 生成接口/异步服务骨架、基于 persona 的候选召回示例；LLM 生成与蒸馏部分以可替换模块形式提供）。
+## Paper Summaries (Index)
 
-> 说明：以上复现以“**关键机制可跑通 + 最小闭环**”为目标，使用合成/简化数据验证核心思想；与论文的真实数据、训练规模与线上系统仍有差距。
+1. [UNIVID](papers/univid.md) — ByteDance, score 84 — Video content moderation VLM
+2. [QueryAgent-R1](papers/queryagent_r1.md) — Alibaba International, score 82 — E-commerce query recommendation
+3. [Recommender Interventions](papers/recommender_interventions.md) — Washington University, score 71 — Platform governance
+4. [EVID-Bench](papers/evid_bench.md) — score 70 — Video misinformation benchmark
+5. [Active Learning FM Priors](papers/active_learning_fm_priors.md) — score 64 — Data labeling quality
+6. [Perceptual Judgment Bias](papers/perceptual_judgment_bias.md) — KAIST (ICML 2026), score 60 — MLLM evaluation
+7. [Reroute VLM Token Routing](papers/reroute_vlm.md) — score 59 — VLM efficiency (Jun 11)
+8. [C-DIC Dialogue Compression](papers/cdic_dialogue.md) — ICML 2026, score 58 — LLM dialogue efficiency (Jun 11)
+9. [InSemRAG](papers/insemrag.md) — score 56 — RAG efficiency

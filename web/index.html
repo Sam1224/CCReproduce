@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCReproduce — Daily AI Paper Tracker</title>
+<style>
+  :root {
+    --bg: #f8f9fb;
+    --card-bg: #ffffff;
+    --border: #e2e6ea;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --text: #1a202c;
+    --text-muted: #6b7280;
+    --strong-tag: #059669;
+    --weak-tag: #d97706;
+    --score-high: #10b981;
+    --score-mid: #f59e0b;
+    --score-low: #ef4444;
+    --shadow: 0 2px 8px rgba(0,0,0,0.07);
+    --radius: 10px;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  [data-theme="dark"] {
+    --bg: #111827; --card-bg: #1f2937; --border: #374151;
+    --text: #f3f4f6; --text-muted: #9ca3af;
+    --accent-light: #1e3a5f; --shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  
+  /* HEADER */
+  header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .logo { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .logo span { color: var(--text-muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+  .header-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  
+  /* CONTROLS */
+  .controls { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .control-group { display: flex; align-items: center; gap: 8px; }
+  label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type="date"], select { font-family: var(--font); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; background: var(--bg); color: var(--text); cursor: pointer; }
+  input[type="range"] { width: 120px; accent-color: var(--accent); }
+  .score-val { font-weight: 700; color: var(--accent); min-width: 28px; }
+  button { font-family: var(--font); border: none; cursor: pointer; border-radius: 6px; padding: 6px 14px; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-toggle { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); }
+  
+  /* MAIN */
+  main { padding: 24px; max-width: 1600px; margin: 0 auto; }
+  .stats-bar { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; text-align: center; min-width: 120px; }
+  .stat-num { font-size: 24px; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+  
+  /* GRID */
+  .paper-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+  
+  /* CARD */
+  .paper-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); transition: transform 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; gap: 12px; }
+  .paper-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .paper-card.hidden { display: none; }
+  
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; line-height: 1.4; flex: 1; }
+  .card-title a { color: var(--text); text-decoration: none; }
+  .card-title a:hover { color: var(--accent); }
+  
+  .score-badge { font-size: 16px; font-weight: 800; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .score-high { background: #d1fae5; color: #065f46; }
+  .score-mid { background: #fef3c7; color: #92400e; }
+  .score-low { background: #fee2e2; color: #991b1b; }
+  
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  .tag-strong { background: #d1fae5; color: #065f46; }
+  .tag-weak { background: #fef3c7; color: #92400e; }
+  .tag-domain { background: var(--accent-light); color: var(--accent); }
+  .tag-date { background: #f3f4f6; color: #6b7280; }
+  
+  .card-meta { font-size: 12px; color: var(--text-muted); }
+  .card-meta strong { color: var(--text); }
+  
+  .method-section { font-size: 13px; }
+  .method-section p { margin-bottom: 6px; }
+  
+  .toggle-btn { font-size: 11px; color: var(--accent); cursor: pointer; background: none; border: none; font-weight: 600; padding: 0; }
+  .toggle-btn:hover { text-decoration: underline; }
+  
+  .collapsible { display: none; margin-top: 8px; }
+  .collapsible.open { display: block; }
+  
+  /* SCORE BREAKDOWN */
+  .score-breakdown { border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; }
+  .score-breakdown table { width: 100%; border-collapse: collapse; }
+  .score-breakdown td { padding: 4px 8px; }
+  .score-breakdown tr:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .score-breakdown .dim { color: var(--text-muted); }
+  .score-breakdown .val { font-weight: 700; text-align: right; }
+  .score-bar { display: inline-block; height: 6px; border-radius: 3px; background: var(--accent); margin-left: 6px; vertical-align: middle; }
+  
+  /* FIGURE */
+  .figure-box { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--bg); }
+  .figure-box svg { max-width: 100%; height: auto; }
+  .figure-caption { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 6px; }
+  
+  /* EXPERIMENT */
+  .exp-box { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; }
+  .exp-box table { width: 100%; border-collapse: collapse; }
+  .exp-box th { background: var(--accent-light); color: var(--accent); padding: 6px 10px; font-size: 11px; text-align: left; }
+  .exp-box td { padding: 6px 10px; border-top: 1px solid var(--border); }
+  .exp-box tr:nth-child(even) td { background: var(--bg); }
+  
+  /* STORY ARC */
+  .story-arc { border-left: 3px solid var(--accent); padding-left: 12px; font-size: 12px; color: var(--text-muted); font-style: italic; }
+  
+  /* LINKS */
+  .card-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .card-link { font-size: 11px; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); border-radius: 4px; padding: 2px 8px; }
+  .card-link:hover { background: var(--accent); color: white; }
+  
+  /* SECTION HEADER */
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 6px; }
+  
+  /* NO RESULTS */
+  .no-results { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 16px; }
+  
+  /* FOOTER */
+  footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">CCReproduce <span>Daily AI Paper Tracker</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">E-commerce · Content Governance · Influencer (达人) · LLM/VLM · Agents</div>
+  </div>
+  <div class="header-controls">
+    <button class="btn-ghost lang-toggle" onclick="toggleLang()" id="langBtn">中文</button>
+    <button class="btn-ghost" onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Date</label>
+    <input type="date" id="datePicker" value="2026-06-11" onchange="filterByDate(this.value)">
+  </div>
+  <div class="control-group">
+    <label>Min Score</label>
+    <input type="range" id="scoreSlider" min="0" max="100" value="0" oninput="filterByScore(this.value)">
+    <span class="score-val" id="scoreVal">0</span>
+  </div>
+  <div class="control-group">
+    <label>Bucket</label>
+    <select id="bucketFilter" onchange="filterAll()">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Domain</label>
+    <select id="domainFilter" onchange="filterAll()">
+      <option value="all">All Domains</option>
+      <option value="content-governance">Content Governance</option>
+      <option value="e-commerce">E-commerce</option>
+      <option value="recommendation">Recommendation</option>
+      <option value="VLM">VLM</option>
+      <option value="RAG">RAG</option>
+      <option value="data-labeling">Data Labeling</option>
+    </select>
+  </div>
+  <button class="btn-primary" onclick="resetFilters()">Reset</button>
+</div>
+
+<main>
+  <div class="stats-bar" id="statsBar">
+    <div class="stat"><div class="stat-num" id="statTotal">9</div><div class="stat-label">Papers Found</div></div>
+    <div class="stat"><div class="stat-num" id="statShown">9</div><div class="stat-label">Shown</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Reproduced (≥80)</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">STRONG</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--accent)">2026-06-11</div><div class="stat-label">Date (GMT+8)</div></div>
+  </div>
+
+  <div class="paper-grid" id="paperGrid"></div>
+  <div class="no-results hidden" id="noResults">No papers match current filters.</div>
+</main>
+
+<footer>
+  CCReproduce · Scheduled Daily Inspection · Domain: E-commerce & Content Governance · 2026-06-11
+</footer>
+
+<script>
+// ========== DATA ==========
+const PAPERS = [
+  {
+    id: "univid",
+    date: "2026-06-11",
+    arxiv: "2606.05748",
+    title: "UNIVID: Unified Vision-Language Model for Video Moderation",
+    title_zh: "UNIVID：用于视频内容审核的统一视觉语言模型",
+    authors: "Kejuan Yang, Yizhuo Zhang et al.",
+    affiliation: "ByteDance",
+    score: 84,
+    bucket: "STRONG",
+    domains: ["content-governance","VLM","violation-detection"],
+    code: "code/UNIVID/",
+    method_en: "UNIVID generates policy-aware captions as an interpretable intermediate representation for video moderation. A three-stage cascaded pipeline: (A) Risk Filter fuses UNIVID caption with visual features to filter high-risk videos; (B) Moderation Actor uses UNIVID-Lite for classification and UNIVID-RAG for recall of known violation events; (C) Trend Governance fine-tunes a lightweight trend head on cached UNIVID embeddings to adaptively detect emerging risks without full model retraining.",
+    method_zh: "UNIVID 以「策略感知字幕」为核心中间表示，构建三阶段级联流水线：（A）风险过滤器；（B）审核执行器（Lite+RAG）；（C）趋势治理模块。字幕使审核决策可被人工验证，支持多任务复用。",
+    innovation_en: "Policy-aware captions unify multi-task moderation via a single shared VLM representation. UNIVID-RAG enables recall of edge-case violations similar to historical events. Trend head fine-tuning allows fast adaptation to new risk categories without retraining the full model.",
+    innovation_zh: "策略感知字幕统一多任务审核；UNIVID-RAG 通过历史违规事件增强召回；趋势头微调支持快速适应新兴风险，无需全量重训。",
+    story_arc: "Fragmented black-box classifiers are hard to maintain and lack interpretability → UNIVID unifies moderation through a policy-aware captioning VLM with a three-stage pipeline.",
+    metrics: [
+      ["ByteDance Production", "Multi-task reuse", "Shared VLM representation", "N/A (production)"],
+      ["Trend detection", "Adaptation speed", "Hours (trend head)", "Days (full retraining)"],
+    ],
+    score_breakdown: [
+      ["Innovation", 25, 30],
+      ["SOTA Delta", 12, 15],
+      ["Exp. Quality", 12, 15],
+      ["Efficiency", 7, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 24, 25],
+    ],
+    submission_date: "Jun 4, 2026"
+  },
+  {
+    id: "queryagent_r1",
+    date: "2026-06-11",
+    arxiv: "2606.05671",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    title_zh: "QueryAgent-R1：链式检索 RL 优化的电商查询推荐",
+    authors: "Alibaba International Digital Commerce Group",
+    affiliation: "Alibaba International",
+    score: 82,
+    bucket: "STRONG",
+    domains: ["e-commerce","recommendation","agents","RAG"],
+    code: "code/QueryAgent-R1/",
+    method_en: "QueryAgent-R1 is a memory-augmented agentic framework that grounds query generation in real inventory retrieval. After generating a candidate query, the agent retrieves products and refines its query based on the results. A consistency reward jointly optimizes query relevance (CTR) and product alignment (CVR) via GRPO-based RL. A memory abstraction module extracts an interest graph from user long-term history for efficient user profiling.",
+    method_zh: "记忆增强 Agentic 框架：Agent 生成查询后立即检索商品，根据检索结果精化查询。GRPO 强化学习的一致性奖励联合优化 CTR+CVR，兴趣图谱模块高效压缩用户长期历史。",
+    innovation_en: "First e-commerce query recommendation method to embed real-time product retrieval results into the RL reward loop, directly bridging the CTR-CVR optimization gap. Interest graph memory abstraction handles long user histories efficiently.",
+    innovation_zh: "首次将商品库实时检索结果嵌入 RL 奖励循环，直接解决高 CTR 低 CVR 的核心矛盾；兴趣图谱抽象高效压缩用户历史。",
+    story_arc: "Existing query recommendation methods optimize CTR while ignoring product-level CVR → QueryAgent-R1 grounds query generation in retrieval to jointly optimize both objectives.",
+    metrics: [
+      ["Industrial Platform", "CTR+CVR", "Significant improvement", "Standard rec baseline"],
+      ["Public Dataset", "Query Relevance", "SOTA", "Prior methods"],
+    ],
+    score_breakdown: [
+      ["Innovation", 24, 30],
+      ["SOTA Delta", 12, 15],
+      ["Exp. Quality", 12, 15],
+      ["Efficiency", 6, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 24, 25],
+    ],
+    submission_date: "Jun 4, 2026"
+  },
+  {
+    id: "recommender_interventions",
+    date: "2026-06-11",
+    arxiv: "2606.08265",
+    title: "Unintended Consequences of Recommender System Interventions: Evidence from a Field Experiment",
+    title_zh: "推荐系统干预的意外后果：来自现场实验的证据",
+    authors: "Shilei Luo, Song Yao, Dennis J. Zhang",
+    affiliation: "Washington University in St. Louis",
+    score: 71,
+    bucket: "STRONG",
+    domains: ["recommendation","platform-governance"],
+    code: null,
+    method_en: "Large-scale field experiment on a short-video platform: a 'sleep reminder' campaign designed to reduce late-night usage paradoxically increased late-night engagement by 14.75% and overall usage by 2.18%. Mechanism: forced-exploration revealed high latent demand for promoted content, triggering recommendation policy updates that reinforced the engagement loops the campaign aimed to mitigate.",
+    method_zh: "短视频平台「睡眠提醒」大规模现场实验：干预将深夜参与度提高 14.75%，整体使用量提高 2.18%，效果持续数周。强制探索机制：干预暴露了用户对深夜内容的高潜在需求，触发算法更新强化参与循环。",
+    innovation_en: "First causal identification of the forced-exploration mechanism in platform content interventions. Shows that governance interventions must account for adaptive algorithm feedback loops — a critical insight for content policy designers.",
+    innovation_zh: "首次因果识别内容干预的强制探索机制，揭示治理政策必须考虑算法自适应反馈，对内容政策制定有重要指导意义。",
+    story_arc: "Platform interventions are evaluated as static nudges, ignoring adaptive learning → Field experiment reveals algorithm feedback loops can amplify opposite effects.",
+    metrics: [
+      ["Sleep campaign", "Late-night engagement", "+14.75%", "Reduction expected"],
+      ["Sleep campaign", "Overall usage", "+2.18%", "Reduction expected"],
+      ["Post-experiment", "Effect persistence", "Weeks", "Expected: short-term only"],
+    ],
+    score_breakdown: [
+      ["Innovation", 22, 30],
+      ["SOTA Delta", 10, 15],
+      ["Exp. Quality", 14, 15],
+      ["Efficiency", 3, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 18, 25],
+    ],
+    submission_date: "Jun 6, 2026"
+  },
+  {
+    id: "evid_bench",
+    date: "2026-06-11",
+    arxiv: "2606.04098",
+    title: "When Seeing Is Not Believing — A Benchmark for Search-Grounded Video Misinformation Detection",
+    title_zh: "EVID-Bench：基于网络搜索的视频虚假信息检测基准",
+    authors: "(Multi-institution)",
+    affiliation: "Multi-institution",
+    score: 70,
+    bucket: "STRONG",
+    domains: ["content-governance","VLM","MLLM"],
+    code: null,
+    method_en: "EVID-Bench introduces search-grounded video misinformation detection: systems must search the open web for related videos and identify false information through cross-video comparison. 222 manually verified videos spanning 9 manipulation types (AI generation, single-source editing, multi-source editing). All samples confirmed undetectable by frontier MLLMs via visual inspection alone.",
+    method_zh: "提出基于网络搜索的跨视频虚假信息检测范式，222 个手工验证样本，9种操纵类型，所有样本经确认前沿 MLLM 单视频检测失效。",
+    innovation_en: "Exposes fundamental limitation of single-video visual inspection. Introduces cross-video search as required paradigm for modern video misinformation detection. Manual verification ensures benchmark quality.",
+    innovation_zh: "揭示单视频视觉检测的根本局限；提出跨视频搜索为必要检测范式；手工验证确保基准质量。",
+    story_arc: "Video misinformation is increasingly evidence-level (not pixel-level), undetectable by visual inspection alone → EVID-Bench requires cross-video web search for detection.",
+    metrics: [
+      ["Frontier MLLMs", "Single-video detection", "≈ random", "N/A"],
+      ["EVID-Bench", "Total samples", "222 videos", "—"],
+      ["Coverage", "Manipulation types", "9 types", "3 categories"],
+    ],
+    score_breakdown: [
+      ["Innovation", 20, 30],
+      ["SOTA Delta", 10, 15],
+      ["Exp. Quality", 11, 15],
+      ["Efficiency", 5, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 20, 25],
+    ],
+    submission_date: "Jun 3, 2026"
+  },
+  {
+    id: "active_learning_fm",
+    date: "2026-06-11",
+    arxiv: "2606.07630",
+    title: "Active Learning with Foundation Model Priors: Efficient Learning under Class Imbalance",
+    title_zh: "基础模型先验赋能的主动学习：类别不均衡下的高效学习",
+    authors: "Jiancheng Zhang, Meiqing Li, Qi Zhang, Yinglun Zhu",
+    affiliation: "UC Riverside; CMU; WPI",
+    score: 64,
+    bucket: "WEAK",
+    domains: ["data-labeling","LLM"],
+    code: null,
+    method_en: "Proposes active learning with foundation model (CLIP) priors to handle dual challenges of label noise and class imbalance. Foundation model provides reliable class distribution estimates; combined with task model uncertainty for imbalance-aware co-decision on which samples to annotate. First study to systematically address noise + imbalance jointly in active learning across image and text domains.",
+    method_zh: "利用 CLIP 等基础模型提供类别先验，与任务模型协同做不均衡感知的主动学习决策，同时内嵌噪声过滤，首次系统研究图像和文本双域的噪声+不均衡联合挑战。",
+    innovation_en: "First systematic study of active learning under simultaneous noise + class imbalance with foundation model priors. Annotation savings without sacrificing minority class performance.",
+    innovation_zh: "首个系统研究噪声+不均衡联合问题的主动学习框架；基础模型先验降低标注成本的同时提升少数类性能。",
+    story_arc: "Real-world annotation data is noisy AND imbalanced — existing methods address them separately → Foundation model priors enable unified imbalance-aware noise-robust active learning.",
+    metrics: [
+      ["Image + Text domains", "Annotation savings", "Substantial", "Standard AL"],
+      ["Minority classes", "Accuracy", "Significant improvement", "Imbalance-blind AL"],
+    ],
+    score_breakdown: [
+      ["Innovation", 18, 30],
+      ["SOTA Delta", 10, 15],
+      ["Exp. Quality", 11, 15],
+      ["Efficiency", 7, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 14, 25],
+    ],
+    submission_date: "May 30, 2026"
+  },
+  {
+    id: "perceptual_bias",
+    date: "2026-06-11",
+    arxiv: "2606.02578",
+    title: "Mitigating Perceptual Judgment Bias in Multimodal LLM-as-a-Judge",
+    title_zh: "缓解多模态 LLM 评判模型的感知判断偏差",
+    authors: "Seojeong Park, Jiho Choi, et al.",
+    affiliation: "KAIST",
+    score: 60,
+    bucket: "WEAK",
+    domains: ["MLLM","data-labeling"],
+    code: "https://github.com/kaist-cvml/perception-judge",
+    method_en: "Identifies Perceptual Judgment Bias in MLLMs: judges anchor on text narratives over visual evidence. Constructs Perceptually Perturbed Judgment Dataset via minimal visual edits creating counterfactual responses. Unified training framework with GRPO-based reward + batch-ranking objective corrects the bias. (ICML 2026)",
+    method_zh: "发现并量化 MLLM 评判模型的感知偏差，通过最小化视觉编辑构建反事实数据集，结合 GRPO 奖励和批次排序训练修正偏差（ICML 2026）。",
+    innovation_en: "Systematic discovery and mitigation of a fundamental MLLM judge limitation via counterfactual perturbations. Directly applicable to automated content quality evaluation pipelines.",
+    innovation_zh: "系统发现并修正 MLLM 评判的感知偏差；反事实数据集构建方法提供可验证监督；直接提升自动化内容质量评估可靠性。",
+    story_arc: "MLLM judges prefer plausible text narratives over perceptually correct visual answers → Counterfactual dataset + GRPO reward corrects perceptual judgment bias.",
+    metrics: [
+      ["ICML 2026 benchmarks", "Perceptual accuracy", "SOTA", "Prior MLLM judges"],
+      ["Counterfactual eval", "Judgment consistency", "Significant improvement", "Baseline judges"],
+    ],
+    score_breakdown: [
+      ["Innovation", 18, 30],
+      ["SOTA Delta", 10, 15],
+      ["Exp. Quality", 12, 15],
+      ["Efficiency", 4, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 12, 25],
+    ],
+    submission_date: "Jun 2, 2026"
+  },
+  {
+    id: "reroute_vlm",
+    date: "2026-06-11",
+    arxiv: "2606.12412",
+    title: "Reroute, Don't Remove: Recoverable Visual Token Routing for Vision-Language Models",
+    title_zh: "路由而非移除：VLM 的可恢复视觉 Token 路由",
+    authors: "Cheng-Yu Yang, Shao-Yuan Lo, Yu-Lun Liu",
+    affiliation: "Academia (Taiwan)",
+    score: 59,
+    bucket: "WEAK",
+    domains: ["VLM","efficiency"],
+    code: "https://github.com/elmma/mllm-reroute",
+    method_en: "Proposes recoverable visual token routing for VLMs. Instead of permanently removing tokens (pruning), tokens are routed to auxiliary pathways and can be recovered when needed. Task-adaptive routing decides which tokens to route based on downstream task information needs. Submitted June 11, 2026.",
+    method_zh: "提出可恢复路由代替永久剪枝：Token 被路由到辅助路径而非丢弃，需要时可恢复，任务自适应路由策略决定哪些 Token 被路由（2026-06-11 提交）。",
+    innovation_en: "Routing vs. removal framing preserves information recoverability lost in pruning. Achieves better task performance than pruning at comparable efficiency.",
+    innovation_zh: "「路由」vs「移除」保留可恢复性；VQA 等任务优于剪枝方法；为电商内容理解 VLM 部署提供更安全的效率方案。",
+    story_arc: "Token pruning permanently discards potentially useful visual information → Routing preserves tokens in auxiliary paths, enabling recovery when task demands it.",
+    metrics: [
+      ["VQA benchmarks", "Accuracy", "Better than pruning", "Token pruning"],
+      ["Inference", "FLOPS", "Comparable", "Token pruning"],
+    ],
+    score_breakdown: [
+      ["Innovation", 18, 30],
+      ["SOTA Delta", 10, 15],
+      ["Exp. Quality", 10, 15],
+      ["Efficiency", 9, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 8, 25],
+    ],
+    submission_date: "Jun 11, 2026 ★"
+  },
+  {
+    id: "cdic_dialogue",
+    date: "2026-06-11",
+    arxiv: "2606.12411",
+    title: "Context-Driven Incremental Compression for Multi-Turn Dialogue Generation",
+    title_zh: "多轮对话生成的上下文驱动增量压缩",
+    authors: "Yeongseo Jung, Jaehyeok Kim, et al.",
+    affiliation: "HKUST, NVIDIA, et al.",
+    score: 58,
+    bucket: "WEAK",
+    domains: ["LLM","efficiency"],
+    code: null,
+    method_en: "C-DIC treats a conversation as interleaved contextual threads and stores revisable per-thread compression states in compact dialogue memory. Each turn: a lightweight retrieve→revise→write-back loop shares information across turns and corrects stale memories. Stabilizes long-term dialogue without costly full-context re-encoding. (ICML 2026, submitted June 11, 2026)",
+    method_zh: "C-DIC 将对话分解为语义线程，维护可修订的逐线程压缩状态，通过轻量级 retrieve→revise→write-back 循环实现跨轮信息共享和过期记忆修正（ICML 2026，2026-06-11）。",
+    innovation_en: "Thread-based incremental compression is finer-grained than whole-dialogue summarization. Revisable per-thread states solve cross-turn memory staleness. Directly applicable to e-commerce customer service chatbots.",
+    innovation_zh: "线程级增量压缩比整体摘要更精细；可修订机制解决跨轮记忆失效；对电商客服 Agent 长对话场景有实用价值。",
+    story_arc: "Multi-turn dialogue agents re-encode growing history at every turn, incurring quadratic attention cost → C-DIC's thread-based incremental compression amortizes cost across turns.",
+    metrics: [
+      ["Multi-turn benchmarks", "Memory efficiency", "Significant reduction", "Full re-encoding"],
+      ["Long dialogue", "Fidelity", "Better", "Truncation/summarization"],
+    ],
+    score_breakdown: [
+      ["Innovation", 16, 30],
+      ["SOTA Delta", 9, 15],
+      ["Exp. Quality", 11, 15],
+      ["Efficiency", 8, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 10, 25],
+    ],
+    submission_date: "Jun 11, 2026 ★"
+  },
+  {
+    id: "insemrag",
+    date: "2026-06-11",
+    arxiv: "2606.01240",
+    title: "InSemRAG: Efficient RAG with Intent-Aware Retrieval and Semantics-Preserving Chunking",
+    title_zh: "InSemRAG：意图感知检索与语义保留分块的高效 RAG",
+    authors: "(Multi-author)",
+    affiliation: "Multi-institution",
+    score: 56,
+    bucket: "WEAK",
+    domains: ["RAG","LLM"],
+    code: null,
+    method_en: "InSemRAG addresses information insufficiency in conventional RAG via: (1) Intent-Aware Retriever that decomposes queries into intent-specific sub-queries for targeted retrieval; (2) Semantics-Preserving Chunking based on semantic boundaries rather than fixed lengths to maintain information integrity.",
+    method_zh: "InSemRAG 通过意图感知检索器（分解为意图子查询）和语义保留 chunking（基于语义边界）解决传统 RAG 的意图无关检索和信息碎片化问题。",
+    innovation_en: "Intent decomposition + semantic chunking combination directly addresses root causes of RAG performance gaps. Applicable to e-commerce policy knowledge bases and product FAQ systems.",
+    innovation_zh: "意图分解+语义边界分块直接解决 RAG 根本问题；对电商政策知识库、商品 FAQ 系统有应用价值。",
+    story_arc: "Intent-agnostic retrieval and fixed-length chunking cause information insufficiency in RAG → Intent-aware retriever + semantics-preserving chunking addresses both root causes.",
+    metrics: [
+      ["RAG benchmarks", "Answer quality", "Improved vs. naive RAG", "Naive RAG"],
+      ["Chunking", "Semantic integrity", "Better", "Fixed-length chunking"],
+    ],
+    score_breakdown: [
+      ["Innovation", 15, 30],
+      ["SOTA Delta", 9, 15],
+      ["Exp. Quality", 10, 15],
+      ["Efficiency", 8, 10],
+      ["Generalization", 4, 5],
+      ["Domain Relevance", 10, 25],
+    ],
+    submission_date: "Jun 1, 2026"
+  },
+];
+
+// ========== STATE ==========
+let lang = "en";
+let minScore = 0;
+let dateFilter = "all";
+let bucketFilter = "all";
+let domainFilter = "all";
+
+// ========== RENDER ==========
+function scoreClass(s) {
+  if (s >= 75) return "score-high";
+  if (s >= 60) return "score-mid";
+  return "score-low";
+}
+
+function renderFigure(paper) {
+  // Generate SVG methodology figure per paper
+  const figs = {
+    univid: `<svg viewBox="0 0 460 140" xmlns="http://www.w3.org/2000/svg" font-family="system-ui" font-size="11">
+      <rect x="5" y="10" width="80" height="40" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="45" y="28" text-anchor="middle" fill="#1e40af" font-weight="bold">Video</text>
+      <text x="45" y="44" text-anchor="middle" fill="#1e40af">Frames</text>
+      <polygon points="90,30 100,25 100,35" fill="#94a3b8"/>
+      <rect x="103" y="5" width="90" height="50" rx="6" fill="#d1fae5" stroke="#059669"/>
+      <text x="148" y="23" text-anchor="middle" fill="#065f46" font-weight="bold">UNIVID</text>
+      <text x="148" y="37" text-anchor="middle" fill="#065f46">Policy-Aware</text>
+      <text x="148" y="51" text-anchor="middle" fill="#065f46">Caption</text>
+      <polygon points="196,30 206,25 206,35" fill="#94a3b8"/>
+      <rect x="209" y="5" width="75" height="50" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="246" y="23" text-anchor="middle" fill="#92400e" font-weight="bold">Stage A</text>
+      <text x="246" y="37" text-anchor="middle" fill="#92400e">Risk</text>
+      <text x="246" y="51" text-anchor="middle" fill="#92400e">Filter</text>
+      <polygon points="287,30 297,25 297,35" fill="#94a3b8"/>
+      <rect x="300" y="0" width="75" height="60" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+      <text x="337" y="18" text-anchor="middle" fill="#991b1b" font-weight="bold">Stage B</text>
+      <text x="337" y="32" text-anchor="middle" fill="#991b1b">Lite+RAG</text>
+      <text x="337" y="46" text-anchor="middle" fill="#991b1b">Actor</text>
+      <rect x="210" y="80" width="165" height="40" rx="6" fill="#f3f4f6" stroke="#6b7280"/>
+      <text x="292" y="98" text-anchor="middle" fill="#374151" font-weight="bold">Stage C: Trend Governance</text>
+      <text x="292" y="112" text-anchor="middle" fill="#374151">Cached Embeddings → Trend Head</text>
+      <line x1="337" y1="60" x2="337" y2="80" stroke="#6b7280" stroke-dasharray="4,2"/>
+    </svg>`,
+    queryagent_r1: `<svg viewBox="0 0 460 130" xmlns="http://www.w3.org/2000/svg" font-family="system-ui" font-size="11">
+      <rect x="5" y="20" width="80" height="50" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="45" y="40" text-anchor="middle" fill="#1e40af" font-weight="bold">User</text>
+      <text x="45" y="54" text-anchor="middle" fill="#1e40af">History +</text>
+      <text x="45" y="68" text-anchor="middle" fill="#1e40af">Intent</text>
+      <polygon points="88,45 98,40 98,50" fill="#94a3b8"/>
+      <rect x="100" y="15" width="90" height="60" rx="6" fill="#d1fae5" stroke="#059669"/>
+      <text x="145" y="35" text-anchor="middle" fill="#065f46" font-weight="bold">Memory</text>
+      <text x="145" y="49" text-anchor="middle" fill="#065f46">Abstraction</text>
+      <text x="145" y="63" text-anchor="middle" fill="#065f46">(Interest</text>
+      <text x="145" y="75" text-anchor="middle" fill="#065f46">Graph)</text>
+      <polygon points="193,45 203,40 203,50" fill="#94a3b8"/>
+      <rect x="205" y="10" width="80" height="70" rx="6" fill="#fef3c7" stroke="#d97706"/>
+      <text x="245" y="32" text-anchor="middle" fill="#92400e" font-weight="bold">LLM</text>
+      <text x="245" y="46" text-anchor="middle" fill="#92400e">Query</text>
+      <text x="245" y="60" text-anchor="middle" fill="#92400e">Generator</text>
+      <text x="245" y="74" text-anchor="middle" fill="#92400e">(GRPO)</text>
+      <polygon points="288,45 298,40 298,50" fill="#94a3b8"/>
+      <rect x="300" y="20" width="75" height="50" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+      <text x="337" y="40" text-anchor="middle" fill="#991b1b" font-weight="bold">Product</text>
+      <text x="337" y="54" text-anchor="middle" fill="#991b1b">Retrieval</text>
+      <text x="337" y="68" text-anchor="middle" fill="#991b1b">+ Reward</text>
+      <path d="M 337 70 C 337 110 245 110 245 80" fill="none" stroke="#6b7280" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+      <text x="285" y="118" text-anchor="middle" fill="#6b7280" font-size="10">Chain-of-Retrieval Refinement</text>
+    </svg>`,
+  };
+  return figs[paper.id] || `<svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" font-family="system-ui" font-size="12">
+    <rect x="10" y="10" width="380" height="60" rx="8" fill="#f3f4f6" stroke="#d1d5db"/>
+    <text x="200" y="45" text-anchor="middle" fill="#6b7280">${paper.title.substring(0,50)}…</text>
+  </svg>`;
+}
+
+function renderScoreBreakdown(paper) {
+  const rows = paper.score_breakdown.map(([dim, val, max]) => {
+    const pct = Math.round(val / max * 100);
+    return `<tr>
+      <td class="dim">${dim}</td>
+      <td class="val">${val}/${max}</td>
+      <td><span class="score-bar" style="width:${pct * 0.8}px"></span></td>
+    </tr>`;
+  }).join("");
+  return `<div class="score-breakdown">
+    <div class="section-title" style="margin-bottom:8px">Score Breakdown</div>
+    <table>${rows}</table>
+  </div>`;
+}
+
+function renderExperiments(paper) {
+  if (!paper.metrics || paper.metrics.length === 0) return "";
+  const rows = paper.metrics.map(([dataset, metric, ours, baseline]) =>
+    `<tr><td>${dataset}</td><td>${metric}</td><td style="color:var(--score-high);font-weight:700">${ours}</td><td style="color:var(--text-muted)">${baseline}</td></tr>`
+  ).join("");
+  return `<div class="exp-box">
+    <table>
+      <tr><th>Dataset/Setting</th><th>Metric</th><th>Result</th><th>Baseline</th></tr>
+      ${rows}
+    </table>
+  </div>`;
+}
+
+function buildCard(paper) {
+  const isEnglish = (lang === "en");
+  const title = isEnglish ? paper.title : paper.title_zh;
+  const method = isEnglish ? paper.method_en : paper.method_zh;
+  const innov = isEnglish ? paper.innovation_en : paper.innovation_zh;
+
+  const domains = paper.domains.map(d =>
+    `<span class="tag tag-domain">${d}</span>`
+  ).join("");
+
+  const codeLinkHTML = paper.code ? (paper.code.startsWith("http") ?
+    `<a class="card-link" href="${paper.code}" target="_blank">💻 Code</a>` :
+    `<a class="card-link" href="https://github.com/Sam1224/CCReproduce/tree/main/2026-06-11/${paper.code}" target="_blank">💻 Reproduction</a>`
+  ) : "";
+
+  const confTag = paper.score >= 80 ? '<span class="tag tag-domain" style="background:#ede9fe;color:#6d28d9">≥80 Reproduced</span>' : "";
+
+  return `<div class="paper-card" id="card-${paper.id}" 
+    data-score="${paper.score}" 
+    data-date="${paper.date}" 
+    data-bucket="${paper.bucket}"
+    data-domains="${paper.domains.join(",")}"
+  >
+    <div class="card-header">
+      <div class="card-title">
+        <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank">${title}</a>
+      </div>
+      <div class="score-badge ${scoreClass(paper.score)}">${paper.score}</div>
+    </div>
+
+    <div class="tags">
+      <span class="tag tag-${paper.bucket.toLowerCase()}">${paper.bucket}</span>
+      ${domains}
+      ${confTag}
+      <span class="tag tag-date">📅 ${paper.submission_date}</span>
+    </div>
+
+    <div class="card-meta">
+      <strong>${paper.authors}</strong> · ${paper.affiliation} ·
+      <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank" style="color:var(--accent)">arXiv:${paper.arxiv}</a>
+    </div>
+
+    <div class="story-arc">${paper.story_arc}</div>
+
+    <div class="method-section">
+      <div class="section-title">Method</div>
+      <p>${method}</p>
+    </div>
+
+    <div>
+      <button class="toggle-btn" onclick="toggleSection('innov-${paper.id}', this)">▶ Innovation Analysis</button>
+      <div class="collapsible" id="innov-${paper.id}">
+        <div class="method-section" style="margin-top:8px">
+          <div class="section-title">Innovation</div>
+          <p>${innov}</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="toggle-btn" onclick="toggleSection('fig-${paper.id}', this)">▶ Architecture Figure</button>
+      <div class="collapsible" id="fig-${paper.id}">
+        <div class="figure-box" style="margin-top:8px">
+          ${renderFigure(paper)}
+          <div class="figure-caption">${paper.title} — architecture overview</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="toggle-btn" onclick="toggleSection('exp-${paper.id}', this)">▶ Key Experiments</button>
+      <div class="collapsible" id="exp-${paper.id}">
+        <div style="margin-top:8px">${renderExperiments(paper)}</div>
+      </div>
+    </div>
+
+    <div>
+      <button class="toggle-btn" onclick="toggleSection('score-${paper.id}', this)">▶ Score Breakdown</button>
+      <div class="collapsible" id="score-${paper.id}">
+        <div style="margin-top:8px">${renderScoreBreakdown(paper)}</div>
+      </div>
+    </div>
+
+    <div class="card-links">
+      <a class="card-link" href="https://arxiv.org/abs/${paper.arxiv}" target="_blank">📄 Paper</a>
+      ${codeLinkHTML}
+    </div>
+  </div>`;
+}
+
+function renderAll() {
+  const grid = document.getElementById("paperGrid");
+  grid.innerHTML = PAPERS.map(p => buildCard(p)).join("");
+  filterAll();
+}
+
+// ========== FILTER ==========
+function filterAll() {
+  minScore = parseInt(document.getElementById("scoreSlider").value);
+  bucketFilter = document.getElementById("bucketFilter").value;
+  domainFilter = document.getElementById("domainFilter").value;
+  document.getElementById("scoreVal").textContent = minScore;
+
+  let shown = 0;
+  PAPERS.forEach(p => {
+    const card = document.getElementById(`card-${p.id}`);
+    const scoreOk = p.score >= minScore;
+    const bucketOk = bucketFilter === "all" || p.bucket === bucketFilter;
+    const domainOk = domainFilter === "all" || p.domains.includes(domainFilter);
+    const visible = scoreOk && bucketOk && domainOk;
+    card.classList.toggle("hidden", !visible);
+    if (visible) shown++;
+  });
+
+  document.getElementById("statShown").textContent = shown;
+  const noR = document.getElementById("noResults");
+  noR.classList.toggle("hidden", shown > 0);
+}
+
+function filterByScore(val) {
+  document.getElementById("scoreVal").textContent = val;
+  filterAll();
+}
+
+function filterByDate(val) {
+  // In a multi-date DB scenario, filter by date; here single date available
+  filterAll();
+}
+
+function resetFilters() {
+  document.getElementById("scoreSlider").value = 0;
+  document.getElementById("scoreVal").textContent = "0";
+  document.getElementById("bucketFilter").value = "all";
+  document.getElementById("domainFilter").value = "all";
+  filterAll();
+}
+
+// ========== TOGGLE ==========
+function toggleSection(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle("open");
+  btn.textContent = (open ? "▼ " : "▶ ") + btn.textContent.substring(2);
+}
+
+// ========== LANG ==========
+function toggleLang() {
+  lang = lang === "en" ? "zh" : "en";
+  document.getElementById("langBtn").textContent = lang === "en" ? "中文" : "English";
+  renderAll();
+}
+
+// ========== THEME ==========
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", dark ? "" : "dark");
+  document.getElementById("themeBtn").textContent = dark ? "🌙" : "☀️";
+}
+
+// ========== INIT ==========
+document.addEventListener("DOMContentLoaded", () => {
+  renderAll();
+});
+</script>
+</body>
+</html>
