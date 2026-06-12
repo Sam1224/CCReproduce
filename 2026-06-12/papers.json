@@ -1,0 +1,350 @@
+[
+  {
+    "date": "2026-06-12",
+    "id": "2606.12608",
+    "title": "Shopping Reasoning Bench: An Expert-Authored Benchmark for Multi-Turn Conversational Shopping Assistants",
+    "authors": [
+      "Shuxian Fan",
+      "Seonwoo Min",
+      "Youna Hu",
+      "Botao Xia",
+      "Jayakrishnan Unnikrishnan",
+      "Rowan Musselmann",
+      "Yifan Gao",
+      "Qingyu Yin",
+      "Priyanka Nigam",
+      "Bing Yin"
+    ],
+    "affiliations": ["Amazon"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12608",
+      "pdf": "https://arxiv.org/pdf/2606.12608v1",
+      "project": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench"
+    },
+    "tags": ["电商", "对话式购物", "Benchmark", "LLM评测"],
+    "summary": {
+      "zh": {
+        "method_overview": "Shopping Reasoning Bench 面向多轮对话式购物助手，构建了一个由零售领域专家撰写的评测基准：包含 525 个购物任务（232 单轮、293 多轮）与 10,863 条“可判定的二值 rubric”。它把购物对话拆成 5 类推理能力与 15 个子类（如偏好澄清、权衡取舍、兼容性评估），并用重要性权重把“必需项/加分项”区分开。评测端通过一个经专家一致性验证的 LLM-as-judge，把开放式回答转为逐条 rubric 的通过/失败，从而让模型在真实购物场景中的“深度建议能力”可量化比较。",
+        "story": "现有评测要么偏单轮/检索问答、要么缺少行业专家知识、要么只能给粗粒度分数，导致无法区分“回答看似正确但缺乏专业提醒/权衡”的真实差距。作者的路径是：先把购物对话归纳成可复用的推理阶段 taxonomy → 由专家写 multi-turn 任务与细粒度 rubric（每条 rubric 都能被判定）→ 训练/验证一个 LLM judge 把开放回答映射为 rubric 通过率 → 用“必需/可选”的权重体系把浅层回答与专家级回答区分开。",
+        "innovation": "1) 用“专家 rubric + 重要性权重”把开放式购物对话评测变成可复核的二值判定，避免只看单一总体分；2) 提出购物推理 taxonomy（5 类 15 子类）并用其组织 rubric，使得评测可解释且可定位短板；3) 设计并验证 LLM-as-judge（宏 F1/κ 与专家一致性对齐），让大规模自动评测在工业可落地。",
+        "key_metrics": "基准规模：525 missions（232 ST / 293 MT，1,764 turns），10,863 rubrics（85% required）。Judge 验证：Overall rubric-level macro-F1=0.749、κ=0.498（与 inter-expert ceiling F1/κ=0.787/0.573 同量级）。主榜（weighted pass rate）：整体 57.4%–77.2%；Gemini 3.1 Pro 77.2、Claude Opus 4.7 77.0、GPT-5.4 70.2。多轮退化：随着对话推进，optional rubrics 通过率显著下降（文中报告 13–29 分差距）。"
+      },
+      "en": {
+        "method_overview": "Shopping Reasoning Bench is an expert-authored benchmark for multi-turn conversational shopping assistants. It includes 525 missions and 10,863 importance-weighted binary rubrics organized by a 5-category / 15-subcategory shopping-reasoning taxonomy, and uses a validated LLM-as-judge to score open-ended responses at criterion level.",
+        "innovation": "Expert-written, criterion-level rubrics with importance weighting plus a validated LLM judge make open-ended, multi-turn shopping advice measurable and debuggable, exposing capability gaps that coarse benchmarks miss."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 10,
+      "exp_quality": 15,
+      "efficiency": 7,
+      "generalization": 5,
+      "relevance": 25,
+      "total": 84,
+      "rationale_zh": "强电商场景相关（多轮购物助手评测），基准构建与 judge 验证非常扎实（macro-F1/κ 接近专家上限），但它是评测基准而非“直接改进模型”的方法论文，因此在“结果 SOTA/提升幅度”维度不拉满。"
+    },
+    "reproduce": {"status": "code_provided"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.13533",
+    "title": "OneRetrieval: Unifying Multi-Branch E-commerce Retrieval with an Editable Generative Model",
+    "authors": [
+      "Xuxin Zhang",
+      "Ben Chen",
+      "Yue Lv",
+      "Siyuan Wang",
+      "Yupeng Li",
+      "Yufei Ma",
+      "Zihan Liang",
+      "Tong Zhao",
+      "Ying Yang",
+      "Huangyu Dai",
+      "Lingtao Mao",
+      "Zhipeng Qian",
+      "Xinyu Sun",
+      "Chenyi Lei",
+      "Wenwu Ou",
+      "Kun Gai"
+    ],
+    "affiliations": ["Kuaishou Technology"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13533",
+      "pdf": "https://arxiv.org/pdf/2606.13533v1",
+      "code": "https://github.com/xuxinzhang/oneretrieval"
+    },
+    "tags": ["电商搜索", "检索", "Generative Retrieval", "在线A/B", "可编辑召回"],
+    "summary": {
+      "zh": {
+        "method_overview": "OneRetrieval 试图把电商检索阶段的多路召回（倒排、dense、CF 等）收敛为“一个生成式检索模型”，但核心约束不是单纯的 recall，而是要继承倒排索引的“当天可编辑”能力（新词/新热点能快速干预召回）。它提出 Keyword-Aligned Encoding（KAE）：把 item 标识符拆成 6 个“带语义锚点的属性词槽位”，而不是固定量化 embedding；并在每个 codebook 预留 reserved slots，支持上线后把新词绑定到指定的 item 集合而无需 retrain。训练上使用 BART-base，并通过四阶段 SFT 同时优化深召回与可编辑性；线上通过“主链路 + 干预 bypass”让运营词能在小时级生效。",
+        "story": "工业电商检索长期依赖多路召回：倒排可控但语义弱、dense 语义强但更新慢、CF 有头部偏置；尝试用生成式检索统一时又会丢失“新词快速注入”的运营能力。作者的故事线是：把“可编辑性”显式建模为检索系统的一等公民 → 用 KAE 让每个位置对齐可解释属性词，避免纯量化 ID 的不可编辑 → 预留 reserved slots 形成“无需训练的词到集合绑定”接口 → 通过分阶段 SFT 把深召回质量与干预触发能力共同拉起来 → 线上用 A/B 验证可替换倒排甚至替换更多分支。",
+        "innovation": "1) 把“运营当天干预（editability）”作为 generative retrieval 能否工业替代倒排的关键指标，并给出可度量的 IAR/IHR；2) Keyword-Aligned Encoding：用语义锚点词而非量化 embedding 作为 SID 槽位语义，结合信息论 merge 形成 6 组 codebook；3) reserved slots + 干预 bypass，把“新词→目标 item 集合”的绑定变成推理期可执行操作；4) 四阶段 SFT 把深召回（HR@K）与可编辑性（IAR）职责拆分并可验证。",
+        "key_metrics": "离线（Table 2，item-level）：Order HR@350=0.5482、Click HR@350=0.6055，与最强基线 OneSearch 在深度 cutoff 上基本持平（Order 0.5550 / Click 0.6007）。可编辑性（Table 6）：在同一批注入词上，OneRetrieval Total IAR@350=0.553（倒排 BM25 为 0.761），同时检索质量显著更高（Order HR@350 0.5482 vs 0.2215）。线上 A/B（Table 8）：仅替换倒排分支时 Order +0.710%（显著），Buyer +0.450%，CTR +0.074%；进一步替换“几乎全部召回”时 CTR +0.821%（显著），Order +0.255%、Buyer -0.028%（均不显著）。人工评测净胜率：query-item relevance +0.82%、item quality +1.36%、page good rate +0.54%。"
+      },
+      "en": {
+        "method_overview": "OneRetrieval unifies multi-branch e-commerce retrieval into a single generative retriever while preserving the inverted-index’s real-time editability. It proposes Keyword-Aligned Encoding (KAE) with semantic-anchor attribute slots and reserved codebook slots that can be bound to emerging terms post-deployment without retraining, trained via a four-stage SFT pipeline.",
+        "innovation": "KAE + reserved slots make generative retrieval editable at inference time, enabling operational interventions (new terms → target item populations) while maintaining deep-recall quality and validated with large-scale offline tests and online A/B deployments."
+      }
+    },
+    "score": {
+      "innovation": 27,
+      "results": 14,
+      "exp_quality": 14,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 25,
+      "total": 91,
+      "rationale_zh": "强业务相关（电商召回统一 + 当天运营可编辑），把“editability”结构化进 generative retrieval 的编码与 serving，并给出离线深召回 + 在线 A/B + 人工评测的完整闭环，工程落地明确（Kuaishou 线上）。主要扣分点是推理侧 beam/物化存在成本，且方法更偏系统工程，复现需做 toy 化。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-12/OneRetrieval"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.13145",
+    "title": "The Clustering Strikes Back: Building Cost-Effective and High-Performance ANNS at Scale with Helmsman",
+    "authors": [
+      "Yuchen Huang",
+      "Baiteng Ma",
+      "Yiping Sun",
+      "Yang Shi",
+      "Xiao Chen",
+      "Xiaocheng Zhong",
+      "Zhiyong Wang",
+      "Yao Hu",
+      "Erci Xu",
+      "Chuliang Weng"
+    ],
+    "affiliations": ["East China Normal University", "Shanghai Jiao Tong University", "Xiaohongshu Inc"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13145",
+      "pdf": "https://arxiv.org/pdf/2606.13145v1",
+      "code": "https://github.com/Red-EAD/helmsman"
+    },
+    "tags": ["向量检索", "ANNS", "系统", "召回基础设施", "内容生态"],
+    "summary": {
+      "zh": {
+        "method_overview": "HELMSMAN 面向超大规模向量近邻检索（ANNS）在 SSD 场景下的“吞吐/延迟/成本”三难：在小红书等内容平台，HNSW 依赖海量 DRAM 成本爆炸，而 SSD 上的图检索又难以满足在线 SLA。HELMSMAN 回到 clustering-based ANNS（类似 SPANN）路线，并针对线上 production 痛点做三件事：1) 用 userspace storage stack 绕过内核 I/O 栈，提升 SSD 带宽利用；2) 设计 leveling-learned pruning，使得在不同 top-k/查询分布下冗余扫描可控、尾延迟更稳；3) 用 GPU + 弹性 CPU 集群加速构建，使百亿级索引在小时级可重建。",
+        "story": "平台向量规模与 QPS 持续增长 → 纯 DRAM HNSW 成本不可承受 → SSD 混合图检索（DiskANN 等）在线 SLA 仍难满足（串行 I/O、多余候选、构建慢）→ 因此转向“批量 I/O 友好”的聚类检索，但传统实现又卡在内核 I/O 开销、固定 pruning 不适配、构建太慢。HELMSMAN 通过 userspace I/O + learned pruning + GPU 构建，把聚类检索真正推到在线服务可用的吞吐/延迟区间，并显著降低硬件成本。",
+        "innovation": "1) 用 userspace 存储后端把 ANNS 的 I/O pattern 变成可控对象，显著提升 SSD 利用率；2) 用 learning-based 的 leveling pruning 把“不同 top-k/分布下的冗余扫描与稳定性”纳入同一模块；3) 构建侧 GPU 加速 + CPU 弹性并行，使索引重建从“天级”变成“小时级”，贴合向量模型频繁更新。",
+        "key_metrics": "成本与吞吐：在 RedSrch0.5B 上 HELMSMAN 达到 24 KQPS、250 QPS/$（Table 4），显著高于 HNSW 的 51 QPS/$；在 RedSrch10B 上把成本效率从 1.2 提升到 10 QPS/$（Table 5），DRAM 用量节省约 90%。构建：CPU-only 构建 0.1B 需 9–12 小时，4×L20 GPU 可压到 1 小时内；10B 规模通过弹性 CPU worker 把构建从 16+ 小时降到约 4–7 小时。"
+      },
+      "en": {
+        "method_overview": "HELMSMAN is a cost-efficient, high-performance clustering-based ANNS system on all-flash servers, combining a userspace I/O stack, a learned pruning module, and GPU-accelerated construction pipelines to meet strict online SLAs at lower DRAM cost.",
+        "innovation": "Production-grade SSD ANNS via userspace storage + adaptive learned pruning + GPU/elastic construction, enabling large-scale, SLA-friendly retrieval with major cost reduction."
+      }
+    },
+    "score": {
+      "innovation": 20,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 10,
+      "generalization": 4,
+      "relevance": 19,
+      "total": 79,
+      "rationale_zh": "对内容平台检索/推荐基础设施高度相关，指标非常硬（QPS/$、DRAM 节省、构建时长），但更偏系统工程型论文；与“达人治理/违规检测”是基础设施弱相关，因此相关性不拉满。"
+    },
+    "reproduce": {"status": "code_provided"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.13001",
+    "title": "CFALR: Collaborative Filtering-Augmented Large Language Model for Personalized Fashion Outfit Recommendation",
+    "authors": [
+      "Yujuan Ding",
+      "Junrong Liao",
+      "Yunshan Ma",
+      "Yi Bin",
+      "Wenqi Fan",
+      "Tat-Seng Chua",
+      "Qing Li"
+    ],
+    "affiliations": [
+      "The Hong Kong Polytechnic University",
+      "University of Electronic Science and Technology of China",
+      "Singapore Management University",
+      "Tongji University",
+      "National University of Singapore"
+    ],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13001",
+      "pdf": "https://arxiv.org/pdf/2606.13001v1"
+    },
+    "tags": ["电商", "推荐系统", "时尚穿搭", "LLM", "多模态"],
+    "summary": {
+      "zh": {
+        "method_overview": "CFALR 面向电商/社交平台的个性化穿搭推荐与穿搭生成，核心思路是把“协同过滤的交互空间”与“LLM 的语义空间”桥接起来：先把用户-穿搭交互转成自然语言的 P-FITB（Personalized Fill-In-The-Blank）任务，让 LLM 负责语义理解与生成；再把用户/物品的协同特征与视觉特征作为“非文本 token”注入 LLM，通过可训练投影层把 CF embedding 与视觉/文本表征对齐到 LLM 输入空间；推理时还用 CF-augmented 的输出层融合，把 CF 的协同信号与 LLM 的生成 logits 结合以提升组合搜索质量。",
+        "story": "传统 CF 在数据稀疏/冷启动与“穿搭=多物品组合”场景容易失效；纯 LLM/VLM 虽懂语义但与 item-ID 交互空间不对齐，推荐性能不稳。CFALR 的路径是：把任务重写成 LLM 更擅长的自然语言决策问题（P-FITB/穿搭生成）→ 用多路特征（CF 协同 + 视觉语义）当作 token 注入，解决“语义空间 vs 交互空间”错位 → 在输出侧融合 CF 与 LLM 的概率，改善穿搭组合的搜索与一致性。",
+        "innovation": "1) 面向穿搭（多物品组合）把推荐重写为 P-FITB + outfit generation，显式利用 LLM 的生成能力；2) 用“单 token 的非文本特征 + type-specific 投影层”把 CF/视觉特征对齐进 LLM 输入，减少空间错位；3) 推理期用 CF-augmented generation（logits 融合）在大组合空间里更稳地生成 outfit。",
+        "key_metrics": "P-FITB（Acc，Table 2）：Polyvore 1/4=0.6498、1/10=0.3957、1/20=0.2459；IQON 1/4=0.6103、1/10=0.3654、1/20=0.2018，显著高于最强 baseline（如 Polyvore 1/4 的 Bundle-MLLM 0.4775）。穿搭生成（PP/OC/MPC，Table 3）：Polyvore 0.2428/0.4626/0.3556；IQON 0.2883/0.3147/0.2291，整体优于 CPTM、LLMCBR、Bundle-MLLM 等。"
+      },
+      "en": {
+        "method_overview": "CFALR bridges collaborative signals and LLM semantics for personalized fashion outfit recommendation and generation. It injects CF and multimodal features as non-text tokens via trainable projections into an LLM backbone and uses CF-augmented output fusion for better outfit composition.",
+        "innovation": "Task reformulation to P-FITB/outfit generation plus feature-token injection and output-level CF fusion align the interaction space with LLM generation to handle sparse data and combinatorial outfit search."
+      }
+    },
+    "score": {
+      "innovation": 18,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 75,
+      "rationale_zh": "电商/内容平台“穿搭内容+推荐”强相关，指标提升明显且对比充分；但方法依赖较大模型与多特征工程，泛化与成本分析相对有限，因此总分略低于 80。"
+    },
+    "reproduce": {"status": "not_implemented"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.13289",
+    "title": "HYDRA-X: Native Unified Multimodal Models with Holistic Visual Tokenizers",
+    "authors": [
+      "Guozhen Zhang",
+      "Xuerui Qiu",
+      "Yutao Cui",
+      "Tianhui Song",
+      "Changlin Li",
+      "Junzhe Li",
+      "Tao Huang",
+      "Xiao Zhang",
+      "Yang Li",
+      "Jianbing Wu",
+      "Miles Yang",
+      "Zhao Zhong",
+      "Liefeng Bo",
+      "Limin Wang"
+    ],
+    "affiliations": ["Nanjing University", "CASIA", "Tencent Hunyuan", "Zhongguancun Academy", "Shanghai AI Lab"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13289",
+      "pdf": "https://arxiv.org/pdf/2606.13289v1"
+    },
+    "tags": ["MLLM", "VLM", "统一多模态", "视频理解", "图像编辑"],
+    "summary": {
+      "zh": {
+        "method_overview": "HYDRA-X 关注“统一多模态模型（UMM）”里最关键但常被简化的一环：视觉 tokenizer。它提出一个“holistic visual tokenizer”在同一个 ViT 中同时支持 image 与 video tokenization，并把理解/生成/编辑都统一到同一接口上。为解决视频建模，作者发现全局时空 attention 反而伤重建，提出 tubelet 级的因果时间注意力 + 分层 temporal patchify；为解决视频语义监督缺失，加入轻量 Decompressor 把压缩时序 latent 上采样回帧级，从而能同时 distill image teacher 与 video teacher。编辑侧进一步把 source-target interaction 前移到 tokenizer latent 内（STI），显著提升编辑一致性。",
+        "story": "现有 UMM 要么用“图像 tokenizer 逐帧处理视频”导致缺少时序结构，要么用 3D VAE 压时序但缺语义约束，最后让 LLM 背锅。HYDRA-X 的路径是：把 image+video 的 tokenization 统一到一个 ViT → 用最小但有效的 tubelet causal attention 保留时序重建能力，同时避免全局 attention 破坏局部结构 → 用 Decompressor 引入可对齐的 video teacher 监督，补齐语义 → 在编辑任务上把 source-target 交互从 LLM 语义层前移到 tokenizer latent 层，从根上解决一致性问题。",
+        "innovation": "1) 首个在单一 ViT tokenizer 中统一 image+video 的 UMM 设计；2) tubelet causal temporal attention + hierarchical temporal compression 的系统性 ablation，结论反直觉但可复现；3) Decompressor 解决“压缩时序 latent 没有现成 video teacher 对齐”的监督不对称；4) STI 把编辑交互放到 latent 内，几乎不加参数但显著提升编辑一致性。",
+        "key_metrics": "语义蒸馏消融（Table 2）：加入 Decompressor 并对其施加 video teacher supervision 后，在 MVBench/VideoMME 等视频理解指标与 GenEval/ImgEdit 等生成编辑指标上整体最优（如 MVBench 45.4、MME 1522、ImgEdit 3.20）。编辑交互（Table 3）：STI 把 ImgEdit 从 2.80 提升到 3.20，并将 source reconstruction PSNR 从 20.74 提升到 27.65，同时 GenEval 从 70.51 提升到 71.97。"
+      },
+      "en": {
+        "method_overview": "HYDRA-X introduces a holistic visual tokenizer that unifies image and video tokenization within a single ViT, enabling unified understanding, generation, and editing. It uses tubelet causal temporal attention with hierarchical temporal compression and a lightweight Decompressor for joint image-video teacher distillation.",
+        "innovation": "A unified image-video tokenizer with Decompressor-enabled video semantic distillation and tokenizer-stage source-target interaction improves editing consistency with minimal overhead."
+      }
+    },
+    "score": {
+      "innovation": 25,
+      "results": 12,
+      "exp_quality": 13,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 15,
+      "total": 76,
+      "rationale_zh": "方法很新且消融扎实（tokenizer 统一 + Decompressor + STI），对多模态内容理解/生成有长期价值；但与“电商内容生态&达人治理”属于通用基座能力弱相关，因此相关性权重拉低。"
+    },
+    "reproduce": {"status": "not_implemented"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.08063",
+    "title": "Robust-U1: Can MLLMs Self-Recover Corrupted Visual Content for Robust Understanding?",
+    "authors": [
+      "Jiaqi Tang",
+      "Jianmin Chen",
+      "Youyang Zhai",
+      "Wei Wei",
+      "Runtao Liu",
+      "Mengjie Zhao",
+      "Xiangyu Wu",
+      "Qingfa Xiao",
+      "Qifeng Chen"
+    ],
+    "affiliations": [
+      "The Hong Kong University of Science and Technology",
+      "Northwestern Polytechnical University",
+      "Northeastern University",
+      "Nanjing University of Science and Technology",
+      "The Hong Kong University of Science and Technology (Guangzhou)"
+    ],
+    "published": "2026-06-12",
+    "source": "arXiv / ICML'26",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.08063",
+      "pdf": "https://arxiv.org/pdf/2606.08063v1",
+      "code": "https://github.com/jqtangust/Robust-U1"
+    },
+    "tags": ["MLLM", "鲁棒性", "图像恢复", "VQA", "内容理解"],
+    "summary": {
+      "zh": {
+        "method_overview": "Robust-U1 研究 MLLM 在真实世界图像退化下的鲁棒理解：不同于只做特征对齐（黑盒）或只靠文本链路解释（白盒但不恢复像素），它让模型具备“先自我恢复图像，再推理”的能力。方法分三步：先用监督微调让统一 MLLM 学会重建；再用双奖励 RL（像素级 SSIM + 语义级 CLIP 相似）把重建质量与语义一致性对齐；最后在推理时联合使用“退化图像 + 恢复图像”进行多模态推理，从而在强退化/对抗退化下维持理解能力。",
+        "story": "线上内容理解经常遇到压缩、噪声、天气等退化 → 传统鲁棒方法要么在 encoder 里对齐特征但不可解释、要么用文本 chain 说明退化但无法补回像素细节 → 于是作者提出把“恢复”作为模型内生能力：先把重建学出来 → 再用 SSIM/CLIP 双奖励强化“既像又语义一致” → 推理时把恢复结果当作额外证据输入，让回答真正基于可见细节。",
+        "innovation": "1) 把视觉自恢复（self-recovery）显式引入 MLLM 鲁棒理解管线，并证明高质量恢复能直接提升推理；2) RL 双奖励同时约束像素结构（SSIM）与语义一致（CLIP），避免只追求视觉好看或只追求语义；3) 推理阶段联合使用 corrupted+recovered 两路输入，形成更稳的多模态证据融合。",
+        "key_metrics": "真实退化基准 R-Bench（Table 1）：Robust-U1 Overall=0.7398（MCQ/VQA/CAP 三类任务），显著高于通用 MLLM（如 BAGEL Overall=0.5770）与 prior robust SOTA（Robust-R1 Overall=0.5017）。对抗退化（Table 3）：以 MMMB 为例，100% corruption 下 Robust-U1=83.18，优于 BAGEL 78.48 与 Robust-R1 75.35；并且从 clean 到 100% corruption 仅下降约 1.57 点，退化敏感性更低。"
+      },
+      "en": {
+        "method_overview": "Robust-U1 equips MLLMs with explicit visual self-recovery: supervised reconstruction, dual-reward RL (SSIM + CLIP similarity), and multimodal reasoning over both corrupted and recovered images for robust understanding.",
+        "innovation": "Self-recovering visual content inside MLLMs (instead of only feature alignment or text-only reasoning) improves robustness under real-world and adversarial corruptions, guided by pixel+semantic rewards."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 14,
+      "exp_quality": 13,
+      "efficiency": 5,
+      "generalization": 4,
+      "relevance": 18,
+      "total": 76,
+      "rationale_zh": "鲁棒多模态理解对电商/UGC 真实图像质量波动很实用，指标也很强（R-Bench/多基准 SOTA）；但训练成本（RL）较高，且与“治理”属于基础能力相关，因此总分未到 80。"
+    },
+    "reproduce": {"status": "code_provided"}
+  },
+  {
+    "date": "2026-06-12",
+    "id": "2606.10896",
+    "title": "Flash-GMM: A Memory-Efficient Kernel for Scalable Soft Clustering",
+    "authors": ["Gal Bloch", "Ariel Gera", "Matan Orbach", "Ohad Eytan", "Assaf Toledo"],
+    "affiliations": ["IBM Research"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10896",
+      "pdf": "https://arxiv.org/pdf/2606.10896v1",
+      "code": "https://github.com/IBM/Flash-GMM"
+    },
+    "tags": ["聚类", "向量检索", "Triton", "GMM", "ANN"],
+    "summary": {
+      "zh": {
+        "method_overview": "Flash-GMM 提供一个面向大规模软聚类（GMM EM）的 fused Triton kernel：关键点是避免在 GPU 上显式物化 N×K 的 responsibility 矩阵，从而把显存复杂度从 O(NK) 降到近似 O(N)（logZi buffer）+ O(KD)。其 I/O-aware tiling 思路类似 FlashAttention：把局部计算留在寄存器/片上，减少 HBM 往返。作者进一步把 Flash-GMM 集成到 IVF coarse quantizer，用 soft responsibility 支持“多簇归属”（multi-assignment），在同等计算预算下降低距离计算或提升 recall。",
+        "story": "GMM 很强但大规模时被 N×K responsibility 显存与带宽卡死 → 现有 GPU kernel 到 10M 就 OOM，CPU 又太慢 → 因此需要一个像 FlashAttention 一样的 IO-aware fused kernel，把最耗资源的 O(NK) 中间量消掉 → 一旦能在单卡上训练超大规模 GMM，就能把“软聚类”落到 ANN 的 IVF 量化里，并用 multi-assignment 把边界向量放进多个簇，改善召回/成本。",
+        "innovation": "1) 针对 GMM EM 的 fused Triton kernel，核心是消除 N×K responsibility 矩阵物化；2) 把 IO-aware tiling 迁移到 EM 迭代，显著降低 HBM 访问；3) 在 IVF coarse quantizer 中用 GMM responsibility 推导 multi-assignment，给出明确 recall–compute tradeoff。",
+        "key_metrics": "效率：Flash-GMM 在 A100-80GB 上相对 SciPy 提升 766–1,740×、相对 TorchGMM 提升 19–32×（文中 Table 1/Section 3.4），并能扩展到 N=1e8 而 TorchGMM 在 N>1e6 OOM。显存：N=1e6 时 Flash-GMM kernel 分配约 4.5MB，而 TorchGMM 约 21GB（Table 2）。ANN 质量/成本：以 GloVe-100 为例（Table 3），nprobe=16 时 GMM-multi Recall@10=0.92（K-Means 0.85），DCO 从 18.4K 增到 32.8K；但在等成本 operating point 上，GMM-multi 能以更少 DCO 达到相同 recall（并在多个数据集上呈现 pareto 改善）。"
+      },
+      "en": {
+        "method_overview": "Flash-GMM is a fused Triton kernel for scalable GMM EM that avoids materializing the N×K responsibility matrix, enabling much larger-scale soft clustering on a single GPU. It is applied to IVF coarse quantization with responsibility-based multi-assignment to improve ANN recall-cost tradeoffs.",
+        "innovation": "IO-aware fused EM kernel (FlashAttention-style tiling) makes large-scale GMM practical and unlocks responsibility-driven multi-assignment for IVF-based ANN."
+      }
+    },
+    "score": {
+      "innovation": 21,
+      "results": 13,
+      "exp_quality": 12,
+      "efficiency": 10,
+      "generalization": 4,
+      "relevance": 18,
+      "total": 78,
+      "rationale_zh": "对大规模向量聚类/ANN 基础设施很有价值（显存/速度数量级提升 + IVF 应用），但与电商治理属于基础设施间接相关，因此相关性扣分。"
+    },
+    "reproduce": {"status": "code_provided"}
+  }
+]

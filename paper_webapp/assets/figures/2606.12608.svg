@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#10b981"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">Shopping Reasoning Bench</text>
+  <text class="s" x="76" y="118">Expert-authored rubrics + validated LLM judge for conversational shopping</text>
+
+  <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
+
+  <rect x="92" y="220" width="260" height="160" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="252">1) Inputs</text>
+  <text class="p" x="112" y="282">Multi-turn shopping missions</text>
+  <text class="p" x="112" y="308">Real retail constraints</text>
+  <text class="p" x="112" y="334">User preference evolution</text>
+
+  <rect x="380" y="220" width="320" height="200" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="400" y="252">2) Expert authoring</text>
+  <text class="m" x="400" y="282">taxonomy: 5 categories / 15 subcats</text>
+  <text class="m" x="400" y="308">10,863 binary rubrics</text>
+  <text class="p" x="400" y="342">required vs optional weighting</text>
+  <text class="p" x="400" y="368">criterion-level debuggability</text>
+
+  <rect x="730" y="220" width="340" height="200" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="750" y="252">3) LLM-as-judge</text>
+  <text class="m" x="750" y="282">rubric pass/fail scoring</text>
+  <text class="p" x="750" y="312">validated vs expert ceiling</text>
+  <text class="p" x="750" y="338">macro-F1 / κ agreement</text>
+  <text class="p" x="750" y="364">supports large-scale eval</text>
+
+  <rect x="92" y="450" width="978" height="150" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="112" y="482">4) Outputs</text>
+  <text class="p" x="112" y="512">Weighted pass rates + per-skill diagnosis (e.g., preference clarification, trade-offs)</text>
+  <text class="p" x="112" y="538">Model comparison under realistic multi-turn shopping constraints</text>
+  <text class="p" x="112" y="564">Helps product teams pinpoint missing rubrics (safety, compatibility, value for money)</text>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 352 300 L 380 300"/>
+    <path d="M 700 320 L 730 320"/>
+    <path d="M 560 420 L 560 450"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="375,300 363,293 363,307"/>
+    <polygon points="725,320 713,313 713,327"/>
+    <polygon points="560,450 553,438 567,438"/>
+  </g>
+</svg>
