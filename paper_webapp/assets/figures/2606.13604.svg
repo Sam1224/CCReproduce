@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#f0fdf4"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="520" rx="18" fill="url(#bg)"/>
+
+  <text x="28" y="54" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="800" fill="#0f172a">Objective-Weight Adaptation (Offline RL) for Dispatch</text>
+  <text x="28" y="82" font-family="ui-sans-serif, system-ui" font-size="14" fill="#475569">A narrow RL control interface that preserves optimizer safeguards</text>
+
+  <g filter="url(#shadow)">
+    <rect x="60" y="150" width="260" height="130" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="80" y="185" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">State (per store)</text>
+    <text x="80" y="212" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Backlog · supply pressure</text>
+    <text x="80" y="234" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Courier wait time (CWT)</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="360" y="150" width="200" height="130" rx="16" fill="#dcfce7" stroke="#86efac"/>
+    <text x="380" y="185" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#166534">OWA-RL Policy</text>
+    <text x="380" y="212" font-family="ui-sans-serif, system-ui" font-size="12" fill="#14532d">select multiplier</text>
+    <text x="380" y="234" font-family="ui-sans-serif, system-ui" font-size="12" fill="#14532d">(speed vs batching)</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="600" y="150" width="260" height="130" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="620" y="185" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">Assignment Optimizer</text>
+    <text x="620" y="212" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Feasibility constraints</text>
+    <text x="620" y="234" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Operational safeguards</text>
+  </g>
+
+  <path d="M320 215 L360 215" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M560 215 L600 215" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="320" width="720" height="145" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="110" y="355" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">Delayed marketplace feedback (reward)</text>
+    <text x="110" y="382" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Efficiency: CAT ↓, CWT ↓, %batched ↑ · Quality: ASAP ↔, lateness ↓</text>
+    <text x="110" y="404" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Offline learning → online switchback experiment</text>
+  </g>
+
+  <text x="28" y="492" font-family="ui-sans-serif, system-ui" font-size="13" fill="#475569">Highlights: batching +0.495pp (p&lt;0.001), CAT/CWT significantly reduced; delivery quality unchanged</text>
+</svg>

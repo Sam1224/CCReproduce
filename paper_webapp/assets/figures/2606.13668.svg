@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#fff7ed"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="520" rx="18" fill="url(#bg)"/>
+
+  <text x="28" y="54" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="800" fill="#0f172a">Influcoder: Distill Influence Rankings into an Encoder</text>
+  <text x="28" y="82" font-family="ui-sans-serif, system-ui" font-size="14" fill="#475569">Make influence-based data attribution fast enough for dataset governance</text>
+
+  <g filter="url(#shadow)">
+    <rect x="60" y="140" width="300" height="150" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="80" y="175" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">Stage-1 (teacher)</text>
+    <text x="80" y="202" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Decoder + LoRA gradients</text>
+    <text x="80" y="224" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">CountSketch compression</text>
+    <text x="80" y="246" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Influence score = cosine(∇q, ∇p)</text>
+  </g>
+
+  <path d="M360 215 L420 215" stroke="#ea580c" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="420" y="140" width="420" height="150" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="440" y="175" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">Stage-2 (student)</text>
+    <text x="440" y="202" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Encoder → influence embeddings</text>
+    <text x="440" y="224" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Train to match teacher ranking/similarity</text>
+    <text x="440" y="246" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Attribution becomes vector search</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="320" width="720" height="145" rx="16" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="110" y="355" font-family="ui-sans-serif, system-ui" font-size="14" font-weight="800" fill="#0f172a">Toy governance use-case</text>
+    <text x="110" y="382" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">Query: “toxic behavior source?” → retrieve influential training samples</text>
+    <text x="110" y="404" font-family="ui-sans-serif, system-ui" font-size="12" fill="#334155">AUPRC ≈ LESS but inference time drops from ~2,200s to ~32s</text>
+  </g>
+
+  <text x="28" y="492" font-family="ui-sans-serif, system-ui" font-size="13" fill="#475569">Highlights: AUPRC 0.698 vs 0.708 (LESS), but 70× faster and far smaller storage</text>
+</svg>

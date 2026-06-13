@@ -1,0 +1,326 @@
+[
+  {
+    "date": "2026-06-13",
+    "id": "2606.12984",
+    "title": "SkillChain: Closing the Loop on Skill Evolution for Image-Based E-Commerce AI Assistants",
+    "authors": [
+      "Yimin Hu",
+      "Mengtao Xu",
+      "Hao Guo",
+      "Yuheng Song",
+      "Xiaoyong Zhu",
+      "Bo Zheng"
+    ],
+    "affiliations": ["Alibaba Group"],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12984",
+      "pdf": "https://arxiv.org/pdf/2606.12984v1"
+    },
+    "tags": ["电商", "多模态", "购物助手", "Agent", "Skill"],
+    "summary": {
+      "zh": {
+        "method_overview": "SkillChain 面向“图片触发多意图”的电商视觉助手，把每个意图的行为约束抽象为可声明的 Skill（工具调用、卡片结构、写作约束与领域知识等）。它用三段式闭环自动演进：Stage-1 从任务说明与轨迹生成初始 Skill 并走人工反思 gate；Stage-2 挖掘线上路由失败，对 Skill Description 做 update/merge/discard 以修复意图→Skill 映射漂移；Stage-3 用规则路径 + LLM Judge 路径的双通道评估做归因，定位 Skill Body 缺陷并迭代修复。",
+        "story": "生产上的电商图片助手面对“同一张图对应多种意图”的长尾分布，容易出现：缺少 per-intent 行为规范导致格式/工具调用混乱；流量分布变化导致路由持续漂移；Skill 体在上线后缺少可自动诊断与修复的反馈回路。作者的路径是：把约束显式化为 Skill → 用路由失败挖掘把 Description 与流量对齐 → 用双路径评估与归因把 Body 的系统性缺陷找出来并迭代修复，同时用 stage-wise gate 保证质量单调不降。",
+        "innovation": "1) 把“技能”定义为声明式行为规范（而非可执行代码），让结构化输出与工具调用可控；2) 显式加入 Route Optimizer，专门治理 intent routing drift（工业界常见但学术工作缺失）；3) 双路径评估（规则结构 + LLM-as-judge 语义/约束）+ 聚合归因，把线上失败转成可执行的修复指令，并通过阶段解耦实现单调质量保证。",
+        "key_metrics": "离线（1000 条生产 query）：Full SkillChain 的 Avg LLM-Judge=72.2（TCR 61.3 / CCC 72.2 / CQ 82.3 / CA 62.7），Routing F1=73.5；相对 Stage2，CCC+8.8、CQ+5.8。线上 A/B（1 周，Stage3 vs Stage2）：Interactive UV +1.92pp，Full-read Rate +4.98pp，Avg Dwell Time +2.85s，7-day Return Rate +1.15pp。"
+      },
+      "en": {
+        "method_overview": "SkillChain targets image-based e-commerce assistants where one image maps to multiple intents. It formalizes each intent as a declarative Skill specification (tool calls, rich-card format, constraints, and domain knowledge), and closes the production feedback loop with a 3-stage pipeline: Skill creation, routing optimization under drift, and body refinement with dual-path evaluation.",
+        "innovation": "A stage-decoupled, monotone-improvement skill lifecycle: explicit routing-drift optimization plus dual-path (rules + LLM-judge) attribution to iteratively repair skill bodies using production feedback."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 12,
+      "exp_quality": 11,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 24,
+      "total": 78,
+      "rationale_zh": "电商图片助手强相关且有真实线上 A/B，但评测与数据高度生产定制（LLM-Judge/Skill 资产与数据不可公开），学术可复现性与可迁移证据相对不足，因此控制在 80 分以下。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.12924",
+    "title": "Iterating Toward Better Search: A Two-Agent Simulation Framework for Evaluating Agentic Search Architectures in E-Commerce",
+    "authors": [
+      "Jetlir Duraj",
+      "Jayanth Yetukuri",
+      "Shuang Zhou",
+      "Dhruv Varma",
+      "Rui Kong",
+      "Ishita Khan",
+      "Qunzhi Zhou"
+    ],
+    "affiliations": ["eBay Inc."],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12924",
+      "pdf": "https://arxiv.org/pdf/2606.12924v1"
+    },
+    "tags": ["电商", "对话式购物", "Agent", "评测/仿真"],
+    "summary": {
+      "zh": {
+        "method_overview": "本文提出一个“两 Agent 可替换仿真框架”来评测对话式购物助手：buyer agent 按 persona/mission/patience 自主提出需求并执行行动；responder agent 调用真实电商搜索 API 生成 SRP/对话建议。由于 buyer 固定、responder 可替换，作者可以在同一批对话场景上可控对比不同架构（记忆策略、LLM backbone、judge 选择），并用失败分析驱动快速迭代。",
+        "story": "对话购物助手上线前很难用低成本 AB 覆盖足够用户类型；单一 agent 生成对话又会产生不真实的“自我对话”。作者用 buyer/responder 解耦：buyer 独立生成真实行为分布 → responder 接真实搜索 API → 固定 buyer 复用场景做架构对比 → 用系统化 failure taxonomy 把低分样本转成具体修复点，从而加速迭代。",
+        "innovation": "1) 把“评测”做成可复放的双 Agent 仿真（buyer 固定 + responder 可插拔），能显式评估 memory/intent/LLM/backbone；2) 证明“更简单的 rolling-window memory”在多项指标上优于 intent-extraction memory，同时延迟更低；3) 明确指出 judge 选择会显著影响结论（Gemini/Claude 分歧），为工业评测治理提供直接经验。",
+        "key_metrics": "数据：2,011 段对话、14 个 persona bucket。Sys-B（rolling-window）相对 Sys-A（intent tracking）在多指标均提升（Gemini judge：Mission Success +0.10、SRP Relevance +0.07、CHAT Helpfulness +0.08、Intent Understanding +0.05），且 per-query latency 下降 35%。针对最差 bucket 的 Sys-B+ 迭代：near-failure 从 65 降到 25（-62%），catastrophic failure 14→9（-36%）。"
+      },
+      "en": {
+        "method_overview": "A modular two-agent simulation for conversational shopping assistants: a buyer agent with personas/missions interacts with a plug-and-play responder that calls a real e-commerce search API. By holding the buyer constant, architectures (memory, LLM backbone, judges) can be compared on identical scenarios, and failure analysis enables rapid iteration.",
+        "innovation": "Controlled two-agent replay for agentic search evaluation, plus evidence that simpler rolling-window memory can beat intent-extraction memory while reducing latency, and that judge choice materially changes conclusions."
+      }
+    },
+    "score": {
+      "innovation": 21,
+      "results": 10,
+      "exp_quality": 12,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 24,
+      "total": 78,
+      "rationale_zh": "电商对话购物助手评测强相关，方法可直接用于你们的离线迭代与失败归因；但它主要贡献在评测/工程范式，模型侧提升幅度中等，因此不给到 80+。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.13533",
+    "title": "OneRetrieval: Unifying Multi-Branch E-commerce Retrieval with an Editable Generative Model",
+    "authors": [
+      "Xuxin Zhang",
+      "Ben Chen",
+      "Yue Lv",
+      "Siyuan Wang",
+      "Yupeng Li",
+      "Yufei Ma",
+      "Zihan Liang",
+      "Tong Zhao",
+      "Ying Yang",
+      "Huangyu Dai",
+      "Lingtao Mao",
+      "Zhipeng Qian",
+      "Xinyu Sun",
+      "Chenyi Lei",
+      "Wenwu Ou",
+      "Kun Gai"
+    ],
+    "affiliations": ["Kuaishou Technology"],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13533",
+      "pdf": "https://arxiv.org/pdf/2606.13533v1",
+      "code": "https://github.com/xuxinzhang/oneretrieval"
+    },
+    "tags": ["电商", "检索", "Generative Retrieval", "可编辑/运营干预"],
+    "summary": {
+      "zh": {
+        "method_overview": "OneRetrieval 试图用单一生成式检索模型统一电商多路召回（稀疏/稠密/协同等），并且保留倒排分支最大的工业优势：新词“小时级”注入与可控干预。核心是 Keyword-Aligned Encoding（KAE）：把每个 identifier 位置绑定到可解释的属性词而非量化 embedding，并在每个 codebook 预留 slots，允许运营把新词绑定到 reserved slot、同时把目标 item 集合的编码打上同一 slot，从而实现无需 retrain 的可编辑检索。再配合信息论式的 codebook 合并与四阶段 SFT，兼顾召回质量与 editability。",
+        "story": "工业电商召回通常是多分支拼接：倒排可运营干预但转化弱，稠密/生成式召回质量好但难以小时级注入新词。作者的路径是：用 KAE 把“词→编码槽位”做成可绑定的可解释接口 → 通过 reserved slots + 运营绑定实现 editability → 用分组 codebook 与多阶段训练把召回质量拉到可用，从而让单模型逐步替换更多分支。",
+        "innovation": "1) 把可编辑性作为 generative retrieval 的结构性目标，而不是训练后靠泛化“碰运气”；2) KAE 将 identifier 位置与可解释属性词对齐，使得新词绑定与目标集合路由成为显式操作；3) 用在线 A/B 证明“先替换倒排，再替换稠密”可以在不牺牲转化的情况下提升点击质量，具备真实落地价值。",
+        "key_metrics": "离线（点击/下单两套测试集）：OneRetrieval 在深召回 HR@350 上与最强 generative baseline 接近（Order HR@350=0.5482，Click HR@350=0.6055）。线上 A/B（out-of-mall search）：仅替换倒排分支时 Order +0.710%（显著），Buyer +0.450%，Item CTR +0.074%；进一步“替换几乎全部召回”时 Item CTR +0.821%（显著），Buyer -0.028%，Order +0.255%。"
+      },
+      "en": {
+        "method_overview": "OneRetrieval unifies multi-branch e-commerce retrieval with a single generative model while preserving real-time editability (fast keyword interventions). It introduces Keyword-Aligned Encoding with reserved slots that can be bound to newly emerging words after deployment, plus an information-theoretic codebook grouping and a multi-stage fine-tuning pipeline.",
+        "innovation": "Editability-aware generative retrieval: reserved-slot binding and keyword-aligned identifier positions make operational interventions explicit, enabling hour-level new-term routing without retraining."
+      }
+    },
+    "score": {
+      "innovation": 27,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 87,
+      "rationale_zh": "强电商检索相关且直接解决“可运营干预/新词小时级注入”这一工业刚需，给出了离线深召回指标与线上 A/B 业务指标；代价是推理 beam-search 资源较重，且细节较工业化。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-13/OneRetrieval"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.13604",
+    "title": "Multi-Agent Reinforcement Learning from Delayed Marketplace Feedback for Objective-Weight Adaptation in Three-Sided Dispatch",
+    "authors": ["Haochen Wu", "Yi Hou", "Ryan Xie"],
+    "affiliations": ["DoorDash"],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13604",
+      "pdf": "https://arxiv.org/pdf/2606.13604v1"
+    },
+    "tags": ["平台治理", "Marketplace", "Offline RL", "调度/分发"],
+    "summary": {
+      "zh": {
+        "method_overview": "本文把三方市场（商家-骑手-用户）的调度权衡视为“从真实世界延迟反馈学习”的离线 RL 问题：不直接替换组合优化器，而是让 store-level agent 选择一个离散 multiplier 去调节优化器目标中“速度 vs 拼单效率”的权重。训练端用集中式 value function、去中心化执行，并用 Double Q + 保守正则来缓解 OOD 价值过估。线上通过 switchback 实验验证在不伤害用户侧交付质量的情况下提升效率。",
+        "story": "生产调度系统常用固定权重启发式，面对局部拥堵/供需变化会变得脆弱；但直接用 RL 替代组合优化器风险高。作者选择“窄接口”路线：把 RL 的 action 限制为一个 objective-weight multiplier → 保留原优化器的可行性约束与安全护栏 → 用延迟的市场结果构造奖励做 offline RL → 线上 switchback 做稳健验证。",
+        "innovation": "1) 以“objective-weight adaptation”作为可控接口，把 offline RL 引入高风险生产调度而不破坏既有优化器；2) 以区域级延迟反馈构造奖励，体现市场网络效应；3) 结合保守正则与 DDQN 目标，降低离线学习的 OOD 风险。",
+        "key_metrics": "线上 switchback（约 4,000 区域，2 小时切换）：All day parts：CAT -1.261s (p=0.019)，CWT -0.856s (p=0.004)，% batched +0.495pp (p<0.001)，ASAP +0.972s (ns)，%20-min late -0.012pp (ns)。Dinner：CAT -1.289s (p=0.042)，CWT -1.030s (p=0.041)，% batched +0.600pp (p=0.010)，%20-min late -0.037pp (p=0.040)。"
+      },
+      "en": {
+        "method_overview": "A deployed offline RL system for a three-sided delivery marketplace. Instead of replacing the combinatorial assignment optimizer, a store-level policy selects a discrete multiplier to adapt objective weights (speed vs batching) using delayed marketplace outcomes.",
+        "innovation": "A constrained RL control interface that safely adapts production dispatch objectives under delayed, noisy feedback while retaining optimizer feasibility and safeguards."
+      }
+    },
+    "score": {
+      "innovation": 20,
+      "results": 10,
+      "exp_quality": 12,
+      "efficiency": 8,
+      "generalization": 2,
+      "relevance": 15,
+      "total": 67,
+      "rationale_zh": "偏“市场调度/效率治理”，对电商平台治理有借鉴（窄接口 + 延迟反馈 offline RL），但与内容理解/达人治理不直接相关，因此相关性分不高。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.13668",
+    "title": "Influcoder: Distilling Decoders’ Gradient Influence Rankings into an Encoder for Data Attribution",
+    "authors": ["Dimitri Kachler", "Damien Sileo", "Pascal Denis"],
+    "affiliations": ["Inria / Université de Lille"],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13668",
+      "pdf": "https://arxiv.org/pdf/2606.13668v1"
+    },
+    "tags": ["数据治理", "数据归因", "数据过滤", "Toxicity"],
+    "summary": {
+      "zh": {
+        "method_overview": "Influcoder 关注“大模型训练数据归因/过滤”在规模化落地时的核心瓶颈：基于 influence function / per-example gradient 的方法准确但计算与存储昂贵。它先用 decoder + LoRA 在 LoRA 子空间计算每条样本的 influence ranking（用 CountSketch 等方式压缩梯度），得到 query→pool 的 ground-truth 影响力排序；再训练一个 encoder，把样本映射为 influence embedding，使得 embedding 的 cosine similarity 能拟合 ground-truth influence，从而把在线归因从“算梯度”降级为“算 embedding + 向量检索”。",
+        "story": "想治理训练数据导致的有害行为（如 toxic）需要能在大规模数据上做 attribution/过滤，但经典 influence/梯度方法难以承受计算与存储。作者的路径是：用一次性的 gradient influence 作为监督信号 → distill 到轻量 encoder → 之后归因用 embedding 相似度近似 influence，达到接近精度但数量级更快/更省存储。",
+        "innovation": "1) 以“影响力排序”为蒸馏对象，而不是蒸馏 loss 或直接蒸馏输出；2) 结合 LoRA 子空间梯度与 CountSketch 压缩，让 ground-truth influence 生成可控；3) 在 toxicity filtration 任务上证明：精度接近梯度法（LESS），但推理耗时下降到几十秒量级，具备工程可行性。",
+        "key_metrics": "效率（10K 样本）：LESS 约 3.5h/320MB；LoGRA 约 0.85h/2.24GB；Influcoder（dim=768）训练+推理约 0.73h，总推理约 0.02h/30MB。毒性过滤（8K 数据，66 toxic，AUPRC）：Influcoder Het 0.6981（32.1s）/ Hom 0.6919（33.4s）；LESS Het 0.7075（2248.5s）/ Hom 0.7562（2285.6s）。"
+      },
+      "en": {
+        "method_overview": "Influcoder distills influence-based data attribution into a fast encoder. It first computes gradient-based influence rankings in a LoRA subspace (with sketching for compression), then trains an encoder to produce influence embeddings whose cosine similarity approximates the gradient influence.",
+        "innovation": "Ranking distillation for scalable data attribution: near-gradient quality on toxicity filtering with orders-of-magnitude faster inference and much smaller storage."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 21,
+      "total": 82,
+      "rationale_zh": "与数据治理/清洗/有害样本过滤强相关；AUPRC 接近梯度基线（LESS），但速度与存储显著更优，具备在大规模数据上落地为“归因检索服务”的潜力。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-13/Influcoder"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.13680",
+    "title": "Learning to Reason by Analogy via Retrieval-Augmented Reinforcement Fine-Tuning",
+    "authors": [
+      "Zilin Xiao",
+      "Qi Ma",
+      "Chun-cheng Jason Chen",
+      "Xintao Chen",
+      "Avinash Atreya",
+      "Hanjie Chen",
+      "Vicente Ordonez"
+    ],
+    "affiliations": [],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13680",
+      "pdf": "https://arxiv.org/pdf/2606.13680v1"
+    },
+    "tags": ["RAG", "RLVR", "推理", "LLM"],
+    "summary": {
+      "zh": {
+        "method_overview": "RA-RFT 把“检索增强”引入基于可验证奖励的推理后训练（RLVR），但关键不是检索表面相似，而是检索“推理效用”（能否提供可迁移的解题策略）。它先用 judge model 对 query-corpus 生成 reasoning-relevance 标签（gold-relevance distillation），再训练 reasoning-aware retriever，用其检索到的“类比推理轨迹”作为 demonstrations 注入 RLVR 训练 prompt，从而在探索阶段就获得更高质量 rollouts 与更密集的有效奖励信号。",
+        "story": "RLVR 能提升推理，但当模型缺少某类策略时会遇到稀疏奖励瓶颈；传统 RAG 用语义相似检索，往往检到“看起来像但策略不对”的样例，反而干扰训练。作者用“类比推理”视角：定义推理效用→蒸馏检索监督→训练推理感知 retriever→把检索到的推理轨迹融入 RLVR，让模型在训练中学会使用类比策略。",
+        "innovation": "1) 明确把检索目标从语义相似转为推理效用（reasoning utility），并用 LLM judge 蒸馏可训练监督；2) 将检索到的推理轨迹直接纳入 RLVR fine-tuning（训练阶段增强而非仅推理时增强）；3) 在多个竞赛级数学基准上给出稳定增益，并做 retriever/优化算法等 ablation。",
+        "key_metrics": "Table 1（average@32 accuracy）：Qwen3-1.7B：GRPO 50.4/41.6/26.3/54.8（AIME24/25/HMMT25/BrUMO25），RA-RFT 55.1/48.7/28.2/57.4；Qwen3-4B：GRPO 74.8/66.4/46.4/69.8，RA-RFT 75.8/69.2/47.3/75.7。"
+      },
+      "en": {
+        "method_overview": "RA-RFT combines retrieval augmentation with reinforcement fine-tuning for reasoning, where retrieval is optimized for reasoning utility rather than semantic similarity. It distills utility labels with a judge model, trains a reasoning-aware retriever, and injects retrieved reasoning traces into RLVR training.",
+        "innovation": "Reasoning-utility retrieval plus training-time integration into RLVR improves competition-level math reasoning across benchmarks."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 4,
+      "generalization": 4,
+      "relevance": 12,
+      "total": 67,
+      "rationale_zh": "方法很强但偏数学推理后训练；对电商内容生态/治理更多是“可借鉴的通用 RAG+RLVR 范式”，相关性较弱且训练成本高。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.13681",
+    "title": "EvoArena: Tracking Memory Evolution for Robust LLM Agents in Dynamic Environments",
+    "authors": [
+      "Jundong Xu",
+      "Qingchuan Li",
+      "Jiaying Wu",
+      "Yihuai Lan",
+      "Shuyue Stella Li",
+      "Huichi Zhou",
+      "Bowen Jiang",
+      "Lei Wang",
+      "Jun Wang",
+      "Anh Tuan Luu",
+      "Caiming Xiong",
+      "Hae Won Park",
+      "Bryan Hooi",
+      "Zhiyuan Hu"
+    ],
+    "affiliations": [
+      "National University of Singapore",
+      "Singapore Management University",
+      "University of Washington",
+      "University College London",
+      "University of Pennsylvania",
+      "Nanyang Technological University",
+      "Recursive",
+      "Massachusetts Institute of Technology"
+    ],
+    "published": "2026-06-11",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13681",
+      "pdf": "https://arxiv.org/pdf/2606.13681v1"
+    },
+    "tags": ["Agent", "Memory", "鲁棒性", "Benchmark"],
+    "summary": {
+      "zh": {
+        "method_overview": "EvoArena 关注一个被忽视的部署现实：环境会持续演化（API/工作流/代码库/用户偏好版本迭代），但多数 agent benchmark 只评测静态快照。它把环境组织成“逐步更新的 release chain”，要求 agent 在新版本下完成任务并识别哪些旧知识仍有效。作者提出 EvoMem：像 git 一样记录 memory 的 patch 历史（更新前后内容、理由与证据），默认用最新状态，但在冲突/版本回溯时可检索历史 patch 来恢复与解释旧状态，从而提升跨版本鲁棒性。",
+        "story": "静态评测会高估 agent 的可靠性：上线后环境版本变化会导致 memory 覆盖、规则冲突与状态坍缩。作者用“版本链”构建 benchmark 暴露问题 → 发现 memory 只保留 latest state 会在演化环境下失效 → 用可追溯的 patch history 把更新过程显式化，让 agent 能回溯、对比与解释变化，从而更稳健地适配新版本。",
+        "innovation": "1) 把“持续环境演化”建模为可度量的 benchmark 形态（release chain + chain accuracy）；2) 提出 git-like patch memory（EvoMem），把更新理由与证据纳入 memory 结构；3) 通过链级指标揭示 agent 在连续演化任务中的累积失败模式，对真实生产（工具/流程不断变更）有直接启发。",
+        "key_metrics": "EvoArena 上现有 agent 平均 accuracy 约 39.6%。EvoMem 平均带来 +1.5%（跨 agent/backbone），并将 chain-level accuracy 提升 +3.7%；在标准基准上也有增益（GAIA +6.1%、LoCoMo +4.8%）。"
+      },
+      "en": {
+        "method_overview": "EvoArena benchmarks agents under persistent environment evolution (release chains) instead of static snapshots. EvoMem records memory as an append-only patch history (before/after state, rationale, evidence) to improve version-aware reasoning and robustness.",
+        "innovation": "Release-chain evaluation plus git-like patch memory exposes and mitigates state collapse in evolving environments."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 9,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 14,
+      "total": 68,
+      "rationale_zh": "更偏通用 Agent 评测与 memory 结构，对你们做“治理/工具链/流程持续迭代”的 Agent 系统很有借鉴，但与电商内容理解/达人治理的业务强相关度一般。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  }
+]
