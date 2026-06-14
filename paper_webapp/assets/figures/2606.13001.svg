@@ -16,40 +16,38 @@
   <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
   <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
   <text class="t" x="76" y="92">CFALR</text>
-  <text class="s" x="76" y="118">CF-augmented LLM for personalized fashion outfit recommendation & generation</text>
+  <text class="s" x="76" y="118">Collaborative Filtering + LLM token injection for outfit recommendation</text>
 
   <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
 
-  <rect x="92" y="220" width="270" height="150" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
-  <text class="h" x="112" y="252">1) Signals</text>
-  <text class="p" x="112" y="282">user-outfit interactions</text>
-  <text class="p" x="112" y="308">item images + metadata</text>
+  <rect x="92" y="220" width="300" height="165" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="252">1) User history</text>
+  <text class="p" x="112" y="282">click / purchase / likes</text>
+  <text class="p" x="112" y="308">outfit interactions</text>
 
-  <rect x="392" y="220" width="320" height="200" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
-  <text class="h" x="412" y="252">2) Feature tokens</text>
-  <text class="m" x="412" y="282">CF embeddings → projection</text>
-  <text class="m" x="412" y="308">vision features → projection</text>
-  <text class="p" x="412" y="342">inject as non-text tokens</text>
+  <rect x="422" y="220" width="320" height="165" rx="16" fill="#fdf2f8" stroke="#fbcfe8"/>
+  <text class="h" x="442" y="252">2) CF signals</text>
+  <text class="m" x="442" y="282">u, i embeddings</text>
+  <text class="p" x="442" y="308">project → single token</text>
 
-  <rect x="742" y="220" width="328" height="200" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
-  <text class="h" x="762" y="252">3) LLM reasoning</text>
-  <text class="m" x="762" y="282">P-FITB (fill-in-the-blank)</text>
-  <text class="p" x="762" y="312">outfit composition constraints</text>
-  <text class="p" x="762" y="338">generate / rank candidates</text>
+  <rect x="772" y="220" width="336" height="165" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="792" y="252">3) LLM (P-FITB)</text>
+  <text class="p" x="792" y="282">fill missing items</text>
+  <text class="p" x="792" y="308">multimodal item text/attr</text>
 
-  <rect x="92" y="450" width="978" height="150" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
-  <text class="h" x="112" y="482">4) Outputs</text>
-  <text class="p" x="112" y="512">Personalized outfit recommendation + outfit generation</text>
-  <text class="p" x="112" y="538">CF-augmented output fusion improves combinatorial search stability</text>
+  <rect x="92" y="440" width="1016" height="180" rx="16" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text class="h" x="112" y="472">4) CF-augmented generation</text>
+  <text class="p" x="112" y="502">combine LLM distribution with CF preference</text>
+  <text class="m" x="112" y="530">p(next) ∝ p_LLM(next) ⊕ p_CF(next)</text>
 
   <g fill="none" stroke="#94a3b8" stroke-width="4">
-    <path d="M 362 295 L 392 295"/>
-    <path d="M 712 320 L 742 320"/>
-    <path d="M 560 420 L 560 450"/>
+    <path d="M 392 302 L 422 302"/>
+    <path d="M 742 302 L 772 302"/>
+    <path d="M 590 385 L 590 440"/>
   </g>
   <g fill="#94a3b8">
-    <polygon points="387,295 375,288 375,302"/>
-    <polygon points="737,320 725,313 725,327"/>
-    <polygon points="560,450 553,438 567,438"/>
+    <polygon points="417,302 405,295 405,309"/>
+    <polygon points="767,302 755,295 755,309"/>
+    <polygon points="590,440 583,428 597,428"/>
   </g>
 </svg>

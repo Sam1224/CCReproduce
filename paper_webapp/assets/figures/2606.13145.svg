@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#f1f5f9"/></linearGradient>
-    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#ecfdf5"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#0ea5e9"/></linearGradient>
     <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
     <style>
       .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
@@ -15,41 +15,40 @@
   <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
   <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
   <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
-  <text class="t" x="76" y="92">HELMSMAN</text>
-  <text class="s" x="76" y="118">Cost-effective SSD ANNS via clustering + userspace I/O + learned pruning</text>
+  <text class="t" x="76" y="92">Helmsman</text>
+  <text class="s" x="76" y="118">Production-scale clustering ANNS: userspace I/O + learned pruning + GPU build</text>
 
   <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
 
-  <rect x="92" y="220" width="250" height="150" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
-  <text class="h" x="112" y="252">1) Vectors @ scale</text>
-  <text class="p" x="112" y="282">billions of embeddings</text>
-  <text class="p" x="112" y="308">stored on SSD (low DRAM)</text>
+  <rect x="92" y="220" width="300" height="165" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="252">1) Query embedding</text>
+  <text class="p" x="112" y="282">top-k / latency SLA</text>
+  <text class="p" x="112" y="308">online traffic skew</text>
 
-  <rect x="370" y="220" width="330" height="200" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
-  <text class="h" x="390" y="252">2) Userspace I/O</text>
-  <text class="m" x="390" y="282">bypass kernel storage stack</text>
-  <text class="p" x="390" y="312">higher SSD bandwidth utilization</text>
-  <text class="p" x="390" y="338">stable tail latency</text>
+  <rect x="422" y="220" width="320" height="165" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="442" y="252">2) Cluster routing</text>
+  <text class="p" x="442" y="282">coarse centroids</text>
+  <text class="m" x="442" y="308">adaptive learned pruning</text>
 
-  <rect x="730" y="220" width="340" height="200" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
-  <text class="h" x="750" y="252">3) Learned pruning</text>
-  <text class="m" x="750" y="282">leveling-learned pruning</text>
-  <text class="p" x="750" y="312">less redundant scans</text>
-  <text class="p" x="750" y="338">better QPS / cost</text>
+  <rect x="772" y="220" width="336" height="165" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="792" y="252">3) Userspace storage</text>
+  <text class="p" x="792" y="282">bypass kernel I/O</text>
+  <text class="m" x="792" y="308">all-flash optimized</text>
 
-  <rect x="92" y="450" width="978" height="150" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
-  <text class="h" x="112" y="482">4) Fast construction & serving</text>
-  <text class="p" x="112" y="512">GPU-assisted index build + elastic CPU workers</text>
-  <text class="p" x="112" y="538">Production gains: ~90% DRAM saving and large QPS/$ improvements</text>
+  <rect x="92" y="440" width="1016" height="180" rx="16" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text class="h" x="112" y="472">4) High-throughput search</text>
+  <text class="p" x="112" y="502">cluster scan → refine → return neighbors</text>
+  <text class="p" x="112" y="528">GPU-centric construction speeds index build</text>
+  <text class="m" x="112" y="556">cost ↓, QPS ↑, P99 SLA met</text>
 
   <g fill="none" stroke="#94a3b8" stroke-width="4">
-    <path d="M 342 295 L 370 295"/>
-    <path d="M 700 320 L 730 320"/>
-    <path d="M 560 420 L 560 450"/>
+    <path d="M 392 302 L 422 302"/>
+    <path d="M 742 302 L 772 302"/>
+    <path d="M 590 385 L 590 440"/>
   </g>
   <g fill="#94a3b8">
-    <polygon points="365,295 353,288 353,302"/>
-    <polygon points="725,320 713,313 713,327"/>
-    <polygon points="560,450 553,438 567,438"/>
+    <polygon points="417,302 405,295 405,309"/>
+    <polygon points="767,302 755,295 755,309"/>
+    <polygon points="590,440 583,428 597,428"/>
   </g>
 </svg>
