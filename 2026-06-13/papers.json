@@ -322,5 +322,91 @@
       "rationale_zh": "更偏通用 Agent 评测与 memory 结构，对你们做“治理/工具链/流程持续迭代”的 Agent 系统很有借鉴，但与电商内容理解/达人治理的业务强相关度一般。"
     },
     "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.05748",
+    "title": "UNIVID: Unified Vision-Language Model for Video Moderation",
+    "authors": [
+      "Kejuan Yang",
+      "Yizhuo Zhang",
+      "Mingyuan Du",
+      "Yue Zhang",
+      "Dixin Zheng",
+      "Kaili Zhao",
+      "Yang Xiao",
+      "Hanzhong Liang",
+      "Kenan Xiao"
+    ],
+    "affiliations": ["ByteDance"],
+    "published": "2026-06-04",
+    "source": "WebSearch fallback (arXiv direct 403); ByteDance Seed Research",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.05748",
+      "pdf": "https://arxiv.org/pdf/2606.05748v1"
+    },
+    "tags": ["内容治理", "视频审核", "VLM", "ByteDance", "多政策", "MLLM"],
+    "summary": {
+      "zh": {
+        "method_overview": "UNIVID 是字节跳动面向工业级视频内容审核的统一 VLM，核心思路是以生成「策略感知字幕」（policy-aware caption）作为可解释中间表示，替代原本分散的 1000+ 个政策特定分类器。整体分三阶段：(A) Risk Filter 以字幕为基础的多模态风险漏斗做初筛；(B) Moderation Actor 含两个微调下游模型——UNIVID-Lite（轻量快速决策）和 UNIVID-RAG（基于历史违规事件检索增强，减少违规漏检）；(C) Trend Governance 利用缓存的 UNIVID embedding 做聚类，自适应检测新兴风险趋势而无需重新标注。训练数据结合专家精标与合成数据，在多政策、多模态联合学习。",
+        "story": "全球化内容平台面临「政策碎片化（1000+ 类）× 黑盒分类 × 缺乏透明度」三重困境，维护成本极高且难以扩展。作者的路径是：用单一 VLM 生成策略感知字幕（人类可读可验证） → 以字幕驱动轻量下游决策与 RAG 召回 → 缓存 embedding 做新兴趋势检测 → 工业 AB 实验验证违规漏检率与误杀率大幅下降，同时将工程维护负担从千个模型降至一个。",
+        "innovation": "1) 以「字幕生成」取代「直接分类」作为内容治理的可解释中间层，是审核范式的根本性转变；2) UNIVID-RAG 把历史违规事件索引化，用检索增强减少漏检（新政策也能靠历史先例兜底）；3) Trend Governance 利用缓存 embedding 做低成本新兴风险追踪，避免频繁全量重训；4) 单 backbone 替代 1000+ 模型生态，工程维护成本数量级降低；5) 训练数据配方（专家精标 + 合成）兼顾多政策学习效率。",
+        "key_metrics": "工业部署对比（ByteDance 线上 AB）：违规漏检率（Violation Leakage）相对下降 42.7%；误杀率（Overkill Rate）相对下降 37.0%；模型数量从 1000+ 降至 1 个 UNIVID backbone，释放大量计算资源与工程维护人力。"
+      },
+      "en": {
+        "method_overview": "UNIVID is ByteDance's unified VLM for industrial-scale video content moderation. It generates policy-aware captions as interpretable intermediates, replacing 1,000+ fragmented policy-specific classifiers. Three-stage pipeline: (A) Risk Filter (caption-based multi-modal risk funnel); (B) Moderation Actor (UNIVID-Lite for fast decisions + UNIVID-RAG for leakage recall using historical violations); (C) Trend Governance (cached UNIVID embeddings to adaptively detect emerging risks).",
+        "innovation": "Paradigm shift from direct classification to caption generation as interpretable intermediate; UNIVID-RAG integrates violation history to reduce leakage; Trend Governance tracks emerging risks via cached embeddings; single backbone replaces the model zoo."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 13,
+      "exp_quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 24,
+      "total": 86,
+      "rationale_zh": "直接命中内容治理/视频审核/达人内容风险管理（ByteDance = TikTok/抖音）；单 VLM 替代 1000+ 模型生态是工程范式创新；工业 AB 数字（-42.7% 漏检/-37.0% 误杀）有力，分数≥80 需复现。"
+    },
+    "reproduce": {"status": "implemented", "path": "2026-06-13/code/UNIVID"}
+  },
+  {
+    "date": "2026-06-13",
+    "id": "2606.05671",
+    "title": "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    "authors": [
+      "Alibaba International Digital Commerce Group"
+    ],
+    "affiliations": ["Alibaba International Digital Commerce Group"],
+    "published": "2026-06-04",
+    "source": "WebSearch fallback (arXiv direct 403)",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.05671",
+      "pdf": "https://arxiv.org/pdf/2606.05671v1"
+    },
+    "tags": ["电商", "查询推荐", "Agent", "强化学习", "RAG", "CTR/CVR"],
+    "summary": {
+      "zh": {
+        "method_overview": "QueryAgent-R1 是阿里国际面向电商查询推荐场景的记忆增强 RL Agent。现有方法仅优化查询级相关性（CTR），忽视检索到的商品是否真正转化（CVR），导致「高点击低转化」。QueryAgent-R1 的核心是 Chain-of-Retrieval Optimization：在 RL 训练的推理链中嵌入真实商品检索步骤，使 Agent 能根据实际检索结果验证并调整生成的查询。Consistency Reward 联合优化 CTR 与 CVR 目标。Memory Abstraction Module 将用户历史行为抽象为可检索记忆，实现高效个性化画像。",
+        "story": "传统查询推荐只看点击率（CTR），用户点进去发现商品不合适，转化率（CVR）仍低；商品检索结果与查询生成是脱节的两个模块。作者用「将检索验证内化为训练过程」的思路：Chain-of-Retrieval 让 Agent 在训练时就与真实检索结果交互 → Consistency Reward 同时惩罚低点击和低转化 → Memory 模块让查询个性化 → 线上 AB 双指标共同提升。",
+        "innovation": "1) 把「商品检索」内化为 RL 训练链路（training-time grounding）而非仅推理期调用，使 Agent 的查询生成策略与真实检索空间绑定；2) Consistency Reward 首次在查询推荐场景下联合优化 CTR 和 CVR，解决目标解耦导致的「高 CTR 低 CVR」问题；3) Memory Abstraction 实现轻量实时个性化，无需昂贵的在线重排；4) 阿里国际电商实际落地，业务指标双提升。",
+        "key_metrics": "阿里国际电商线上 AB 实验：CTR（查询点击率）显著提升；CVR（商品转化率）显著提升（这是核心贡献，传统方法 CVR 常无改善）；查询-商品对齐度大幅改善。（具体绝对值未公开；论文提供相对提升与统计显著性）"
+      },
+      "en": {
+        "method_overview": "QueryAgent-R1 is a memory-augmented RL agent for e-commerce query recommendation from Alibaba International. Chain-of-Retrieval Optimization embeds real product retrieval into the RL training loop; Consistency Reward jointly optimizes CTR and CVR; Memory Abstraction provides lightweight personalized user profiling.",
+        "innovation": "Training-time product retrieval grounding (not just inference-time); consistency reward bridging the CTR/CVR optimization gap; first Agent RL approach to e-commerce query recommendation that jointly optimizes both click and conversion."
+      }
+    },
+    "score": {
+      "innovation": 20,
+      "results": 10,
+      "exp_quality": 11,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 74,
+      "rationale_zh": "核心电商查询推荐场景（Alibaba 国际），联合 CTR+CVR 优化是电商推荐的工业核心诉求；方法创新性中等（chain-of-retrieval + consistency reward 组合）；线上 AB 有效但绝对值未公开。"
+    },
+    "reproduce": {"status": "not_reproduced"}
   }
 ]
