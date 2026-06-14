@@ -100,7 +100,6 @@ input[type=range]{width:160px;}
   display:flex;
   flex-direction:column;
   gap:10px;
-  min-height: 420px;
 }
 
 .card-head{display:flex;justify-content:space-between;gap:10px;}
