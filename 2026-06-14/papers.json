@@ -1,0 +1,424 @@
+[
+  {
+    "date": "2026-06-14",
+    "id": "2606.13533",
+    "title": "OneRetrieval: Unifying Multi-Branch E-commerce Retrieval with an Editable Generative Model",
+    "authors": [
+      "Xuxin Zhang",
+      "Ben Chen",
+      "Yue Lv",
+      "Siyuan Wang",
+      "Yupeng Li",
+      "Yufei Ma",
+      "Zihan Liang",
+      "Tong Zhao",
+      "Ying Yang",
+      "Huangyu Dai",
+      "Lingtao Mao",
+      "Zhipeng Qian",
+      "Xinyu Sun",
+      "Chenyi Lei",
+      "Wenwu Ou",
+      "Kun Gai"
+    ],
+    "affiliations": ["Kuaishou Technology"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13533",
+      "pdf": "https://arxiv.org/pdf/2606.13533v1",
+      "code": "https://github.com/xuxinzhang/oneretrieval"
+    },
+    "tags": ["电商", "检索", "Generative Retrieval", "可编辑/运营干预"],
+    "summary": {
+      "zh": {
+        "method_overview": "OneRetrieval 试图用单一生成式检索模型统一电商多路召回（稀疏/稠密/协同等），同时保留倒排分支最大的工业优势：新词与运营干预可以在小时级生效且可控。核心是 Keyword-Aligned Encoding（KAE）：把每个 identifier 位置绑定到可解释的属性词而非量化 embedding，并在 codebook 里预留可扩展 slots，允许运营在部署后把新词绑定到 reserved slot，从而实现无需 retrain 的“可编辑检索”。配合信息论式的属性分组与四阶段 SFT 流水线，兼顾深召回质量与可编辑性。",
+        "story": "工业召回通常依赖多分支拼接：倒排可运营干预但转化弱，稠密/生成式召回质量好但难以小时级注入新词。本文把“可编辑性”上升为 generative retrieval 的结构性目标：通过 KAE 让 identifier 位置与属性词对齐 → 通过 reserved slot 把新词注入变成显式绑定动作 → 用多阶段训练把深召回质量做上来，从而让单模型能逐步替换更多召回分支。",
+        "innovation": "1）把“运营可编辑性”作为 generative retrieval 的核心约束（可显式绑定），而不是依赖模型泛化；2）KAE 将 identifier 的每个位置与可解释属性词对齐，使得新词路由变成可控接口；3）离线深召回与线上 A/B 双证据，展示先替换倒排、再扩展替换更多分支的可落地路径。",
+        "key_metrics": "离线（31 天日志，day31 测试）：深召回 HR@350 与最强 generative baseline 接近（Order HR@350=0.5482，Click HR@350=0.6055）。线上 A/B（out-of-mall search）：仅替换倒排分支显著提升 Order volume（文中描述为显著提升）；进一步替换几乎全部召回分支后，conversion 基本不变且 Item CTR 显著提升。"
+      },
+      "en": {
+        "method_overview": "OneRetrieval unifies multi-branch e-commerce retrieval with a single generative retriever while preserving real-time editability (hour-level keyword interventions). It introduces Keyword-Aligned Encoding with reserved slots that can be bound to newly emerging words after deployment, plus an information-theoretic codebook grouping and a multi-stage fine-tuning pipeline.",
+        "innovation": "Editability-aware generative retrieval: keyword-aligned identifier slots + reserved-slot binding make operational interventions explicit, enabling fast new-term routing without retraining."
+      }
+    },
+    "score": {
+      "innovation": 27,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 87,
+      "rationale_zh": "强电商检索相关且直接解决‘可运营干预/新词小时级注入’这一工业刚需，并给出离线检索指标与线上 A/B；代价是生成式检索推理开销（大 beam）较重、系统细节更偏工业实现。"
+    },
+    "reproduce": {"status": "code_available", "path": "2026-06-14/OneRetrieval"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.13145",
+    "title": "The Clustering Strikes Back: Building Cost-Effective and High-Performance ANNS at Scale with Helmsman",
+    "authors": [
+      "Yuchen Huang",
+      "Baiteng Ma",
+      "Yiping Sun",
+      "Yang Shi",
+      "Xiao Chen",
+      "Xiaocheng Zhong",
+      "Zhiyong Wang",
+      "Yao Hu",
+      "Erci Xu",
+      "Chuliang Weng"
+    ],
+    "affiliations": ["East China Normal University", "Shanghai Jiao Tong University", "Xiaohongshu Inc"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13145",
+      "pdf": "https://arxiv.org/pdf/2606.13145v1",
+      "code": "https://github.com/Red-EAD/helmsman"
+    },
+    "tags": ["向量检索", "ANN/ANNS", "内容检索", "平台基础设施", "成本优化"],
+    "summary": {
+      "zh": {
+        "method_overview": "HELMSMAN 面向亿/十亿级向量检索（ANNS）在生产上的成本瓶颈：传统 HNSW 需要海量 DRAM 才能满足严格 SLA。它转向“全闪存 + 聚类式 ANNS”，并在三个关键点补齐性能：1）绕过 kernel I/O 栈的 userspace storage，充分利用 SSD 带宽；2）leveling-learned pruning，根据 top-k 与 query 分布自适应裁剪扫描量；3）GPU 加速与动态 CPU 分配的建库流水线，让十亿级索引可在小时级重建。",
+        "story": "内容平台/电商检索与推荐依赖海量 embedding 向量，HNSW 虽快但 DRAM 成本爆炸；而纯 SSD 的图检索又难满足延迟与吞吐 SLA。本文走‘聚类索引 + SSD 批量 I/O’路线，但又遇到 I/O 栈开销、固定裁剪策略和慢建库三大痛点，于是分别用 userspace I/O、学习型裁剪和 GPU 建库把瓶颈逐个击破。",
+        "innovation": "1）把‘聚类式 ANNS + 全闪存’做成可用于严苛在线 SLA 的系统化方案，而非仅离线；2）引入与 top-k/分布自适应的 learned pruning，在稳定性上对齐生产需求；3）把建库速度作为一等公民，用 GPU/CPU pipeline 支撑高频重建（embedding 模型频繁更新）。",
+        "key_metrics": "生产部署：40 台机器承载原本约 35,000 CPU cores + 0.35PB DRAM 的 ANNS 工作量，硬件成本节省 >90%。论文报告：吞吐量相对 DRAM–SSD ANNS 提升 2–16×，并达到 in-DRAM ANNS 吞吐的最高约 85%（同时满足在线延迟 SLA）。"
+      },
+      "en": {
+        "method_overview": "HELMSMAN is a production-scale, cost-effective clustering-based ANNS system on all-flash servers. It bypasses the kernel I/O stack with a userspace storage backend, introduces adaptive learned pruning for varying top-k/query distributions, and accelerates index construction with GPU-centric pipelines.",
+        "innovation": "A full-stack ANNS redesign (userspace I/O + learned pruning + GPU construction) that makes all-flash clustering-based ANNS viable under strict online SLAs at dramatically lower cost."
+      }
+    },
+    "score": {
+      "innovation": 25,
+      "results": 13,
+      "exp_quality": 12,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 85,
+      "rationale_zh": "虽非直接‘治理算法’，但对内容/电商检索与向量化召回是底座级能力；同时给出真实生产量级与成本/吞吐指标，工程创新与落地价值很高。"
+    },
+    "reproduce": {"status": "code_available", "path": "2026-06-14/Helmsman"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.12451",
+    "title": "ToolSense: A Diagnostic Framework for Auditing Parametric Tool Knowledge in LLMs",
+    "authors": ["Ashutosh Hathidara", "Sai Shruthi Sistla", "Sebastian Schreiber", "Sahil Bansal"],
+    "affiliations": ["SAP Labs"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12451",
+      "pdf": "https://arxiv.org/pdf/2606.12451v1",
+      "code": "https://github.com/SAP/toolsense"
+    },
+    "tags": ["Agent", "工具检索", "评测/诊断", "ToolBench"],
+    "summary": {
+      "zh": {
+        "method_overview": "ToolSense 针对‘把工具目录写进 LLM 参数（parametric tool retrieval）’这类方案的一个盲点：标准 ToolBench 评测使用冗长、写得很全的 query，再加上 constrained decoding，可能掩盖模型是否真的理解工具。ToolSense 给任意工具目录自动生成三类诊断集：更贴近真实用户表达的 Realistic Retrieval Benchmark（按歧义分三档）、工具能力 MCQ probing、以及 QA probing，并提出 Internalization Score（free-form vs constrained）来量化对 trie 的依赖。",
+        "story": "Parametric tool retrieval 在标准 benchmark 上很强，但生产里用户 query 更短更含糊，而且下游 agent 往往不能依赖 constrained decoding。作者先指出评测 gap → 设计‘更真实’的 retrieval queries 与 probing → 用 free-form 与 constrained 的差异作为诊断信号，揭示“检索能力高但工具知识弱/不稳”的 dissociation。",
+        "innovation": "1）把‘诊断 benchmark 自动生成’做成框架，降低大工具目录评测门槛；2）引入 RRB + probing，把‘pattern matching vs tool understanding’拆开测；3）Internalization Score 把 constrained decoding 依赖显式量化，能直接指导生产型 agent 的风险评估。",
+        "key_metrics": "在 ToolBench（约 47k tools）上，部分 parametric 训练配置在更真实的 RRB queries 上相比标准 ToolBench 评测出现约 50–64 个百分点的明显下滑，并且一些配置在 factual probes 上接近随机，表明存在“知识-检索”解耦。"
+      },
+      "en": {
+        "method_overview": "ToolSense is a diagnostic framework for parametric tool retrieval. It auto-generates three benchmarks (realistic retrieval queries with ambiguity tiers, MCQ probing, QA probing) from any tool catalog and introduces an Internalization Score to quantify reliance on constrained decoding.",
+        "innovation": "Evaluation that separates surface retrieval from genuine tool understanding, and explicitly measures trie-dependence via free-form vs constrained decoding."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 21,
+      "total": 80,
+      "rationale_zh": "对‘Agent + 大工具目录’类治理/运营系统非常有借鉴（尤其是评测与风险诊断），且开源；不过它是评测/诊断为主，直接业务收益需结合你们工具栈落地。"
+    },
+    "reproduce": {"status": "code_available", "path": "2026-06-14/ToolSense"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.12674",
+    "title": "Evoflux: Inference-Time Evolution of Executable Tool Workflows for Compact Agents",
+    "authors": [
+      "Kushal Raj Bhandari",
+      "Ling Yue",
+      "Ching-Yun Ko",
+      "Dhaval Patel",
+      "Shaowu Pan",
+      "Pin-Yu Chen",
+      "Jianxi Gao"
+    ],
+    "affiliations": ["Rensselaer Polytechnic Institute", "IBM Research"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12674",
+      "pdf": "https://arxiv.org/pdf/2606.12674v1",
+      "code": "https://github.com/IBM/Evoflux"
+    },
+    "tags": ["Agent", "工作流", "MCP", "推理时搜索", "小模型"],
+    "summary": {
+      "zh": {
+        "method_overview": "Evoflux 关注小模型做工具型 Agent 时的真实失败模式：计划图看起来合理，但在工具解析、参数校验、依赖链传递、执行落地时频繁崩。作者不依赖大规模蒸馏数据，而是在推理时把‘产出 workflow’当成一个可执行图的修复问题：用 typed workflow graph 表示计划，通过结构化 edits + 执行反馈 + 自适应强度控制 + 多样性剪枝做进化搜索，在固定预算内逐步修成能跑通的 workflow。",
+        "story": "小模型工具 agent 的难点不在‘会不会写 JSON’，而在‘能否在动态工具目录下修复失败计划直到可执行’；但少量 teacher traces 的 SFT 往往只学到成功样式，学不到修复行为。本文改思路：把 compute 花在 test-time repair 上，通过执行反馈驱动 workflow 进化，从而在稀疏监督下更稳。",
+        "innovation": "1）把 MCP-style tool use 形式化为 typed workflow repair，并把执行可行性作为核心目标；2）将 evolutionary search 迁移到 workflow DAG（有 schema 与依赖约束）这一更‘可编译’的空间；3）在相同小数据预算下，展示 test-time search 比小语料 SFT/DPO 更可靠，量化了小语料微调的潜在负效应。",
+        "key_metrics": "在 MCP-Bench（28 个 live servers / 250 tools）held-out 任务上：Evoflux 将小规划器的 execution feasibility 从约 3% 提升到 17–24%；而在相同小预算 search-mined 数据上做 SFT / SFT+DPO 往往不升反降。"
+      },
+      "en": {
+        "method_overview": "Evoflux is an inference-time evolutionary search method for compact tool-using agents. It treats tool use as executable workflow repair over typed workflow graphs, using structured edits and execution feedback to evolve feasible workflows under a fixed budget.",
+        "innovation": "Execution-grounded test-time evolution can outperform small-corpus distillation for MCP-style tool workflows, improving feasibility under live catalogs and strict schema/dependency constraints."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 80,
+      "rationale_zh": "与你们后续做‘治理/运营类 Agent（多工具编排）’非常相关：它直接解决小模型在真实工具执行上不稳的问题，并且开源。"
+    },
+    "reproduce": {"status": "code_available", "path": "2026-06-14/Evoflux"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.12608",
+    "title": "Shopping Reasoning Bench: An Expert-Authored Benchmark for Multi-Turn Conversational Shopping Assistants",
+    "authors": [
+      "Shuxian Fan",
+      "Seonwoo Min",
+      "Youna Hu",
+      "Botao Xia",
+      "Jayakrishnan Unnikrishnan",
+      "Rowan Musselmann",
+      "Yifan Gao",
+      "Qingyu Yin",
+      "Priyanka Nigam",
+      "Bing Yin"
+    ],
+    "affiliations": ["Amazon"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12608",
+      "pdf": "https://arxiv.org/pdf/2606.12608v1",
+      "project": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench"
+    },
+    "tags": ["电商", "对话式购物", "评测/Benchmark", "多轮推理"],
+    "summary": {
+      "zh": {
+        "method_overview": "Shopping Reasoning Bench 是一个由零售领域专家编写的对话购物评测集，专门覆盖多轮购物场景中‘偏好澄清、跨商品权衡、兼容性判断’等难以用唯一标准答案验证的能力。它包含 525 个 mission（232 单轮、293 多轮），并为每个 mission 提供总计 10,863 条带权重的二值 rubrics，可用 LLM-as-judge 做 criterion-level 的细粒度评分，同时作者验证了 judge 与专家的一致性。",
+        "story": "对话购物助手已规模化上线，但现有评测要么是单轮、要么缺少专家级 rubrics，导致模型看似‘能答’但实际建议不够专业。作者用‘专家 taxonomy + 原子化 rubrics + 多轮 mission’把“好建议”拆成可验证的细项，并用验证过的 LLM judge 支撑大规模自动评分，从而让‘多轮购物推理’成为可迭代的 benchmark。",
+        "innovation": "1）购物推理 taxonomy（5 大类 15 子类）+ 专家 rubrics，把主观/开放式对话质量拆成可判定的 criterion；2）importance-weighted 的 rubrics 设计，能区分 required vs above-and-beyond 的专家能力；3）给出 judge 可靠性验证，为生产评测提供可落地范式。",
+        "key_metrics": "主结果（9 个模型，3 家族）：Overall weighted pass rate 57.4%–77.2%。Judge 验证：overall rubric-level macro-F1=0.749（κ=0.498）。多轮退化：随对话推进 pass rate 下降（论文摘要给出 4–18 个百分点），且 optional rubrics 比 required 低 13–29 个点。"
+      },
+      "en": {
+        "method_overview": "Shopping Reasoning Bench is an expert-authored benchmark for multi-turn conversational shopping assistants, with 525 missions and 10,863 importance-weighted binary rubrics for criterion-level evaluation via a validated LLM judge.",
+        "innovation": "A rubric-verifiable, expert-designed multi-turn shopping benchmark with an explicit reasoning taxonomy and judge validation for scalable, fine-grained evaluation."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "results": 10,
+      "exp_quality": 15,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 79,
+      "rationale_zh": "电商对话购物强相关，benchmark 设计与评测治理价值高；但它是评测集而非直接算法提升，且核心贡献在 rubric/评测范式，因此控制在 80 以下。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.13001",
+    "title": "CFALR: Collaborative Filtering-Augmented Large Language Model for Personalized Fashion Outfit Recommendation",
+    "authors": [
+      "Yujuan Ding",
+      "Junrong Liao",
+      "Yunshan Ma",
+      "Yi Bin",
+      "Wenqi Fan",
+      "Tat-Seng Chua",
+      "Qing Li"
+    ],
+    "affiliations": [
+      "The Hong Kong Polytechnic University",
+      "University of Electronic Science and Technology of China",
+      "Singapore Management University",
+      "Tongji University",
+      "National University of Singapore"
+    ],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13001",
+      "pdf": "https://arxiv.org/pdf/2606.13001v1"
+    },
+    "tags": ["电商", "推荐", "穿搭/组合推荐", "LLM", "协同过滤"],
+    "summary": {
+      "zh": {
+        "method_overview": "CFALR 面向‘穿搭/套装’这类组合推荐：仅靠协同过滤会受稀疏/冷启动影响，仅靠 LLM/VLM 又难对齐 user-item 交互空间。它把 user-outfit 交互改写成自然语言的 P-FITB（fill-in-the-blank）任务，用开源 LLM 作 backbone，同时把 CF 向量与多模态 item 特征通过投影层映射成“单 token”注入模型；推理时再用 CF-augmented 的生成机制融合协同信号与语言模型分布，以在巨大组合空间中更稳地生成可用 outfit。",
+        "story": "穿搭推荐既要个性化又要兼容性，且组合空间巨大。传统 CF 在稀疏时失效，模板法又受限于固定结构；LLM 语义强但与交互 ID 空间不匹配。CFALR 的路径是：把任务语言化让 LLM 能‘读懂’场景 → 用投影 token 把 CF/视觉特征对齐到 LLM embedding 空间 → 再在生成时用 CF 信号做输出层融合，兼顾语义与交互规律。",
+        "innovation": "1）面向 outfit-level 组合推荐的 LLM/CF 融合框架（特征 token 注入 + 输出层融合）；2）用 P-FITB 任务形式把组合推荐转成可监督的生成式学习问题；3）在稀疏设置下展示 CF 与多模态特征的互补作用（ablation）。",
+        "key_metrics": "P-FITB Accuracy（Polyvore）：CFALR 0.6498/0.3957/0.2459（1/4、1/10、1/20），显著高于最佳 baseline（如 Bundle-MLLM 0.4775/0.2519/0.1459）。P-FITB（IQON）：CFALR 0.6103/0.3654/0.2018。POG（Polyvore PP/OC/MPC）：CFALR 0.2428/0.4626/0.3556；IQON：0.2883/0.3147/0.2291。"
+      },
+      "en": {
+        "method_overview": "CFALR is a collaborative-filtering-augmented LLM for personalized fashion outfit recommendation. It frames outfit completion as a personalized fill-in-the-blank task, injects CF and multimodal item features as projected tokens, and uses a CF-augmented generation scheme to navigate the combinatorial outfit space.",
+        "innovation": "A task-specific CF+LLM fusion for outfit-level recommendation: projected feature tokens align interaction and semantic spaces, and CF-augmented decoding stabilizes compositional generation."
+      }
+    },
+    "score": {
+      "innovation": 23,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 5,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 78,
+      "rationale_zh": "与电商组合推荐/内容生态（穿搭）相关且离线指标提升显著，但暂无明确开源实现与线上验证，因此暂不拉到 80+。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.12744",
+    "title": "GRIP: Feedback-Guided Prompt Retrieval for Large Multimodal Models",
+    "authors": [
+      "Garvita Allabadi",
+      "Matteo Sodano",
+      "Roberto Estevão",
+      "Yuxiong Wang",
+      "Vikram Adve",
+      "Emre Kıcıman",
+      "Ranveer Chandra"
+    ],
+    "affiliations": ["University of Illinois Urbana Champaign", "University of Bonn", "Microsoft"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12744",
+      "pdf": "https://arxiv.org/pdf/2606.12744v1"
+    },
+    "tags": ["多模态", "VLM/MLLM", "Prompt Retrieval", "ICL", "Caption"],
+    "summary": {
+      "zh": {
+        "method_overview": "GRIP 针对多模态 in-context learning 的一个误区：仅按 embedding 相似度取示例并不等价于‘对模型有用’。它把检索监督改成来自 LMM 的反馈：对候选邻居逐个做‘加入/不加入’对比，按任务指标增益把邻居标注为 beneficial 或 detrimental，再用对比学习训练一个 vision-only retriever，使得检索空间直接对齐‘带来性能提升’的 utility，而不是对齐相似度。",
+        "story": "多模态 ICL 要靠检索示例，但相似示例可能误导模型（caption/VQA 需要关键细节）。作者先证明相似度检索的正例排序并不靠前 → 用 LMM 的实际表现差异作为监督 → 训练 utility-aligned retriever → 让检索到的示例更稳定地提升下游效果，并且能跨模型迁移到闭源模型。",
+        "innovation": "1）用‘是否提升目标模型表现’定义检索监督（utility alignment），而非相似度启发式；2）vision-only retriever + hard negative（相似但无用）训练，专门修正相似度空间的盲点；3）跨模型/闭源模型可迁移，适合工程化（用开源模型的反馈训练 retriever，再用到贵的闭源模型）。",
+        "key_metrics": "Table 2：在 Qwen2.5-VL-7B 上，GRIP 分类/ VQA/ caption 全面优于相似度检索（例如 Pets accuracy 83.9 vs ViT 79.0；ScienceVQA 84.2 vs DINO 81.9；COCO CIDEr 72.5 vs DINO 72.0/CLIP 69.0）。闭源评测：在 GPT-4o 的 ScienceVQA 上 GRIP（Idefics2 反馈训练）85.9%，比 zero-shot +6.6、比 CLIP +1.1。"
+      },
+      "en": {
+        "method_overview": "GRIP trains a vision-only prompt retriever for multimodal ICL using LMM feedback as supervision. Neighbors are labeled beneficial/detrimental based on whether they improve task scores when included in-context, and a contrastive retriever learns an embedding space aligned with in-context utility rather than similarity.",
+        "innovation": "Feedback-supervised retrieval aligns example selection with actual downstream gains, and transfers across models (including closed-source LMMs) without retraining."
+      }
+    },
+    "score": {
+      "innovation": 21,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 17,
+      "total": 72,
+      "rationale_zh": "对你们做多模态内容理解/Caption/RAG 的‘示例检索’非常可借鉴，但属于通用方法论文，且当前版本未给出开源代码链接与业务场景验证。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.13267",
+    "title": "TimeLens: On-Device Artifact Recognition with Retrieval-Augmented Question Answering for the Grand Egyptian Museum",
+    "authors": ["Rawan Hesham", "Ali Ashraf", "Amr Ahmed", "Malak Alaa", "Omar Ahmed", "Omar Wagih"],
+    "affiliations": ["Capital University (Faculty of Computers and AI)"],
+    "published": "2026-06-12",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13267",
+      "pdf": "https://arxiv.org/pdf/2606.13267v1"
+    },
+    "tags": ["多模态", "数据质量", "检索增强", "部署", "中英/多语"],
+    "summary": {
+      "zh": {
+        "method_overview": "TimeLens 是一个面向博物馆的双语（英/阿）移动导览系统：手机端先用小型 YOLOv8n 在本地实时识别展品，再把用户追问交给后端 RAG（ChromaDB + 量化 Gemma）回答，避免幻觉。论文的核心经验在‘数据质量驱动’：先用 YOLO-World 自动标注，再用空间清洗规则修 label，最后用人工标注闭环，证明在细粒度视觉类别里 label 质量比模型结构更决定成败。",
+        "story": "面向真实游客的导览应用同时要：低延迟、离线/弱网可用、且回答不能编造。作者把任务拆成两条链：1）端侧识别要快 → 用 YOLOv8n + 训练数据治理；2）问答要可靠 → 用 RAG 把答案锚定到小规模 KB，并做量化与工程优化压延迟。",
+        "innovation": "1）端侧识别 + 后端 RAG 的分层架构，先在端上确认实体，再做知识问答；2）以 label 清洗/迭代为核心的工程方法学，把 foundation-model auto-annotation 转成可用数据集；3）双语 + grounded QA 的完整产品化链路（Flutter + TTS + 位置 gating）。",
+        "key_metrics": "识别：YOLOv8n（TFLite, 5.97MB）在 51 类展品上 mAP@0.5=0.995，mAP@0.5:0.95=0.924。问答：7 个候选 LLM 中选择 Gemma 4 E2B（量化），并把端到端延迟从 >30s 优化到约 10s。"
+      },
+      "en": {
+        "method_overview": "TimeLens is a bilingual mobile museum guide. It performs real-time on-device artifact detection with a compact YOLOv8n model, then answers follow-up questions via a grounded RAG backend (ChromaDB + quantized Gemma) to reduce hallucinations.",
+        "innovation": "A practical split architecture (on-device recognition + grounded RAG QA) with a data-quality-driven labeling/cleaning loop that dominates fine-grained recognition performance."
+      }
+    },
+    "score": {
+      "innovation": 18,
+      "results": 10,
+      "exp_quality": 10,
+      "efficiency": 9,
+      "generalization": 2,
+      "relevance": 16,
+      "total": 65,
+      "rationale_zh": "偏应用工程论文，但对‘内容理解 + 可靠问答（RAG）+ 数据清洗 + 多语’的端到端落地很有参考价值；与电商场景需做 domain adaptation。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  },
+  {
+    "date": "2026-06-14",
+    "id": "2606.12683",
+    "title": "From AGI to ASI",
+    "authors": [
+      "Tim Genewein",
+      "Matija Franklin",
+      "Alexander Lerchner",
+      "Laurent Orseau",
+      "Samuel Albanie",
+      "Adam Bales",
+      "Cole Wyeth",
+      "Stephanie Chan",
+      "Iason Gabriel",
+      "Joel Z. Leibo",
+      "Allan Dafoe",
+      "Marcus Hutter",
+      "Thore Graepel",
+      "Shane Legg"
+    ],
+    "affiliations": ["Google DeepMind", "University of Waterloo", "Australian National University", "University College London"],
+    "published": "2026-06-10",
+    "source": "arXiv",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12683",
+      "pdf": "https://arxiv.org/pdf/2606.12683v1"
+    },
+    "tags": ["趋势", "AGI/ASI", "研究路线图"],
+    "summary": {
+      "zh": {
+        "method_overview": "这是一篇 Google DeepMind 的长篇研究报告，讨论从人类级 AGI 到 ASI 的四条潜在路径：继续 scale、范式转移、递归自我改进、以及大规模 multi-agent 集体涌现，并系统整理每条路径可能遇到的摩擦与瓶颈（算力、数据、对齐、系统工程等），以开放问题的方式提出未来研究方向。",
+        "story": "在 AGI 目标逼近的背景下，‘AGI 之后会怎样’缺少结构化讨论。作者用‘路径 × 摩擦’的二维框架：先定义 ASI → 给出四条演进路径 → 对每条路径列出可能瓶颈与需要观测/研究的关键变量，从而把宏大预测拆成可研究的问题清单。",
+        "innovation": "它偏研究路线图与问题拆解，而非新算法；价值在于把多条路径与瓶颈系统化，并以“开放问题列表”推动跨学科讨论。",
+        "key_metrics": "无典型算法实验指标（研究报告性质）。"
+      },
+      "en": {
+        "method_overview": "A DeepMind report mapping potential pathways from AGI to ASI (scaling, paradigm shifts, recursive improvement, multi-agent collectives) and the frictions/bottlenecks that may shape each pathway.",
+        "innovation": "A structured pathway-vs-friction framing that turns speculative debates into an explicit set of research questions."
+      }
+    },
+    "score": {
+      "innovation": 12,
+      "results": 0,
+      "exp_quality": 5,
+      "efficiency": 0,
+      "generalization": 3,
+      "relevance": 15,
+      "total": 35,
+      "rationale_zh": "热度高、可作为大模型/Agent 方向的宏观参考，但与电商内容理解&达人治理的直接方法与可落地实验距离较远，因此不纳入本次需推送的 >=40 列表。"
+    },
+    "reproduce": {"status": "not_reproduced"}
+  }
+]
