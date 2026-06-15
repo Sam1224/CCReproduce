@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Paper Radar — 2026-06-14</title>
+  <style>
+    :root {
+      --bg: #f5f6fa;
+      --card-bg: #ffffff;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --tag-bg: #f1f5f9;
+      --score-high: #16a34a;
+      --score-mid: #d97706;
+      --score-low: #64748b;
+      --header-h: 64px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'SF Pro Text', 'Segoe UI', system-ui, sans-serif; font-size: 14px; }
+
+    /* ── Header ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--card-bg); border-bottom: 1px solid var(--border);
+      height: var(--header-h); display: flex; align-items: center;
+      padding: 0 24px; gap: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .brand h1 { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
+    .brand p  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .controls { display: flex; align-items: center; gap: 20px; margin-left: auto; }
+    .controls label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .controls input[type=range] { width: 120px; accent-color: var(--accent); }
+    #scoreVal { font-weight: 700; color: var(--accent); min-width: 28px; }
+    #langBtn {
+      background: var(--accent); color: #fff; border: none; border-radius: 6px;
+      padding: 5px 14px; cursor: pointer; font-size: 13px; font-weight: 600;
+    }
+    #langBtn:hover { background: #1d4ed8; }
+
+    /* ── Layout ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 28px 20px; }
+    .meta-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .meta-bar h2 { font-size: 20px; font-weight: 700; }
+    .meta-bar span { font-size: 12px; color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px; display: flex; flex-direction: column; gap: 14px;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); transform: translateY(-2px); }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.4; flex: 1; }
+    .score-badge {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--accent-light); border-radius: 10px; padding: 8px 12px;
+      min-width: 56px; flex-shrink: 0;
+    }
+    .score-num { font-size: 22px; font-weight: 800; line-height: 1; }
+    .score-sub { font-size: 10px; color: var(--muted); }
+    .score-high .score-num { color: var(--score-high); }
+    .score-mid  .score-num { color: var(--score-mid); }
+    .score-low  .score-num { color: var(--score-low); }
+
+    .card-meta { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .card-meta a { color: var(--accent); text-decoration: none; }
+    .card-meta a:hover { text-decoration: underline; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      background: var(--tag-bg); border-radius: 99px; padding: 2px 10px;
+      font-size: 11px; color: var(--muted); font-weight: 500;
+    }
+
+    details { border-top: 1px solid var(--border); padding-top: 12px; }
+    summary {
+      cursor: pointer; font-size: 12px; font-weight: 600; color: var(--accent);
+      list-style: none; display: flex; align-items: center; gap: 6px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 9px; transition: transform .2s; }
+    details[open] summary::before { transform: rotate(90deg); }
+    .detail-body { margin-top: 10px; font-size: 13px; line-height: 1.65; color: var(--text); }
+    .detail-body h4 { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 10px 0 4px; }
+
+    .metric-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    .metric-table th { background: var(--tag-bg); text-align: left; padding: 5px 8px; font-weight: 600; }
+    .metric-table td { padding: 4px 8px; border-top: 1px solid var(--border); }
+
+    .score-breakdown { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; margin-top: 6px; }
+    .score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .score-label { font-size: 12px; }
+    .score-bar { height: 6px; background: var(--tag-bg); border-radius: 99px; flex: 1; overflow: hidden; }
+    .score-fill { height: 100%; background: var(--accent); border-radius: 99px; }
+    .score-val { font-size: 12px; font-weight: 700; color: var(--accent); min-width: 32px; text-align: right; }
+
+    .code-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent); color: #fff; text-decoration: none;
+      border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600;
+    }
+    .code-link:hover { background: #1d4ed8; }
+    .links-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .no-results {
+      grid-column: 1/-1; text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .controls { gap: 12px; }
+      .controls input[type=range] { width: 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>📡 Daily Paper Radar</h1>
+    <p>E-commerce Content Ecology &amp; Creator Governance — 2026-06-14</p>
+  </div>
+  <div class="controls">
+    <label>
+      <span id="lbl-score">最低分</span>
+      <input type="range" id="scoreSlider" min="0" max="100" value="40">
+      <span id="scoreVal">40</span>
+    </label>
+    <button id="langBtn">EN</button>
+  </div>
+</header>
+
+<main>
+  <div class="meta-bar">
+    <h2 id="pageTitle">2026-06-14 巡检报告</h2>
+    <span id="countLabel">8 篇 ≥ 40 分</span>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<script>
+const ZH = true;
+let lang = 'zh';
+
+const PAPERS = [
+  {
+    id: "2606.13533",
+    title: "OneRetrieval: Unifying Multi-Branch E-commerce Retrieval with an Editable Generative Model",
+    authors: "Xuxin Zhang et al.",
+    affil: "Kuaishou Technology",
+    date: "2026-06-12",
+    tags: ["电商检索", "生成式检索", "可编辑运营", "KAE"],
+    score: 87,
+    breakdown: {innovation:27, results:13, exp:13, eff:6, gen:3, rel:25},
+    rationale_zh: "强电商检索相关，直接解决'可运营干预/新词小时级注入'工业刚需，含离线+线上 A/B 双证据。",
+    rationale_en: "Directly solves the production need for hour-level keyword injection in generative retrieval, with offline and online A/B evidence.",
+    method_zh: "OneRetrieval 通过 Keyword-Aligned Encoding（KAE）将生成式检索 identifier 每位绑定到可解释属性词，并在 codebook 中预留 Reserved Slots，运营无需 retrain 即可小时级注入新词。配合信息论属性分组和四阶段 SFT 流水线兼顾深召回质量。",
+    method_en: "OneRetrieval binds each identifier position to a human-readable attribute word (KAE) and reserves slots for post-deployment keyword injection without retraining. A multi-stage SFT pipeline maintains deep-recall quality.",
+    innovation_zh: "首次将'可编辑性'作为 generative retrieval 的结构性约束，KAE + reserved slot 使新词路由成为显式绑定操作，兼顾工业倒排与深召回双优势。",
+    innovation_en: "First to make editability a structural constraint in generative retrieval; KAE + reserved-slot binding turns new-term routing into an explicit, non-retrain operation.",
+    metrics: [["快手日志 Order HR@350","0.5482","< OneRetrieval"],["Click HR@350","0.6055","< OneRetrieval"],["线上 A/B Order Volume","显著↑","—"]],
+    abs: "https://arxiv.org/abs/2606.13533",
+    code: "https://github.com/xuxinzhang/oneretrieval",
+    local: "2026-06-14/OneRetrieval/",
+  },
+  {
+    id: "2606.13145",
+    title: "The Clustering Strikes Back: Building Cost-Effective and High-Performance ANNS at Scale with Helmsman",
+    authors: "Yuchen Huang et al.",
+    affil: "ECNU / SJTU / Xiaohongshu",
+    date: "2026-06-12",
+    tags: ["向量检索","ANNS","全闪存","成本优化","基础设施"],
+    score: 85,
+    breakdown: {innovation:25, results:13, exp:12, eff:10, gen:3, rel:22},
+    rationale_zh: "内容/电商检索底座能力，生产量级数据+成本/吞吐指标，工程创新与落地价值极高。",
+    rationale_en: "Production-grade ANNS infrastructure paper with real cost and throughput data at Xiaohongshu scale.",
+    method_zh: "HELMSMAN 走全闪存 + 聚类 ANNS 路线，用 Userspace I/O 绕过 kernel 栈、Leveling-Learned Pruning 自适应裁剪扫描量、GPU 加速建库流水线支撑小时级 index 重建，使 40 台机器替代约 35000 CPU cores + 0.35PB DRAM。",
+    method_en: "HELMSMAN adopts all-flash clustering ANNS with userspace I/O, adaptive learned pruning, and a GPU-accelerated index rebuild pipeline, replacing 35k CPU cores + 0.35PB DRAM with 40 servers.",
+    innovation_zh: "系统化证明聚类+全闪存可满足严格在线 SLA，三组件协同（Userspace I/O + learned pruning + GPU build）逐一击破传统方案的三大瓶颈。",
+    innovation_en: "Proves all-flash clustering ANNS is viable under strict online SLAs at scale; three focused innovations address I/O, pruning, and rebuild bottlenecks together.",
+    metrics: [["硬件成本节省",">90%","—"],["吞吐 vs DRAM-SSD ANNS","2–16×","—"],["吞吐 vs in-DRAM ANNS","≤85%","—"]],
+    abs: "https://arxiv.org/abs/2606.13145",
+    code: "https://github.com/Red-EAD/helmsman",
+    local: "2026-06-14/Helmsman/",
+  },
+  {
+    id: "2606.12451",
+    title: "ToolSense: A Diagnostic Framework for Auditing Parametric Tool Knowledge in LLMs",
+    authors: "A. Hathidara et al.",
+    affil: "SAP Labs",
+    date: "2026-06-12",
+    tags: ["Agent","工具检索","评测/诊断","Internalization Score"],
+    score: 80,
+    breakdown: {innovation:24, results:12, exp:12, eff:7, gen:4, rel:21},
+    rationale_zh: "对 Agent + 大工具目录类治理/运营系统非常有借鉴，首次量化 constrained decoding 依赖，开源可用。",
+    rationale_en: "First diagnostic framework that separates tool retrieval from tool understanding and quantifies constrained-decoding reliance; directly applicable to agent governance.",
+    method_zh: "ToolSense 自动为任意工具目录生成三类诊断集（RRB 分三档歧义、MCQ probing、QA probing），提出 Internalization Score（free-form vs constrained decoding 准确率之差）量化 LLM 对 trie 的依赖，揭示'检索能力高但工具知识弱'的解耦。",
+    method_en: "ToolSense auto-generates three benchmark types (RRB with ambiguity tiers, MCQ probing, QA probing) and introduces the Internalization Score (constrained – free-form accuracy) to quantify trie dependence.",
+    innovation_zh: "首次把'工具检索能力'与'工具理解能力'解耦测评，RRB 更真实的 query 揭示 50–64pp 下滑，指导生产 Agent 风险审计。",
+    innovation_en: "Decouples parametric retrieval from true tool understanding; exposes 50–64pp performance collapse under realistic queries that standard ToolBench benchmarks hide.",
+    metrics: [["RRB vs ToolBench delta","−50–64pp","—"],["Factual Probe Accuracy","≈random","for some configs"]],
+    abs: "https://arxiv.org/abs/2606.12451",
+    code: "https://github.com/SAP/toolsense",
+    local: "2026-06-14/ToolSense/",
+  },
+  {
+    id: "2606.12674",
+    title: "Evoflux: Inference-Time Evolution of Executable Tool Workflows for Compact Agents",
+    authors: "K. R. Bhandari et al.",
+    affil: "RPI / IBM Research",
+    date: "2026-06-12",
+    tags: ["Agent","工具工作流","MCP","推理时搜索","小模型"],
+    score: 80,
+    breakdown: {innovation:23, results:12, exp:12, eff:7, gen:4, rel:22},
+    rationale_zh: "小模型 tool-use 可用性关键突破，测试时进化修复比小语料 SFT 更稳，开源可直接对接 MCP。",
+    rationale_en: "Key breakthrough for compact agent tool-use; test-time evolutionary repair outperforms small-corpus SFT/DPO and integrates directly with MCP-style catalogs.",
+    method_zh: "Evoflux 把工具调用序列形式化为 typed workflow graph，在固定 budget 内通过结构化 edit（insert/replace/fix）+ 执行反馈做进化搜索修复，以'执行可行性'为唯一目标，无需重新训练。",
+    method_en: "Evoflux formalises tool calls as typed workflow graphs and applies execution-feedback-driven evolutionary search (structured edits + diversity pruning) to repair infeasible plans at inference time.",
+    innovation_zh: "在 schema + 依赖约束空间做 workflow repair，量化展示少量 SFT 的潜在负效应，首次用进化搜索替代训练时修复行为学习。",
+    innovation_en: "Schema-grounded evolutionary repair as an alternative to training; quantifies SFT negative transfer on live tool catalogs.",
+    metrics: [["MCP-Bench Exec. Feasibility","17–24%","~3% (base)"],["SFT/DPO on same data","往往↓","baseline"]],
+    abs: "https://arxiv.org/abs/2606.12674",
+    code: "https://github.com/IBM/Evoflux",
+    local: "2026-06-14/Evoflux/",
+  },
+  {
+    id: "2606.12608",
+    title: "Shopping Reasoning Bench: An Expert-Authored Benchmark for Multi-Turn Conversational Shopping Assistants",
+    authors: "Shuxian Fan et al.",
+    affil: "Amazon",
+    date: "2026-06-12",
+    tags: ["电商","对话式购物","多轮推理","评测/Benchmark","LLM-as-judge"],
+    score: 79,
+    breakdown: {innovation:22, results:10, exp:15, eff:6, gen:4, rel:22},
+    rationale_zh: "电商对话购物核心评测基础设施，专家 rubrics + judge 验证 + 多轮分析全面；以评测为主因此控制在 80 以下。",
+    rationale_en: "Core benchmarking infrastructure for conversational shopping; expert rubrics + judge validation + multi-turn analysis; below 80 as it is a benchmark paper.",
+    method_zh: "525 个专家编写的 mission（含 293 多轮），10,863 条重要性加权二值 rubrics，涵盖偏好澄清/跨商品权衡/兼容性判断，LLM judge 验证 macro-F1=0.749。",
+    method_en: "525 expert-authored missions (293 multi-turn), 10,863 importance-weighted binary rubrics covering preference clarification, cross-product trade-offs, and compatibility judgments.",
+    innovation_zh: "首个同时具备专家级 rubrics 与 judge 可靠性验证的多轮电商对话推理评测集，把主观'好建议'拆成可量化细粒度 criterion。",
+    innovation_en: "First multi-turn shopping benchmark with expert rubrics and validated LLM judge; decomposes subjective 'good advice' into auditable fine-grained criteria.",
+    metrics: [["Weighted Pass Rate (9 models)","57.4–77.2%","—"],["Judge macro-F1","0.749","expert agreement"],["Multi-turn degradation","4–18pp","—"]],
+    abs: "https://arxiv.org/abs/2606.12608",
+    code: "https://huggingface.co/datasets/amazon/ShoppingReasoningBench",
+  },
+  {
+    id: "2606.13001",
+    title: "CFALR: Collaborative Filtering-Augmented LLM for Personalized Fashion Outfit Recommendation",
+    authors: "Yujuan Ding et al.",
+    affil: "HKPolyU / UESTC / SMU / NUS",
+    date: "2026-06-12",
+    tags: ["电商","推荐","穿搭推荐","LLM","协同过滤","多模态"],
+    score: 78,
+    breakdown: {innovation:23, results:12, exp:12, eff:5, gen:3, rel:23},
+    rationale_zh: "电商组合推荐/内容生态（穿搭）强相关，离线指标提升显著，待线上验证。",
+    rationale_en: "Directly relevant to e-commerce outfit/combo recommendation; strong offline gains; pending online validation.",
+    method_zh: "把 outfit completion 改写为 P-FITB 生成任务，CF 向量与多模态特征投影为单 token 注入 LLM，推理时用 CF-augmented 生成机制融合协同信号与语言模型分布。",
+    method_en: "Frames outfit completion as a personalized fill-in-the-blank task, injects CF and visual features as projected tokens, and augments decoding with collaborative signals.",
+    innovation_zh: "首次在 outfit-level 组合推荐中实现显式 CF+LLM 特征 token 融合，P-FITB 任务化将组合推荐变成可监督的生成式学习。",
+    innovation_en: "First CF+LLM feature token fusion for outfit-level combination recommendation; task framing as P-FITB enables supervised generative learning.",
+    metrics: [["Polyvore P-FITB Acc (1/4)","0.6498","0.4775 (Bundle-MLLM)"],["IQON P-FITB Acc (1/4)","0.6103","—"]],
+    abs: "https://arxiv.org/abs/2606.13001",
+  },
+  {
+    id: "2606.12744",
+    title: "GRIP: Feedback-Guided Prompt Retrieval for Large Multimodal Models",
+    authors: "G. Allabadi et al.",
+    affil: "UIUC / Univ. Bonn / Microsoft",
+    date: "2026-06-12",
+    tags: ["多模态","VLM","Prompt Retrieval","ICL","Caption","RAG"],
+    score: 72,
+    breakdown: {innovation:21, results:11, exp:12, eff:7, gen:4, rel:17},
+    rationale_zh: "对多模态内容理解/Caption/RAG 的示例检索很有借鉴，通用方法论文，无业务场景验证。",
+    rationale_en: "Strong reference for multimodal RAG example selection; general-purpose methodology without business deployment.",
+    method_zh: "用 LMM 实际反馈（加入/不加入对比）标注 beneficial/detrimental 邻居，对比学习训练 vision-only retriever 使检索空间对齐 utility，可跨闭源模型迁移。",
+    method_en: "Uses LMM performance delta as supervision to label beneficial/detrimental neighbors, trains a vision-only retriever via contrastive learning aligned with utility.",
+    innovation_zh: "首次把 utility alignment 扩展到多模态 ICL 检索，vision-only retriever 可跨 LMM（含 GPT-4o）迁移，工程价值高。",
+    innovation_en: "First utility-aligned retrieval for multimodal ICL; vision-only retriever transfers to closed-source LMMs without retraining.",
+    metrics: [["Oxford Pets (Qwen2.5-VL-7B)","83.9%","79.0% (ViT)"],["ScienceVQA (GPT-4o)","85.9%","84.8% (CLIP)"]],
+    abs: "https://arxiv.org/abs/2606.12744",
+  },
+  {
+    id: "2606.13267",
+    title: "TimeLens: On-Device Artifact Recognition with RAG for the Grand Egyptian Museum",
+    authors: "R. Hesham et al.",
+    affil: "Capital University (Egypt)",
+    date: "2026-06-12",
+    tags: ["多模态","数据质量","RAG","端侧部署","双语","标注清洗"],
+    score: 65,
+    breakdown: {innovation:18, results:10, exp:10, eff:9, gen:2, rel:16},
+    rationale_zh: "偏工程应用论文，端侧识别+RAG+数据治理的完整落地链路有参考价值，与电商场景需做 domain adaptation。",
+    rationale_en: "Practical engineering paper; on-device recognition + RAG + data cleaning pipeline is a useful reference; domain adaptation needed for e-commerce.",
+    method_zh: "端侧 YOLOv8n（5.97MB）识别展品 + 后端 RAG（ChromaDB + 量化 Gemma 4）双语问答；核心经验在 YOLO-World 自动标注→空间清洗规则→人工闭环的数据治理流水线。",
+    method_en: "On-device YOLOv8n (5.97MB) for recognition + backend RAG (ChromaDB + quantized Gemma 4) for bilingual QA; key insight: label quality dominates fine-grained recognition over model capacity.",
+    innovation_zh: "端侧识别+RAG QA 分层架构 + foundation-model auto-annotation 清洗流水线，证明细粒度视觉类别下数据质量决定成败。",
+    innovation_en: "Split on-device recognition + grounded RAG QA with a data-quality-driven labeling pipeline; demonstrates that label quality dominates over model scale for fine-grained categories.",
+    metrics: [["识别 mAP@0.5","0.995","—"],["识别 mAP@0.5:0.95","0.924","—"],["模型大小","5.97 MB","—"],["端到端延迟","~10s",">30s 原始"]],
+    abs: "https://arxiv.org/abs/2606.13267",
+  },
+];
+
+// State
+let minScore = 40;
+let currentLang = 'zh';
+
+// Elements
+const grid    = document.getElementById('grid');
+const slider  = document.getElementById('scoreSlider');
+const scoreV  = document.getElementById('scoreVal');
+const langBtn = document.getElementById('langBtn');
+const countLbl= document.getElementById('countLabel');
+
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 65) return 'score-mid';
+  return 'score-low';
+}
+
+function metricsTable(metrics) {
+  if (!metrics || !metrics.length) return '';
+  return `<table class="metric-table">
+    <thead><tr><th>Metric / 指标</th><th>Value</th><th>Baseline</th></tr></thead>
+    <tbody>${metrics.map(r => `<tr><td>${r[0]}</td><td><strong>${r[1]}</strong></td><td>${r[2]}</td></tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function breakdown(bd) {
+  const items = [
+    {k:'innovation', label:'Innovation', max:30},
+    {k:'results',    label:'Results',    max:15},
+    {k:'exp',        label:'Exp. Quality', max:15},
+    {k:'eff',        label:'Efficiency', max:10},
+    {k:'gen',        label:'Generalization', max:5},
+    {k:'rel',        label:'Relevance',  max:25},
+  ];
+  return `<div class="score-breakdown">${items.map(i => `
+    <span class="score-label">${i.label}</span>
+    <span class="score-bar-wrap">
+      <span class="score-bar"><span class="score-fill" style="width:${bd[i.k]/i.max*100}%"></span></span>
+      <span class="score-val">${bd[i.k]}/${i.max}</span>
+    </span>`).join('')}</div>`;
+}
+
+function renderCards() {
+  const visible = PAPERS.filter(p => p.score >= minScore);
+  countLbl.textContent = currentLang === 'zh'
+    ? `${visible.length} 篇 ≥ ${minScore} 分`
+    : `${visible.length} papers ≥ ${minScore}`;
+
+  grid.innerHTML = visible.length === 0
+    ? `<div class="no-results">${currentLang === 'zh' ? '暂无符合条件的论文' : 'No papers match the current filter'}</div>`
+    : visible.map(p => {
+      const method    = currentLang === 'zh' ? p.method_zh    : p.method_en;
+      const innov     = currentLang === 'zh' ? p.innovation_zh : p.innovation_en;
+      const rationale = currentLang === 'zh' ? p.rationale_zh : p.rationale_en;
+      const labelMethod = currentLang === 'zh' ? '方法概述' : 'Method';
+      const labelInnov  = currentLang === 'zh' ? '创新分析' : 'Innovation';
+      const labelMetrics = currentLang === 'zh' ? '关键指标' : 'Key Metrics';
+      const labelScore  = currentLang === 'zh' ? '评分详情' : 'Score Breakdown';
+      const codeLabel   = currentLang === 'zh' ? '代码' : 'Code';
+      const paperLabel  = currentLang === 'zh' ? '论文' : 'Paper';
+
+      return `<article class="card" data-score="${p.score}">
+        <div class="card-top">
+          <div class="card-title">${p.title}</div>
+          <div class="score-badge ${scoreClass(p.score)}">
+            <div class="score-num">${p.score}</div>
+            <div class="score-sub">/100</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <strong>${p.authors}</strong> · ${p.affil}<br>
+          <span>${p.date}</span>
+        </div>
+        <div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <div class="card-meta">${rationale}</div>
+
+        <details>
+          <summary>${labelMethod}</summary>
+          <div class="detail-body">
+            <h4>${labelMethod}</h4><p>${method}</p>
+            <h4>${labelInnov}</h4><p>${innov}</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>${labelMetrics}</summary>
+          <div class="detail-body">${metricsTable(p.metrics)}</div>
+        </details>
+
+        <details>
+          <summary>${labelScore}</summary>
+          <div class="detail-body">${breakdown(p.breakdown)}</div>
+        </details>
+
+        <div class="links-row">
+          <a class="code-link" href="${p.abs}" target="_blank" rel="noopener">📄 ${paperLabel}</a>
+          ${p.code ? `<a class="code-link" href="${p.code}" target="_blank" rel="noopener">💻 ${codeLabel}</a>` : ''}
+          ${p.local ? `<a class="code-link" href="https://github.com/Sam1224/CCReproduce/tree/main/${p.local}" target="_blank" rel="noopener">🔁 Reproduce</a>` : ''}
+        </div>
+      </article>`;
+    }).join('');
+}
+
+slider.addEventListener('input', () => {
+  minScore = +slider.value;
+  scoreV.textContent = minScore;
+  renderCards();
+});
+
+langBtn.addEventListener('click', () => {
+  currentLang = currentLang === 'zh' ? 'en' : 'zh';
+  langBtn.textContent = currentLang === 'zh' ? 'EN' : '中';
+  document.getElementById('lbl-score').textContent = currentLang === 'zh' ? '最低分' : 'Min Score';
+  document.getElementById('pageTitle').textContent = currentLang === 'zh'
+    ? '2026-06-14 巡检报告' : '2026-06-14 Paper Inspection';
+  renderCards();
+});
+
+renderCards();
+</script>
+</body>
+</html>
