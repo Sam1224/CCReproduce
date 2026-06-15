@@ -33,7 +33,8 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
           method_overview_en TEXT,
           innovation_zh TEXT,
           innovation_en TEXT,
-          key_metrics TEXT,
+          key_metrics_zh TEXT,
+          key_metrics_en TEXT,
           reproduce_url TEXT,
           figure_path TEXT,
           PRIMARY KEY (inspection_date, paper_id)
@@ -92,8 +93,8 @@ def main() -> None:
                   inspection_date, paper_id, title, authors, affiliations, source, published,
                   links, tags, score_total, score_breakdown, rationale_zh,
                   method_overview_zh, method_overview_en, innovation_zh, innovation_en,
-                  key_metrics, reproduce_url, figure_path
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  key_metrics_zh, key_metrics_en, reproduce_url, figure_path
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     inspection_date,
@@ -113,6 +114,7 @@ def main() -> None:
                     summary.get("zh", {}).get("innovation"),
                     summary.get("en", {}).get("innovation"),
                     summary.get("zh", {}).get("key_metrics"),
+                    summary.get("en", {}).get("key_metrics"),
                     reproduce_url,
                     figure_path,
                 ),

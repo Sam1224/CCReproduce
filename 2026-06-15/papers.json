@@ -1,0 +1,337 @@
+[
+  {
+    "id": "2606.13533",
+    "title": "OneRetrieval: Unifying Multi-Branch E-commerce Retrieval with an Editable Generative Model",
+    "authors": [
+      "Xuxin Zhang",
+      "Ben Chen",
+      "Yue Lv",
+      "Siyuan Wang",
+      "Yupeng Li",
+      "Yufei Ma",
+      "Zihan Liang",
+      "Tong Zhao",
+      "Ying Yang",
+      "Huangyu Dai",
+      "Lingtao Mao",
+      "Zhipeng Qian",
+      "Xinyu Sun",
+      "Chenyi Lei",
+      "Wenwu Ou",
+      "Kun Gai"
+    ],
+    "affiliations": ["Kuaishou Technology"],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13533",
+      "pdf": "https://arxiv.org/pdf/2606.13533v1",
+      "code": "https://github.com/xuxinzhang/oneretrieval"
+    },
+    "tags": ["电商", "检索", "生成式召回", "线上A/B"],
+    "score": {
+      "innovation": 27,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 87,
+      "rationale_zh": "强电商检索相关，且把‘运营可编辑/新词小时级注入’作为结构性目标，给出离线检索指标与线上 A/B 的闭环证据。缺点是生成式召回推理开销偏重、系统实现更偏工业工程。"
+    },
+    "reproduce": {
+      "status": "reproduced",
+      "path": "2026-06-15/OneRetrieval"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "OneRetrieval 用一个生成式检索模型统一电商多路召回（稀疏/稠密/协同等），但将‘上线后仍可小时级运营干预/新词注入’作为一等约束。核心是 Keyword-Aligned Encoding（KAE）：把 identifier 的各位置绑定到可解释属性词，并在 codebook 预留 reserved slots；推理期提供干预 bypass，命中新词时强制改写对应槽位 token，实现无需 retrain 的可控路由。训练上用多阶段 SFT 兼顾深召回质量与可编辑性，并在真实流量中逐步替换召回分支验证可落地收益。",
+        "story": "多分支召回中，倒排可运营但语义弱、深召回质量高却难以快速注入新词。本文将可编辑性显式化：KAE 让 token 语义可控 → reserved slot 把新词绑定变成可执行接口 → 训练把深召回做上来，从而让单模型能从替换倒排开始逐步覆盖更多分支。",
+        "innovation": "1）把运营可编辑性作为 generative retrieval 的核心约束，而不是依赖模型泛化；2）KAE 将 identifier 槽位与可解释属性词对齐，使新词路由可控；3）reserved slots + 推理期 bypass 支持小时级干预；4）离线 + 线上 A/B 双证据展示可落地路径。",
+        "key_metrics": "离线（Order/Click, HR@350）：Order HR@350=0.5482、Click HR@350=0.6055（接近强基线）；可编辑性（IAR@350）：Total IAR@350=0.553。线上 A/B：仅替换倒排分支时 Order +0.710%（显著）、Buyer +0.450%、CTR +0.074%；进一步替换几乎全部召回分支时 CTR +0.821%（显著）。"
+      },
+      "en": {
+        "method_overview": "OneRetrieval unifies multi-branch e-commerce retrieval with a single generative retriever while preserving hour-level operational editability (e.g., emerging keywords). It introduces Keyword-Aligned Encoding (KAE) with reserved slots and an inference-time bypass so new terms can be routed without retraining, plus a multi-stage SFT pipeline to retain deep-retrieval quality.",
+        "innovation": "Editability-first generative retrieval: KAE aligns identifier slots with interpretable attribute words, and reserved-slot binding makes keyword interventions an explicit, controllable interface.",
+        "key_metrics": "Offline: Order HR@350=0.5482, Click HR@350=0.6055; editability Total IAR@350=0.553. Online A/B: replacing the lexical branch yields Order +0.710% (sig.), Buyer +0.450%, CTR +0.074%; replacing almost all recall branches yields CTR +0.821% (sig.)."
+      }
+    }
+  },
+  {
+    "id": "2606.13001",
+    "title": "CFALR: Collaborative Filtering-Augmented Large Language Model for Personalized Fashion Outfit Recommendation",
+    "authors": [
+      "Yujuan Ding",
+      "Junrong Liao",
+      "Yunshan Ma",
+      "Yi Bin",
+      "Wenqi Fan",
+      "Tat-Seng Chua",
+      "Qing Li"
+    ],
+    "affiliations": [
+      "The Hong Kong Polytechnic University",
+      "University of Electronic Science and Technology of China",
+      "Singapore Management University",
+      "Tongji University",
+      "National University of Singapore"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13001",
+      "pdf": "https://arxiv.org/pdf/2606.13001v1"
+    },
+    "tags": ["电商", "推荐", "时尚穿搭", "LLM", "组合推荐"],
+    "score": {
+      "innovation": 23,
+      "results": 12,
+      "exp_quality": 11,
+      "efficiency": 5,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 77,
+      "rationale_zh": "强电商/时尚穿搭推荐相关，做到了‘协同过滤交互信号’与 LLM 生成空间的结构化对齐与融合；但推理成本偏高，且跨域泛化/线上验证信息不足。"
+    },
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "CFALR 面向个性化穿搭（多物品组合）推荐，将任务改写为 LLM 擅长的生成式决策：P-FITB（个性化填空补全）与 outfit generation。为解决语义空间与交互空间错位，它把用户/物品 CF embedding 与多模态特征通过可训练投影层注入为非文本 token 与文本一同输入 LLM，并在输出侧融合 CF 信号与 LLM logits，提升组合搜索稳定性。",
+        "story": "传统 CF 难以应对组合爆炸与语义理解，纯 LLM 又缺交互信号。本文通过‘把 CF 特征 token 化注入 LLM + 输出侧融合’补齐协同信号，使生成式穿搭既懂语义又个性化。",
+        "innovation": "1）将穿搭推荐统一成 P-FITB + 生成式组合；2）用投影把 CF/视觉等非文本特征对齐到 LLM 输入空间；3）提出 CF-augmented generation 的输出融合，让协同信号直接影响生成概率。",
+        "key_metrics": "P-FITB Acc：Polyvore 1/4=0.6498、1/10=0.3957、1/20=0.2459；IQON 1/4=0.6103、1/10=0.3654、1/20=0.2018。生成指标（PP/OC/MPC）：Polyvore 0.2428/0.4626/0.3556；IQON 0.2883/0.3147/0.2291。"
+      },
+      "en": {
+        "method_overview": "CFALR targets personalized outfit recommendation by reframing it into generation-friendly tasks (P-FITB and outfit generation). It injects CF embeddings and multimodal features as projected non-text tokens into the LLM, and fuses CF signals with LLM logits at the output to stabilize combinatorial search.",
+        "innovation": "Tokenizing CF interaction signals and aligning them to the LLM space enables controllable, personalized combinatorial generation beyond pure semantic prompting.",
+        "key_metrics": "P-FITB Acc: Polyvore (1/4=0.6498, 1/10=0.3957, 1/20=0.2459); IQON (1/4=0.6103, 1/10=0.3654, 1/20=0.2018). Generation (PP/OC/MPC): Polyvore 0.2428/0.4626/0.3556; IQON 0.2883/0.3147/0.2291."
+      }
+    }
+  },
+  {
+    "id": "2606.12608",
+    "title": "Shopping Reasoning Bench: An Expert-Authored Benchmark for Multi-Turn Conversational Shopping Assistants",
+    "authors": [
+      "Shuxian Fan",
+      "Seonwoo Min",
+      "Youna Hu",
+      "Botao Xia",
+      "Jayakrishnan Unnikrishnan",
+      "Rowan Musselmann",
+      "Yifan Gao",
+      "Qingyu Yin",
+      "Priyanka Nigam",
+      "Bing Yin"
+    ],
+    "affiliations": ["Amazon"],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12608",
+      "pdf": "https://arxiv.org/pdf/2606.12608v1",
+      "project": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench"
+    },
+    "tags": ["电商", "对话式购物", "评测基准", "LLM-as-judge"],
+    "score": {
+      "innovation": 22,
+      "results": 11,
+      "exp_quality": 14,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 82,
+      "rationale_zh": "电商对话助手强相关，贡献在于专家 rubric + LLM judge 的可复核评测体系，且给出了规模、标注结构与 judge 可信度验证；属于基准/方法论型高质量产出。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "Shopping Reasoning Bench 是专家撰写的多轮对话式购物助手评测基准：将能力拆为 5 类推理与 15 个子类，并为每个任务提供可判定的二值 rubric。评测时用经专家一致性验证的 LLM-as-judge，把开放式回答映射为 rubric 级通过/失败，并引入重要性权重区分必需项/加分项，使结果更可解释、可定位短板。",
+        "story": "购物助手评测常粗粒度且缺专家知识，导致‘看似对但不专业’难量化。本文用专家 rubric 将开放回答转为可复核的二值判定，并用 LLM judge 做规模化评测，最终形成可诊断的能力画像。",
+        "innovation": "1）专家 rubric + 重要性权重把评测从‘单分’变为‘可解释的条款通过率’；2）taxonomy 组织能力维度；3）验证 LLM judge 与专家一致性，使自动评测可落地。",
+        "key_metrics": "规模：525 missions（232 单轮/293 多轮，1,764 turns），10,863 rubrics（85% required）。Judge：rubric-level macro-F1=0.749、κ=0.498（接近 inter-expert ceiling 0.787/0.573）。主榜 weighted pass rate：57.4%–77.2%。"
+      },
+      "en": {
+        "method_overview": "Shopping Reasoning Bench is an expert-authored benchmark for multi-turn conversational shopping assistants. It decomposes shopping reasoning into a taxonomy with binary, auditable rubrics, and uses a validated LLM-as-judge to score rubric-level pass/fail with importance weighting.",
+        "innovation": "Auditable, expert-written rubrics + validated LLM judging turn open-ended shopping dialogues into reproducible, diagnostic evaluation signals.",
+        "key_metrics": "525 missions (232 single-turn/293 multi-turn, 1,764 turns), 10,863 rubrics (85% required). Judge: rubric-level macro-F1=0.749, κ=0.498. Weighted pass rate: 57.4%–77.2%."
+      }
+    }
+  },
+  {
+    "id": "2606.14046",
+    "title": "When Recommendation Denoising Meets Popularity Bias: Understanding and Mitigating Their Interaction",
+    "authors": ["Guohang Zeng", "Jie Lu", "Guangquan Zhang"],
+    "affiliations": [],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.14046",
+      "pdf": "https://arxiv.org/pdf/2606.14046v1"
+    },
+    "tags": ["推荐系统", "去噪", "流行度偏置", "长尾"],
+    "score": {
+      "innovation": 18,
+      "results": 6,
+      "exp_quality": 7,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 13,
+      "total": 56,
+      "rationale_zh": "理论上解释了去噪与流行度偏置的耦合，并提出轻量 PAD gate 可 plug-in 到去噪框架；但目前可引用的 SOTA 数值与 ablation 细节需要回原文表格进一步核对。"
+    },
+    "reproduce": {
+      "status": "reproduced_toy",
+      "path": "2026-06-15/PAD"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文研究 loss-based 去噪训练与推荐系统流行度偏置的相互作用：尾部物品因稀疏更难拟合，导致即使是干净样本也更可能呈现大 loss，从而被 small-loss 去噪误降权，进一步放大 head–tail 失衡。基于分析提出 PAD（Popularity-Aware Denoising）：用物品流行度构造门控系数，让头部更强去噪、尾部更保守，作为轻量 plug-in 叠加到现有去噪器上。",
+        "story": "去噪希望降权噪声，但用 loss 做 proxy 会把‘难学但干净’的长尾样本当成噪声，结果准确率与多样性一起受损。PAD 用流行度门控重新分配去噪强度，避免对长尾过度降权。",
+        "innovation": "1）形式化刻画去噪权重诱导的有效 head–tail 信号比例；2）提出按流行度调制去噪强度的 PAD gate（plug-in）；3）强调准确性-多样性联合评估去噪副作用。",
+        "key_metrics": "（待补）摘要/现有工作区资料未给出可直接引用的完整指标表；本次在仓库中提供了对齐核心公式与现象的 toy 复现（见 Reproduce 链接）。"
+      },
+      "en": {
+        "method_overview": "The paper studies how loss-based denoising interacts with popularity bias in implicit-feedback recommenders: tail items are harder to fit, so clean tail positives may get down-weighted as ‘noisy’ under small-loss reweighting, amplifying head–tail imbalance. PAD adds a popularity-conditioned gate to modulate denoising strength (stronger on head, conservative on tail) as a plug-in on top of existing denoisers.",
+        "innovation": "A popularity-aware gate that modulates denoising intensity to mitigate the denoising–popularity coupling, improving the accuracy–diversity trade-off.",
+        "key_metrics": "(To verify) The full paper tables need to be checked for exact SOTA numbers; this repo includes a toy-but-runnable implementation aligned to the core PAD weighting equations."
+      }
+    }
+  },
+  {
+    "id": "2606.11023",
+    "title": "Generative Archetype-Grounded Item Representations for Sequential Recommendation",
+    "authors": [
+      "Yifan Li",
+      "Jiahong Liu",
+      "Xinni Zhang",
+      "Hao Chen",
+      "Yankai Chen",
+      "Wenhao Yu",
+      "Jianting Chen",
+      "Irwin King"
+    ],
+    "affiliations": [],
+    "source": "arXiv",
+    "published": "2026-06-09",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11023",
+      "pdf": "https://arxiv.org/pdf/2606.11023v1",
+      "code": "https://github.com/AI-Santiago/GenAIR"
+    },
+    "tags": ["推荐系统", "序列推荐", "LLM", "表征学习"],
+    "score": {
+      "innovation": 20,
+      "results": 10,
+      "exp_quality": 10,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 18,
+      "total": 69,
+      "rationale_zh": "序列推荐相关且思路清晰（LLM 生成 archetype + 行为校准），并提供代码；但与电商内容理解/治理属于可迁移相关，且摘要未给出明确数值增益。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "GenAIR 提出用 LLM 从 item metadata 推断 ‘archetype’（理想目标受众画像），并把 archetype embedding 作为 item 表征的一部分注入序列推荐模型。为缩小语义空间与行为空间差距，方法加入行为校准目标，把真实交互信号显式用于调整 embedding 空间结构，从而同时保留语义可解释性与推荐有效性。",
+        "story": "仅用 metadata 的静态语义难以反映真实用户行为，导致语义 embedding 与行为模式不对齐。GenAIR 用 LLM 生成受众 archetype 捕获‘谁会买’，再用行为校准把语义空间拉回到交互分布上。",
+        "innovation": "1）将 item identity 与目标受众画像（archetype）绑定；2）LLM 单次前向抽取 archetype embedding；3）行为校准目标显式对齐语义与行为。",
+        "key_metrics": "摘要未给出可直接引用的具体指标数值；论文声称在 3 个真实数据集上显著优于 SOTA，并开源实现代码（见 Code 链接）。"
+      },
+      "en": {
+        "method_overview": "GenAIR uses an LLM to infer an item archetype (ideal target-audience profile) from metadata and injects its embedding into sequential recommenders. A behavioral calibration objective then reshapes the embedding space using real interactions to bridge the semantic–behavior gap.",
+        "innovation": "Archetype-grounded item representations: audience-centric textual archetypes + behavior calibration to align semantics with interaction patterns.",
+        "key_metrics": "The abstract does not provide exact metric numbers; the paper reports consistent gains over SOTA on three real-world datasets and releases code (see Code link)."
+      }
+    }
+  },
+  {
+    "id": "2606.07688",
+    "title": "TRACER: Token ReAssignment for Concept ERasure in Generative Recommendation",
+    "authors": [
+      "Ziheng Chen",
+      "Jiali Cheng",
+      "Zezhong Fan",
+      "Hadi Amiri",
+      "Diyuan Wu",
+      "Gabriele Tolomei",
+      "Yang Zhang"
+    ],
+    "affiliations": [],
+    "source": "arXiv",
+    "published": "2026-06-05",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.07688",
+      "pdf": "https://arxiv.org/pdf/2606.07688v1"
+    },
+    "tags": ["推荐系统", "生成式推荐", "遗忘/去概念", "治理"],
+    "score": {
+      "innovation": 22,
+      "results": 9,
+      "exp_quality": 9,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 20,
+      "total": 70,
+      "rationale_zh": "与推荐治理（概念遗忘/隐私/合规）强相关，提出 token reassignment 避免 SID 共享导致的忘记-保留冲突；但摘要未给出可引用的明确数值，是否开源代码需回原文进一步确认。"
+    },
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "TRACER 面向生成式推荐中的概念遗忘（unlearning）：语义 ID（SID）是抽象 token，常被 forget 与 retain item 共享，直接抑制 token 会造成严重副作用。TRACER 的核心是 token reassignment：将与目标概念相关的 item 重新分配到更适合遗忘的新 token 上，并加入 coherence regularizer 维持 retain item 的语义一致性，从而在移除概念的同时尽量保留推荐效用。",
+        "story": "生成式推荐里 token 共享导致‘忘记概念’与‘保留效用’发生硬冲突。TRACER 通过把概念相关 item 迁移到替代 token，避免在共享 token 上做硬抑制，从结构上缓解冲突。",
+        "innovation": "1）针对 SID 抽象性与共享性提出端到端 token reassignment；2）coherence regularizer 保护 retain 语义结构；3）将 unlearning 适配到生成式推荐的特殊 token 语义。",
+        "key_metrics": "摘要仅说明在真实推荐数据集上能更好移除概念且更好保留效用，未给出明确数值（需回论文实验表核对）。"
+      },
+      "en": {
+        "method_overview": "TRACER studies concept unlearning for generative recommendation where semantic IDs (SIDs) are abstract tokens shared across forget/retain items. Instead of suppressing shared SIDs directly, TRACER reassigns concept-related items to alternative tokens and adds a coherence regularizer to preserve semantic consistency among retained items.",
+        "innovation": "Token reassignment resolves SID-sharing conflicts in unlearning, enabling concept erasure with less collateral damage to retained recommendation utility.",
+        "key_metrics": "The abstract reports better concept removal with improved utility preservation than baselines, but does not provide exact numbers (needs table verification)."
+      }
+    }
+  },
+  {
+    "id": "2606.14703",
+    "title": "Gaze Heads: How VLMs Look at What They Describe",
+    "authors": ["Rohit Gandikota", "David Bau"],
+    "affiliations": [],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.14703",
+      "pdf": "https://arxiv.org/pdf/2606.14703v1",
+      "project": "https://gaze.baulab.info/"
+    },
+    "tags": ["VLM", "可解释性", "推理期干预", "多模态"],
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 10,
+      "total": 71,
+      "rationale_zh": "多模态可解释与可控性很强（推理期通过 gaze heads 重定向描述区域），对多模态内容理解/治理有启发，但与电商业务为弱相关。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "论文发现 VLM 语言骨干里存在少量 attention heads（gaze heads）专门追踪当前描述的图像区域。通过相关性打分可定位这些 heads；更关键的是，推理时将 gaze heads 的注意力重定向到指定区域，就能强制模型转而描述该区域，实现无需重训的区域级可控生成。",
+        "story": "VLM ‘在看哪里’不透明，难以治理和控制。本文找到具备因果控制力的 gaze heads，并用 attention redirect 在推理期直接操控描述焦点。",
+        "innovation": "1）从机制层面定位功能性 head 集合；2）证明其因果性与可控性（重定向注意力即可改变输出）；3）跨数据与跨模型规模复现。",
+        "key_metrics": "对 top-100 gaze heads（<9% heads）做一次 attention-mask 干预，可将描述重定向到指定漫画分镜，准确率 83.1%；该机制在 COCO 自然图像上也有效。"
+      },
+      "en": {
+        "method_overview": "The paper identifies a small set of attention heads (gaze heads) in VLMs that track the visual region being described. By redirecting the attention of these heads at inference time, the model can be forced to describe a chosen region without retraining.",
+        "innovation": "A causal, inference-time control lever: manipulating a small subset of attention heads yields region-level controllability in VLM descriptions.",
+        "key_metrics": "Redirecting the top-100 gaze heads (<9% of heads) achieves 83.1% accuracy in steering descriptions to specified comic panels; the effect also transfers to COCO images."
+      }
+    }
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "name": "AimeCard",
+  "dsl": {
+    "schema": "2.0",
+    "header": {
+      "title": {"tag": "plain_text", "content": "Paper巡检 | 2026-06-15"},
+      "template": "blue"
+    },
+    "body": {
+      "elements": [
+        {
+          "tag": "markdown",
+          "content": "本次共收录 7 篇（含强相关/弱相关）。下方为 **评分≥40** 的中文摘要（每篇一个区块）。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **OneRetrieval**（87分）\n👥 作者：Xuxin Zhang 等（Kuaishou）\n🔗 链接：https://arxiv.org/abs/2606.13533\n📝 方法概述：生成式召回统一多路召回 + KAE + reserved slots + 推理期干预，实现小时级新词注入。\n💡 创新性分析：把可编辑性结构化为接口/槽位绑定，而非依赖泛化；离线+线上A/B闭环。\n📊 关键指标：Order HR@350=0.5482；线上 Order +0.710%（显著），CTR +0.821%（显著）。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **Shopping Reasoning Bench**（82分）\n👥 作者：Shuxian Fan 等（Amazon）\n🔗 链接：https://arxiv.org/abs/2606.12608\n📝 方法概述：专家编写多轮购物任务与细粒度 rubric，LLM-as-judge 做 rubric 级判定+重要性加权。\n💡 创新性分析：把开放式购物对话评测转为可复核的条款通过率，便于诊断短板。\n📊 关键指标：525 missions / 10,863 rubrics；Judge macro-F1=0.749，κ=0.498。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **CFALR**（77分）\n👥 作者：Yujuan Ding 等（PolyU/SMU/NUS 等）\n🔗 链接：https://arxiv.org/abs/2606.13001\n📝 方法概述：将穿搭推荐重写为生成式任务（P-FITB+outfit generation），把 CF embedding/多模态特征投影为 token 注入 LLM，并在输出侧融合 CF 信号。\n💡 创新性分析：把交互信号结构化对齐到 LLM 空间，解决组合推荐的语义-协同错位。\n📊 关键指标：P-FITB Acc（Polyvore 1/4=0.6498；IQON 1/4=0.6103）；生成指标 PP/OC/MPC（Polyvore 0.2428/0.4626/0.3556）。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **Gaze Heads**（71分）\n👥 作者：Rohit Gandikota, David Bau\n🔗 链接：https://arxiv.org/abs/2606.14703\n📝 方法概述：定位 VLM 中少量 gaze heads 追踪当前描述区域；推理期重定向这些 heads 的注意力即可控制描述焦点。\n💡 创新性分析：不仅解释，还证明可控的因果杠杆（无需重训）。\n📊 关键指标：对 top-100 gaze heads（<9%）做一次干预，重定向准确率 83.1%。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **TRACER**（70分）\n👥 作者：Ziheng Chen 等\n🔗 链接：https://arxiv.org/abs/2606.07688\n📝 方法概述：生成式推荐的概念遗忘：用 token reassignment 把概念相关 item 迁移到替代 token，避免抑制共享 SID；并加 coherence regularizer 保护 retain 结构。\n💡 创新性分析：针对 SID 抽象/共享导致的忘记-保留冲突给出结构性解法。\n📊 关键指标：摘要未给出可引用的明确数值（建议回原文表格核对）。"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **GenAIR**（69分）\n👥 作者：Yifan Li 等\n🔗 链接：https://arxiv.org/abs/2606.11023\n📝 方法概述：LLM 从 metadata 推断目标受众 archetype，并用行为校准目标对齐语义空间与交互分布，增强序列推荐表征。\n💡 创新性分析：把‘谁会买’作为 item identity 的可生成组成，并用行为信号校准。\n📊 关键指标：摘要未给出可引用的明确数值；代码：https://github.com/AI-Santiago/GenAIR"
+        },
+        {"tag": "hr"},
+
+        {
+          "tag": "markdown",
+          "content": "📄 **PAD**（56分，已做 toy 复现）\n👥 作者：Guohang Zeng 等\n🔗 链接：https://arxiv.org/abs/2606.14046\n📝 方法概述：分析 loss-based 去噪会误降权长尾干净样本从而放大流行度偏置；提出 popularity gate 调制去噪强度。\n💡 创新性分析：把去噪×流行度耦合形式化，并给出 plug-in 的自适应门控。\n📊 关键指标：论文表格数值待进一步核对；toy 复现已入库。"
+        },
+
+        {
+          "tag": "markdown",
+          "content": "\n更多信息与可视化页面：https://54b188ae079b.aime-app.bytedance.net"
+        }
+      ]
+    }
+  }
+}

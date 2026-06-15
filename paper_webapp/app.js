@@ -142,7 +142,8 @@ function renderPapers(papers) {
       figBtn.classList.remove("btn-secondary");
     }
 
-    card.querySelector(".exp").textContent = p.key_metrics || "";
+    const expText = lang === "zh" ? p.key_metrics_zh : p.key_metrics_en;
+    card.querySelector(".exp").textContent = expText || "";
 
     figBtn.addEventListener("click", () => {
       figWrap.classList.toggle("hidden");
@@ -166,7 +167,7 @@ function refresh() {
       score_total, score_breakdown, rationale_zh,
       method_overview_zh, method_overview_en,
       innovation_zh, innovation_en,
-      key_metrics, reproduce_url, figure_path
+      key_metrics_zh, key_metrics_en, reproduce_url, figure_path
     FROM papers
     WHERE inspection_date = ? AND score_total >= ?
     ORDER BY score_total DESC, title ASC`,
