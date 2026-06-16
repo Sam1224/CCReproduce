@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eff6ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#ef4444"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#4338ca}
+      .lab{font:700 12px ui-sans-serif,system-ui;fill:#fff}
+    </style>
+  </defs>
+
+  <rect width="900" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">SGFF-Net</text>
+  <text class="s" x="40" y="64">Spatial-Gradient-Frequency fusion for generalizable deepfake detection across generators</text>
+
+  <!-- input -->
+  <rect x="24" y="170" width="120" height="120" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="36" y="192">Input image</text>
+  <rect x="36" y="202" width="96" height="64" rx="6" fill="#dbeafe" stroke="#bfdbfe"/>
+  <circle cx="62" cy="234" r="13" fill="#fca5a5"/><rect x="82" y="220" width="42" height="9" rx="2" fill="#93c5fd"/><rect x="82" y="238" width="32" height="8" rx="2" fill="#bfdbfe"/>
+  <text class="p" x="36" y="284">face / scene</text>
+
+  <!-- three branches -->
+  <rect x="184" y="110" width="190" height="68" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="h" x="196" y="132">Spatial branch</text>
+  <text class="p" x="196" y="150">RGB texture cues</text>
+  <text class="m" x="196" y="168">CNN backbone</text>
+
+  <rect x="184" y="196" width="190" height="68" rx="12" fill="#ecfeff" stroke="#a5f3fc"/>
+  <text class="h" x="196" y="218">Gradient branch</text>
+  <text class="p" x="196" y="236">edge / Sobel maps</text>
+  <text class="m" x="196" y="254">boundary artifacts</text>
+
+  <rect x="184" y="282" width="190" height="78" rx="12" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text class="h" x="196" y="304">DWT wavelet-frequency</text>
+  <text class="p" x="196" y="322">LL / LH / HL / HH sub-bands</text>
+  <text class="m" x="196" y="340">spectral fingerprints</text>
+
+  <!-- dual residual fusion -->
+  <rect x="414" y="170" width="170" height="130" rx="12" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="426" y="194">Dual Residual</text>
+  <text class="h" x="426" y="210">Network fusion</text>
+  <rect x="426" y="222" width="64" height="60" rx="8" fill="#fff" stroke="#fdba74"/>
+  <text class="p" x="436" y="242">res-block</text><text class="p" x="436" y="258">stream A</text>
+  <rect x="500" y="222" width="70" height="60" rx="8" fill="#fff" stroke="#fdba74"/>
+  <text class="p" x="510" y="242">res-block</text><text class="p" x="510" y="258">stream B</text>
+  <text class="m" x="426" y="297">fuse 3 domains</text>
+
+  <!-- classifier -->
+  <rect x="622" y="170" width="160" height="130" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="634" y="194">Classifier</text>
+  <rect x="634" y="206" width="136" height="40" rx="8" fill="#dcfce7" stroke="#86efac"/>
+  <text class="lab" x="666" y="231" fill="#15803d">REAL</text>
+  <rect x="634" y="252" width="136" height="40" rx="8" fill="#fee2e2" stroke="#fca5a5"/>
+  <text class="lab" x="668" y="277" fill="#b91c1c">FAKE</text>
+
+  <!-- generalization note -->
+  <rect x="414" y="320" width="368" height="78" rx="12" fill="#ecfdf5" stroke="#86efac"/>
+  <text class="h" x="426" y="342">Cross-generator generalization</text>
+  <text class="p" x="426" y="362">spans GAN + diffusion paradigms · multi-source training + augmentation</text>
+  <text class="m" x="426" y="384" fill="#15803d">real-world 61.5% -&gt; 75.8% ;  intra-dataset 98.95%</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.3">
+    <path d="M144 220 C 162 160, 170 148, 184 145" marker-end="url(#ar)"/>
+    <path d="M144 230 L184 230" marker-end="url(#ar)"/>
+    <path d="M144 240 C 162 300, 170 318, 184 320" marker-end="url(#ar)"/>
+    <path d="M374 144 C 396 170, 404 200, 414 210" marker-end="url(#ar)"/>
+    <path d="M374 230 L414 232" marker-end="url(#ar)"/>
+    <path d="M374 320 C 396 300, 404 270, 414 258" marker-end="url(#ar)"/>
+    <path d="M584 232 L622 232" marker-end="url(#ar)"/>
+  </g>
+  <path d="M540 300 L540 320" fill="none" stroke="#94a3b8" stroke-width="2.3" marker-end="url(#ar)"/>
+</svg>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#f0fdfa"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <marker id="arT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#0d9488"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#0f766e}
+      .lab{font:700 11px ui-sans-serif,system-ui;fill:#fff}
+    </style>
+  </defs>
+
+  <rect width="900" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">Data2Story</text>
+  <text class="s" x="40" y="64">Data journalist agent: a virtual newsroom turning raw data into verifiable multimodal stories</text>
+
+  <!-- raw data -->
+  <rect x="24" y="160" width="120" height="140" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="36" y="182">Raw data</text>
+  <g><rect x="36" y="192" width="96" height="14" rx="3" fill="#cbd5e1"/><rect x="36" y="210" width="96" height="14" rx="3" fill="#e2e8f0"/><rect x="36" y="228" width="96" height="14" rx="3" fill="#cbd5e1"/><rect x="36" y="246" width="96" height="14" rx="3" fill="#e2e8f0"/></g>
+  <text class="m" x="36" y="280">tables / logs</text>
+  <text class="p" x="36" y="294">CSV, APIs, docs</text>
+
+  <!-- newsroom -->
+  <rect x="174" y="100" width="380" height="300" rx="14" fill="# effff" stroke="#99f6e4"/>
+  <rect x="174" y="100" width="380" height="300" rx="14" fill="#f0fdfa" stroke="#99f6e4"/>
+  <text class="h" x="190" y="124">Multi-agent newsroom</text>
+
+  <rect x="190" y="138" width="168" height="74" rx="10" fill="#ccfbf1" stroke="#5eead4"/>
+  <text class="h" x="202" y="160">Analyst</text>
+  <text class="p" x="202" y="178">run statistics</text>
+  <text class="p" x="202" y="194">find context + trends</text>
+
+  <rect x="370" y="138" width="168" height="74" rx="10" fill="#cffafe" stroke="#67e8f9"/>
+  <text class="h" x="382" y="160">Angle editor</text>
+  <text class="p" x="382" y="178">choose the story angle</text>
+  <text class="p" x="382" y="194">narrative framing</text>
+
+  <rect x="190" y="222" width="168" height="74" rx="10" fill="#fef9c3" stroke="#fde68a"/>
+  <text class="h" x="202" y="244">Designer</text>
+  <text class="p" x="202" y="262">pick modality / tools</text>
+  <text class="p" x="202" y="278">layout + visuals</text>
+
+  <rect x="370" y="222" width="168" height="74" rx="10" fill="#ffe4e6" stroke="#fda4af"/>
+  <text class="h" x="382" y="244">Inspector</text>
+  <text class="p" x="382" y="262">evidence-linker</text>
+  <text class="p" x="382" y="278">re-execute + verify</text>
+
+  <rect x="190" y="308" width="348" height="76" rx="10" fill="#fff" stroke="#99f6e4"/>
+  <text class="h" x="202" y="330">Evidence traceability</text>
+  <text class="p" x="202" y="350">every number / angle / asset linked to data, code or citation</text>
+  <text class="m" x="202" y="370">number -&gt; source row -&gt; code cell</text>
+
+  <!-- output story -->
+  <rect x="582" y="120" width="296" height="280" rx="14" fill="#fff" stroke="#fed7aa"/>
+  <text class="h" x="596" y="144">Verifiable multimodal story</text>
+  <rect x="596" y="156" width="128" height="74" rx="8" fill="#dbeafe" stroke="#bfdbfe"/>
+  <text class="h" x="606" y="176" font-size="11">Interactive map</text>
+  <path d="M606 184 q20 -10 40 0 t40 0" fill="none" stroke="#60a5fa" stroke-width="2"/>
+  <circle cx="650" cy="206" r="6" fill="#ef4444"/><circle cx="690" cy="214" r="6" fill="#ef4444"/>
+
+  <rect x="736" y="156" width="128" height="74" rx="8" fill="#fef3c7" stroke="#fcd34d"/>
+  <text class="h" x="746" y="176" font-size="11">Charts</text>
+  <g fill="#f59e0b"><rect x="748" y="196" width="14" height="28" rx="2"/><rect x="768" y="186" width="14" height="38" rx="2"/><rect x="788" y="204" width="14" height="20" rx="2"/><rect x="808" y="192" width="14" height="32" rx="2"/></g>
+
+  <rect x="596" y="240" width="268" height="64" rx="8" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text class="h" x="606" y="260" font-size="11">Audio narration</text>
+  <g stroke="#a855f7" stroke-width="2"><line x1="610" y1="282" x2="610" y2="290"/><line x1="618" y1="276" x2="618" y2="296"/><line x1="626" y1="270" x2="626" y2="302"/><line x1="634" y1="278" x2="634" y2="294"/><line x1="642" y1="272" x2="642" y2="300"/><line x1="650" y1="280" x2="650" y2="292"/></g>
+  <text class="p" x="666" y="288">reader-intent driven tools</text>
+
+  <rect x="596" y="314" width="268" height="72" rx="8" fill="#ecfdf5" stroke="#86efac"/>
+  <text class="h" x="606" y="336">Auditable + traceable</text>
+  <text class="p" x="606" y="356">4-axis eval · strongest in transparency</text>
+  <text class="m" x="606" y="376" fill="#15803d">re-execution verifiability</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.3">
+    <path d="M144 230 L174 230" marker-end="url(#ar)"/>
+  </g>
+  <g fill="none" stroke="#0d9488" stroke-width="2.3">
+    <path d="M358 175 L370 175" marker-end="url(#arT)"/>
+    <path d="M274 212 L274 222" marker-end="url(#arT)"/>
+    <path d="M454 212 L454 222" marker-end="url(#arT)"/>
+    <path d="M554 250 L582 250" marker-end="url(#arT)"/>
+  </g>
+</svg>

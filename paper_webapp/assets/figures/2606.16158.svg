@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480" viewBox="0 0 900 480">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#22c55e"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#16a34a"/></marker>
+    <marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#ea580c"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#3730a3}
+      .lab{font:700 10.5px ui-sans-serif,system-ui;fill:#fff}
+    </style>
+  </defs>
+
+  <rect width="900" height="480" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">LazyMCoT</text>
+  <text class="s" x="40" y="64">Focus when necessary: adaptive routing + collaborative grounding for training-free visual grounding</text>
+
+  <!-- input -->
+  <rect x="24" y="150" width="140" height="150" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="36" y="172">Input</text>
+  <rect x="36" y="182" width="116" height="60" rx="6" fill="#dbeafe" stroke="#bfdbfe"/>
+  <circle cx="64" cy="208" r="11" fill="#60a5fa"/><rect x="86" y="200" width="52" height="9" rx="2" fill="#93c5fd"/><rect x="86" y="216" width="40" height="8" rx="2" fill="#bfdbfe"/>
+  <text class="p" x="36" y="262">MC question +</text>
+  <text class="p" x="36" y="277">4 options (A-D)</text>
+  <text class="p" x="36" y="292">high-res image</text>
+
+  <!-- single VLM forward -->
+  <rect x="186" y="150" width="118" height="64" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="h" x="198" y="174">Single VLM</text>
+  <text class="h" x="198" y="190">forward pass</text>
+  <text class="p" x="198" y="206">one cheap call</text>
+
+  <!-- first token stats -->
+  <rect x="186" y="232" width="118" height="68" rx="12" fill="#ecfeff" stroke="#a5f3fc"/>
+  <text class="h" x="198" y="254">First-token stats</text>
+  <text class="m" x="198" y="272">top_p (confidence)</text>
+  <text class="m" x="198" y="288">delta_logit gap</text>
+
+  <!-- router -->
+  <rect x="326" y="180" width="132" height="120" rx="12" fill="#fefce8" stroke="#fde68a"/>
+  <text class="h" x="338" y="202">GBDT Adaptive</text>
+  <text class="h" x="338" y="218">Router</text>
+  <text class="p" x="338" y="238">zero extra params</text>
+  <text class="m" x="338" y="258">conformal cal.</text>
+  <text class="m" x="338" y="274">threshold s_floor</text>
+  <text class="p" x="338" y="292">recall lower bound</text>
+
+  <!-- easy branch -->
+  <rect x="486" y="120" width="150" height="58" rx="12" fill="#ecfdf5" stroke="#86efac"/>
+  <rect x="486" y="120" width="6" height="58" rx="3" fill="#16a34a"/>
+  <text class="h" x="502" y="142">Confident (easy)</text>
+  <text class="p" x="502" y="160">~67% samples</text>
+  <rect x="700" y="120" width="170" height="58" rx="12" fill="#dcfce7" stroke="#86efac"/>
+  <text class="h" x="714" y="146">Direct Answer</text>
+  <text class="p" x="714" y="164">short-circuit, low latency</text>
+
+  <!-- hard branch: collaborative grounding -->
+  <rect x="486" y="200" width="384" height="200" rx="12" fill="#fff7ed" stroke="#fed7aa"/>
+  <rect x="486" y="200" width="6" height="200" rx="3" fill="#ea580c"/>
+  <text class="h" x="504" y="222">Uncertain (hard) -&gt; Collaborative Grounding</text>
+
+  <rect x="504" y="234" width="170" height="62" rx="10" fill="#fef3c7" stroke="#fcd34d"/>
+  <text class="h" x="514" y="254">VLM attention branch</text>
+  <text class="p" x="514" y="271">cross-modal attn map</text>
+  <text class="p" x="514" y="287">entity decomposition</text>
+
+  <rect x="504" y="306" width="170" height="62" rx="10" fill="#ffedd5" stroke="#fdba74"/>
+  <text class="h" x="514" y="326">SAM3 visual expert</text>
+  <text class="p" x="514" y="343">open-vocab segment</text>
+  <text class="p" x="514" y="359">complementary cues</text>
+
+  <rect x="692" y="234" width="160" height="62" rx="10" fill="#fff" stroke="#fdba74"/>
+  <text class="h" x="702" y="254">Two-stage</text>
+  <text class="p" x="702" y="271">detect -&gt; refine crop</text>
+  <text class="p" x="702" y="287">parallel fusion</text>
+
+  <rect x="692" y="306" width="160" height="62" rx="10" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="702" y="326">Localized Panel</text>
+  <text class="p" x="702" y="343">colored + legend</text>
+  <text class="p" x="702" y="359">fed back to VLM -&gt; Answer</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.2">
+    <path d="M164 215 L186 200" marker-end="url(#ar)"/>
+    <path d="M245 214 L245 232" marker-end="url(#ar)"/>
+    <path d="M304 250 L326 245" marker-end="url(#ar)"/>
+  </g>
+  <path d="M458 200 C 472 160, 478 150, 486 149" fill="none" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arG)"/>
+  <path d="M636 149 L700 149" fill="none" stroke="#16a34a" stroke-width="2.4" marker-end="url(#arG)"/>
+  <path d="M458 270 C 472 290, 478 298, 486 300" fill="none" stroke="#ea580c" stroke-width="2.4" marker-end="url(#arR)"/>
+  <g fill="none" stroke="#fb923c" stroke-width="2.2">
+    <path d="M674 265 L692 265" marker-end="url(#arR)"/>
+    <path d="M772 296 L772 306" marker-end="url(#arR)"/>
+    <path d="M589 296 L589 306" marker-end="url(#arR)"/>
+  </g>
+</svg>

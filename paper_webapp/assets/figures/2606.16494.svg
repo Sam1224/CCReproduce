@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#fff1f2"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#9f1239}
+      .lab{font:700 11px ui-sans-serif,system-ui;fill:#fff}
+      .ax{font:600 10px ui-sans-serif,system-ui;fill:#64748b}
+    </style>
+  </defs>
+
+  <rect width="900" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">Lost at the End</text>
+  <text class="s" x="40" y="64">Primacy bias in multimodal retrieval-augmented QA: gold-at-first &#187; gold-at-last</text>
+
+  <!-- query + image -->
+  <rect x="24" y="110" width="150" height="120" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="h" x="36" y="132">KB-VQA query</text>
+  <rect x="36" y="142" width="58" height="46" rx="6" fill="#dbeafe" stroke="#bfdbfe"/>
+  <circle cx="54" cy="166" r="9" fill="#60a5fa"/>
+  <text class="p" x="100" y="160">+ image</text>
+  <text class="p" x="36" y="208">question Q</text>
+  <text class="p" x="36" y="222">retrieved passages</text>
+
+  <!-- retrieved list with gold slot variations -->
+  <rect x="196" y="96" width="240" height="320" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="208" y="118">Retrieved context (k passages)</text>
+  <text class="p" x="208" y="136">vary only the gold slot</text>
+
+  <!-- variant first -->
+  <text class="m" x="208" y="160">gold @ FIRST</text>
+  <rect x="208" y="166" width="216" height="16" rx="4" fill="#22c55e"/><text class="lab" x="214" y="178">gold passage</text>
+  <rect x="208" y="184" width="216" height="11" rx="3" fill="#e2e8f0"/>
+  <rect x="208" y="197" width="216" height="11" rx="3" fill="#e2e8f0"/>
+
+  <!-- variant middle -->
+  <text class="m" x="208" y="232">gold @ MIDDLE</text>
+  <rect x="208" y="238" width="216" height="11" rx="3" fill="#e2e8f0"/>
+  <rect x="208" y="251" width="216" height="16" rx="4" fill="#86efac"/><text class="lab" x="214" y="263" fill="#166534">gold passage</text>
+  <rect x="208" y="269" width="216" height="11" rx="3" fill="#e2e8f0"/>
+
+  <!-- variant last -->
+  <text class="m" x="208" y="306">gold @ LAST</text>
+  <rect x="208" y="312" width="216" height="11" rx="3" fill="#e2e8f0"/>
+  <rect x="208" y="325" width="216" height="11" rx="3" fill="#e2e8f0"/>
+  <rect x="208" y="338" width="216" height="16" rx="4" fill="#fca5a5"/><text class="lab" x="214" y="350" fill="#7f1d1d">gold passage</text>
+  <text class="m" x="208" y="382" fill="#9f1239">image + text in slot 0 dominate</text>
+
+  <!-- VLM reader -->
+  <rect x="458" y="170" width="120" height="120" rx="12" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="470" y="194">VLM reader</text>
+  <text class="p" x="470" y="214">7B / 8B</text>
+  <text class="p" x="470" y="232">instruction-tuned</text>
+  <text class="m" x="470" y="258">reads prompt</text>
+  <text class="p" x="470" y="276">-&gt; answer</text>
+
+  <!-- accuracy bar chart -->
+  <rect x="600" y="100" width="278" height="320" rx="12" fill="#fff" stroke="#e2e8f0"/>
+  <text class="h" x="614" y="124">Accuracy by gold position</text>
+  <!-- axis -->
+  <line x1="640" y1="370" x2="860" y2="370" stroke="#cbd5e1" stroke-width="2"/>
+  <line x1="640" y1="150" x2="640" y2="370" stroke="#cbd5e1" stroke-width="2"/>
+  <!-- bars -->
+  <rect x="668" y="170" width="48" height="200" rx="4" fill="#22c55e"/>
+  <rect x="736" y="230" width="48" height="140" rx="4" fill="#86efac"/>
+  <rect x="804" y="290" width="48" height="80" rx="4" fill="#f87171"/>
+  <text class="lab" x="676" y="190" fill="#fff">high</text>
+  <text class="ax" x="676" y="388">first</text>
+  <text class="ax" x="740" y="388">middle</text>
+  <text class="ax" x="810" y="388">last</text>
+  <text class="m" x="614" y="410">gap 16-26 pts (primacy, U-shape flipped)</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.3">
+    <path d="M174 170 L196 200" marker-end="url(#ar)"/>
+    <path d="M436 230 L458 230" marker-end="url(#ar)"/>
+    <path d="M578 230 L600 230" marker-end="url(#ar)"/>
+  </g>
+</svg>

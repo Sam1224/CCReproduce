@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480" viewBox="0 0 900 480">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#ecfeff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <marker id="arP" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#9333ea"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#0369a1}
+      .badge{font:700 12px ui-sans-serif,system-ui;fill:#fff}
+      .zone{font:700 11px ui-sans-serif,system-ui;fill:#94a3b8}
+    </style>
+  </defs>
+
+  <rect width="900" height="480" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">VisualClaw</text>
+  <text class="s" x="40" y="64">Real-time, self-evolving multimodal agent for the physical world</text>
+
+  <!-- API cost badge -->
+  <rect x="700" y="30" width="160" height="34" rx="17" fill="#16a34a"/>
+  <text class="badge" x="722" y="52">API cost  -98%</text>
+
+  <!-- zone labels -->
+  <text class="zone" x="34" y="98">EDGE  (CPU, on-device)</text>
+  <rect x="24" y="104" width="470" height="250" rx="14" fill="#f1f5f9" stroke="#e2e8f0" stroke-dasharray="5 4"/>
+  <text class="zone" x="520" y="98">CLOUD  (frozen VLM)</text>
+  <rect x="510" y="104" width="366" height="250" rx="14" fill="#faf5ff" stroke="#e9d5ff" stroke-dasharray="5 4"/>
+
+  <!-- streaming frames -->
+  <rect x="38" y="120" width="92" height="150" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text class="h" x="48" y="140">Video stream</text>
+  <rect x="48" y="150" width="72" height="26" rx="4" fill="#bae6fd"/>
+  <rect x="48" y="182" width="72" height="26" rx="4" fill="#7dd3fc"/>
+  <rect x="48" y="214" width="72" height="26" rx="4" fill="#bae6fd"/>
+  <text class="p" x="48" y="262">per-frame</text>
+
+  <!-- cascade gate -->
+  <rect x="146" y="120" width="150" height="150" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text class="h" x="158" y="140">Cascade gate</text>
+  <text class="m" x="158" y="160">perceptual hash</text>
+  <text class="m" x="158" y="178">128-d encoder</text>
+  <text class="m" x="158" y="196">change gate</text>
+  <rect x="158" y="206" width="58" height="20" rx="10" fill="#16a34a"/><text class="badge" x="166" y="220">MAJOR</text>
+  <rect x="222" y="206" width="58" height="20" rx="10" fill="#f59e0b"/><text class="badge" x="232" y="220">MINOR</text>
+  <rect x="158" y="232" width="50" height="20" rx="10" fill="#94a3b8"/><text class="badge" x="168" y="246">SKIP</text>
+  <text class="p" x="216" y="246">no LLM in loop</text>
+
+  <!-- keyframes -->
+  <rect x="312" y="150" width="166" height="90" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text class="h" x="324" y="172">Keyframes only</text>
+  <rect x="324" y="182" width="40" height="30" rx="4" fill="#38bdf8"/>
+  <rect x="370" y="182" width="40" height="30" rx="4" fill="#38bdf8"/>
+  <text class="p" x="324" y="230">salient frames -&gt; cloud</text>
+
+  <!-- skill injector + memory -->
+  <rect x="524" y="120" width="160" height="74" rx="10" fill="#f3e8ff" stroke="#d8b4fe"/>
+  <text class="h" x="534" y="140">Skill injector</text>
+  <text class="p" x="534" y="158">hot/cold top-k inject</text>
+  <text class="p" x="534" y="174">compress prompt</text>
+
+  <rect x="524" y="204" width="160" height="68" rx="10" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text class="h" x="534" y="224">Memory retrieval</text>
+  <text class="p" x="534" y="242">solved cases bank</text>
+  <text class="p" x="534" y="258">grounding context</text>
+
+  <!-- frozen VLM -->
+  <rect x="700" y="120" width="160" height="152" rx="10" fill="#fae8ff" stroke="#e879f9"/>
+  <text class="h" x="712" y="142">Cloud VLM</text>
+  <text class="p" x="712" y="160">(frozen, API only)</text>
+  <text class="badge" x="712" y="186" fill="#9333ea" font-size="11">&#10052; no retrain</text>
+  <rect x="712" y="196" width="136" height="62" rx="8" fill="#fff" stroke="#e9d5ff"/>
+  <text class="h" x="722" y="216" fill="#7e22ce">Answer / Action</text>
+  <text class="p" x="722" y="234">grounded response</text>
+  <text class="p" x="722" y="250">+ executable check</text>
+
+  <!-- self-evolution loop -->
+  <rect x="180" y="384" width="540" height="74" rx="12" fill="#fffbeb" stroke="#fde68a"/>
+  <text class="h" x="196" y="406">Self-evolution loop</text>
+  <text class="p" x="196" y="424">repeated failures -&gt; offline LLM evolver</text>
+  <text class="p" x="196" y="441">updates skill bank · per-skill utility tracking + pruning</text>
+  <rect x="470" y="396" width="232" height="50" rx="8" fill="#fef9c3" stroke="#fcd34d"/>
+  <text class="p" x="484" y="416">Offline LLM</text>
+  <text class="h" x="484" y="434">Skill Evolver</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.2">
+    <path d="M130 195 L146 195" marker-end="url(#ar)"/>
+    <path d="M296 195 L312 195" marker-end="url(#ar)"/>
+  </g>
+  <g fill="none" stroke="#9333ea" stroke-width="2.4">
+    <path d="M478 195 L524 175" marker-end="url(#arP)"/>
+    <path d="M478 200 L524 230" marker-end="url(#arP)"/>
+    <path d="M684 157 L700 165" marker-end="url(#arP)"/>
+    <path d="M684 238 L700 220" marker-end="url(#arP)"/>
+  </g>
+  <!-- evolution feedback -->
+  <g fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="6 4">
+    <path d="M770 272 C 790 330, 790 400, 702 418" marker-end="url(#ar)"/>
+    <path d="M470 420 C 360 420, 300 400, 280 272" marker-end="url(#ar)"/>
+  </g>
+  <text class="p" x="740" y="320" fill="#b45309">failures</text>
+  <text class="p" x="300" y="350" fill="#b45309">update skills</text>
+</svg>

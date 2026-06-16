@@ -1,0 +1,33 @@
+{
+  "name": "AimeCard",
+  "dsl": {
+    "schema": "2.0",
+    "header": {
+      "title": {"tag": "plain_text", "content": "Paper巡检 | 2026-06-16 | 电商内容生态&达人治理"},
+      "template": "blue"
+    },
+    "body": {
+      "elements": [
+        {"tag": "markdown", "content": "本次共收录 **8 篇**（强相关/弱相关）。下方为 **评分≥40** 的中文摘要（每篇一个区块），按分数降序。评分≥80 的 **LazyMCoT** 已完成代码复现并入库。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **LazyMCoT**（82分 · 已复现 ✅）\n👥 作者：Yifan Wang 等（Tencent BAC / Tsinghua / PKU）\n🔗 链接：https://arxiv.org/abs/2606.16158\n📝 方法概述：免训练视觉定位‘按需聚焦’——用首 token 零成本统计(topp/Δlogit)训 GBDT 路由 + 共形阈值校准，简单样本直答、难样本走‘VLM 注意力 + SAM3 视觉专家’两阶段协同定位再回灌 VLM。\n💡 创新性分析：论证无差别定位之害，路由对难样本给可控召回下界、部署期零额外参数，注意力与视觉专家互补。\n📊 关键指标：~67% 样本一遍即对；一致超免训练法并匹配/超训练型法，精度提升且端到端时延下降。\n🧪 复现：CCReproduce/2026-06-16/LazyMCoT（Direct 0.671 → LazyMCoT 0.986）。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **VisualClaw**（81分）\n👥 作者：Haoqin Tu 等（UCSC / UNC / Google / UC Berkeley）\n🔗 链接：https://arxiv.org/abs/2606.16295\n📝 方法概述：自进化多模态 Agent——边缘 CPU 级联帧门控(MAJOR/MINOR/SKIP)只上关键帧 + hot/cold 技能注入 + 记忆驱动技能进化，VLM 冻结；并建 200 场景 agentic benchmark。\n💡 创新性分析：唯一边缘 CPU 逐帧在线、选帧不放 LLM；冻结权重下自进化 + 效用治理。\n📊 关键指标：API 成本平均 −98%（峰值 −99.3%）；EgoSchema +3.85%（峰值 +15.80%）。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **ContextRL**（77分）\n👥 作者：Peiyang Xu 等（Princeton / UC Davis）\n🔗 链接：https://arxiv.org/abs/2606.17053\n📝 方法概述：在 GRPO 上加‘上下文选择’辅助损失——给 (Q,A) 与相似正/负上下文，训模型选支撑答案的上下文(logit margin)，modality-agnostic。\n💡 创新性分析：对比探针量化 context unawareness；对照证明增益来自目标而非数据。\n📊 关键指标：agentic +3.2%/+1.5%；12 个 VQA 上 +2.0%/+1.6%。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **MACCO**（76分）\n👥 作者：Wei Li, Zhen Huang, Xinmei Tian（USTC）\n🔗 链接：https://arxiv.org/abs/2606.13288\n📝 方法概述：跨模态遮蔽组合概念建模——在一模态遮蔽组合概念、以另一模态完整上下文重建 + inter/intra 对齐正则，修复 CLIP‘词袋’问题。\n💡 创新性分析：直击属性-对象绑定/词序短板，组合性提升并惠及 T2I 与 MLLM。\n📊 关键指标：5 个组合性基准显著提升，句法/语言信息捕捉改善。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **AGAR**（73分）\n👥 作者：Shenglai Zeng 等（Michigan State Univ.）\n🔗 链接：https://arxiv.org/abs/2606.12898\n📝 方法概述：视觉文本理解——发现 VLM‘定位有余、利用不足’，用自身中后层注意力定位关键词跨度并放大重渲染再推理（免训练、模型无关）。\n💡 创新性分析：揭示 localization-without-utilization 机制并转为即插即用增强。\n📊 关键指标：9 个 VTC 基准 × 4 个 VLM 一致提升，可与后训练叠加。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **SGFF-Net**（67分）\n👥 作者：Amna Amjid 等（NUST / Mid Sweden / Lulea）\n🔗 链接：https://arxiv.org/abs/2606.14230\n📝 方法概述：可泛化 deepfake 检测——空间+梯度+DWT 小波频率三域在双残差网融合，学跨生成器不变取证表征 + 多源训练/增强。\n💡 创新性分析：与内容治理/违规检测相关；强调数据多样性对泛化与特征融合同等重要。\n📊 关键指标：intra 98.95%；cross-model 79.80%、cross-paradigm 78.12%、真实世界 75.80%。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **Lost at the End**（62分）\n👥 作者：Jieyuan Liu 等（Ohio State Univ.）\n🔗 链接：https://arxiv.org/abs/2606.16494\n📝 方法概述：多模态 KB-VQA 读端位置依赖受控探针——文本 U 型在多模态翻转为 primacy，gold 放最前显著优于最后(‘Lost at the End’)。\n💡 创新性分析：定位到 reader slot 0；指出 recall@k 是错误部署指标，需读端干预。\n📊 关键指标：gold-first 比 gold-last 高 16–26 分；多模态放大文本 primacy 2.2–4.5×。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "📄 **Data2Story**（61分）\n👥 作者：Kevin Qinghong Lin 等（NUS / Oxford / Stanford）\n🔗 链接：https://arxiv.org/abs/2606.11176\n📝 方法概述：数据新闻多智能体‘虚拟编辑部’——Inspector 把每个数字/角度/素材回链证据，按读者意图多模态生成(交互地图/音频/图表)。\n💡 创新性分析：证据可溯 + 意图驱动多模态生成；四维评测含重执行校验。\n📊 关键指标：18 篇文章评测，透明度/可审计性突出。"},
+        {"tag": "hr"},
+        {"tag": "markdown", "content": "🔎 **可视化页面（中英文切换 / 分数滑条 / 按日期查询 / 方法图 & 亮眼实验 / 复现代码链接）**：https://b9a12b5e7bbe.aime-app.bytedance.net\n💻 复现代码仓库：https://github.com/Sam1224/CCReproduce/tree/main/2026-06-16"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#f0fdf4"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#16a34a"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#4338ca}
+      .lab{font:700 11px ui-sans-serif,system-ui;fill:#fff}
+    </style>
+  </defs>
+
+  <rect width="900" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">ContextRL</text>
+  <text class="s" x="40" y="64">Context-aware RL: reward picking the context that supports the answer (modality-agnostic)</text>
+
+  <!-- Q,A -->
+  <rect x="24" y="170" width="120" height="120" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="h" x="36" y="194">(Q, A) pair</text>
+  <text class="p" x="36" y="216">question Q</text>
+  <text class="p" x="36" y="234">answer A</text>
+  <text class="p" x="36" y="262">two similar</text>
+  <text class="p" x="36" y="278">contexts</text>
+
+  <!-- C+ -->
+  <rect x="170" y="120" width="190" height="92" rx="12" fill="#ecfdf5" stroke="#86efac"/>
+  <rect x="170" y="120" width="6" height="92" rx="3" fill="#16a34a"/>
+  <text class="h" x="186" y="142">C+  supporting context</text>
+  <text class="p" x="186" y="162">contains evidence for A</text>
+  <text class="p" x="186" y="180">agent traj. / image (positive)</text>
+  <text class="m" x="186" y="200">label: choose this</text>
+
+  <!-- C- -->
+  <rect x="170" y="248" width="190" height="92" rx="12" fill="#fef2f2" stroke="#fecaca"/>
+  <rect x="170" y="248" width="6" height="92" rx="3" fill="#ef4444"/>
+  <text class="h" x="186" y="270">C-  confounder</text>
+  <text class="p" x="186" y="290">minimally perturbed</text>
+  <text class="p" x="186" y="308">supports a different answer</text>
+  <text class="m" x="186" y="328" fill="#b91c1c">label: reject</text>
+
+  <!-- model picks -->
+  <rect x="388" y="180" width="150" height="100" rx="12" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="400" y="204">Model selects</text>
+  <text class="p" x="400" y="224">teacher-forced</text>
+  <text class="p" x="400" y="242">option tokens</text>
+  <text class="m" x="400" y="266">logit margin &#916;</text>
+
+  <!-- loss -->
+  <rect x="562" y="180" width="160" height="100" rx="12" fill="#ecfeff" stroke="#a5f3fc"/>
+  <text class="h" x="574" y="204">Context-awareness</text>
+  <text class="h" x="574" y="220">loss</text>
+  <text class="m" x="574" y="244">-log&#963;(clip(&#916;,-c,c))</text>
+  <text class="p" x="574" y="266">pull C+ &gt; C-</text>
+
+  <!-- GRPO -->
+  <rect x="746" y="155" width="124" height="150" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="h" x="758" y="178">GRPO</text>
+  <text class="p" x="758" y="198">outcome reward</text>
+  <text class="p" x="758" y="216">+ aux context loss</text>
+  <rect x="758" y="226" width="100" height="64" rx="8" fill="#e0e7ff" stroke="#a5b4fc"/>
+  <text class="p" x="768" y="246">policy update</text>
+  <text class="p" x="768" y="264">no arch change</text>
+  <text class="p" x="768" y="282">+1 to +3%</text>
+
+  <!-- two domains strip -->
+  <rect x="388" y="318" width="334" height="118" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="400" y="340">Two domains</text>
+  <rect x="400" y="350" width="150" height="72" rx="8" fill="#fef9c3" stroke="#fde68a"/>
+  <text class="h" x="410" y="370" font-size="11">Agentic</text>
+  <text class="p" x="410" y="388">SWE-smith trajectories</text>
+  <text class="p" x="410" y="404">1k contrastive pairs</text>
+  <rect x="562" y="350" width="148" height="72" rx="8" fill="#dbeafe" stroke="#bfdbfe"/>
+  <text class="h" x="572" y="370" font-size="11">Multimodal</text>
+  <text class="p" x="572" y="388">edited + retrieved imgs</text>
+  <text class="p" x="572" y="404">7k pairs (cos &#8805; 0.85)</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#16a34a" stroke-width="2.3">
+    <path d="M144 200 L170 175" marker-end="url(#arG)"/>
+  </g>
+  <g fill="none" stroke="#ef4444" stroke-width="2.3">
+    <path d="M144 262 L170 288" marker-end="url(#ar)"/>
+  </g>
+  <g fill="none" stroke="#94a3b8" stroke-width="2.3">
+    <path d="M360 166 C 374 200, 380 215, 388 218" marker-end="url(#ar)"/>
+    <path d="M360 294 C 374 260, 380 245, 388 244" marker-end="url(#ar)"/>
+    <path d="M538 230 L562 230" marker-end="url(#ar)"/>
+    <path d="M722 230 L746 230" marker-end="url(#ar)"/>
+    <path d="M555 386 L562 386" marker-end="url(#ar)"/>
+  </g>
+  <path d="M463 318 L463 280" fill="none" stroke="#94a3b8" stroke-width="2.3" marker-end="url(#ar)"/>
+</svg>

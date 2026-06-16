@@ -1,0 +1,316 @@
+[
+  {
+    "id": "2606.16158",
+    "title": "Focus When Necessary: Adaptive Routing and Collaborative Grounding for Training-Free Visual Grounding",
+    "authors": ["Yifan Wang", "Peiming Li", "Shiyu Li", "Zhiyuan Hu", "Xiaochen Yang", "Wenming Yang", "Yang Tang", "Zheng Wei"],
+    "affiliations": ["Tencent BAC", "Tsinghua University (SIGS)", "Peking University", "University of Glasgow"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.16158",
+      "pdf": "https://arxiv.org/pdf/2606.16158v1",
+      "code": "https://github.com/TencentBAC/LazyMCoT"
+    },
+    "tags": ["内容理解", "MLLM/VLM", "视觉定位", "训练免训", "高效推理"],
+    "score": {
+      "innovation": 25,
+      "results": 12,
+      "exp_quality": 13,
+      "efficiency": 9,
+      "generalization": 5,
+      "relevance": 18,
+      "total": 82,
+      "rationale_zh": "强内容理解相关（细粒度商品/图文理解可直接复用）。创新点扎实：用首 token 零成本统计 + GBDT 路由 + 共形校准给出难样本召回下界，再用注意力分支与视觉专家(SAM3)协同两阶段定位；既提精度又降时延。扣分在于绝对 SOTA 增幅中等、依赖外部视觉专家。官方仓库当前仅含 LICENSE，故本次复现。"
+    },
+    "reproduce": {
+      "status": "reproduced",
+      "path": "2026-06-16/LazyMCoT"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "LazyMCoT 是一个免训练的视觉定位框架，核心思想是‘按需聚焦’：对简单样本直接回答、只对困难样本做密集视觉定位。它从单次前向的首答案 token 抽取两个零成本统计量（option top probability 与 option-vs-non-option logit gap），用 GBDT 训练一个轻量路由器并以共形预测（conformal prediction）校准阈值，从而对‘需定位的难样本’提供可控召回下界。被判定为难的样本进入 Collaborative Grounding：把问题分解为实体集，并行运行 VLM 跨模态注意力分支与外部视觉专家(SAM3)分支，经两阶段检测+精修得到带颜色/图例的 Localized Panel Display，再回灌 VLM 推理。",
+        "story": "现有免训练视觉定位方法对所有样本无差别地做缩放/裁剪：既浪费算力（~67% 样本 VLM 一遍即可答对），又会截断全局上下文、引入背景噪声反而把本可答对的简单样本带错。→ 需要一个‘是否值得做定位’的判别器：用首 token 不确定性做近零成本预测；→ 再为真正困难的样本设计‘注意力+视觉专家’协同定位，精确抠出关键证据。",
+        "innovation": "1）首次系统论证无差别视觉定位的危害，并用首 token 统计量作为难度信号；2）GBDT 路由 + 共形阈值校准，对难样本召回给出可控下界，且部署期零额外可学习参数；3）Collaborative Grounding 把 VLM 注意力与视觉专家(SAM3)互补耦合，两阶段并行检测+裁剪精修；4）即插即用，可配任意 VLM，同时提升精度并降低平均时延。",
+        "key_metrics": "在 V* Bench、HR-Bench 4K/8K、TreeBench 上以开源 VLM（如 Qwen2.5-VL-7B）为骨干：统计分析显示平均 67.17% 样本无需额外定位即可答对；LazyMCoT 一致超过现有免训练方法，并匹配甚至超过近期训练型定位方法，在细粒度定位任务获显著精度提升，同时通过短路简单样本显著降低端到端平均推理时延。"
+      },
+      "en": {
+        "method_overview": "LazyMCoT is a training-free visual grounding framework that allocates effort by sample difficulty. From a single forward pass it extracts two zero-cost first-token statistics (option top probability and option-vs-non-option logit gap), trains a lightweight GBDT router, and calibrates its threshold via conformal prediction to guarantee a controllable recall lower bound on hard samples. Easy samples are answered directly; hard ones enter Collaborative Grounding, which decomposes the question into entities, runs the VLM cross-modal attention branch in parallel with an external visual expert (SAM3), and after a two-stage detect-and-refine step renders a Localized Panel Display fed back to the VLM.",
+        "innovation": "Selective grounding via near-zero-cost first-token uncertainty + conformal-calibrated GBDT routing (controllable hard-sample recall, no extra deployable parameters), plus a Collaborative Grounding module that couples VLM attention with a visual expert for precise evidence extraction. Plug-and-play with any VLM, improving accuracy while reducing latency.",
+        "key_metrics": "On V* Bench, HR-Bench 4K/8K and TreeBench with open VLMs (e.g., Qwen2.5-VL-7B): ~67.17% of samples are solved correctly without extra grounding; LazyMCoT consistently beats training-free methods and matches/exceeds recent training-based grounding, with large gains on fine-grained localization and lower average end-to-end latency."
+      }
+    }
+  },
+  {
+    "id": "2606.16295",
+    "title": "VisualClaw: A Real-Time, Personalized Agent for the Physical World",
+    "authors": ["Haoqin Tu", "Jianwen Chen", "Zijun Wang", "Siwei Han", "Juncheng Wu", "Hardy Chen", "Haonian Ji", "Kaiwen Xiong", "Jiaqi Liu", "Peng Xia", "Jieru Mei", "Hongliang Fei", "Jason Eshraghian", "Zeyu Zheng", "Yuyin Zhou", "Huaxiu Yao", "Cihang Xie"],
+    "affiliations": ["UC Santa Cruz", "UNC-Chapel Hill", "Google", "UC Berkeley"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.16295",
+      "pdf": "https://arxiv.org/pdf/2606.16295v1",
+      "code": "https://github.com/ucsc-vlaa/VisualClaw",
+      "project": "https://ucsc-vlaa.github.io/VisualClaw"
+    },
+    "tags": ["Agent", "MLLM/VLM", "高效推理", "记忆/技能进化", "视频理解"],
+    "score": {
+      "innovation": 24,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 10,
+      "generalization": 5,
+      "relevance": 16,
+      "total": 81,
+      "rationale_zh": "自进化多模态 Agent，效率与系统设计均强（边缘 CPU 级联帧门控 + 冻结 VLM + 技能/记忆进化），并自建 200 场景 agentic benchmark。与电商内容治理为可迁移相关（流式理解、低成本巡检 Agent）。官方仓库已有完整实现（221 文件），故不复现，仅给出链接。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "VisualClaw 是面向真实/可穿戴场景的自进化多模态 Agent，围绕两点设计：1）混合编码降本——边缘侧用‘感知哈希 + 128 维 CPU 编码器 + 自适应变化门’的级联门控逐帧判 MAJOR/MINOR/SKIP，只把关键帧上云；技能库用 hot/cold top-k 注入压缩 prompt。2）技能与记忆自进化——答对样本入记忆库，多次失败触发离线 LLM evolver，结合记忆与失败轨迹更新技能库，并用 per-skill 效用追踪与剪枝保持库的精简。VLM 权重始终冻结（仅 API 调用）。同时提出 VisualClawArena（200 场景、需在工作区内用视频证据+文档+可执行检查）填补 agentic 评测空白。",
+        "story": "VLM 直接处理密集视频帧+长 prompt 成本高、agent 脚手架部署后僵化、且标准 video-QA 不测‘能否在工具工作区里用视觉证据’。→ 用边缘级联帧门控削视觉成本；→ 用 hot/cold 技能注入削 prompt 成本；→ 用记忆驱动的技能进化让 agent 从失败中持续变强；→ 自建 arena 评测真实 agentic 能力。",
+        "innovation": "1）唯一在边缘 CPU 上逐帧在线、且不在选帧回路里放 LLM 的级联门控；2）冻结权重下的技能/记忆自进化 + per-skill 效用治理，免重训提升 frontier VLM；3）多模态 agentic benchmark VisualClawArena（平均 24.4 步 / 18.1 视觉必需步）。",
+        "key_metrics": "4 个 video-QA × 2 个 VLM（Gemini 3 Flash / GPT-5.2）：相比全帧上传单题 API 成本平均 −98%（Video-MME 峰值 −99.3%），相比离线 Uniform-8 再降 −25.9%；精度多数提升，EgoSchema 上 Gemini 3 Flash 平均 +3.85%、峰值 +15.80%。VisualClawArena（200 场景）：Codex(GPT-5.5) 宏精度 +2.9、Claude Code(Sonnet 4.6) +3.2，难场景增益更大。"
+      },
+      "en": {
+        "method_overview": "VisualClaw is a self-evolving multimodal agent for real/wearable settings. (i) Hybrid encoding: an on-device cascade (perceptual hash + 128-d CPU encoder + adaptive change gate) emits MAJOR/MINOR/SKIP per frame, sending only salient keyframes to the cloud VLM; a hot/cold top-k skill injector compresses the prompt. (ii) Self-evolving skills/memory: solved cases enter memory, repeated failures trigger an offline LLM evolver that updates the skill bank, with per-skill utility tracking and pruning. VLM weights stay frozen (API calls). It also introduces VisualClawArena, a 200-scenario agentic benchmark requiring visual evidence + documents + executable checks.",
+        "innovation": "The only edge-CPU, per-frame online frame gate with no LLM in the selection loop, combined with frozen-weight skill/memory self-evolution and per-skill utility governance; plus a new multimodal agentic benchmark.",
+        "key_metrics": "Across 4 video-QA benchmarks and 2 VLMs (Gemini 3 Flash / GPT-5.2): per-question API cost −98% avg vs full-frame (peak −99.3% on Video-MME), −25.9% vs offline Uniform-8; accuracy up in most settings (+3.85% avg, +15.80% peak on EgoSchema). On VisualClawArena (200 scenarios): +2.9 macro for Codex (GPT-5.5), +3.2 for Claude Code (Sonnet 4.6)."
+      }
+    }
+  },
+  {
+    "id": "2606.17053",
+    "title": "Context-Aware RL for Agentic and Multimodal LLMs",
+    "authors": ["Peiyang Xu", "Bangzheng Li", "Sijia Liu", "Karthik R. Narasimhan", "Pramod Viswanath", "Prateek Mittal", "Xingyu Fu"],
+    "affiliations": ["Princeton University", "UC Davis"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.17053",
+      "pdf": "https://arxiv.org/pdf/2606.17053v1",
+      "code": "https://github.com/xupy2003/ContextAwareRL",
+      "project": "https://xupy2003.github.io/ContextRL_Website/"
+    },
+    "tags": ["Agent", "LLM/MLLM", "强化学习", "上下文对齐", "蒸馏/数据"],
+    "score": {
+      "innovation": 26,
+      "results": 9,
+      "exp_quality": 14,
+      "efficiency": 5,
+      "generalization": 5,
+      "relevance": 18,
+      "total": 77,
+      "rationale_zh": "创新性与方法论扎实：把‘上下文选择’作为 GRPO 的辅助目标，证明收益来自目标而非数据本身（对照数据增强基线甚至崩溃）。对电商 Agent/RAG 的‘证据对齐’有迁移价值。扣分在于绝对增益偏小（+1~3%）、纯训练侧成本。已开源完整代码，故不复现。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "ContextRL 针对‘context unawareness’（证据在上下文里却没被模型用上）问题，在标准 GRPO 之外加一个上下文感知辅助损失：给定 (问题 Q, 答案 A) 和两个高度相似的上下文（支持 A 的正例 C+ 与被微扰但支持别的答案的混淆负例 C-），用 teacher-forcing 计算两个选项 token 的 logit margin，并以 -log σ(clip(Δ,-c,c)) 训练模型选出 C+。数据上：agentic 用 SWE-smith 轨迹经多级过滤挖出 1k 对比轨迹；多模态用生成式编辑(Nano Banana 2)+相似检索(Qwen3-VL-Embedding，cos≥0.85)构造 7k 对比图像对。该损失 modality-agnostic。",
+        "story": "强基准分数会掩盖‘上下文不对齐’：开源 VLM/LLM 在对比上下文选择探针上接近随机，而闭源模型可靠。→ 与其只奖励最终答案，不如显式奖励‘选出支撑答案的上下文’，把‘产出什么答案’与‘哪段上下文支撑它’解耦，从而提升细粒度证据 grounding。",
+        "innovation": "1）提出对比上下文选择探针量化 context unawareness；2）将其转化为可叠加到 GRPO 的 logit 级对比辅助目标，modality-agnostic、无需架构改动/大规模人工标注；3）对照实验证明增益来自目标本身而非数据（SFT/outcome-RL 复用同数据几乎无效甚至崩溃）。",
+        "key_metrics": "agentic：相比 GRPO 平均 +3.2%（Klear-AgentForge-8B）/ +1.5%（Qwen3-8B），覆盖 5 个长程基准；多模态：12 个 VQA 基准上相比 GRPO +2.0%（Qwen2.5-VL-7B）/ +1.6%（Qwen3-VL-8B）。数据增强基线（同数据走 SFT/outcome-RL）几乎无增益甚至将长程 resolve rate 拉到 0%。"
+      },
+      "en": {
+        "method_overview": "ContextRL adds a context-awareness auxiliary loss on top of GRPO: given (Q, A) and two highly similar contexts (a supporting C+ and a minimally perturbed confounder C-), it computes the logit margin between the two option tokens via teacher forcing and optimizes -log σ(clip(Δ,-c,c)) to select C+. Agentic data: 1k contrastive trajectory pairs mined from SWE-smith via cascaded filters; multimodal: 7k contrastive image pairs via generative editing + similarity retrieval (cos≥0.85). The loss is modality-agnostic.",
+        "innovation": "A contrastive context-selection probe quantifies context unawareness; turning it into a logit-level auxiliary RL objective decouples 'what answer' from 'which context supports it'. Ablations show gains come from the objective, not the data (SFT/outcome-RL on the same data add little or collapse).",
+        "key_metrics": "Agentic: +3.2% (Klear-AgentForge-8B) / +1.5% (Qwen3-8B) avg over GRPO on 5 long-horizon benchmarks. Multimodal: +2.0% (Qwen2.5-VL-7B) / +1.6% (Qwen3-VL-8B) over GRPO across 12 VQA benchmarks."
+      }
+    }
+  },
+  {
+    "id": "2606.13288",
+    "title": "Cross-Modal Masked Compositional Concept Modeling for Enhancing Visio-Linguistic Compositionality",
+    "authors": ["Wei Li", "Zhen Huang", "Xinmei Tian"],
+    "affiliations": ["University of Science and Technology of China"],
+    "source": "arXiv",
+    "published": "2026-06-11",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.13288",
+      "pdf": "https://arxiv.org/pdf/2606.13288v1",
+      "code": "https://github.com/hiker-lw/MACCO"
+    },
+    "tags": ["内容理解", "向量化表征", "VLM/CLIP", "组合性", "Caption"],
+    "score": {
+      "innovation": 24,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 6,
+      "generalization": 5,
+      "relevance": 18,
+      "total": 76,
+      "rationale_zh": "与电商图文表征/属性-对象绑定强相关（CLIP 类‘词袋’问题正是商品理解痛点）。方法新颖（跨模态遮蔽重建组合概念 + 双向对齐正则），并惠及 T2I 与 MLLM。扣分在于绝对增益与效率信息一般。已开源代码，故不复现。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "MACCO（Masked Compositional Concept Modeling）针对 CLIP 类对比模型的‘词袋’行为（难捕捉对象关系、属性-对象绑定与词序）。它在一个模态里遮蔽组合概念，并以另一模态的完整上下文为条件去重建被遮蔽内容，从而更有效地捕捉并对齐跨模态组合结构；同时引入两个辅助目标在 inter-modal 与 intra-modal 两个层面对齐/正则化被遮蔽特征。",
+        "story": "对比训练用全局单向量优化，且未充分利用图文对里天然的组合信息，导致模型像‘词袋’。→ 通过跨模态遮蔽-重建迫使模型显式建模组合概念，再用双向对齐正则稳住表征，从而提升组合性、句法结构与语言信息的捕捉。",
+        "innovation": "1）跨模态遮蔽组合概念重建（用一模态完整上下文恢复另一模态被遮蔽组合概念）；2）inter/intra-modal 双重对齐正则；3）改进的组合性可迁移惠及文生图与 MLLM。",
+        "key_metrics": "在 5 个组合性基准上显著提升 VLM 组合性，并改善句法结构与语言信息捕捉；额外验证对文生图与 MLLM 的下游收益（具体数值见原文表格）。"
+      },
+      "en": {
+        "method_overview": "MACCO masks compositional concepts in one modality and reconstructs them conditioned on the full context from the other modality, so the model captures and aligns cross-modal compositional structure better than global single-vector contrastive training. Two auxiliary objectives align/regularize the masked features both inter- and intra-modally.",
+        "innovation": "Cross-modal masked compositional reconstruction plus inter/intra-modal alignment regularizers tackle the CLIP 'bag-of-words' problem; the improved compositionality also benefits text-to-image generation and MLLMs.",
+        "key_metrics": "Significant compositionality gains on five benchmarks, with improved syntactic-structure and linguistic capture, and downstream benefits for T2I and MLLM (see paper tables for exact numbers)."
+      }
+    }
+  },
+  {
+    "id": "2606.12898",
+    "title": "Magnifying What Matters: Attention-Guided Adaptive Rendering for Visual Text Comprehension",
+    "authors": ["Shenglai Zeng", "Qirui Wang", "Kai Guo", "Xinnan Dai", "Xianxuan Long", "Hui Liu"],
+    "affiliations": ["Michigan State University"],
+    "source": "arXiv",
+    "published": "2026-06-11",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.12898",
+      "pdf": "https://arxiv.org/pdf/2606.12898v1"
+    },
+    "tags": ["内容理解", "VLM", "视觉文本/OCR", "训练免训", "长上下文"],
+    "score": {
+      "innovation": 22,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 16,
+      "total": 73,
+      "rationale_zh": "面向‘把文本渲染成图给 VLM 读’（长页 OCR / 多页记忆 QA），与电商商品长图/详情页文本理解相关。方法即插即用、免训练，机制分析清晰。扣分在绝对增益与跨域信息一般；未见明确开源代码。"
+    },
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "AGAR（Attention-Guided Adaptive Rendering）面向视觉文本理解（VTC，把文本渲染成图让 VLM 读，以绕开 LLM 上下文窗口）。作者发现 VLM 存在‘定位有余、利用不足’：中后层注意力能锐利定位证据，却常与答案正确性脱钩；而把定位到的文本片段在渲染页上放大就能挽回大量失败。AGAR 据此用 VLM 自身中后层注意力找 top-K 关键 patch，映射回词跨度，把这些词放大重渲染后再次推理。",
+        "story": "现有 VTC 把渲染/排版当成内容无关的固定预处理，且缺乏对 VLM 如何处理可视化文本的机制理解。→ 发现‘定位-不利用’现象 → 用模型自身注意力指导自适应放大关键文本 → 免训练、模型无关地恢复失败样本。",
+        "innovation": "1）揭示 VLM 在视觉文本上的‘localization-without-utilization’机制；2）注意力引导的自适应重渲染（放大关键词跨度）作为即插即用增强；3）可与 VLM 后训练叠加，且对视觉/文本侧输入退化稳健。",
+        "key_metrics": "在 9 个 VTC 基准（短文本、长上下文、多页记忆 QA）与 4 个 VLM 骨干上，AGAR 一致提升开箱 VLM，且与后训练可叠加获更多增益（具体数值见原文）。"
+      },
+      "en": {
+        "method_overview": "AGAR targets Visual Text Comprehension (rendering text into images for a VLM to read). It finds a 'localization-without-utilization' regime: middle-to-late layer attention sharply localizes evidence but is decoupled from correctness, while enlarging the localized spans recovers many failures. AGAR uses the VLM's own attention to pick top-K patches, maps them back to word spans, and re-renders the page with those spans enlarged before re-inferring.",
+        "innovation": "Reveals the localization-without-utilization mechanism in VLMs and turns it into a training-free, model-agnostic attention-guided adaptive rendering enhancement that also composes with post-training.",
+        "key_metrics": "Across 9 VTC benchmarks (short-form, long-context, multi-page memory QA) and 4 VLM backbones, AGAR consistently improves off-the-shelf VLMs and adds further gains when composed with post-training."
+      }
+    }
+  },
+  {
+    "id": "2606.14230",
+    "title": "A Multi-Domain Feature Fusion Framework for Generalizable Deepfake Detection Across Different Generators",
+    "authors": ["Amna Amjid", "Sana Qadir", "Mehwish Fatima", "Raja Khurram Shahzad"],
+    "affiliations": ["NUST (SEECS), Pakistan", "Mid Sweden University", "Lulea University of Technology"],
+    "source": "arXiv",
+    "published": "2026-06-12",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.14230",
+      "pdf": "https://arxiv.org/pdf/2606.14230v1"
+    },
+    "tags": ["治理", "违规检测", "Deepfake", "泛化", "多域融合"],
+    "score": {
+      "innovation": 17,
+      "results": 11,
+      "exp_quality": 12,
+      "efficiency": 5,
+      "generalization": 5,
+      "relevance": 17,
+      "total": 67,
+      "rationale_zh": "与内容治理/违规检测相关（AIGC 伪造图识别是达人/内容生态治理的现实需求），跨生成器泛化评测较系统。创新度偏工程（空间+梯度+小波频率三域融合 + 双残差），方法新颖性一般；未见开源代码。"
+    },
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "SGFF-Net（Spatial-Gradient-Frequency Fusion Network）面向可泛化的 deepfake 检测，在双残差网络(DRN)里融合空间、梯度与 DWT 小波频率三类互补的取证线索，以学习‘跨生成器’不变的伪造表征，缓解 GAN 检测器在扩散模型/真实世界图上失效的问题。并系统验证：稳健泛化不仅靠特征融合，也依赖多源训练与数据增强。",
+        "story": "多数检测器只用单一域表征、且高度依赖训练数据构成，在未见生成器/流水线上分布漂移严重（GAN 训练的检测器尤甚）。→ 跨空间/梯度/频率三域融合互补线索 → 再叠加多源训练与增强 → 显著提升跨模型/跨范式/真实世界泛化。",
+        "innovation": "1）面向泛化的多域(空间+梯度+小波频率)表征学习，统一覆盖 GAN 与扩散范式；2）双残差融合架构；3）系统性实证：数据多样性+增强对泛化的贡献与特征融合同等重要。",
+        "key_metrics": "intra-dataset 准确率 98.95%；cross-model 70.46%→79.80%、cross-paradigm 69%→78.12%、真实世界 61.50%→75.80%（多源训练+增强后），均优于基线 DRN。"
+      },
+      "en": {
+        "method_overview": "SGFF-Net fuses spatial, gradient and DWT wavelet-frequency cues inside a dual residual network to learn generator-agnostic forensic representations for deepfake detection, addressing the failure of GAN-trained detectors on diffusion/real-world images. It also shows robust generalization depends on multi-source training and augmentation, not only feature fusion.",
+        "innovation": "Generalization-oriented multi-domain (spatial+gradient+wavelet) representation in a dual-residual architecture spanning GAN and diffusion paradigms, with a systematic study of data-diversity effects.",
+        "key_metrics": "Intra-dataset accuracy 98.95%; cross-model 70.46%→79.80%, cross-paradigm 69%→78.12%, real-world 61.50%→75.80% with multi-source training + augmentation, all above the baseline DRN."
+      }
+    }
+  },
+  {
+    "id": "2606.16494",
+    "title": "Lost at the End: Primacy Bias in Multimodal Retrieval-Augmented Question Answering",
+    "authors": ["Jieyuan Liu", "Jianyang Gu", "Shijie Chen", "Jefferson Chen", "Zhen Wang"],
+    "affiliations": ["The Ohio State University"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.16494",
+      "pdf": "https://arxiv.org/pdf/2606.16494v1"
+    },
+    "tags": ["RAG", "多模态", "VLM", "位置偏置", "分析型"],
+    "score": {
+      "innovation": 18,
+      "results": 7,
+      "exp_quality": 13,
+      "efficiency": 5,
+      "generalization": 4,
+      "relevance": 15,
+      "total": 62,
+      "rationale_zh": "分析型工作：首个受控探针证明多模态 KB-VQA 的‘读端’位置依赖从 U 型变为 primacy（gold 放最前显著优于最后）。对电商多模态 RAG 的 prompt 组织有实操启发。扣分在于无新 SOTA 方法、增益主要是诊断结论。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "本文用受控的 gold-position 协议（仅改变 gold passage 在 prompt 中的槽位）首次系统探查多模态知识型 VQA(KB-VQA)‘读端’的位置依赖。结论：纯文本长上下文常见的 U 型‘lost-in-the-middle’在多模态部署里翻转为 primacy——gold 放最前比放最后高 16–26 分，称为‘Lost at the End’。三组消融把成因定位到指令化 reader 的 prompt slot 0；并指出仅靠检索端修复(MMR/oracle 重排/按 rank 重排)无法弥合，需读端干预。",
+        "story": "检索端 recall@k 高不代表 reader 真的用上证据。→ 设计只改 gold 槽位的受控探针 → 发现 multimodal 放大了已存在的文本 primacy（2.2–4.5 倍）→ 证明检索端三种重排都无效，必须在 reader 侧干预。",
+        "innovation": "1）首个多模态 KB-VQA 读端位置依赖的受控探针与协议；2）揭示 U→primacy 的翻转(‘Lost at the End’)并定位到 slot 0；3）论证 recall@k 在部署中是错误指标，开源协议作为评测工具。",
+        "key_metrics": "在 3 个开源 7B/8B VLM reader、2 个 KB-VQA 基准、k 至 20 上：gold-at-first 比 gold-at-last 在每个 reader×benchmark 组合上高 16–26 分；纯文本对照显示多模态把文本 primacy 放大 2.2–4.5 倍；检索端三种修复均不缩小差距。"
+      },
+      "en": {
+        "method_overview": "Using a controlled gold-position protocol (varying only the gold passage's prompt slot), the paper probes reader-side position dependence in multimodal KB-VQA. The text-domain U-shaped 'lost-in-the-middle' flips to primacy: gold-at-first beats gold-at-last by 16–26 points ('Lost at the End'), localized to prompt slot 0 of instruction-tuned readers; retrieval-side fixes don't help.",
+        "innovation": "First controlled probe of reader-side position dependence in multimodal KB-VQA, revealing the U→primacy flip and showing recall@k is the wrong deployment metric; the protocol is released as an evaluation instrument.",
+        "key_metrics": "On 3 open 7B/8B VLM readers and 2 KB-VQA benchmarks (k up to 20): gold-at-first beats gold-at-last by 16–26 points on every reader×benchmark cell; multimodality amplifies text primacy 2.2–4.5×; three retrieval-side fixes leave the gap intact."
+      }
+    }
+  },
+  {
+    "id": "2606.11176",
+    "title": "Data Journalist Agent: Transforming Data into Verifiable Multimodal Stories",
+    "authors": ["Kevin Qinghong Lin", "Batu EI", "Yuhong Shi", "Pan Lu", "Philip Torr", "James Zou"],
+    "affiliations": ["National University of Singapore", "University of Oxford", "Stanford University"],
+    "source": "arXiv",
+    "published": "2026-06-09",
+    "date": "2026-06-16",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.11176",
+      "pdf": "https://arxiv.org/pdf/2606.11176v1",
+      "project": "https://data2story.github.io"
+    },
+    "tags": ["Agent", "多模态生成", "证据可溯", "内容生成"],
+    "score": {
+      "innovation": 20,
+      "results": 8,
+      "exp_quality": 12,
+      "efficiency": 4,
+      "generalization": 3,
+      "relevance": 14,
+      "total": 61,
+      "rationale_zh": "多智能体‘虚拟编辑部’把数据变成可溯源的多模态报道，证据可校验是亮点。对电商内容生成/可信内容生态有迁移启发，但与达人治理弱相关、效率与硬指标一般。已开源代码与 demo。"
+    },
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "Data2Story 是端到端的数据新闻多智能体框架，把找语境、跑统计、定角度、做可视化等专业分工编排为一个‘虚拟编辑部’。两大创新：1）证据可溯——Inspector 把每个数字/角度/素材回链到数据、代码或外部引用；2）多模态生成——根据读者想看什么动态调用工具（地理用交互地图、音乐用音频），而非默认纯文本+静态图。",
+        "story": "一篇高质量数据特稿需团队数周。现有 agent 只擅长单步（数据科学 agent 或设计 agent）。→ 用多智能体编排专业角色 → 用 Inspector 保证可校验 → 用多模态工具按需生成 → 实现端到端、可审计的数据报道。",
+        "innovation": "1）证据接地的多智能体编排（Inspector 全程回链证据）；2）按读者意图的多模态生成（交互地图/音频等）；3）四维评测含 LLM/CUA 评审与重执行校验。",
+        "key_metrics": "在 18 篇文章上沿 4 个维度评测（人-agent 角度覆盖、53 人 rubric 评分、CUA-as-judge、可校验性重执行）：在透明度与可审计性上尤其强；人类作者在编辑角度/创意设计/呈现上仍占优。"
+      },
+      "en": {
+        "method_overview": "Data2Story is an end-to-end multi-agent data-journalism framework orchestrating specialized roles into a virtual newsroom. Two innovations: (i) evidence-grounded — an Inspector links every number/angle/asset back to data, code or external references; (ii) multimodally generative — it deploys tools (interactive maps for geography, audio for music) based on what readers want rather than defaulting to plain text + static charts.",
+        "innovation": "Evidence-grounded multi-agent orchestration (Inspector traceability) plus reader-intent-driven multimodal generation, evaluated along four axes including re-execution verifiability.",
+        "key_metrics": "Evaluated on 18 articles along 4 axes (angle coverage, 53-participant rubric, CUA-as-judge, re-execution verifiability): strongest in transparency/auditability; human authors retain an edge in editorial angle, creative design and presentation."
+      }
+    }
+  }
+]

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#fdf4ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#ec4899"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#94a3b8"/></marker>
+    <marker id="arX" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 Z" fill="#db2777"/></marker>
+    <style>
+      .t{font:700 21px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .s{font:500 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#64748b}
+      .h{font:700 12.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#0f172a}
+      .p{font:500 10.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;fill:#475569}
+      .m{font:600 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#be185d}
+      .strike{font:600 11px ui-monospace,Menlo,monospace;fill:#94a3b8;text-decoration:line-through}
+    </style>
+  </defs>
+
+  <rect width="900" height="460" rx="20" fill="url(#bg)"/>
+  <rect x="20" y="18" width="860" height="56" rx="14" fill="#fff" filter="url(#sh)"/>
+  <rect x="20" y="18" width="860" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="40" y="46">MACCO</text>
+  <text class="s" x="40" y="64">Cross-modal masked compositional concept modeling to fix CLIP's bag-of-words</text>
+
+  <!-- image-text pair -->
+  <rect x="24" y="110" width="160" height="240" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="36" y="132">Image-text pair</text>
+  <rect x="36" y="142" width="136" height="78" rx="8" fill="#dbeafe" stroke="#bfdbfe"/>
+  <circle cx="64" cy="180" r="14" fill="#f87171"/><rect x="86" y="162" width="74" height="12" rx="3" fill="#34d399"/><rect x="86" y="186" width="50" height="10" rx="3" fill="#93c5fd"/>
+  <rect x="36" y="232" width="136" height="100" rx="8" fill="#fce7f3" stroke="#fbcfe8"/>
+  <text class="p" x="46" y="252">"a red cube on</text>
+  <text class="p" x="46" y="270">a blue sphere"</text>
+  <text class="m" x="46" y="296">attr-object binding</text>
+  <text class="m" x="46" y="314">word order, relation</text>
+
+  <!-- mask one modality -->
+  <rect x="208" y="120" width="190" height="220" rx="12" fill="#fef2f2" stroke="#fecaca"/>
+  <text class="h" x="220" y="142">Mask compositional</text>
+  <text class="h" x="220" y="158">concepts (one modality)</text>
+  <rect x="220" y="172" width="166" height="64" rx="8" fill="#fff" stroke="#fecaca"/>
+  <text class="p" x="230" y="192">text branch:</text>
+  <text class="strike" x="230" y="212">red ___ on ___ sphere</text>
+  <text class="p" x="230" y="228">mask attr / object / rel</text>
+  <rect x="220" y="246" width="166" height="80" rx="8" fill="#fff" stroke="#fecaca"/>
+  <text class="p" x="230" y="266">image branch:</text>
+  <rect x="230" y="276" width="40" height="40" rx="5" fill="#cbd5e1"/>
+  <rect x="278" y="276" width="40" height="40" rx="5" fill="#fca5a5"/>
+  <rect x="326" y="276" width="40" height="40" rx="5" fill="#cbd5e1"/>
+  <text class="p" x="230" y="-2"></text>
+
+  <!-- reconstruct conditioned on other modality -->
+  <rect x="422" y="120" width="196" height="220" rx="12" fill="#ecfeff" stroke="#a5f3fc"/>
+  <text class="h" x="434" y="142">Reconstruct</text>
+  <text class="p" x="434" y="160">conditioned on the OTHER</text>
+  <text class="p" x="434" y="176">modality's full context</text>
+  <rect x="434" y="190" width="172" height="60" rx="8" fill="#fff" stroke="#a5f3fc"/>
+  <text class="p" x="444" y="210">masked text  &#8592;  full image</text>
+  <text class="m" x="444" y="232">recover cube / blue</text>
+  <rect x="434" y="262" width="172" height="64" rx="8" fill="#fff" stroke="#a5f3fc"/>
+  <text class="p" x="444" y="282">masked image &#8592; full text</text>
+  <text class="m" x="444" y="304">recover patch region</text>
+
+  <!-- regularizers -->
+  <rect x="642" y="120" width="232" height="106" rx="12" fill="#fefce8" stroke="#fde68a"/>
+  <text class="h" x="654" y="142">Alignment regularizers</text>
+  <rect x="654" y="152" width="100" height="60" rx="8" fill="#fff" stroke="#fde68a"/>
+  <text class="p" x="664" y="172">inter-modal</text>
+  <text class="p" x="664" y="190">align img &#8596; text</text>
+  <text class="p" x="664" y="206">features</text>
+  <rect x="762" y="152" width="100" height="60" rx="8" fill="#fff" stroke="#fde68a"/>
+  <text class="p" x="772" y="172">intra-modal</text>
+  <text class="p" x="772" y="190">consistency</text>
+  <text class="p" x="772" y="206">within modality</text>
+
+  <!-- output -->
+  <rect x="642" y="244" width="232" height="96" rx="12" fill="#ecfdf5" stroke="#86efac"/>
+  <text class="h" x="654" y="266">Compositional VL repr.</text>
+  <text class="p" x="654" y="288">captures relations + binding</text>
+  <text class="p" x="654" y="306">+ word order  (no bag-of-words)</text>
+  <text class="m" x="654" y="328" fill="#15803d">helps T2I and MLLM downstream</text>
+
+  <!-- arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2.3">
+    <path d="M184 230 L208 230" marker-end="url(#ar)"/>
+    <path d="M398 230 L422 230" marker-end="url(#ar)"/>
+    <path d="M618 200 L642 180" marker-end="url(#ar)"/>
+  </g>
+  <path d="M758 226 L758 244" fill="none" stroke="#db2777" stroke-width="2.3" marker-end="url(#arX)"/>
+</svg>
