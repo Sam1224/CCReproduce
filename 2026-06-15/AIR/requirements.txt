@@ -1,0 +1,5 @@
+torch>=2.0
+transformers>=4.40
+faiss-cpu>=1.7
+numpy>=1.24
+tqdm

@@ -20,7 +20,9 @@
       "Wenwu Ou",
       "Kun Gai"
     ],
-    "affiliations": ["Kuaishou Technology"],
+    "affiliations": [
+      "Kuaishou Technology"
+    ],
     "source": "arXiv",
     "published": "2026-06-12",
     "date": "2026-06-15",
@@ -29,7 +31,12 @@
       "pdf": "https://arxiv.org/pdf/2606.13533v1",
       "code": "https://github.com/xuxinzhang/oneretrieval"
     },
-    "tags": ["电商", "检索", "生成式召回", "线上A/B"],
+    "tags": [
+      "电商",
+      "检索",
+      "生成式召回",
+      "线上A/B"
+    ],
     "score": {
       "innovation": 27,
       "results": 13,
@@ -84,7 +91,13 @@
       "abs": "https://arxiv.org/abs/2606.13001",
       "pdf": "https://arxiv.org/pdf/2606.13001v1"
     },
-    "tags": ["电商", "推荐", "时尚穿搭", "LLM", "组合推荐"],
+    "tags": [
+      "电商",
+      "推荐",
+      "时尚穿搭",
+      "LLM",
+      "组合推荐"
+    ],
     "score": {
       "innovation": 23,
       "results": 12,
@@ -95,7 +108,10 @@
       "total": 77,
       "rationale_zh": "强电商/时尚穿搭推荐相关，做到了‘协同过滤交互信号’与 LLM 生成空间的结构化对齐与融合；但推理成本偏高，且跨域泛化/线上验证信息不足。"
     },
-    "reproduce": {"status": "no_code", "path": ""},
+    "reproduce": {
+      "status": "no_code",
+      "path": ""
+    },
     "summary": {
       "zh": {
         "method_overview": "CFALR 面向个性化穿搭（多物品组合）推荐，将任务改写为 LLM 擅长的生成式决策：P-FITB（个性化填空补全）与 outfit generation。为解决语义空间与交互空间错位，它把用户/物品 CF embedding 与多模态特征通过可训练投影层注入为非文本 token 与文本一同输入 LLM，并在输出侧融合 CF 信号与 LLM logits，提升组合搜索稳定性。",
@@ -125,7 +141,9 @@
       "Priyanka Nigam",
       "Bing Yin"
     ],
-    "affiliations": ["Amazon"],
+    "affiliations": [
+      "Amazon"
+    ],
     "source": "arXiv",
     "published": "2026-06-12",
     "date": "2026-06-15",
@@ -134,7 +152,12 @@
       "pdf": "https://arxiv.org/pdf/2606.12608v1",
       "project": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench"
     },
-    "tags": ["电商", "对话式购物", "评测基准", "LLM-as-judge"],
+    "tags": [
+      "电商",
+      "对话式购物",
+      "评测基准",
+      "LLM-as-judge"
+    ],
     "score": {
       "innovation": 22,
       "results": 11,
@@ -145,7 +168,10 @@
       "total": 82,
       "rationale_zh": "电商对话助手强相关，贡献在于专家 rubric + LLM judge 的可复核评测体系，且给出了规模、标注结构与 judge 可信度验证；属于基准/方法论型高质量产出。"
     },
-    "reproduce": {"status": "code_available", "path": ""},
+    "reproduce": {
+      "status": "code_available",
+      "path": ""
+    },
     "summary": {
       "zh": {
         "method_overview": "Shopping Reasoning Bench 是专家撰写的多轮对话式购物助手评测基准：将能力拆为 5 类推理与 15 个子类，并为每个任务提供可判定的二值 rubric。评测时用经专家一致性验证的 LLM-as-judge，把开放式回答映射为 rubric 级通过/失败，并引入重要性权重区分必需项/加分项，使结果更可解释、可定位短板。",
@@ -163,7 +189,11 @@
   {
     "id": "2606.14046",
     "title": "When Recommendation Denoising Meets Popularity Bias: Understanding and Mitigating Their Interaction",
-    "authors": ["Guohang Zeng", "Jie Lu", "Guangquan Zhang"],
+    "authors": [
+      "Guohang Zeng",
+      "Jie Lu",
+      "Guangquan Zhang"
+    ],
     "affiliations": [],
     "source": "arXiv",
     "published": "2026-06-12",
@@ -172,7 +202,12 @@
       "abs": "https://arxiv.org/abs/2606.14046",
       "pdf": "https://arxiv.org/pdf/2606.14046v1"
     },
-    "tags": ["推荐系统", "去噪", "流行度偏置", "长尾"],
+    "tags": [
+      "推荐系统",
+      "去噪",
+      "流行度偏置",
+      "长尾"
+    ],
     "score": {
       "innovation": 18,
       "results": 6,
@@ -223,7 +258,12 @@
       "pdf": "https://arxiv.org/pdf/2606.11023v1",
       "code": "https://github.com/AI-Santiago/GenAIR"
     },
-    "tags": ["推荐系统", "序列推荐", "LLM", "表征学习"],
+    "tags": [
+      "推荐系统",
+      "序列推荐",
+      "LLM",
+      "表征学习"
+    ],
     "score": {
       "innovation": 20,
       "results": 10,
@@ -234,7 +274,10 @@
       "total": 69,
       "rationale_zh": "序列推荐相关且思路清晰（LLM 生成 archetype + 行为校准），并提供代码；但与电商内容理解/治理属于可迁移相关，且摘要未给出明确数值增益。"
     },
-    "reproduce": {"status": "code_available", "path": ""},
+    "reproduce": {
+      "status": "code_available",
+      "path": ""
+    },
     "summary": {
       "zh": {
         "method_overview": "GenAIR 提出用 LLM 从 item metadata 推断 ‘archetype’（理想目标受众画像），并把 archetype embedding 作为 item 表征的一部分注入序列推荐模型。为缩小语义空间与行为空间差距，方法加入行为校准目标，把真实交互信号显式用于调整 embedding 空间结构，从而同时保留语义可解释性与推荐有效性。",
@@ -269,7 +312,12 @@
       "abs": "https://arxiv.org/abs/2606.07688",
       "pdf": "https://arxiv.org/pdf/2606.07688v1"
     },
-    "tags": ["推荐系统", "生成式推荐", "遗忘/去概念", "治理"],
+    "tags": [
+      "推荐系统",
+      "生成式推荐",
+      "遗忘/去概念",
+      "治理"
+    ],
     "score": {
       "innovation": 22,
       "results": 9,
@@ -280,7 +328,10 @@
       "total": 70,
       "rationale_zh": "与推荐治理（概念遗忘/隐私/合规）强相关，提出 token reassignment 避免 SID 共享导致的忘记-保留冲突；但摘要未给出可引用的明确数值，是否开源代码需回原文进一步确认。"
     },
-    "reproduce": {"status": "no_code", "path": ""},
+    "reproduce": {
+      "status": "no_code",
+      "path": ""
+    },
     "summary": {
       "zh": {
         "method_overview": "TRACER 面向生成式推荐中的概念遗忘（unlearning）：语义 ID（SID）是抽象 token，常被 forget 与 retain item 共享，直接抑制 token 会造成严重副作用。TRACER 的核心是 token reassignment：将与目标概念相关的 item 重新分配到更适合遗忘的新 token 上，并加入 coherence regularizer 维持 retain item 的语义一致性，从而在移除概念的同时尽量保留推荐效用。",
@@ -298,7 +349,10 @@
   {
     "id": "2606.14703",
     "title": "Gaze Heads: How VLMs Look at What They Describe",
-    "authors": ["Rohit Gandikota", "David Bau"],
+    "authors": [
+      "Rohit Gandikota",
+      "David Bau"
+    ],
     "affiliations": [],
     "source": "arXiv",
     "published": "2026-06-12",
@@ -308,7 +362,12 @@
       "pdf": "https://arxiv.org/pdf/2606.14703v1",
       "project": "https://gaze.baulab.info/"
     },
-    "tags": ["VLM", "可解释性", "推理期干预", "多模态"],
+    "tags": [
+      "VLM",
+      "可解释性",
+      "推理期干预",
+      "多模态"
+    ],
     "score": {
       "innovation": 24,
       "results": 12,
@@ -319,7 +378,10 @@
       "total": 71,
       "rationale_zh": "多模态可解释与可控性很强（推理期通过 gaze heads 重定向描述区域），对多模态内容理解/治理有启发，但与电商业务为弱相关。"
     },
-    "reproduce": {"status": "code_available", "path": ""},
+    "reproduce": {
+      "status": "code_available",
+      "path": ""
+    },
     "summary": {
       "zh": {
         "method_overview": "论文发现 VLM 语言骨干里存在少量 attention heads（gaze heads）专门追踪当前描述的图像区域。通过相关性打分可定位这些 heads；更关键的是，推理时将 gaze heads 的注意力重定向到指定区域，就能强制模型转而描述该区域，实现无需重训的区域级可控生成。",
@@ -331,6 +393,192 @@
         "method_overview": "The paper identifies a small set of attention heads (gaze heads) in VLMs that track the visual region being described. By redirecting the attention of these heads at inference time, the model can be forced to describe a chosen region without retraining.",
         "innovation": "A causal, inference-time control lever: manipulating a small subset of attention heads yields region-level controllability in VLM descriptions.",
         "key_metrics": "Redirecting the top-100 gaze heads (<9% of heads) achieves 83.1% accuracy in steering descriptions to specified comic panels; the effect also transfers to COCO images."
+      }
+    }
+  },
+  {
+    "id": "2606.10357",
+    "title": "Atomic Intent Reasoning: Bringing LLM Semantics to Industrial Cross-Domain Recommendations",
+    "authors": [
+      "Zhuohang Jiang",
+      "Yuxin Chen",
+      "Shijie Wang",
+      "Haohao Qu",
+      "Zhou Jindong",
+      "Wenqi Fan",
+      "Li Qing",
+      "Dongxu Liang",
+      "Jun Wang"
+    ],
+    "affiliations": [
+      "Kuaishou Technology"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-09",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.10357",
+      "pdf": "https://arxiv.org/pdf/2606.10357v1"
+    },
+    "tags": [
+      "电商",
+      "跨域推荐",
+      "LLM",
+      "意图推理",
+      "线上A/B",
+      "content-to-commerce"
+    ],
+    "score": {
+      "innovation": 25,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 87,
+      "rationale_zh": "快手内容→电商跨域推荐，离线 LLM 推理+在线意图原子检索组合实现 ~400× 加速，生产 A/B GMV +3.446%，学术与工业双路验证。"
+    },
+    "reproduce": {
+      "status": "reproduced",
+      "path": "2026-06-15/AIR"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "AIR 将 LLM 推理离线化，把用户行为序列中的意图分解为可索引意图原子；在线服务只做轻量原子检索与动态组合，实现 ~400× 延迟压缩，同时通过意图原子空间对齐内容侧用户信号与电商 item 语义，缩小跨域语义鸿沟。",
+        "story": "内容平台与电商平台之间存在显著语义鸿沟，在线 LLM 推理延迟过高；AIR 把 LLM 语义能力解耦为离线生产+在线检索组合，从而在工业场景可落地地实现跨域语义增强。",
+        "innovation": "1）意图原子化将 LLM 语义固化为可索引单元；2）离线推理+在线检索组合实现 400× 加速；3）快手电商生产 A/B 闭环验证 GMV +3.446%。",
+        "key_metrics": "多公开 benchmark 达 SOTA；快手电商生产 A/B：GMV +3.446%，推理延迟 ~400× 降低。"
+      },
+      "en": {
+        "method_overview": "AIR atomizes user intent offline via LLM, building an index of fine-grained intent atoms. Online serving retrieves and composes atoms dynamically (~400× faster than online LLM inference) while maintaining semantic alignment between content-side signals and e-commerce items.",
+        "innovation": "Decoupling LLM inference into offline production + online retrieval composition enables industry-ready semantic cross-domain recommendation.",
+        "key_metrics": "SOTA on public benchmarks; Production A/B (Kuaishou e-commerce): GMV +3.446%, inference latency ~400× reduced."
+      }
+    }
+  },
+  {
+    "id": "2606.05671",
+    "title": "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    "authors": [
+      "Dike Sun",
+      "Zheng Zou",
+      "Jingtong Zang",
+      "Qi Sun",
+      "Huaipeng Zhao",
+      "Tao Luo",
+      "Xiaoyi Zeng"
+    ],
+    "affiliations": [
+      "Alibaba International Digital Commerce Group"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-03",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.05671",
+      "pdf": "https://arxiv.org/pdf/2606.05671v1"
+    },
+    "tags": [
+      "电商",
+      "查询推荐",
+      "Agent",
+      "RL",
+      "链式检索",
+      "Alibaba"
+    ],
+    "score": {
+      "innovation": 24,
+      "results": 14,
+      "exp_quality": 13,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 86,
+      "rationale_zh": "Alibaba 电商查询推荐，链式检索+一致性奖励闭环解决 CTR-CVR 脱钩，生产 A/B CTR+2.9%/CVR+3.1%，工业+学术双数据集验证。"
+    },
+    "reproduce": {
+      "status": "reproduced",
+      "path": "2026-06-15/QueryAgent-R1"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "QueryAgent-R1 将电商查询推荐改造为 memory-augmented 智能体框架；agent 生成 candidate query 后调用真实库存检索 API，分析检索结果并迭代精炼 query；一致性奖励在 RL 训练中联合优化查询相关性与下游商品参与度（CVR），从结构上解决 CTR-CVR 脱钩。",
+        "story": "传统 query 推荐只优化 query 文本质量（CTR），忽略检索到的商品是否符合用户购买意图（CVR），导致高点击但低转化。QueryAgent-R1 引入链式检索循环使 query 生成直接面向商品转化对齐。",
+        "innovation": "1）链式检索优化将 query 生成与库存检索闭环；2）一致性奖励把 CVR 信号显式注入 RL；3）Alibaba International 生产 A/B 验证真实业务价值。",
+        "key_metrics": "Industrial Cons@1: 0.025→0.117 (+368%)；Amazon I_Hit@1: 0.144；生产 A/B: Query CTR +2.9%, Guided CVR +3.1%。"
+      },
+      "en": {
+        "method_overview": "QueryAgent-R1 frames e-commerce query recommendation as a memory-augmented agent: the agent generates a candidate query, calls a real inventory retrieval API, analyzes results, and iteratively refines the query. A consistency reward in RL jointly optimizes query relevance and downstream product engagement (CVR), structurally aligning CTR and CVR objectives.",
+        "innovation": "Chain-of-retrieval optimization closes the loop between query generation and inventory retrieval; consistency reward bridges CTR and CVR optimization in a single RL objective.",
+        "key_metrics": "Industrial Cons@1: 0.025→0.117 (+368%); Amazon I_Hit@1: 0.144; Production A/B: Query CTR +2.9%, Guided CVR +3.1%."
+      }
+    }
+  },
+  {
+    "id": "2606.09393",
+    "title": "CapRL++: Unified Reinforcement Learning with Verifiable Rewards for Dense Image and Video Captioning",
+    "authors": [
+      "Penghui Yang",
+      "Long Xing",
+      "Xiaoyi Dong",
+      "Yuhang Zang",
+      "Yuhang Cao",
+      "Yibin Wang",
+      "Yujie Zhou",
+      "Jiazi Bu",
+      "Jianze Liang",
+      "Qidong Huang",
+      "Jiaqi Wang",
+      "Feng Wu",
+      "Dahua Lin"
+    ],
+    "affiliations": [
+      "Shanghai AI Lab",
+      "InternLM",
+      "USTC",
+      "CUHK"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-08",
+    "date": "2026-06-15",
+    "links": {
+      "abs": "https://arxiv.org/abs/2606.09393",
+      "pdf": "https://arxiv.org/pdf/2606.09393v1",
+      "code": "https://github.com/InternLM/CapRL"
+    },
+    "tags": [
+      "VLM",
+      "图像描述",
+      "视频描述",
+      "RLVR",
+      "多模态预训练",
+      "InternLM"
+    ],
+    "score": {
+      "innovation": 24,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 21,
+      "total": 82,
+      "rationale_zh": "RLVR 引入密集描述，utility-based 可验证奖励完全无需人工 caption 标注，3B 模型超 72B，20+ 基准验证，对电商商品描述/短视频标注有直接启发。"
+    },
+    "reproduce": {
+      "status": "reproduced",
+      "path": "2026-06-15/CapRL"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "CapRL++ 将 RLVR 引入密集图像/视频描述任务，设计 reference-free 奖励：LVLM 生成 caption → 独立纯文本 LLM 基于该 caption 回答 MCQ → 答对率作为奖励，无需人工参考 caption。解耦两阶段 pipeline 同时支持图像与视频描述，构建 CapRL-Image-1M 数据集验证不同规模模型配置。",
+        "story": "现有密集描述依赖昂贵 SFT 标注，模型记忆答案而非理解视觉内容。CapRL++ 用 MCQ 效用奖励替代参考 caption 相似度，使 RL 训练完全可扩展，小模型超越大模型。",
+        "innovation": "1）将 caption 质量定义为信息效用（MCQ 回答准确率）而非文本相似度；2）reference-free 奖励可规模化；3）图像+视频统一框架；4）3B 模型超 72B SOTA。",
+        "key_metrics": "Prism 框架评测：compact 3B/7B 模型性能 ≥ Qwen2.5-VL-72B 与 Qwen3-VL-235B-A22B；20+ 图像/视频基准均有提升。"
+      },
+      "en": {
+        "method_overview": "CapRL++ applies RLVR to dense image/video captioning using a reference-free utility reward: an LVLM generates a caption, then a vision-free LLM answers MCQs about the image using only that caption; answer accuracy is the verifiable reward. A decoupled two-stage pipeline unifies image and video captioning, backed by the CapRL-Image-1M dataset.",
+        "innovation": "Redefining caption quality as information utility (MCQ accuracy) instead of text similarity enables fully scalable, reference-free RL training that pushes compact 3B models past 72B+ models.",
+        "key_metrics": "Prism: compact 3B/7B ≥ Qwen2.5-VL-72B and Qwen3-VL-235B-A22B; improvements on 20+ image and video benchmarks."
       }
     }
   }
