@@ -1,0 +1,210 @@
+[
+  {
+    "id": "2606.16838",
+    "title": "OneRank: Unified Transformer-Native Ranking Architecture for Multi-Task Recommendation",
+    "authors": ["Jiakai Tang", "Sunhao Dai", "Kun Wang", "Zhiluohan Guo", "Yu Zhao", "Cong Fu", "Kangle Wu", "Yabo Ni", "Anxiang Zeng", "Xu Chen", "Jun Xu"],
+    "affiliations": ["Renmin University of China", "Shopee Pte. Ltd.", "Nanyang Technological University"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.16838", "pdf": "https://arxiv.org/pdf/2606.16838v1"},
+    "tags": ["电商", "排序", "多任务", "Transformer", "线上A/B"],
+    "score": {"innovation": 27, "results": 12, "exp_quality": 13, "efficiency": 9, "generalization": 3, "relevance": 16, "total": 80, "rationale_zh": "强电商工业排序场景（Shopee 主排序），范式创新扎实（Transformer-native 多任务、任务私有通道、梯度脱钩、匹配式打分），且有真实线上 A/B 收益与高效率证据。扣分主要在：仅单一专有数据集、未开源、与‘内容理解/创作者治理’仅间接相关。达到复现阈值且无代码，故进行复现。"},
+    "reproduce": {"status": "reproduced", "path": "2026-06-17/OneRank"},
+    "summary": {
+      "zh": {
+        "method_overview": "OneRank 是一个 Transformer-native 多任务排序框架，取消传统‘编码器 F → 预测器 G’的分离，把多任务推理内置进 Transformer 栈内。前向自底向上构建任务私有通道：输入级注入相互不可见的任务 token 实现早期专精，中间级用情境描述符（Situational Descriptor）做候选感知的上下文聚合，预测级用可配置掩码的跨任务关系注意力做受控知识迁移。反向用‘梯度脱钩’只允许对角线梯度回传，使跨任务注意力成为只读记忆，避免负迁移。最后用基于内积匹配的动态打分替换静态 MLP 打分头。",
+        "story": "现有 Transformer 排序仍沿用‘编码器-预测器’分离，导致任务无关的信息瓶颈、梯度冲突（跷跷板效应）、以及注意力到静态 MLP 的范式断裂 → OneRank 用任务专属 token + 候选感知上下文化 + 跨任务受控注意力 + 梯度脱钩 + 动态匹配打分，把多任务推理内化进 Transformer 统一解决。",
+        "innovation": "1）识别并形式化 Transformer-MTL 编码器-预测器分离的三大缺陷；2）自底向上的任务感知计算范式（相互不可见任务 token、候选感知上下文化、可配置跨任务掩码）；3）策略性梯度脱钩，前向共享、后向隔离；4）用 Transformer-native 内积匹配打分替换静态 MLP 头，实现上下文/任务自适应排序。创新合理、工程可落地。",
+        "key_metrics": "离线（Shopee，33M 用户 / 118M 商品 / 26.6B 曝光）：OneRank C-AUC=0.7910、A-AUC=0.8463、O-AUC=0.9024（参数仅 4.9M，FLOPs 1.0G），相对最强基线 OneTrans/PLE 的 C-AUC +0.0137、A-AUC +0.0092、O-AUC +0.0028。线上 A/B（主排序，7 天，各 10% 流量）：GMV/UU +1.01%、Paid GMV/UU +1.17%、AR/UU +0.81%，Bad Query Rate −2.29%。"
+      },
+      "en": {
+        "method_overview": "OneRank is a Transformer-native multi-task ranking framework that removes the encoder–predictor split by internalizing multi-task reasoning inside the Transformer stack. The forward pass builds task-private channels bottom-up: mutually-invisible task tokens for early specialization, situational-descriptor-based candidate-aware contextualization, and configurable cross-task relational attention. The backward pass uses strategic gradient detachment (diagonal-only gradients), turning cross-task attention into read-only memory to avoid negative transfer. Static MLP scorers are replaced by dynamic inner-product matching scoring.",
+        "innovation": "A unified Transformer-native MTL ranker that internalizes multi-task reasoning via mutually-invisible task tokens, candidate-aware contextualization, gradient-detached cross-task attention, and matching-based dynamic scoring—eliminating the encoder–predictor split.",
+        "key_metrics": "Offline (Shopee, 33M users / 118M items / 26.6B impressions): C-AUC=0.7910, A-AUC=0.8463, O-AUC=0.9024 with only 4.9M params / 1.0G FLOPs; +0.0137/+0.0092/+0.0028 AUC over the strongest OneTrans/PLE baselines. Online A/B (main ranking, 7 days, 10% traffic each): GMV/UU +1.01%, Paid GMV/UU +1.17%, AR/UU +0.81%, Bad Query Rate −2.29%."
+      }
+    }
+  },
+  {
+    "id": "2606.16703",
+    "title": "Harmonizing Semantic and Collaborative in LLMs: Reasoning-based Embedding Generator for Sequential Recommendation",
+    "authors": ["Qidong Liu", "Mingyao Huang", "Moranxin Wang", "Wenxuan Yang", "Haiping Zhu"],
+    "affiliations": ["Xi'an Jiaotong University"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.16703", "pdf": "https://arxiv.org/pdf/2606.16703v1", "code": "https://github.com/mingyao-huang/ReaEmb"},
+    "tags": ["推荐系统", "序列推荐", "LLM", "表征学习", "强化学习"],
+    "score": {"innovation": 25, "results": 13, "exp_quality": 13, "efficiency": 9, "generalization": 5, "relevance": 12, "total": 77, "rationale_zh": "把 LLM 改造为序列推荐物品向量生成器，潜在推理 + 共现奖励 RL 组合新颖，长尾收益突出、离线预计算零在线开销、跨 backbone/LLM 泛化稳定；但模块多为已有技术拼装，与‘创作者治理’需二次迁移。"},
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "ReaEmb 是把（冻结的）LLM 改造为序列推荐物品向量生成器的两阶段框架。第一阶段 LRCL 通过‘两次前向 + 轻量注意力模块’产生潜在推理 token，挖掘 LLM 内在推理能力增强物品语义，并配合属性级对比学习。第二阶段 CRRL 用 GRPO 式强化学习、以物品共现为奖励（并提出批级相对优势 BRPO），显式拉近高共现物品的嵌入距离以注入协同信号。训练后离线预计算物品向量，用于初始化下游 SRS backbone，推理时无需在线 LLM 计算。",
+        "story": "现有 LLM 嵌入方法语义理解不足（仅单次前向当文本编码器）、且协同信号注入隐式低效 → 设计 LRCL 两次前向 + 注意力潜在推理模块补语义，再用 CRRL 共现奖励强化学习显式注入协同信号。",
+        "innovation": "1）两阶段 LLM 嵌入生成框架 ReaEmb，统一‘语义+协同’；2）LRCL 用 k 个推理占位符 + 额外注意力层做隐式潜在推理（两次前向），突破‘语言链’限制；3）CRRL 设计基于物品共现的奖励显式注入协同信号；4）在连续推理向量上加高斯扰动模拟采样，并用批级相对优势 BRPO 稳定训练。",
+        "key_metrics": "Yelp + SASRec：Overall H@10=0.7862 / N@10=0.5036（最佳基线 TSLRec 0.7608/0.4969，H@10 约 +3.3%）；Tail H@10=0.6504（vs 次优 0.6157，+5.6%）。Yelp + GRU4Rec：Overall H@10=0.7566 相对最佳基线 LLM2Vec 0.6155 提升约 +22.9%，Tail H@10 0.5663 vs 0.3877（约 +46%），长尾增益显著。"
+      },
+      "en": {
+        "method_overview": "ReaEmb turns a frozen LLM into an item-embedding generator for SRS in two stages. Stage 1 (LRCL) uses a two-forward-pass process with a lightweight attention module to create latent reasoning tokens that enrich item semantics, trained via attribute-level contrastive learning. Stage 2 (CRRL) applies GRPO-style RL with a co-occurrence-based reward (and batch-relative advantage, BRPO) to explicitly pull frequently co-occurring items closer. Item embeddings are precomputed offline to initialize the SRS backbone, adding no online inference cost.",
+        "innovation": "A two-stage LLM-embedding framework harmonizing semantics and collaboration: latent reasoning via reasoning placeholders + an extra attention layer (two-pass), a co-occurrence reward to explicitly inject collaborative signals, and Gaussian perturbation + batch-relative policy optimization (BRPO) for stable RL.",
+        "key_metrics": "Yelp + SASRec: Overall H@10=0.7862 / N@10=0.5036 (best baseline TSLRec 0.7608/0.4969, ~+3.3% H@10); Tail H@10=0.6504 (+5.6%). Yelp + GRU4Rec: Overall H@10=0.7566 vs best baseline LLM2Vec 0.6155 (~+22.9%); Tail H@10 0.5663 vs 0.3877 (~+46%)."
+      }
+    }
+  },
+  {
+    "id": "2606.15752",
+    "title": "One Sequential Recommendation Model Pretrained from Synthetic Priors Predicts Multiple Datasets",
+    "authors": ["Woosung Kang", "Jiwon Jeong", "Jonghyeok Shin", "Jeongwhan Choi", "Noseong Park"],
+    "affiliations": ["KAIST"],
+    "source": "arXiv",
+    "published": "2026-06-14",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.15752", "pdf": "https://arxiv.org/pdf/2606.15752v1", "code": "https://doi.org/10.5281/zenodo.20403804"},
+    "tags": ["推荐系统", "序列推荐", "PFN", "零样本", "效率"],
+    "score": {"innovation": 27, "results": 12, "exp_quality": 13, "efficiency": 10, "generalization": 5, "relevance": 9, "total": 76, "rationale_zh": "首次将 PFN/后验预测范式引入序列推荐，合成先验预训练一次即可 update-free 单次前向适配新域，效率（1 分钟 vs 15 小时）与未见类目零样本泛化极突出；但纯 ID-交互序列，无内容理解/创作者治理元素，主题契合度有限。"},
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "SRPFN 把序列推荐重构为‘条件推断 / 后验预测分布（PPD）’问题，采用 Prior-data Fitted Network（PFN）。模型在 2560 万条合成序列上离线预训练一次，合成数据来自分层度修正随机块模型（hDCSBM）生成的物品图 + 随机游走，覆盖多样的物品转移模式。推理时无需任何梯度更新，仅以目标域的‘item-item 转移样本’作为 support set，通过交叉注意力在单次前向中给出 next-item 分布。输入用 PPMI + 截断随机 SVD 得到低秩协同/转移嵌入，编码器保留源/目的方向性并用门控残差更新。",
+        "story": "现有序列推荐需对每个数据集从头训练、难以跨域泛化（参数被固化到特定 item catalog 与转移分布）→ 用合成先验预训练一个 PFN，把转移统计作为 support set 输入，单次前向、无需重训即可适配新域。",
+        "innovation": "1）首次将 PFN / 后验预测范式引入序列推荐，实现 update-free 单次前向推理；2）基于 hDCSBM 的合成先验（分层社区 + 幂律热度 + 核心-边缘），随机游走生成多样转移模式；3）support-set 交叉注意力把多条转移样本上下文化聚合；4）PPMI + 截断 SVD 低秩表示 + 源/目的方向性编码 + 门控残差更新。",
+        "key_metrics": "主结果（Table 1）相对次优方法平均提升 7.53%：Beauty HR@10=0.5394（FEARec 0.4879）、NDCG@10=0.3770；Yelp HR@10=0.7924。未见类目零样本（Table 2，HR@1）：Arts 0.3038 vs UniSRec 0.1141 / RecFormer 0.0688（较最强统计基线 ItemKNN 0.1722 约 +76%）。效率：每数据集约 1 分钟（预处理 14s + 推理 45s）vs SASRec ~10min、FEARec ~15h。"
+      },
+      "en": {
+        "method_overview": "SRPFN reformulates sequential recommendation as conditional posterior-predictive inference via a Prior-data Fitted Network. It is pretrained once offline on 25.6M synthetic sequences generated by random walks over hDCSBM item graphs spanning diverse transition regimes. At inference it performs update-free prediction: conditioning on a support set of target-domain item-item transitions through cross-attention in a single forward pass. Inputs are low-rank PPMI+SVD collaborative/transition embeddings; the encoder preserves source/destination asymmetry with a gated residual update.",
+        "innovation": "First PFN-style, posterior-predictive, update-free inference for sequential recommendation, with an hDCSBM-based synthetic prior, support-set cross-attention, and directional low-rank PPMI+SVD inputs with a gated encoder.",
+        "key_metrics": "Avg +7.53% over the runner-up (Table 1): Beauty HR@10=0.5394 (FEARec 0.4879), NDCG@10=0.3770; Yelp HR@10=0.7924. Unseen-category zero-shot (Table 2, HR@1): Arts 0.3038 vs UniSRec 0.1141 / RecFormer 0.0688. Efficiency: ~1 min/dataset (14s preprocess + 45s inference) vs SASRec ~10 min and FEARec ~15h."
+      }
+    }
+  },
+  {
+    "id": "2606.18249",
+    "title": "Unified Multimodal Autoregressive Modeling with Shared Context-Visual Tokenizer is Key to Unification",
+    "authors": ["Wujian Peng", "Lingchen Meng", "Yuxuan Cai", "Xianwei Zhuang", "Yuhuan Yang", "Rongyao Fang", "Chenfei Wu", "Junyang Lin", "Zuxuan Wu", "Shuai Bai"],
+    "affiliations": ["Fudan University", "Shanghai Innovation Institute", "Qwen Team, Alibaba Inc."],
+    "source": "arXiv",
+    "published": "2026-06-16",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.18249", "pdf": "https://arxiv.org/pdf/2606.18249v1", "project": "https://sharelab-sii.github.io/uniar-web"},
+    "tags": ["多模态", "统一模型", "图像生成", "Tokenizer", "自回归"],
+    "score": {"innovation": 27, "results": 12, "exp_quality": 13, "efficiency": 9, "generalization": 4, "relevance": 9, "total": 74, "rationale_zh": "高热度统一多模态工作（复旦 + Qwen Team）：单一离散 tokenizer + 二值量化 + 并行 bitwise 自回归，生成/编辑/文本渲染多项超 GPT-4o 且高效；但与电商内容生态/创作者治理仅弱相关。"},
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "UniAR 用单一离散视觉 tokenizer 作为理解与生成的桥梁，在共享上下文中让模型直接解读自己生成的视觉 token，无需重新编码。tokenizer 基于预训练视觉编码器，融合多层特征（保留浅层细节 + 深层语义），并用 lookup-free 的二值球面量化（BSQ，64 位 → 2^64 码本）替代显式码本。自回归主干用 next-token prediction 联合建模理解/生成/编辑，并用 parallel-bitwise-prediction 对 2×2 空间网格的多层视觉码并行预测，实现 32× 压缩。最后用 DiT 视觉解码器（仅依赖视觉 token、不接收文本）解码高保真图像。训练分预训练→SFT→RL 三阶段，tokenizer 与解码器全程冻结。",
+        "story": "现有统一多模态模型依赖两个独立视觉 tokenizer，理解与生成处于不同表征空间、生成图像须重新编码才能被理解，破坏‘共享上下文’ → UniAR 用‘多层特征融合 + lookup-free 二值量化的单一 tokenizer + 并行 bitwise 自回归 + 无文本 DiT 解码器’实现真正统一。",
+        "innovation": "1）单一离散视觉 tokenizer：多层特征融合兼顾生成与理解，lookup-free 二值量化极低成本扩大词表；2）parallel-bitwise-prediction 自回归范式，32× 压缩、推理步数大减（相对 X-Omni 提速约 4 倍）；3）配 resolution-upsampling 的 DiT 解码器，1024² 图像仅需预测 256 token；4）随机 bitwise index flipping 稳定高温采样，利于 RL；5）涌现的交错‘生成-理解’能力。",
+        "key_metrics": "GenEval Overall 0.85（UniAR† 0.86，>GPT-4o 0.84、>FLUX.1-dev 0.82）；文本渲染 OneIG-EN 0.873（>GPT-4o 0.857）、LongText-EN 0.917；图像编辑 ImgEdit Overall 3.73（>FLUX.1 Kontext 3.71）；理解 OCRBench 833、DocVQA 91.4。效率：生成 1024² 图仅 256 token、13.0s（vs Janus-Pro 101.9s、X-Omni 119.7s）。"
+      },
+      "en": {
+        "method_overview": "UniAR uses a single discrete visual tokenizer as the bridge between understanding and generation, enabling a shared context where the model interprets its own generated tokens without re-encoding. It adapts a pretrained vision encoder with multi-level feature fusion and lookup-free Binary Spherical Quantization (64-bit, 2^64 codes). A unified AR backbone (next-token prediction) jointly models understanding/generation/editing with parallel-bitwise-prediction over 2x2 grids (32x compression), and a text-free DiT decoder with resolution upsampling reconstructs images.",
+        "innovation": "A single discrete tokenizer with multi-level fusion + lookup-free BSQ, a parallel-bitwise-prediction AR paradigm (32x compression, ~4x faster), a text-free DiT decoder with upsampling, and random index flipping for stable high-temperature sampling/RL.",
+        "key_metrics": "GenEval Overall 0.85 (UniAR† 0.86, > GPT-4o 0.84); text rendering OneIG-EN 0.873 (> GPT-4o 0.857), LongText-EN 0.917; ImgEdit Overall 3.73 (> FLUX.1 Kontext 3.71); OCRBench 833, DocVQA 91.4. Efficiency: 256 tokens / 13.0s for a 1024^2 image (vs Janus-Pro 101.9s, X-Omni 119.7s)."
+      }
+    }
+  },
+  {
+    "id": "2606.17276",
+    "title": "On the Memorization Behavior of LLMs in Generative Recommendation: Observations, Implications, and Training Strategies",
+    "authors": ["Sunwoo Kim", "Sunkyung Lee", "Clark Mingxuan Ju", "Donald Loveland", "Bhuvesh Kumar", "Kijung Shin", "Neil Shah", "Liam Collins"],
+    "affiliations": ["KAIST", "Sungkyunkwan University", "Snap Inc."],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.17276", "pdf": "https://arxiv.org/pdf/2606.17276v1", "code": "https://github.com/snap-research/IIRG"},
+    "tags": ["推荐系统", "生成式推荐", "LLM", "记忆行为"],
+    "score": {"innovation": 25, "results": 12, "exp_quality": 13, "efficiency": 6, "generalization": 4, "relevance": 14, "total": 74, "rationale_zh": "首次系统量化 LLM 生成式推荐的‘一跳记忆’现象，并提出即插即用的多任务训练 IIRG（协同邻居 + 语义邻居生成）补足非记忆受益用户；洞察清晰、实验扎实（17 基线 + SID/TID），但效率证据缺失、与创作者治理直接相关性弱。"},
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "该工作首次系统研究 LLM 在生成式推荐（GR）中的‘一跳记忆（one-hop memorization）’现象：模型记住训练序列中相邻物品的转移关系，推理时直接推荐输入物品的‘已记忆后继’。作者发现 LLM 比非 LLM 模型（TIGER）更依赖一跳记忆，且其相对增益主要集中在‘目标物品被一跳转移覆盖’的用户上。为此提出 IIRG（Item–Item Relation Generation），在 next-item 预测之外联合训练两个辅助生成任务：协同邻居生成（多跳共现）与语义邻居生成（文本相似），让 LLM 学到超越一跳转移的更丰富物品关系。",
+        "story": "现有 LLM-GR 仅用 next-item 预测训练，过度依赖一跳记忆、对目标不在记忆转移内的用户帮助有限 → 设计 IIRG，通过‘协同邻居生成 + 语义邻居生成’两个辅助任务，教模型学习多跳协同与语义物品关系，补足非记忆受益用户的推荐信号。",
+        "innovation": "1）首次提出并量化 LLM-GR 中的‘一跳记忆’行为，并证明其无法用模型规模或过拟合解释；2）揭示 LLM 相对 TIGER 的增益主要来自记忆受益用户；3）提出 identifier 无关、即插即用的多任务训练 IIRG（协同邻居 + 语义邻居生成），且邻居信号与一跳转移重叠低、信息互补。",
+        "key_metrics": "主表（Qwen-3.5-4B 骨干，TID，full-item ranking）：Sports R@5 IIRG=0.0406 vs Naive 0.0337（+20.5%）；Toys R@5=0.0780 vs 0.0634（+23%）；Beauty R@5=0.0726 vs 0.0606（+19.8%）。相对仅 next-item 的 Naive 平均 +21% Recall@5，且在全部 3 数据集 ×4 指标上优于全部 17 基线。分组增益：非记忆受益用户 +40% vs 记忆受益用户 +16%。"
+      },
+      "en": {
+        "method_overview": "The paper studies one-hop memorization in LLM-based generative recommendation, where the model memorizes consecutive item transitions and recommends memorized successors. LLMs rely on this more than non-LLM TIGER, and their gains concentrate on users whose targets are covered by such transitions. They propose IIRG, which jointly trains the LLM on next-item prediction plus collaborative-neighbor generation (multi-hop co-occurrence) and semantic-neighbor generation (text similarity), teaching richer item-item relations beyond one-hop transitions.",
+        "innovation": "First to quantify one-hop memorization in LLM-GR (not explained by scale or overfitting) and to propose an identifier-agnostic, plug-and-play multi-task training (IIRG) that supervises multi-hop collaborative and semantic item-item relations.",
+        "key_metrics": "Qwen-3.5-4B/TID full-item ranking: Sports R@5 0.0406 vs Naive 0.0337 (+20.5%); Toys 0.0780 vs 0.0634 (+23%); Beauty 0.0726 vs 0.0606 (+19.8%); ~+21% avg Recall@5 over Naive and best across 3 datasets x 4 metrics vs 17 baselines. Group split: +40% (non-memorization users) vs +16% (memorization users)."
+      }
+    }
+  },
+  {
+    "id": "2606.17707",
+    "title": "Do Generative Recommenders Deepen the Information Cocoon? A Closed-Loop Simulation with LLM-powered User Simulators",
+    "authors": ["Jiyuan Yang", "Gengxin Sun", "Mengqi Zhang", "Lingjie Wang", "Yuanzi Li", "Hongxi Cui", "Xin Xin", "Pengjie Ren"],
+    "affiliations": ["Shandong University", "Renmin University of China"],
+    "source": "arXiv",
+    "published": "2026-06-16",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.17707", "pdf": "https://arxiv.org/pdf/2606.17707v1", "code": "https://github.com/Dregen-Yor/RecLoop"},
+    "tags": ["推荐系统", "生成式推荐", "信息茧房", "治理", "LLM仿真"],
+    "score": {"innovation": 25, "results": 9, "exp_quality": 12, "efficiency": 6, "generalization": 2, "relevance": 19, "total": 73, "rationale_zh": "选题与电商内容多样性治理高度契合（曝光多样性、长尾/头部集中、创作者公平），首次用 LLM-agent 闭环仿真系统比较生成式 vs 传统推荐的信息茧房，并原创 code 空间结构茧房指标；但属诊断/分析型、缺准确率 SOTA 与真实用户校准，泛化范围有限。"},
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "作者构建 RecLoop——一个由 LLM 用户智能体（Qwen3-8B）驱动的大规模闭环仿真框架，让推荐器经历‘曝光→用户选择→数据更新→周期重训’共 15 个循环（Office 5K agents、Toys 20K agents）。每个 agent 含动态画像、长短期双记忆、周期反思与动作模块，既保留历史偏好又随交互演化。除曝光层指标（类目熵、Jaccard、覆盖率、Gini），还原创提出 Code-Space Structural Cocoon（分层 code 熵 + Top-κ 集中度），刻画生成式推荐内部 code 空间的收窄。",
+        "story": "现有信息茧房研究只针对传统 ID 序列推荐、且依赖静态离线评估，无法刻画生成式推荐在长期反馈循环中的茧房演化 → 设计 LLM-agent 闭环仿真 RecLoop + 新增 code 空间结构茧房指标来填补该空白。",
+        "innovation": "1）首个面向生成式推荐信息茧房的 LLM-agent 闭环仿真框架（含周期重训）；2）原创‘Code-Space Structural Cocoon’模型级指标，从学习到的离散 code 层级衡量收窄；3）系统性结论：生成式更抗曝光层茧房；茧房集中在粗粒度 code 层；CID 比 SID 更易加剧；更大模型更抗茧房。",
+        "key_metrics": "Inter-user Jaccard@Cycle15（Office）：SASRec 0.223 > Mamba4Rec 0.138 > TIGER 0.108 > OneRec 0.064（生成式同质化最低，OneRec 比 SASRec 低约 71%）。分层 code 熵下降（TIGER, Office）：Layer0 53.6% / Layer1 40.4% / Layer2 仅 13.4%（茧房集中在粗层）。模型规模（Toys, Cycle15）：3B 最细层活跃 code 233/256 vs 0.5B 仅 70。"
+      },
+      "en": {
+        "method_overview": "RecLoop is a large-scale closed-loop simulator where LLM-powered user agents (Qwen3-8B) interact with recommenders over 15 retraining cycles on two Amazon datasets (5K / 20K agents). Each agent has a dynamic profile, dual (short/long-term) memory, periodic reflection, and an action module. Beyond standard exposure-level cocoon metrics, it introduces a model-level Code-Space Structural Cocoon metric (layer-wise code entropy + Top-k concentration).",
+        "innovation": "The first closed-loop LLM-agent simulation for information cocoons in generative recommendation, plus a novel layer-wise code-space cocoon metric and systematic findings (generative is more cocoon-resistant at exposure level; cocoons concentrate at coarse code layers; collaborative-ID tokenization is worse; larger models help).",
+        "key_metrics": "Inter-user Jaccard@Cycle15 (Office): SASRec 0.223 > Mamba4Rec 0.138 > TIGER 0.108 > OneRec 0.064 (~71% lower than SASRec). Layer-wise code-entropy drop (TIGER, Office): Layer0 53.6% / Layer1 40.4% / Layer2 13.4%. Model scale (Toys, Cycle15): 3B keeps 233/256 active codes at the finest layer vs 70 for 0.5B."
+      }
+    }
+  },
+  {
+    "id": "2606.17449",
+    "title": "MODE-RAG: Manifold Outlier Diagnosis and Energy-based Retrieval-Augmented Generation Evaluation",
+    "authors": ["Zehang Wei", "Jiaxin Dai", "Jiamin Yan", "Xiang Xiang"],
+    "affiliations": ["Huazhong University of Science and Technology"],
+    "source": "arXiv",
+    "published": "2026-06-16",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.17449", "pdf": "https://arxiv.org/pdf/2606.17449v1"},
+    "tags": ["多模态RAG", "幻觉治理", "多智能体", "内容质量"],
+    "score": {"innovation": 24, "results": 10, "exp_quality": 11, "efficiency": 7, "generalization": 2, "relevance": 16, "total": 70, "rationale_zh": "机制驱动的动态门控（变分自由能 + 注意力）+ 多智能体治理思路，对多模态内容质量/幻觉治理有借鉴价值；但实证覆盖窄（单一 7B kernel / 自建基准）、SOTA 优势不稳、无开源与电商落地验证。"},
+    "reproduce": {"status": "no_code", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "MODE-RAG 是一个由变分自由能（VFE）和内部注意力状态驱动的多智能体框架，用于量化并动态缓解多模态 RAG 的幻觉。核心 FE-Router 作为‘热力学门控’，先评估查询的认知不确定性：低风险查询绕过流程避免过度纠正，高风险（F̄>γ）则触发五智能体解耦流水线（Per/Cor/Ret/Rea/Gen-Agent）。Rea-Agent 用 MCTS 构建因果有向无环图，Gen-Agent 用 logit 扰动抑制谄媚，由 PORAG 驱动的 Overseer 做三重一致性核查并触发递归回退。",
+        "story": "现有多模态 RAG 受跨模态幻觉/谄媚困扰，且缓解策略陷入‘干预悖论’（静态规则过度纠正 vs 放任级联编造）→ 设计 VFE/注意力驱动的 FE-Router 做动态门控，并用五智能体（含 MCTS 因果推理、logit 扰动、Overseer 回退）按需精准干预。",
+        "innovation": "1）FE-Router：基于变分自由能 + 注意力的自适应门控，化解干预悖论；2）五智能体解耦流水线，分阶段处理多类幻觉/RAG 触发；3）将 MCTS 引入因果 DAG 推理 + logit 扰动抑制谄媚 + Overseer 双奖励校验与递归回退；4）构建 ModeVent 基准（VFE 极值 500 离群 + 500 稳定）。",
+        "key_metrics": "全局 Average Total：Baseline 4.40 → MODE-RAG 5.45（+1.04，ΔFidelity +0.89）；Outliers 平均 4.50 → 5.98（+1.48）；Majority Text Bias（Outliers）5.04 → 7.36（+2.31）。五方法对比 Overall Total：MODE-RAG 5.45 > Self-RAG 5.21 > Woodpecker 4.93 > Baseline 4.40。效率约 1.42×、26.2s/query（4×RTX 4090，Qwen-2.5-VL-7B）。"
+      },
+      "en": {
+        "method_overview": "MODE-RAG is a VFE- and attention-driven multi-agent framework that quantifies and dynamically gates interventions to mitigate multimodal RAG hallucinations. A central FE-Router (thermodynamic gate) routes low-risk queries to bypass intervention and high-risk queries into a decoupled five-agent pipeline; Rea-Agent runs MCTS to build causal DAGs, Gen-Agent applies logit perturbation against sycophancy, and a PORAG Overseer performs triple-consistency checks with a recursive fallback.",
+        "innovation": "A VFE+attention adaptive FE-Router resolving the intervention paradox, a decoupled five-agent pipeline, MCTS causal DAGs + logit perturbation + a dual-reward Overseer, and the new ModeVent benchmark.",
+        "key_metrics": "Global Average Total: 4.40 -> 5.45 (+1.04, dFidelity +0.89); Outliers 4.50 -> 5.98 (+1.48); Majority Text Bias (Outliers) 5.04 -> 7.36 (+2.31). Overall Total: MODE-RAG 5.45 > Self-RAG 5.21 > Woodpecker 4.93 > Baseline 4.40. ~1.42x cost, 26.2s/query (4xRTX 4090, Qwen-2.5-VL-7B)."
+      }
+    }
+  },
+  {
+    "id": "2606.16387",
+    "title": "Leveraging Code-Mixed Product Metadata and User Feedback for Personalized Recommendation on Daraz Bangladesh",
+    "authors": ["KM Fahim A Bari", "Muhammad Abdullah Adnan", "Nafis Sadeq"],
+    "affiliations": ["East West University", "Bangladesh University of Engineering and Technology"],
+    "source": "arXiv",
+    "published": "2026-06-15",
+    "date": "2026-06-17",
+    "links": {"abs": "https://arxiv.org/abs/2606.16387", "pdf": "https://arxiv.org/pdf/2606.16387v1", "code": "https://github.com/os-car-war-thy/daraz-recsys"},
+    "tags": ["电商", "推荐", "混合语", "内容理解", "低资源"],
+    "score": {"innovation": 12, "results": 6, "exp_quality": 12, "efficiency": 6, "generalization": 3, "relevance": 8, "total": 47, "rationale_zh": "首个孟加拉电商（Daraz/BanglishRev）可复现 Top-N 推荐基准，实证量化了混合语（Banglish）词表碎片化对推荐的损害；方法论严谨但无算法创新、绝对指标低、与‘创作者治理’几乎无关。"},
+    "reproduce": {"status": "code_available", "path": ""},
+    "summary": {
+      "zh": {
+        "method_overview": "本文是首个面向孟加拉 Daraz 电商评论数据（BanglishRev，含孟加拉语 Unicode、英语及拉丁字母转写的 Banglish 混合语）的 Top-N 推荐基准。作者在‘按用户时间排序、留最后一个交互’协议下评测六类模型（GlobalPop、CatPop、UserCF、ItemCF、ExplicitMF-SVD、ImplicitMF-ALS、CBF）。针对极端长尾稀疏做了五档 k-core 阈值消融，并用字符 1–2gram TF-IDF 的内容过滤做按主导书写体系（孟加拉语/英语/Banglish/空）分层评测，量化混合语对推荐质量的影响。属基准/实证类工作，无新模型。",
+        "story": "代码混合（Banglish）电商评论对推荐的影响此前完全未被研究、且无现成基准 → 作者构建首个可复现 Top-N 基准 + k-core 稀疏消融 + 按语言分层的内容过滤评测来系统刻画这一影响。",
+        "innovation": "1）首个孟加拉电商（Daraz/BanglishRev）可复现 Top-N 推荐基准，评测六类模型；2）首次实证测量 Banglish 词表碎片化对推荐质量的损害；3）五档 k-core 密度消融，揭示不同算法对稀疏度的差异化敏感性，对稀疏场景模型选型有指导意义。",
+        "key_metrics": "数据集 BanglishRev：324 万评分 / 934,949 用户 / 128,494 商品，密度 0.0022%，59.3% 用户仅 1 次交互。主基准(10,3)：ItemCF 最优 NDCG@10=0.0270、Hit@10=0.0525；CBF 仅 0.0077。分层 CBF：Banglish 用户 NDCG@10=0.0050，相对孟加拉语用户下降 46.8%（英语 −34.0%）。k-core 消融：ImplicitMF 最受损（Δ−0.0138），ItemCF 最稳健（Δ−0.0047）。"
+      },
+      "en": {
+        "method_overview": "This is the first reproducible Top-N recommendation benchmark on Bangladeshi Daraz e-commerce reviews (BanglishRev, mixing Bengali Unicode, English, and Latin-script Banglish). Six model families are evaluated under a per-user chronological leave-last-out protocol; a five-level k-core threshold ablation probes extreme sparsity, and a language-stratified content-based filtering study (character 1-2 gram TF-IDF) quantifies how code-mixing degrades recommendation. No new model is proposed.",
+        "innovation": "The first reproducible Bangla e-commerce recommendation benchmark, the first empirical quantification of Banglish vocabulary fragmentation harming recommendation, and a five-level k-core density ablation revealing algorithm-specific sparsity sensitivity.",
+        "key_metrics": "BanglishRev: 3.24M ratings / 934,949 users / 128,494 items, density 0.0022%, 59.3% single-interaction users. Primary (10,3): ItemCF best NDCG@10=0.0270, Hit@10=0.0525; CBF only 0.0077. Stratified CBF: Banglish users NDCG@10=0.0050, -46.8% vs Bengali (English -34.0%). k-core: ImplicitMF most hurt (d -0.0138), ItemCF most robust (d -0.0047)."
+      }
+    }
+  }
+]

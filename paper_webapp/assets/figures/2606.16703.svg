@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="700" viewBox="0 0 760 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arr" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrR" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arrO" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f97316"/>
+    </marker>
+    <style>
+      .t  { font:700 22px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .s  { font:500 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .h  { font:700 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .p  { font:500 11.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#334155 }
+      .m  { font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; fill:#0f766e }
+      .lbl{ font:600 11px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .stage { font:800 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0ea5e9 }
+    </style>
+  </defs>
+<rect width="760" height="700" rx="18" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="20" y="18" width="720" height="60" rx="14" fill="#ffffff"/></g>
+  <rect x="20" y="18" width="720" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="38" y="48">ReaEmb</text>
+  <text class="s" x="38" y="68">Two stages over a FROZEN LLM -&gt; precomputed item embeddings</text>
+
+<g filter="url(#sh)"><rect x="60" y="96" width="640" height="34" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/></g>
+<text class="h" x="74" y="118">Frozen LLM (shared backbone, weights kept frozen)</text>
+<rect x="60" y="132" width="26" height="18" rx="9" fill="#0ea5e9" opacity="0.16"/><text class="stage" x="67" y="145">I</text>
+<g filter="url(#sh)"><rect x="60" y="150" width="330" height="70" rx="12" fill="#eff6ff" stroke="#bfdbfe"/></g>
+<text class="h" x="74" y="172">Stage I  - LRCL</text>
+<text class="p" x="74" y="192">input: item text E_i + k reasoning placeholders</text>
+<g filter="url(#sh)"><rect x="60" y="240" width="330" height="64" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="74" y="262">1st forward</text>
+<text class="p" x="74" y="282">latent reasoning via lightweight attention -&gt; R_i</text>
+<g filter="url(#sh)"><rect x="60" y="322" width="330" height="64" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="74" y="344">2nd forward</text>
+<text class="p" x="74" y="364">mean-pool -&gt; item embedding e_i</text>
+<g filter="url(#sh)"><rect x="60" y="404" width="330" height="60" rx="12" fill="#f0fdfa" stroke="#99f6e4"/></g>
+<text class="h" x="74" y="426">Loss</text>
+<text class="p" x="74" y="446">attribute-level contrastive loss</text>
+<line x1="225.0" y1="220" x2="225.0" y2="240" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="225.0" y1="304" x2="225.0" y2="322" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="225.0" y1="386" x2="225.0" y2="404" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<rect x="430" y="132" width="26" height="18" rx="9" fill="#f97316" opacity="0.16"/><text class="stage" x="437" y="145">II</text>
+<g filter="url(#sh)"><rect x="430" y="150" width="270" height="70" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="h" x="444" y="172">Stage II  - CRRL</text>
+<text class="p" x="444" y="192">Gaussian-perturbed reasoning</text>
+<text class="p" x="444" y="210">vectors -&gt; G samples</text>
+<g filter="url(#sh)"><rect x="430" y="252" width="270" height="70" rx="12" fill="#fff7ed" stroke="#fed7aa"/></g>
+<text class="h" x="444" y="274">Reward</text>
+<text class="p" x="444" y="294">co-occurrence reward</text>
+<text class="p" x="444" y="312">+ BRPO advantage</text>
+<g filter="url(#sh)"><rect x="430" y="354" width="270" height="60" rx="12" fill="#fff7ed" stroke="#fed7aa"/></g>
+<text class="h" x="444" y="376">Policy update</text>
+<text class="p" x="444" y="396">GRPO update on samples</text>
+<line x1="565.0" y1="220" x2="565.0" y2="252" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="565.0" y1="322" x2="565.0" y2="354" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="60" y="510" width="640" height="86" rx="12" fill="#ecfdf5" stroke="#bbf7d0"/></g>
+<text class="h" x="74" y="532">Output: precomputed item embeddings</text>
+<text class="p" x="74" y="552">each item -&gt; fixed embedding e_i (offline, no online LLM cost)</text>
+<text class="m" x="74" y="570">initialize SRS backbone:  SASRec  /  GRU4Rec</text>
+<path d="M 225.0 464 L 225.0 510" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 565.0 414 L 565.0 510" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/></svg>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="600" viewBox="0 0 760 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arr" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrR" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arrO" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f97316"/>
+    </marker>
+    <style>
+      .t  { font:700 22px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .s  { font:500 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .h  { font:700 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .p  { font:500 11.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#334155 }
+      .m  { font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; fill:#0f766e }
+      .lbl{ font:600 11px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .stage { font:800 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0ea5e9 }
+    </style>
+  </defs>
+<rect width="760" height="600" rx="18" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="20" y="18" width="720" height="60" rx="14" fill="#ffffff"/></g>
+  <rect x="20" y="18" width="720" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="38" y="48">Daraz / BanglishRev</text>
+  <text class="s" x="38" y="68">Code-mixed Top-N recommendation benchmark pipeline</text>
+
+<g filter="url(#sh)"><rect x="30" y="150" width="175" height="130" rx="12" fill="#eff6ff" stroke="#bfdbfe"/></g>
+<text class="h" x="44" y="172">BanglishRev Data</text>
+<text class="p" x="44" y="192">3.24M ratings</text>
+<text class="p" x="44" y="210">BN + EN + Banglish</text>
+<text class="p" x="44" y="228">(code-mixed reviews)</text>
+<g filter="url(#sh)"><rect x="225" y="150" width="175" height="130" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="239" y="172">Preprocess</text>
+<text class="p" x="239" y="192">dedup</text>
+<text class="p" x="239" y="210">k-core filter</text>
+<text class="p" x="239" y="228">chronological</text>
+<text class="p" x="239" y="246">leave-last-out</text>
+<g filter="url(#sh)"><rect x="420" y="150" width="175" height="130" rx="12" fill="#f0fdfa" stroke="#99f6e4"/></g>
+<text class="h" x="434" y="172">Models</text>
+<text class="p" x="434" y="192">GlobalPop / CatPop</text>
+<text class="p" x="434" y="210">UserCF / ItemCF</text>
+<text class="p" x="434" y="228">ExplicitMF / ImplicitMF</text>
+<text class="p" x="434" y="246">CBF</text>
+<g filter="url(#sh)"><rect x="615" y="150" width="115" height="130" rx="12" fill="#ecfdf5" stroke="#bbf7d0"/></g>
+<text class="h" x="629" y="172">Eval</text>
+<text class="p" x="629" y="192">HR@K</text>
+<text class="p" x="629" y="210">NDCG@K</text>
+<line x1="205" y1="215" x2="225" y2="215" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="400" y1="215" x2="420" y2="215" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="595" y1="215" x2="615" y2="215" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="255" y="400" width="220" height="96" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="h" x="269" y="422">k-core sparsity ablation</text>
+<text class="p" x="269" y="442">5 density thresholds</text>
+<text class="p" x="269" y="460">ImplicitMF most hurt;</text>
+<text class="p" x="269" y="478">ItemCF most robust</text>
+<g filter="url(#sh)"><rect x="510" y="400" width="220" height="96" rx="12" fill="#fff7ed" stroke="#fed7aa"/></g>
+<text class="h" x="524" y="422">Language-stratified CBF</text>
+<text class="p" x="524" y="442">char 1-2gram TF-IDF</text>
+<text class="p" x="524" y="460">Banglish NDCG@10 -46.8%</text>
+<text class="p" x="524" y="478">vs Bengali users</text>
+<path d="M 660 280 C 660 340, 420 350, 365 400" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 690 280 C 700 340, 640 360, 620 400" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/></svg>

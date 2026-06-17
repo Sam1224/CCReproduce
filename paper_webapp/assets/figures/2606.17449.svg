@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="720" viewBox="0 0 760 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arr" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrR" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arrO" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f97316"/>
+    </marker>
+    <style>
+      .t  { font:700 22px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .s  { font:500 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .h  { font:700 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .p  { font:500 11.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#334155 }
+      .m  { font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; fill:#0f766e }
+      .lbl{ font:600 11px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .stage { font:800 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0ea5e9 }
+    </style>
+  </defs>
+<rect width="760" height="720" rx="18" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="20" y="18" width="720" height="60" rx="14" fill="#ffffff"/></g>
+  <rect x="20" y="18" width="720" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="38" y="48">MODE-RAG</text>
+  <text class="s" x="38" y="68">FE-Router gating + decoupled 5-agent hallucination pipeline</text>
+
+<g filter="url(#sh)"><rect x="60" y="96" width="640" height="48" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/></g>
+<text class="h" x="74" y="118">Multimodal Query + retrieved context</text>
+<g filter="url(#sh)"><polygon points="380.0,154 500.0,200 380.0,246 260.0,200" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="h" x="380.0" y="194" text-anchor="middle">FE-Router</text>
+<text class="p" x="380.0" y="212" text-anchor="middle">VFE + attention gate</text>
+<text class="m" x="380.0" y="230" text-anchor="middle">mean F &gt; gamma ?</text>
+<line x1="380.0" y1="144" x2="380.0" y2="154" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="560" y="172" width="150" height="56" rx="12" fill="#ecfdf5" stroke="#bbf7d0"/></g>
+<text class="h" x="574" y="194">Low-risk: bypass</text>
+<text class="p" x="574" y="214">-&gt; output directly</text>
+<line x1="500.0" y1="200" x2="560" y2="200" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<text class="lbl" x="510.0" y="192">low risk</text>
+<text class="lbl" x="40" y="285">high risk (F &gt; gamma)</text>
+<path d="M 290.0 230 C 200 250, 270.0 260, 270.0 290" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="120" y="290" width="300" height="56" rx="12" fill="#eff6ff" stroke="#bfdbfe"/></g>
+<text class="h" x="134" y="312">Per-Agent</text>
+<text class="p" x="134" y="332">perception / parse</text>
+<g filter="url(#sh)"><rect x="120" y="362" width="300" height="56" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="134" y="384">Cor-Agent</text>
+<text class="p" x="134" y="404">cross-modal correction</text>
+<line x1="270.0" y1="346" x2="270.0" y2="362" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="120" y="434" width="300" height="56" rx="12" fill="#f0fdfa" stroke="#99f6e4"/></g>
+<text class="h" x="134" y="456">Ret-Agent</text>
+<text class="p" x="134" y="476">retrieval + manifold filter</text>
+<line x1="270.0" y1="418" x2="270.0" y2="434" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="120" y="506" width="300" height="56" rx="12" fill="#f5f3ff" stroke="#ddd6fe"/></g>
+<text class="h" x="134" y="528">Rea-Agent</text>
+<text class="p" x="134" y="548">MCTS causal DAG reasoning</text>
+<line x1="270.0" y1="490" x2="270.0" y2="506" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="120" y="578" width="300" height="56" rx="12" fill="#fff7ed" stroke="#fed7aa"/></g>
+<text class="h" x="134" y="600">Gen-Agent</text>
+<text class="p" x="134" y="620">generation + logit perturbation</text>
+<line x1="270.0" y1="562" x2="270.0" y2="578" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="470" y="330" width="230" height="120" rx="12" fill="#fff1f2" stroke="#fecdd3"/></g>
+<text class="h" x="484" y="352">PORAG Overseer</text>
+<text class="p" x="484" y="372">triple-consistency check</text>
+<text class="p" x="484" y="390">over agent outputs</text>
+<text class="p" x="484" y="408"></text>
+<text class="p" x="484" y="426">recursive fallback -&gt;</text>
+<path d="M 420 606.0 C 440 606.0, 470 430, 470 430" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 470 360 C 440 320, 420 516, 420 534.0" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arrR)"/>
+<text class="lbl" x="450" y="320">recursive fallback</text>
+<g filter="url(#sh)"><rect x="470" y="480" width="230" height="56" rx="12" fill="#ecfdf5" stroke="#bbf7d0"/></g>
+<text class="h" x="484" y="502">Hallucination-free report</text>
+<line x1="585" y1="450" x2="585" y2="480" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/></svg>

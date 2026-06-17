@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="640" viewBox="0 0 760 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arr" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrR" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arrO" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f97316"/>
+    </marker>
+    <style>
+      .t  { font:700 22px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .s  { font:500 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .h  { font:700 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .p  { font:500 11.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#334155 }
+      .m  { font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; fill:#0f766e }
+      .lbl{ font:600 11px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .stage { font:800 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0ea5e9 }
+    </style>
+  </defs>
+<rect width="760" height="640" rx="18" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="20" y="18" width="720" height="60" rx="14" fill="#ffffff"/></g>
+  <rect x="20" y="18" width="720" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="38" y="48">IIRG</text>
+  <text class="s" x="38" y="68">Shared LLM with 3 parallel training branches (joint multi-task loss)</text>
+
+<g filter="url(#sh)"><rect x="230" y="96" width="300" height="56" rx="12" fill="#f1f5f9" stroke="#e2e8f0"/></g>
+<text class="h" x="244" y="118">User interaction sequence</text>
+<text class="p" x="244" y="138">(input shared by all branches)</text>
+<g filter="url(#sh)"><rect x="210" y="180" width="340" height="50" rx="12" fill="#f5f3ff" stroke="#ddd6fe"/></g>
+<text class="h" x="224" y="202">Shared LLM (one model, joint training)</text>
+<line x1="380.0" y1="152" x2="380.0" y2="180" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="40" y="280" width="180" height="120" rx="12" fill="#eff6ff" stroke="#bfdbfe"/></g>
+<text class="h" x="54" y="302">Next-item Prediction</text>
+<text class="p" x="54" y="322">user seq -&gt; next item</text>
+<text class="p" x="54" y="340">ID + title</text>
+<text class="p" x="54" y="358">(inference uses ONLY this)</text>
+<g filter="url(#sh)"><rect x="70" y="430" width="120" height="40" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="m" x="84" y="452">L_u</text>
+<path d="M 380.0 230 L 130.0 280" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="130.0" y1="400" x2="130.0" y2="430" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="290" y="280" width="180" height="120" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="304" y="302">Collaborative-neighbor Gen</text>
+<text class="p" x="304" y="322">multi-hop co-occurrence</text>
+<text class="p" x="304" y="340">top-N neighbors</text>
+<g filter="url(#sh)"><rect x="320" y="430" width="120" height="40" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="m" x="334" y="452">lambda1 . L^C</text>
+<path d="M 380.0 230 L 380.0 280" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="380.0" y1="400" x2="380.0" y2="430" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="540" y="280" width="180" height="120" rx="12" fill="#f0fdfa" stroke="#99f6e4"/></g>
+<text class="h" x="554" y="302">Semantic-neighbor Gen</text>
+<text class="p" x="554" y="322">text-embedding similarity</text>
+<text class="p" x="554" y="340">top-N neighbors</text>
+<g filter="url(#sh)"><rect x="570" y="430" width="120" height="40" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="m" x="584" y="452">lambda2 . L^S</text>
+<path d="M 380.0 230 L 630.0 280" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<line x1="630.0" y1="400" x2="630.0" y2="430" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<g filter="url(#sh)"><rect x="210" y="510" width="340" height="56" rx="12" fill="#fff7ed" stroke="#fed7aa"/></g>
+<text class="h" x="224" y="532">Joint loss  L = L_u + lambda1 L^C + lambda2 L^S</text>
+<text class="p" x="224" y="552">gradient update on the shared LLM</text>
+<path d="M 130.0 470 L 250 510" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 380.0 470 L 380.0 510" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 630.0 470 L 510 510" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/></svg>
