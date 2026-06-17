@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI论文日报 · 2026-06-16</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #1a1d2e;
+    --bg3: #232635;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --border: #2d3148;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Inter', 'PingFang SC', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Nav */
+  nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--text2); font-weight: 400; font-size: 13px; margin-left: 8px; }
+  .nav-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--text); }
+  .btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 50%, #1a1226 100%);
+    padding: 48px 24px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-date {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 5vw, 40px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #6c63ff, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .hero-sub { color: var(--text2); font-size: 15px; max-width: 600px; margin: 0 auto 24px; }
+  .stats-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-accent { background: var(--accent); }
+
+  /* Layout */
+  .main-layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 20px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 72px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sidebar-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .sidebar-card h3 {
+    font-size: 12px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  .filter-row { margin-bottom: 10px; }
+  .filter-row label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 4px; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  #score-display {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    text-align: right;
+  }
+  .tag-filter { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag.active { border-color: var(--accent); background: rgba(108,99,255,0.15); color: var(--accent); }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 6px; }
+  .toc-list a {
+    font-size: 13px;
+    color: var(--text2);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .toc-list a:hover { background: var(--bg3); color: var(--text); }
+  .toc-score {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .score-high { background: rgba(16,185,129,0.15); color: var(--green); }
+  .score-mid  { background: rgba(245,158,11,0.15); color: var(--yellow); }
+  .score-low  { background: rgba(148,163,184,0.1); color: var(--text2); }
+
+  /* Paper cards */
+  .papers-section h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .papers-section h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .paper-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+  .card-high::before { background: var(--green); }
+  .card-mid::before  { background: var(--yellow); }
+  .card-low::before  { background: var(--border); }
+  .paper-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .paper-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .paper-score-badge {
+    min-width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .badge-high { background: rgba(16,185,129,0.15); color: var(--green); }
+  .badge-mid  { background: rgba(245,158,11,0.15);  color: var(--yellow); }
+  .badge-low  { background: rgba(148,163,184,0.1);  color: var(--text2); }
+  .paper-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .paper-title a { color: inherit; text-decoration: none; }
+  .paper-title a:hover { color: var(--accent); }
+  .paper-meta {
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .meta-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+  .star { color: #f59e0b; }
+  .paper-summary {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text2);
+    margin-top: 10px;
+  }
+  .paper-summary b { color: var(--text); }
+  .paper-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .paper-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 10px;
+    background: rgba(108,99,255,0.1);
+    border: 1px solid rgba(108,99,255,0.25);
+    color: #a78bfa;
+  }
+  .metrics-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .metric-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .metric-pill b { color: var(--green); }
+  .code-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--green);
+    border-radius: 6px;
+    padding: 2px 8px;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  /* Score breakdown chart */
+  .score-breakdown {
+    margin-top: 12px;
+    display: none;
+  }
+  .paper-card.expanded .score-breakdown { display: block; }
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+  @media (max-width: 600px) { .breakdown-grid { grid-template-columns: repeat(2, 1fr); } }
+  .breakdown-item {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 11px;
+  }
+  .breakdown-item .dim-name { color: var(--text2); margin-bottom: 4px; }
+  .breakdown-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .breakdown-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+  .breakdown-val { color: var(--accent); font-weight: 700; margin-top: 2px; }
+  .expand-btn {
+    font-size: 11px;
+    color: var(--text2);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .expand-btn:hover { color: var(--accent); }
+
+  /* Source coverage section */
+  .sources-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .sources-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text2);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+  }
+  .source-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .source-name { color: var(--text); font-weight: 600; margin-bottom: 3px; }
+  .source-status {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .status-403 { color: var(--red); }
+  .status-ok { color: var(--green); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  /* Dark/light toggle */
+  body.light {
+    --bg: #f8fafc;
+    --bg2: #ffffff;
+    --bg3: #f1f5f9;
+    --text: #0f172a;
+    --text2: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .paper-card { animation: fadeIn 0.3s ease; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    📄 AI论文日报
+    <span>2026-06-16</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn" id="lang-btn" onclick="toggleLang()">EN</button>
+    <button class="btn" id="theme-btn" onclick="toggleTheme()">☀️</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-date">2026 年 06 月 16 日 · 电商内容生态 AI 前沿</div>
+  <h1 id="hero-title">内容治理与多模态 AI</h1>
+  <p class="hero-sub" id="hero-sub">覆盖直播审核、商品推荐、LLM评测、长上下文推理等核心方向，共检索 9 篇高相关论文</p>
+  <div class="stats-row">
+    <div class="stat-pill"><span class="stat-dot dot-green"></span><span id="stat1">9 篇论文</span></div>
+    <div class="stat-pill"><span class="stat-dot dot-yellow"></span><span id="stat2">2 篇 ≥80 复现</span></div>
+    <div class="stat-pill"><span class="stat-dot dot-accent"></span><span id="stat3">7 个来源扫描</span></div>
+  </div>
+</div>
+
+<div class="main-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <h3 id="filter-title">筛选</h3>
+      <div class="filter-row">
+        <label id="score-label">最低评分</label>
+        <input type="range" id="score-range" min="0" max="100" value="0" oninput="filterPapers()">
+        <div id="score-display">≥ 0</div>
+      </div>
+      <div class="filter-row">
+        <label id="tag-label" style="margin-bottom:8px;">标签</label>
+        <div class="tag-filter" id="tag-filter">
+          <span class="tag active" data-tag="all" onclick="filterTag(this)">全部</span>
+          <span class="tag" data-tag="moderation" onclick="filterTag(this)">内容审核</span>
+          <span class="tag" data-tag="recommendation" onclick="filterTag(this)">推荐系统</span>
+          <span class="tag" data-tag="llm" onclick="filterTag(this)">LLM</span>
+          <span class="tag" data-tag="agent" onclick="filterTag(this)">Agent</span>
+          <span class="tag" data-tag="attention" onclick="filterTag(this)">高效注意力</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>目录</h3>
+      <ul class="toc-list" id="toc">
+        <li><a href="#paper-dlm"><span>🏆</span> Dynamic Live Moderation <span class="toc-score score-high">88</span></a></li>
+        <li><a href="#paper-univid"><span>🏆</span> UNIVID <span class="toc-score score-high">83</span></a></li>
+        <li><a href="#paper-personas"><span>⭐</span> LLM User Personas <span class="toc-score score-mid">77</span></a></li>
+        <li><a href="#paper-queryagent"><span>⭐</span> QueryAgent-R1 <span class="toc-score score-mid">77</span></a></li>
+        <li><a href="#paper-customer"><span>⭐</span> Customer Agent <span class="toc-score score-mid">71</span></a></li>
+        <li><a href="#paper-judges"><span>·</span> LLM Judge Bias <span class="toc-score score-low">66</span></a></li>
+        <li><a href="#paper-minimax"><span>·</span> MiniMax Sparse Attn <span class="toc-score score-low">65</span></a></li>
+        <li><a href="#paper-cora"><span>·</span> CORA RLVR <span class="toc-score score-low">61</span></a></li>
+        <li><a href="#paper-drift"><span>·</span> Who Drifted <span class="toc-score score-low">58</span></a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main>
+
+    <!-- Source Coverage -->
+    <div class="sources-section">
+      <h2 id="src-title">来源覆盖</h2>
+      <div class="source-grid">
+        <div class="source-item">
+          <div class="source-name">arXiv cs.CV</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">arXiv cs.IR</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">arXiv cs.LG</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">arXiv cs.CL</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">HuggingFace Papers</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">Semantic Scholar</div>
+          <div class="source-status status-403">⚠ HTTP 403 → WebSearch</div>
+        </div>
+        <div class="source-item">
+          <div class="source-name">WebSearch Fallback</div>
+          <div class="source-status status-ok">✓ 9 候选论文</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text2);margin-top:12px;">
+        所有主要来源返回 HTTP 403，已全部切换 WebSearch 备用；详见 README Source Coverage 表。
+      </p>
+    </div>
+
+    <!-- Papers -->
+    <div class="papers-section">
+      <h2 id="papers-title">论文列表</h2>
+
+      <!-- Paper 1: Dynamic Live Moderation -->
+      <div class="paper-card card-high" id="paper-dlm" data-score="88" data-tags="moderation llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-high">88</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2512.03553" target="_blank">
+                Dynamic Content Moderation for Livestreaming via Dual-Pipeline Distillation
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>ByteDance / TikTok</span>
+              <span class="meta-chip">KDD 2026</span>
+              <span class="meta-chip">arXiv:2512.03553</span>
+              <span class="star">★ June 16 listing</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="dlm-summary">
+          提出<b>双管线内容审核系统</b>，用于实时直播流违规检测。
+          <b>管线 A（分类器）</b>：有监督分类，针对已知违规类型，67% Recall @ 80% Precision；
+          <b>管线 B（相似度匹配）</b>：基于参考库的余弦相似度匹配，捕获新型/细粒度违规，76% Recall @ 80% Precision。
+          两路 OR 门融合最大化召回率。MLLM 教师→学生蒸馏压缩 10× 参数量。
+          <b>A/B 测试</b>：减少 6–8% 用户接触不良直播。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">分类召回 <b>67%</b> @80%P</div>
+          <div class="metric-pill">相似召回 <b>76%</b> @80%P</div>
+          <div class="metric-pill">A/B <b>-6~8%</b> 不良直播</div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">内容审核</span>
+          <span class="paper-tag">知识蒸馏</span>
+          <span class="paper-tag">多模态</span>
+          <span class="paper-tag">直播</span>
+        </div>
+        <a class="code-badge" href="../code/DynamicLiveModeration/">⬡ 代码复现 · code/DynamicLiveModeration/</a>
+        <button class="expand-btn" onclick="toggleExpand('paper-dlm')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:87%"></div></div><div class="breakdown-val">26/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:87%"></div></div><div class="breakdown-val">13/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:87%"></div></div><div class="breakdown-val">13/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">8/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">4/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:96%"></div></div><div class="breakdown-val">24/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 2: UNIVID -->
+      <div class="paper-card card-high" id="paper-univid" data-score="83" data-tags="moderation llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-high">83</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.05748" target="_blank">
+                UNIVID: Unified Video Content Moderation via Policy-Aware Captions
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>ByteDance</span>
+              <span class="meta-chip">arXiv:2606.05748</span>
+              <span class="meta-chip">June 4, 2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="univid-summary">
+          提出三阶段视频内容审核框架。
+          <b>阶段一（风险过滤器）</b>：轻量 MLP 高召回预筛，过滤明显安全内容。
+          <b>阶段二（审核演员）</b>：先生成<b>策略感知字幕</b>（Policy-Aware Caption）作为可解释中间表示，再由
+          UNIVID-Lite（低延迟标准违规）或 UNIVID-RAG（检索增强，用于新型违规）决策。
+          <b>阶段三（趋势治理）</b>：缓存 Embedding → 在线聚类 → 新兴违规模式检测 → 快速部署自适应头。
+          UNIVID-RAG 相较 Lite 在新类别召回 <b>+9%</b>。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">RAG vs Lite <b>+9%</b> recall（新类别）</div>
+          <div class="metric-pill">风险过滤 <b>&gt;95%</b> recall</div>
+          <div class="metric-pill">Lite 延迟 <b>~5ms</b></div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">内容审核</span>
+          <span class="paper-tag">RAG</span>
+          <span class="paper-tag">策略字幕</span>
+          <span class="paper-tag">趋势检测</span>
+        </div>
+        <a class="code-badge" href="../code/UNIVID/">⬡ 代码复现 · code/UNIVID/</a>
+        <button class="expand-btn" onclick="toggleExpand('paper-univid')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">24/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">8/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">4/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:92%"></div></div><div class="breakdown-val">23/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 3: LLM User Personas -->
+      <div class="paper-card card-mid" id="paper-personas" data-score="77" data-tags="llm recommendation">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-mid">77</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.12198" target="_blank">
+                Real-Time LLM User Personas at Billion-User Scale
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>Google</span>
+              <span class="meta-chip">arXiv:2606.12198</span>
+              <span class="meta-chip">June 10, 2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="personas-summary">
+          提出<b>实时 LLM 用户画像系统</b>，用于十亿级用户规模的个性化推荐。
+          核心贡献：行为序列语义聚类（在线 k-means）+ LLM 软标签知识蒸馏到轻量编码器 + 异步推理解耦延迟。
+          亮点：首次在生产系统中将 LLM 生成的语义画像推送到端侧推荐打分，
+          用户粘性指标 <b>+3.2%</b>，推荐 CTR <b>+1.8%</b>。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">用户粘性 <b>+3.2%</b></div>
+          <div class="metric-pill">CTR <b>+1.8%</b></div>
+          <div class="metric-pill">QPS <b>1M+</b></div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">用户画像</span>
+          <span class="paper-tag">知识蒸馏</span>
+          <span class="paper-tag">推荐系统</span>
+          <span class="paper-tag">语义聚类</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-personas')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">22/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:70%"></div></div><div class="breakdown-val">7/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">4/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">20/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 4: QueryAgent-R1 -->
+      <div class="paper-card card-mid" id="paper-queryagent" data-score="77" data-tags="recommendation agent llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-mid">77</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.05671" target="_blank">
+                QueryAgent-R1: Chain-of-Retrieval Optimization for E-Commerce Search
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>Alibaba International</span>
+              <span class="meta-chip">arXiv:2606.05671</span>
+              <span class="meta-chip">June 4, 2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="queryagent-summary">
+          将 RLVR（可验证奖励强化学习）引入<b>电商查询推荐</b>。
+          模型在推理时显式生成检索链（Chain-of-Retrieval），
+          包含查询改写→候选召回→一致性验证三步思维过程，
+          最终奖励由 CTR+CVR 联合构成（可验证信号）。
+          在 AliExpress 真实流量上验证：CTR <b>+2.3%</b>，CVR <b>+1.7%</b>。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">CTR <b>+2.3%</b></div>
+          <div class="metric-pill">CVR <b>+1.7%</b></div>
+          <div class="metric-pill">检索链 3 步</div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">查询推荐</span>
+          <span class="paper-tag">RLVR</span>
+          <span class="paper-tag">Chain-of-Thought</span>
+          <span class="paper-tag">电商搜索</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-queryagent')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">22/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">6/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">3/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:88%"></div></div><div class="breakdown-val">22/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 5: Customer Agent -->
+      <div class="paper-card card-mid" id="paper-customer" data-score="71" data-tags="agent llm recommendation">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-mid">71</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.07995" target="_blank">
+                Customer Agent: Tool-Augmented RLVR for Ultra-Long Shopping Trajectories
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>Amazon / Duke</span>
+              <span class="meta-chip">arXiv:2606.07995</span>
+              <span class="meta-chip">June 2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="customer-summary">
+          构建<b>工具增强型购物 Agent</b>，处理含数百步交互的超长购物轨迹。
+          贡献包括：ShopTrajQA 基准（真实电商轨迹 QA 数据集）、
+          RLVR 训练框架（以任务完成率为可验证奖励）、
+          以及工具调用管理（商品搜索、评论分析、价格比较等）。
+          在 ShopTrajQA 上较 GPT-4o 提升 <b>+8.4%</b>。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">vs GPT-4o <b>+8.4%</b></div>
+          <div class="metric-pill">轨迹长度 <b>100+步</b></div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">购物Agent</span>
+          <span class="paper-tag">RLVR</span>
+          <span class="paper-tag">工具调用</span>
+          <span class="paper-tag">基准评测</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-customer')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:67%"></div></div><div class="breakdown-val">20/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">12/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">6/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width">width:40%</div></div><div class="breakdown-val">2/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">20/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 6: LLM Judges -->
+      <div class="paper-card card-low" id="paper-judges" data-score="66" data-tags="llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-low">66</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.15610" target="_blank">
+                Dark Current in LLM Judges: Bias Dimensions and the Judge Datasheet
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>2026</span>
+              <span class="meta-chip">arXiv:2606.15610</span>
+              <span class="star">★ June 14</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="judges-summary">
+          系统性评估 LLM-as-judge 评测方案的五类偏差：
+          <b>暗电流偏差</b>（dark current）、位置偏差、跨敏感度偏差、
+          冗长偏差、自我强化偏差。
+          提出 Judge Datasheet 协议，要求评测报告标注 judge 模型的偏差画像。
+          对 AI 驱动的内容质量评测和电商审核中人机协同评分有直接借鉴。
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">LLM评测</span>
+          <span class="paper-tag">偏差分析</span>
+          <span class="paper-tag">LLM-as-Judge</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-judges')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">18/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:67%"></div></div><div class="breakdown-val">10/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:70%"></div></div><div class="breakdown-val">7/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">3/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:68%"></div></div><div class="breakdown-val">17/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 7: MiniMax Sparse Attention -->
+      <div class="paper-card card-low" id="paper-minimax" data-score="65" data-tags="attention llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-low">65</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.13392" target="_blank">
+                MiniMax Sparse Attention: Blockwise Sparse Attention for 1M-Token Context
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>MiniMax</span>
+              <span class="meta-chip">arXiv:2606.13392</span>
+              <span class="meta-chip">June 11-12, 2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="minimax-summary">
+          提出<b>分块稀疏注意力机制</b>实现百万 Token 上下文。
+          索引分支（Index Branch）维护全局稀疏索引，主分支（Main Branch）做局部密集注意力，
+          两路融合。计算量约为全注意力的 <b>1/20</b>，预填充加速 <b>9.7×</b>，解码加速 <b>15.6×</b>。
+          对电商长文档理解（商品说明、用户评论分析）有潜在价值。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">计算量 <b>1/20</b> 全注意力</div>
+          <div class="metric-pill">预填充 <b>9.7×</b></div>
+          <div class="metric-pill">解码 <b>15.6×</b></div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">稀疏注意力</span>
+          <span class="paper-tag">长上下文</span>
+          <span class="paper-tag">推理加速</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-minimax')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:67%"></div></div><div class="breakdown-val">20/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:90%"></div></div><div class="breakdown-val">9/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">3/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:44%"></div></div><div class="breakdown-val">11/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 8: CORA -->
+      <div class="paper-card card-low" id="paper-cora" data-score="61" data-tags="llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-low">61</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.14691" target="_blank">
+                CORA: Consistency-Constrained Reward for Multimodal RLVR
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>2026</span>
+              <span class="meta-chip">arXiv:2606.14691</span>
+              <span class="star">★ ~June 13</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="cora-summary">
+          为多模态 RLVR 提出<b>思维-答案一致性奖励模型</b>（CORA）。
+          核心观察：RLVR 训练中模型思考过程与最终答案不一致（思维可能正确但答案错误，反之亦然）。
+          CORA 插件式奖励额外惩罚这种不一致，在 7 个多模态基准上平均 <b>+2.1%</b>。
+        </div>
+        <div class="metrics-row">
+          <div class="metric-pill">多模态基准 <b>+2.1%</b></div>
+          <div class="metric-pill">即插即用</div>
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">RLVR</span>
+          <span class="paper-tag">多模态</span>
+          <span class="paper-tag">一致性奖励</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-cora')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">18/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:60%"></div></div><div class="breakdown-val">9/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:70%"></div></div><div class="breakdown-val">7/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">4/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:48%"></div></div><div class="breakdown-val">12/25</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper 9: Who Drifted -->
+      <div class="paper-card card-low" id="paper-drift" data-score="58" data-tags="llm">
+        <div class="paper-header">
+          <div class="paper-score-badge badge-low">58</div>
+          <div>
+            <div class="paper-title">
+              <a href="https://arxiv.org/abs/2606.15474" target="_blank">
+                Who Drifted? Anytime-Valid Attribution for LLM Evaluation Drift
+              </a>
+            </div>
+            <div class="paper-meta">
+              <span>2026</span>
+              <span class="meta-chip">arXiv:2606.15474</span>
+              <span class="star">★ June 13</span>
+            </div>
+          </div>
+        </div>
+        <div class="paper-summary" id="drift-summary">
+          提出<b>双 e-process 归因框架</b>，在 LLM 评测在线监控中区分
+          <b>系统漂移</b>（被评测 LLM 能力变化）和 <b>Judge 漂移</b>（评测 LLM 偏好变化）。
+          基于鞅（martingale）的序列检验，任意停时有效（anytime-valid），
+          无需固定采样规模。对平台持续评估 AI 内容质量审核指标漂移有参考价值。
+        </div>
+        <div class="paper-tags">
+          <span class="paper-tag">统计检验</span>
+          <span class="paper-tag">漂移检测</span>
+          <span class="paper-tag">LLM评测</span>
+          <span class="paper-tag">在线监控</span>
+        </div>
+        <button class="expand-btn" onclick="toggleExpand('paper-drift')">▸ 评分明细</button>
+        <div class="score-breakdown">
+          <div class="breakdown-grid">
+            <div class="breakdown-item"><div class="dim-name">创新性 (×30)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:57%"></div></div><div class="breakdown-val">17/30</div></div>
+            <div class="breakdown-item"><div class="dim-name">SOTA差距 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:53%"></div></div><div class="breakdown-val">8/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">实验质量 (×15)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:73%"></div></div><div class="breakdown-val">11/15</div></div>
+            <div class="breakdown-item"><div class="dim-name">效率 (×10)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">8/10</div></div>
+            <div class="breakdown-item"><div class="dim-name">泛化性 (×5)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:80%"></div></div><div class="breakdown-val">4/5</div></div>
+            <div class="breakdown-item"><div class="dim-name">领域相关 (×25)</div><div class="breakdown-bar"><div class="breakdown-fill" style="width:40%"></div></div><div class="breakdown-val">10/25</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /papers-section -->
+  </main>
+</div>
+
+<footer>
+  <p>AI论文日报 · 2026-06-16 · 自动生成 | 数据来源：arXiv WebSearch 备用 | 所有 arXiv 主源返回 HTTP 403</p>
+  <p style="margin-top:6px;">评分维度：创新性(30) · SOTA差距(15) · 实验质量(15) · 效率(10) · 泛化性(5) · 领域相关(25)</p>
+</footer>
+
+<script>
+  // i18n
+  const i18n = {
+    zh: {
+      heroTitle: "内容治理与多模态 AI",
+      heroSub: "覆盖直播审核、商品推荐、LLM评测、长上下文推理等核心方向，共检索 9 篇高相关论文",
+      stat1: "9 篇论文", stat2: "2 篇 ≥80 复现", stat3: "7 个来源扫描",
+      filterTitle: "筛选", scoreLabel: "最低评分", tagLabel: "标签",
+      srcTitle: "来源覆盖", papersTitle: "论文列表",
+    },
+    en: {
+      heroTitle: "Content Governance & Multimodal AI",
+      heroSub: "Covering live moderation, product recommendation, LLM evaluation, long-context inference — 9 domain-relevant papers",
+      stat1: "9 Papers", stat2: "2 Reproduced (≥80)", stat3: "7 Sources Scanned",
+      filterTitle: "Filter", scoreLabel: "Min Score", tagLabel: "Tags",
+      srcTitle: "Source Coverage", papersTitle: "Papers",
+    }
+  };
+  let currentLang = "zh";
+
+  function toggleLang() {
+    currentLang = currentLang === "zh" ? "en" : "zh";
+    const t = i18n[currentLang];
+    document.getElementById("hero-title").textContent = t.heroTitle;
+    document.getElementById("hero-sub").textContent = t.heroSub;
+    document.getElementById("stat1").textContent = t.stat1;
+    document.getElementById("stat2").textContent = t.stat2;
+    document.getElementById("stat3").textContent = t.stat3;
+    document.getElementById("filter-title").textContent = t.filterTitle;
+    document.getElementById("score-label").textContent = t.scoreLabel;
+    document.getElementById("tag-label").textContent = t.tagLabel;
+    document.getElementById("src-title").textContent = t.srcTitle;
+    document.getElementById("papers-title").textContent = t.papersTitle;
+    document.getElementById("lang-btn").textContent = currentLang === "zh" ? "EN" : "中";
+    document.documentElement.lang = currentLang === "zh" ? "zh-CN" : "en";
+  }
+
+  // Theme
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+    document.getElementById("theme-btn").textContent =
+      document.body.classList.contains("light") ? "🌙" : "☀️";
+  }
+
+  // Score filter
+  function filterPapers() {
+    const minScore = parseInt(document.getElementById("score-range").value);
+    document.getElementById("score-display").textContent = "≥ " + minScore;
+    const activeTag = document.querySelector(".tag.active")?.dataset.tag || "all";
+    applyFilters(minScore, activeTag);
+  }
+
+  // Tag filter
+  function filterTag(el) {
+    document.querySelectorAll(".tag").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    const minScore = parseInt(document.getElementById("score-range").value);
+    applyFilters(minScore, el.dataset.tag);
+  }
+
+  function applyFilters(minScore, tag) {
+    document.querySelectorAll(".paper-card").forEach(card => {
+      const score = parseInt(card.dataset.score);
+      const tags = card.dataset.tags || "";
+      const scoreOk = score >= minScore;
+      const tagOk = tag === "all" || tags.includes(tag);
+      card.style.display = (scoreOk && tagOk) ? "" : "none";
+    });
+  }
+
+  // Expand/collapse score breakdown
+  function toggleExpand(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle("expanded");
+    const btn = card.querySelector(".expand-btn");
+    btn.textContent = card.classList.contains("expanded") ? "▾ 收起明细" : "▸ 评分明细";
+  }
+
+  // Smooth scroll for TOC links
+  document.querySelectorAll('.toc-list a').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
