@@ -1,0 +1,152 @@
+[
+  {
+    "id": "2606.19341",
+    "title": "Native Active Perception as Reasoning for Omni-Modal Understanding",
+    "authors": ["Zhenghao Xing", "Ruiyang Xu", "Yuxuan Wang", "Jinzheng He", "Ziyang Ma", "Qize Yang", "Yunfei Chu", "Jin Xu", "Junyang Lin", "Chi-Wing Fu", "Pheng-Ann Heng"],
+    "affiliations": ["CUHK", "Shanghai Jiao Tong University", "Qwen Team, Alibaba Group", "NTU"],
+    "source": "arXiv (ICML 2026)",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.19341", "pdf": "https://arxiv.org/pdf/2606.19341v1", "code": "https://github.com/harryhsing/OmniAgent"},
+    "tags": ["视频理解", "Omni-Modal", "Agent", "强化学习", "长视频", "内容理解"],
+    "score": {"innovation": 27, "results": 14, "exp_quality": 13, "efficiency": 9, "generalization": 5, "relevance": 18, "total": 86, "rationale_zh": "创新性极高（27/30）：首个端到端原生全模态主动感知 Agent，把视频理解建模为 POMDP 的 Observation-Thought-Action 循环，并提出 TAURA 解决 GRPO 多轮训练的优势同质化问题。实验指标强（14/15）：开源模型十项基准 SOTA，7B 在 LVBench 上以更少帧数反超 10× 大的 Qwen2.5-VL-72B。实验质量高（13/15）：十基准+test-time scaling 分析+消融。效率好（9/10）：推理复杂度与视频时长解耦，帧数 −73%。泛化强（5/5）。相关性（18/25）：视频/全模态内容理解与达人内容治理强相关，但非电商场景直击。原文已提供官方代码与权重，按规则无需复现。"},
+    "reproduce": {"status": "official_code", "path": null, "note": "Qwen Team 官方仓库已开源代码+SFT/RL权重，经核实非空仓库，故不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "OmniAgent 把长视频/全模态理解从被动的“看完全部帧”范式，改造为主动感知的推理过程。它将探索建模为部分可观测马尔可夫决策过程（POMDP），通过 Observation-Thought-Action（OTA）循环按需地浏览帧、收听音频、观看音视频片段，并把高维瞬时感知蒸馏进一段持久的文本记忆，使内部状态只取决于推理轨迹复杂度而非视频时长。训练分两阶段：先用 best-of-N 轨迹合成+双阶段质控做 Agentic SFT 引导主动感知；再用 Agentic RL 中的 TAURA（按轮自适应不确定性重标定优势）把信用分配引向关键发现轮。模型在十个基准上取得开源 SOTA，并展现“推理轮数越多、性能越好”的 test-time scaling 特性。",
+        "innovation": "亮点在于“感知即推理、推理即行动”统一在单个原生模型内，而不是把多模态感知外包给工具模块导致梯度断裂。核心创新有二：(1) 用 POMDP+持久文本记忆把推理复杂度与视频时长解耦，从而能在小时级视频上扩展；(2) TAURA 通过轮级熵识别关键轮，修正 GRPO 把关键发现轮与琐碎动作混为一谈的“优势同质化”。相较“thinking with images”等半被动方法（仍需全局预扫或维持稠密视觉缓存），它真正实现按需取证。",
+        "key_metrics": "亮眼实验：在 10 个基准上全面超过 Qwen2.5-Omni 直接基线，取得开源模型 SOTA。长视频：LVBench 50.5%、MLVU 71.1%；全模态：DailyOmni +4.7%、OmniVideo +7.8%；时序定位：LongVALE 绝对 +33.4%。效率/能力联合证据：7B Agent 在 LVBench 上 50.5% vs Qwen2.5-VL-72B 47.3%（参数小 10×、帧数少 73%）。Test-time scaling：VideoMME-Long 随推理轮数增加 +6.2%。"
+      },
+      "en": {
+        "method_overview": "OmniAgent reframes long-video / omni-modal understanding from a passive watch-it-all paradigm into an active-perception reasoning process. It formulates exploration as a POMDP and, via an Observation-Thought-Action (OTA) cycle, on-demand browses frames, listens to audio, and watches audio-visual clips, distilling high-dimensional transient percepts into a persistent textual memory so that internal state depends only on reasoning-trace complexity rather than raw video duration. Training has two stages: Agentic SFT (best-of-N trajectory synthesis with dual-stage quality control) to bootstrap active perception, then Agentic RL with TAURA (Turn-aware Adaptive Uncertainty Rescaled Advantage) to steer credit toward pivotal discovery turns. It achieves open-source SOTA across ten benchmarks and shows positive test-time scaling.",
+        "innovation": "The key novelty is unifying perception, reasoning and action inside a single native model instead of outsourcing perception to external tools (which severs gradient flow). Two contributions stand out: (1) a POMDP + persistent textual memory that decouples reasoning complexity from video length, enabling hour-long scaling; (2) TAURA, which uses turn-level entropy to fix GRPO's advantage homogenization that conflates pivotal turns with trivial actions. Unlike semi-passive thinking-with-images methods that still pre-scan or keep dense visual buffers, OmniAgent truly gathers evidence on demand.",
+        "key_metrics": "Highlights: beats the Qwen2.5-Omni baseline on all 10 benchmarks (open-source SOTA). Long video: LVBench 50.5%, MLVU 71.1%; omni-modal: DailyOmni +4.7%, OmniVideo +7.8%; temporal grounding: LongVALE +33.4% absolute. Capability-efficiency: 7B agent reaches 50.5% on LVBench vs 47.3% for the 10x larger Qwen2.5-VL-72B with 73% fewer frames. Test-time scaling: +6.2% on VideoMME-Long as reasoning turns increase."
+      }
+    }
+  },
+  {
+    "id": "2606.19103",
+    "title": "ProductConsistency: Improving Product Identity Preservation in Instruction-Based Image Editing via SFT and RL",
+    "authors": ["Mukund Khanna", "Raj Singh Yadav", "Kunal Singh"],
+    "affiliations": ["Fractal Analytics"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.19103", "pdf": "https://arxiv.org/pdf/2606.19103v1", "code": "https://anonymous.4open.science/r/ProductConsistency-6FCC/README.md"},
+    "tags": ["电商", "商品图编辑", "扩散模型", "SFT", "RL", "文本保真"],
+    "score": {"innovation": 23, "results": 12, "exp_quality": 13, "efficiency": 5, "generalization": 4, "relevance": 25, "total": 82, "rationale_zh": "相关性满分（25/25）：直击电商/商品营销图编辑——品牌、Logo、商品几何与商品上文字的保真，是内容生态的核心痛点。创新性较好（23/30）：提出 Cyclic Consistency 奖励（用编辑后图的 caption 与原商品描述的相似度作为商品身份保真代理）+ 全自动合成数据管线 + 新基准。实验（12/15）：CER 5× 下降、Seg CLIP-I/DINO-I/OCR 全面提升，并用闭源 MLLM 做裁判。实验质量（13/15）：两套底座（Qwen-Image-Edit-2511、Flux.1-Kontext-dev）、870 样例基准、奖励消融。效率（5/10）：依赖大扩散模型微调，开销大。评分≥80：原文代码托管于匿名双盲站点、可复现性与可运行性不确定，故按要求进行忠实 PyTorch 复现。"},
+    "reproduce": {"status": "reproduced", "path": "2026-06-18/ProductConsistency", "note": "原文代码为匿名双盲链接，难以确认完整可运行；按要求对核心方法（Cyclic Consistency 奖励 + SFT/RL 管线）做忠实 toy 复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "ProductConsistency 面向电商/广告中的指令式商品图编辑：现有开源与闭源编辑器在改背景、换场景时常常扭曲商品几何、篡改 Logo、拼错或幻觉商品上的文字。作者首先用全自动管线合成带唯一品牌标识与可验证渲染文字的商品图，构建 87k 的 SFT 数据、869 张图的 RL 数据以及 174 图/870 样例的人审基准。训练上，SFT 让模型学会保身份编辑；RL 阶段提出 Cyclic Consistency 奖励——对编辑后图重新生成 caption，与原始商品描述做相似度比较，作为“商品身份是否保持”的语义代理奖励，并叠加指令遵从、视觉一致、文字保真等子奖励。在 Qwen-Image-Edit-2511 与 Flux.1-Kontext-dev 上微调，商品一致性、文字渲染与整体观感均一致提升。",
+        "innovation": "核心创新是把“商品身份保真”这一难以直接监督的目标，转化为一个可计算、可优化的循环一致性奖励：原描述→编辑图→再 caption→与原描述比相似度，形成语义闭环，避免了像素级强约束带来的编辑僵化。配套的合成数据管线生成“带唯一品牌+可验证文字”的商品图，使大规模可控监督成为可能；并首次给出聚焦品牌/文字保真的商品编辑基准（此前基准要么忽略渲染文字、要么只看文档版式）。创新点合理且工程可落地，主要局限是奖励依赖 caption 模型与 OCR 的质量。",
+        "key_metrics": "亮眼实验：在 ProductConsistency Benchmark（174 图、8 类、870 样例）上，相对基线全面提升。Qwen-Image-Edit-2511 在文字保真上字符错误率（CER）下降约 5×；分割区域内的 Seg CLIP-I、Seg DINO-I（商品身份保持）与 OCR 指标均提升；闭源 MLLM 三维裁判（商品一致性 / OCR 保真 / 美观）一致占优。两套底座（Qwen-Image-Edit-2511、Flux.1-Kontext-dev）均观察到一致收益。"
+      },
+      "en": {
+        "method_overview": "ProductConsistency targets instruction-based product image editing for e-commerce/advertising, where existing open and closed editors distort product geometry, alter logos, or misspell/hallucinate on-object text when changing scenes. The authors build a fully automated pipeline that synthesizes product images with unique branding and verifiable rendered text, yielding an 87k SFT set, an 869-image RL set, and a human-verified benchmark of 174 images / 870 samples. SFT teaches identity-preserving edits; the RL stage introduces a Cyclic Consistency reward that re-captions the edited image and compares it with the original product description as a semantic proxy for identity preservation, combined with instruction-adherence, visual-consistency and text-fidelity sub-rewards. Fine-tuning Qwen-Image-Edit-2511 and Flux.1-Kontext-dev yields consistent gains.",
+        "innovation": "The core idea turns the hard-to-supervise goal of product identity preservation into a computable, optimizable cyclic-consistency reward: description -> edited image -> re-caption -> similarity to the original description, forming a semantic loop that avoids the rigidity of pixel-level spatial constraints. A synthetic data pipeline that injects unique brands and verifiable text enables scalable, controllable supervision, and the paper provides the first benchmark focused on brand/text fidelity in product editing. The design is reasonable and deployable; its main limitation is dependence on the quality of the captioner and OCR.",
+        "key_metrics": "Highlights: on the ProductConsistency Benchmark (174 images, 8 categories, 870 samples) it improves over baselines across the board. Qwen-Image-Edit-2511 cuts the OCR character error rate (CER) by about 5x; Seg CLIP-I, Seg DINO-I (identity preservation) and OCR metrics all improve; a closed-source MLLM judge (product consistency / OCR fidelity / aesthetics) consistently favors the trained models. Gains hold for both Qwen-Image-Edit-2511 and Flux.1-Kontext-dev."
+      }
+    }
+  },
+  {
+    "id": "2606.18780",
+    "title": "SAMA: Semantic Anchor-aligned Augmentation for Unified Low-Resource Multimodal Information Extraction",
+    "authors": ["Quanjiang Guo", "Chong Mu", "Jiazhou Pan", "Ming Jia", "Ling Tian", "Hui Gao", "Zhao Kang"],
+    "affiliations": ["University of Electronic Science and Technology of China (UESTC)"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.18780", "pdf": "https://arxiv.org/pdf/2606.18780v1", "code": "https://github.com/UESTC-GQJ/SAMA"},
+    "tags": ["多模态信息抽取", "数据增强", "MLLM", "扩散模型", "低资源", "数据质量"],
+    "score": {"innovation": 24, "results": 12, "exp_quality": 13, "efficiency": 5, "generalization": 5, "relevance": 18, "total": 77, "rationale_zh": "创新性好（24/30）：统一框架同时服务 MNER/MRE/MEE，用从标签构造的“语义锚点”对齐跨模态，配 CME-MLLM（通用 Adapter+任务 Adapter）与锚点保持扩散，再用双约束过滤免人工核验。实验（12/15）：在多个骨干上一致超过 mixGen/GMDA/CAMIM 等增强基线，低资源更明显。实验质量（13/15）：三任务+全/低资源+消融。效率（5/10）：MLLM+扩散，生成开销大。泛化（5/5）：跨三任务统一。相关性（18/25）：多模态内容理解、数据增强与大规模打标，与内容生态数据质量相关，但偏社媒 IE 而非电商直击。<80，不复现，原文亦已开源。"},
+    "reproduce": {"status": "official_code", "path": null, "note": "已开源（github.com/UESTC-GQJ/SAMA），且评分<80，不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "SAMA 针对多模态信息抽取（MNER 命名实体识别、MRE 关系抽取、MEE 事件抽取）在低资源下数据稀缺、跨模态对齐粗糙、且各任务架构割裂的问题，提出统一的数据增强框架。它从真值标签构造结构化“语义锚点”，用一个协作多专家多模态大模型 CME-MLLM（共享语义的通用 Adapter + 各任务专属 Adapter）生成多样但符合约束的文本样本；图像侧用“锚点保持扩散”——以锚点加权提示与隐变量条件，在多样化视觉背景的同时保住关键语义锚点。最后用“双约束过滤”按跨模态一致性与锚点保真自动筛选合成样本，免去人工核验。",
+        "innovation": "创新在于用“语义锚点”作为跨模态对齐与多任务共享的统一中介：既约束文本生成不偏离标签语义，又约束图像生成不丢关键对象，从而修复传统按模态独立增强导致的跨模态语义鸿沟。多专家共享语义的设计让 MNER/MRE/MEE 互相受益，打破任务专用架构的壁垒；双约束过滤把“生成-筛选”闭环自动化，降低对人工的依赖。整体是合理且可复用的数据增强范式，代价是依赖 MLLM 与扩散的生成成本。",
+        "key_metrics": "亮眼实验：在 MNER/MRE/MEE 多个基准、多种骨干（MMT5、PGIM、HVPNeT、TMR 等）上叠加 SAMA 后 F1 一致提升，且优于 mixGen、GMDA、CAMIM 等增强基线。例如 HVPNeT 骨干上 SAMA 将 F1 提升到 78.2/81.9/80.9/83.4（各列对应不同设置），普遍较次优基线 +1~3 F1；低资源设置下增益更明显，验证了合成数据质量与泛化性。"
+      },
+      "en": {
+        "method_overview": "SAMA is a unified data-augmentation framework for multimodal information extraction (MNER, MRE, MEE) under low-resource settings, addressing data scarcity, coarse cross-modal alignment, and fragmented per-task designs. It builds structured semantic anchors from ground-truth labels and uses a Collaborative Multi-Experts MLLM (CME-MLLM: a Universal Adapter for shared semantics plus Task-Specific Adapters) to generate diverse yet constraint-compliant text; for images it uses Anchor-Preserving Diffusion with anchor-weighted prompts and latent conditioning to diversify visual context while retaining critical anchors. A Dual-Constraint Filtering module then auto-selects synthetic samples by cross-modal consistency and anchor fidelity, removing manual verification.",
+        "innovation": "The novelty is using semantic anchors as a unified medium for both cross-modal alignment and multi-task sharing: they constrain text generation to stay faithful to label semantics and constrain image generation to keep key objects, repairing the cross-modal gap caused by per-modality augmentation. The multi-expert shared-semantics design lets MNER/MRE/MEE benefit each other, breaking task-specific silos, while dual-constraint filtering automates the generate-then-select loop. It is a reasonable, reusable augmentation paradigm, at the cost of MLLM + diffusion generation overhead.",
+        "key_metrics": "Highlights: across MNER/MRE/MEE benchmarks and multiple backbones (MMT5, PGIM, HVPNeT, TMR, ...), adding SAMA consistently raises F1 and beats augmentation baselines (mixGen, GMDA, CAMIM). For example, on the HVPNeT backbone SAMA reaches F1 of 78.2/81.9/80.9/83.4 across settings, typically +1-3 F1 over the second-best baseline, with larger gains in low-resource regimes."
+      }
+    }
+  },
+  {
+    "id": "2606.18586",
+    "title": "APT: Atomic Physical Transitions for Causal Video-Language Understanding",
+    "authors": ["Shang Wu", "Haoran Lu", "Songling Liu", "Chenwei Xu", "Lie Lu", "Pranav Maneriker", "Fan Du", "Manling Li", "Zhaoran Wang", "Han Liu"],
+    "affiliations": ["Northwestern University", "Dolby Laboratories"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.18586", "pdf": "https://arxiv.org/pdf/2606.18586v1", "project": "https://polite-bombolone-d4250c.netlify.app/"},
+    "tags": ["视频理解", "因果推理", "VLM", "LoRA", "物理理解", "数据构建"],
+    "score": {"innovation": 24, "results": 12, "exp_quality": 13, "efficiency": 9, "generalization": 5, "relevance": 14, "total": 77, "rationale_zh": "创新性好（24/30）：提出 Atomic Physical Transitions（APT）——把视频从单一事件标签拆成有序、带时间戳的“机制化状态变迁链”，作为事件识别与物理仿真之间缺失的中间表示。实验（12/15）：APT recall 10%→38.1%（+28.1pp），并迁移到 PhysBench、SSv2 多选 +15pp。实验质量（13/15）：8 个零样本 VLM 评测+消融+迁移。效率（9/10）：Qwen3-VL-2B 仅 11M LoRA。泛化（5/5）。相关性（14/25）：视频-语言因果理解对内容理解有借鉴，但聚焦物理机制，与电商达人治理关联较弱。<80，不复现。"},
+    "reproduce": {"status": "skip", "path": null, "note": "评分<80，不复现；原文提供 project page。"},
+    "summary": {
+      "zh": {
+        "method_overview": "APT 认为物理事件不能只用名字（如“bounce”）理解，而应还原其因果状态变化。作者定义 Atomic Physical Transitions（原子物理变迁）：最小、时间局部化的状态变化，把一个可见线索绑定到一个激活的物理机制与前/后动力学状态；一段视频被表示为有序的 APT 链，回答“为什么发生”。他们用人工标注+仿真真值构建混合数据（14 类变迁、1246 个 trial、27303 个带时间实例）。发现当前 VLM 几乎抓不到变迁级物理（零样本 recall ≤14%），而直接微调又导致事件级遗忘。于是提出 APT-Tune：图像-pad 感知监督、格式条件协同训练、机制条件的域到类型解码，在 Qwen3-VL-2B 上仅用 11M LoRA 参数即可在不遗忘常规问答的前提下学会因果变迁。",
+        "innovation": "创新在于提出一种“人类对齐的因果监督信号”，把视频理解的监督单位从 clip 级标签下沉到机制化、可迁移的状态变迁链；这是事件识别与完整物理仿真之间缺失的中间表示，且因按机制（而非外观）定义，可同时用于标注、评测、仿真规格与训练。APT-Tune 用格式条件协同训练化解“学会一种答案格式而非可复用物理表征”的过拟合问题。创新合理、数据构建扎实，主要面向物理视频，泛化到更广内容理解尚需验证。",
+        "key_metrics": "亮眼实验：8 个零样本 VLM 在 14 类设置下 recall 仅 10–14%，错误主要来自漏检变迁，说明 clip 级能力≠变迁级物理理解。APT-Tune 在 Qwen3-VL-2B（11M LoRA）上把 APT recall 从 10.0% 提到 38.1%（+28.1pp），无需在 PhysBench 上训练即可迁移，且把 Something-Something v2 多选准确率较底座 +15pp。"
+      },
+      "en": {
+        "method_overview": "APT argues physical events should be understood by their causal state changes, not by names like 'bounce'. It defines Atomic Physical Transitions: minimal, temporally localized state changes binding a visible cue to an active physical mechanism and before/after dynamical regimes; a video is represented as an ordered APT chain that explains why an event happened. The authors build mixed-source data from human annotation and simulator ground truth (14 transition types, 1,246 trials, 27,303 timed instances). They find current VLMs largely miss transition-level physics (zero-shot recall <=14%), while direct fine-tuning causes event-level forgetting. APT-Tune fixes this with image-pad-aware supervision, format-conditional co-training, and mechanism-conditioned domain-to-type decoding, using only 11M LoRA params on Qwen3-VL-2B.",
+        "innovation": "The novelty is a human-aligned causal supervision signal that moves the supervision unit from clip-level labels to mechanism-typed, transferable transition chains, a missing intermediate representation between event recognition and full physical simulation; because it is defined by mechanism rather than appearance, one schema supports annotation, evaluation, simulation specs and training. APT-Tune's format-conditional co-training resolves overfitting to a single answer format. The design is sound with solid data construction, though it targets physical video and broader transfer needs more validation.",
+        "key_metrics": "Highlights: eight zero-shot VLMs achieve only 10-14% recall in the 14-type setting, dominated by missed transitions, showing clip-level competence != transition-level physics. APT-Tune on Qwen3-VL-2B (11M LoRA) raises APT recall from 10.0% to 38.1% (+28.1pp), transfers to PhysBench without training on it, and improves Something-Something v2 multiple-choice accuracy by +15pp over the base model."
+      }
+    }
+  },
+  {
+    "id": "2606.18947",
+    "title": "Decoupling Search from Reasoning: A Vendor-Agnostic Grounding Architecture for LLM Agents",
+    "authors": ["Emmanuel Aboah Boateng", "Kyle MacDonald", "Amardeep Kumar", "Siddharth Kodwani", "Sudeep Das"],
+    "affiliations": ["DoorDash, Inc."],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.18947", "pdf": "https://arxiv.org/pdf/2606.18947v1"},
+    "tags": ["电商", "Agent", "RAG", "检索接地", "系统架构", "成本优化"],
+    "score": {"innovation": 18, "results": 10, "exp_quality": 12, "efficiency": 9, "generalization": 4, "relevance": 17, "total": 70, "rationale_zh": "工程/系统贡献为主（创新 18/30）：把搜索接地从模型厂商黑盒中解耦为厂商无关的 MCP 网关，暴露提供商路由、来源感知上下文渲染、回退、检索深度与缓存等一等公民控制。实验（10/15）：准确率近原生，主打成本/时延/可控性；非算法 SOTA。实验质量（12/15）：5 个前沿模型+3 公测基准+生产工作负载。效率（9/10）：成本 −91~98%、暖缓存命中 99.4%、时延 −68%。泛化（4/5）。相关性（17/25）：含电商 Query 意图理解（QIU）生产负载，Agent/RAG 与达人治理工具链相关。<80，不复现（系统/网关类工作，复现价值有限）。"},
+    "reproduce": {"status": "skip", "path": null, "note": "系统/网关工程为主，评分<80，不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "DSG（Decoupled Search Grounding）针对生产级 LLM Agent 的实时搜索接地问题：原生搜索把检索策略、提供商选择、证据注入、成本、时延与生成行为都捆在模型厂商边界后面，难以审查、调参、复用与迁移，还会引发“搜索诱导的啰嗦”破坏严格输出契约。作者提出一个厂商无关、兼容 MCP 的网关，把接地移出推理模型之外，将提供商路由、来源感知上下文渲染、可配置回退、检索深度控制与精确+语义缓存暴露为一等公民控制。这样推理模型可随意替换，而检索成为可优化的接口边界。",
+        "innovation": "创新主要是系统抽象与工程权衡，而非新算法：把“搜索接地”从模型的固定特性重新定义为可控接口边界，是其核心贡献。它识别并缓解了 native search 的“搜索诱导啰嗦”这一提示遵从风险，并通过缓存网关在准确率几乎不降的前提下大幅压成本与时延。局限是算法新颖性有限、收益依赖具体提供商与负载，更多是面向落地的最佳实践。",
+        "key_metrics": "亮眼实验：跨 5 个前沿模型（GPT-4o/4o-mini、Gemini 2.5 Flash/Pro、Claude Sonnet 4）与 SimpleQA/FreshQA/HotpotQA。SimpleQA 上 DSG 86.1% 接近原生 87.7%，但搜索成本降 91%；暖缓存命中 99.4%、时延降 68%；在电商 Query 意图理解（QIU）生产负载上准确率追平或略超原生搜索，同时搜索成本下降 98% 以上。FreshQA 这类时效敏感任务原生搜索仍占优。"
+      },
+      "en": {
+        "method_overview": "DSG (Decoupled Search Grounding) tackles real-time search grounding for production LLM agents: native search bundles retrieval policy, provider choice, evidence injection, cost, latency and generation behavior behind a model-provider boundary, making grounding hard to inspect, tune, reuse or port, and can trigger Search-Induced Verbosity that breaks strict output contracts. The authors propose a vendor-agnostic, MCP-compatible gateway that moves grounding outside the reasoning model and exposes provider routing, source-aware context rendering, configured fallback, retrieval-depth control, and exact + semantic caching as first-class controls, keeping the reasoning model interchangeable while retrieval becomes an optimizable interface boundary.",
+        "innovation": "The contribution is mainly a systems abstraction and engineering trade-off rather than a new algorithm: redefining search grounding from a fixed model feature into a controllable interface boundary is the core idea. It identifies and mitigates Search-Induced Verbosity (a prompt-compliance risk of native search) and, via a caching gateway, cuts cost and latency dramatically at near-parity accuracy. Limitations are limited algorithmic novelty and provider/workload-dependent gains; it is best read as deployment best practice.",
+        "key_metrics": "Highlights: across 5 frontier models (GPT-4o/4o-mini, Gemini 2.5 Flash/Pro, Claude Sonnet 4) and SimpleQA/FreshQA/HotpotQA. On SimpleQA, DSG reaches 86.1% vs native 87.7% at 91% lower search cost; 99.4% warm-cache hit rate, 68% lower latency; on a production e-commerce Query Intent Understanding (QIU) workload it matches or slightly exceeds native search while cutting search cost by over 98%. Native search still leads on recency-sensitive FreshQA."
+      }
+    }
+  },
+  {
+    "id": "2606.19259",
+    "title": "A Multi-Domain Benchmark for Detecting AI-Generated Text-Rich Images from GPT-Image-2",
+    "authors": ["Yijin Wang", "Wenhan Zhang", "Shuyi Wang", "Yuqi Ouyang"],
+    "affiliations": ["Sichuan University"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "date": "2026-06-18",
+    "links": {"abs": "https://arxiv.org/abs/2606.19259", "pdf": "https://arxiv.org/pdf/2606.19259v1"},
+    "tags": ["内容治理", "AI生成检测", "文本图像", "Benchmark", "内容真实性"],
+    "score": {"innovation": 12, "results": 7, "exp_quality": 11, "efficiency": 5, "generalization": 4, "relevance": 17, "total": 56, "rationale_zh": "以基准/评测为主、无新方法（创新 12/30、实验 7/15）：构建 GPT-Image-2 生成的“文本密集型”图像多域基准（8602 图、6 类：商业海报/信息图/学术海报/收据/表格/UI 截图），零样本评测 5 个检测器+1 个 VLM。实验质量（11/15）：含分类目与后处理鲁棒性分析。相关性（17/25）：AI 生成内容检测、内容真实性与治理相关，但偏文档型图像、非达人内容直击。价值在于揭示检测器域依赖与对 JPEG 压缩的脆弱性。<80，不复现。"},
+    "reproduce": {"status": "skip", "path": null, "note": "基准/评测类工作、无新方法，评分<80，不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "随着 GPT-Image-2 等多模态生成模型能稳定渲染连贯文字与结构化版式，检测“文本密集型”AI 生成图像（海报、信息图、收据、表格、UI 截图等，常含隐私/交易/决策信息）成为内容真实性与数字信任的新挑战。作者构建一个多域基准：8602 张 GPT-Image-2 生成图，覆盖商业海报、信息图、学术海报、收据、表格、UI 截图 6 类，并提出基于“文本-版式规整度×功能语境”的二维刻画与隐私保护的提示合成管线（不使用原始文字或身份）。基于该基准，零样本评测 5 个代表性 AI 生成图检测器与 1 个多模态 VLM，做整体、分类目与后处理鲁棒性分析。",
+        "innovation": "本文不提新检测方法，价值在于补齐“文本密集型 + 现代生成模型”这一被忽视的评测空白，并给出二维问题刻画与隐私保护合成管线。核心发现是：检测器性能高度依赖类目（在某些类好、换类目就失效），且即便最强的传统检测器对 JPEG 压缩也极其敏感；VLM 能提升整体检测但在结构化文本图上仍不可靠。提示了需要“文本/版式感知”的检测方法。作为资源型工作合理，但方法创新与 SOTA 推进有限。",
+        "key_metrics": "亮眼实验：基准含 8602 图、6 类。零样本评测显示检测性能强烈依赖域——某类表现好的方法在另一类常失败；即便最强传统检测器在 JPEG 压缩下也出现严重性能下降（鲁棒性脆弱）。探索性引入多模态 VLM 后整体检测有提升，但在收据/表格/UI 等结构化文本图上仍不可靠，凸显对文本-版式感知检测的需求。"
+      },
+      "en": {
+        "method_overview": "As multimodal generators like GPT-Image-2 reliably render coherent text and structured layouts, detecting AI-generated text-rich images (posters, infographics, receipts, tables, UI screenshots, often carrying privacy/transactional/decision-relevant info) becomes a key challenge for content authenticity and digital trust. The authors build a multi-domain benchmark of 8,602 GPT-Image-2 images across six categories (commercial posters, infographics, academic posters, receipts, tables, UI screenshots), with a two-dimensional formulation (text-layout regularity x functional context) and a privacy-preserving prompt-synthesis pipeline (no original text or identities). They then evaluate five representative AI-image detectors and one multimodal VLM zero-shot, with overall, per-category and post-processing robustness analyses.",
+        "innovation": "The paper proposes no new detector; its value is filling the overlooked evaluation gap of text-rich images from modern generators, plus a two-dimensional problem formulation and a privacy-preserving synthesis pipeline. Key findings: detector performance is highly category-dependent (good on some, failing on others), even the strongest conventional detector is very sensitive to JPEG compression, and a VLM improves overall detection but remains unreliable on structured text-rich images, motivating text-/layout-aware detection. A reasonable resource paper, but limited methodological novelty.",
+        "key_metrics": "Highlights: the benchmark has 8,602 images across 6 categories. Zero-shot evaluation shows performance is strongly domain-dependent (a method strong on one category often fails on another); even the strongest conventional detector degrades severely under JPEG compression. Adding a multimodal VLM improves overall detection but remains unreliable on structured text-rich images (receipts/tables/UI), highlighting the need for text- and layout-aware detection."
+      }
+    }
+  }
+]
