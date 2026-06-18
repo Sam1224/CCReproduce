@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Paper Daily — 2026-06-17</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --border: #e9ecef;
+    --accent: #3b5bdb; --accent2: #7048e8; --text: #212529;
+    --muted: #868e96; --tag-bg: #e7f5ff; --tag-text: #1971c2;
+    --score-high: #2f9e44; --score-mid: #e67700; --score-low: #c92a2a;
+    --strong: #d3f9d8; --weak: #fff3cd;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  header { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; padding: 2rem; }
+  header h1 { font-size: 1.8rem; font-weight: 700; }
+  header p { opacity: 0.85; margin-top: 0.3rem; }
+
+  .controls { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .controls label { font-size: 0.85rem; color: var(--muted); margin-right: 0.3rem; }
+  .controls input[type=range] { width: 140px; accent-color: var(--accent); }
+  .controls select, .controls input[type=text] { border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.7rem; font-size: 0.9rem; color: var(--text); background: var(--bg); }
+  .lang-btn { background: var(--accent); color: white; border: none; border-radius: 6px; padding: 0.35rem 1rem; cursor: pointer; font-size: 0.85rem; }
+  .lang-btn:hover { background: var(--accent2); }
+  #score-val { font-weight: 700; color: var(--accent); min-width: 2rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; padding: 1.5rem 2rem; max-width: 1600px; margin: 0 auto; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.15s, box-shadow 0.15s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+  .card-header { padding: 1rem 1.2rem 0.8rem; border-bottom: 1px solid var(--border); }
+  .card-badge { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .bucket-badge { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; }
+  .bucket-STRONG { background: var(--strong); color: #2f9e44; }
+  .bucket-WEAK   { background: var(--weak);   color: #e67700; }
+  .score-badge { margin-left: auto; font-size: 0.85rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 6px; }
+  .score-high { background: #d3f9d8; color: var(--score-high); }
+  .score-mid  { background: #fff3cd; color: var(--score-mid);  }
+  .score-low  { background: #ffe3e3; color: var(--score-low);  }
+
+  .card-title { font-size: 0.95rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.4rem; }
+  .card-authors { font-size: 0.78rem; color: var(--muted); }
+  .card-affil { font-size: 0.78rem; color: var(--accent); font-weight: 500; }
+  .card-date { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .card-tags { padding: 0.5rem 1.2rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .tag { background: var(--tag-bg); color: var(--tag-text); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 4px; }
+
+  .card-body { padding: 0 1.2rem; }
+  .section-toggle { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--muted); user-select: none; }
+  .section-toggle:hover { color: var(--accent); }
+  .section-toggle .arrow { transition: transform 0.2s; }
+  .section-toggle.open .arrow { transform: rotate(90deg); }
+  .section-content { font-size: 0.85rem; padding: 0.6rem 0; display: none; }
+  .section-content.visible { display: block; }
+  .section-content p { margin-bottom: 0.4rem; }
+
+  .metrics-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 0.5rem; }
+  .metrics-table th { background: var(--bg); padding: 0.3rem 0.5rem; text-align: left; color: var(--muted); }
+  .metrics-table td { padding: 0.3rem 0.5rem; border-top: 1px solid var(--border); }
+
+  .score-bars { margin-top: 0.5rem; }
+  .score-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; font-size: 0.8rem; }
+  .score-label { width: 90px; color: var(--muted); flex-shrink: 0; }
+  .score-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
+  .score-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .score-num { width: 30px; text-align: right; color: var(--muted); font-size: 0.75rem; }
+
+  .card-footer { padding: 0.7rem 1.2rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: center; }
+  .link-btn { font-size: 0.78rem; padding: 0.25rem 0.7rem; border-radius: 5px; text-decoration: none; border: 1px solid var(--border); color: var(--text); background: var(--bg); }
+  .link-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .link-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .link-btn.primary:hover { background: var(--accent2); border-color: var(--accent2); }
+
+  .hidden { display: none; }
+
+  .summary-bar { background: var(--card); border-bottom: 1px solid var(--border); padding: 0.6rem 2rem; font-size: 0.85rem; color: var(--muted); }
+  .summary-bar strong { color: var(--text); }
+
+  .no-results { text-align: center; padding: 3rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔬 AI Paper Daily Inspection</h1>
+  <p>Date: <strong>2026-06-17</strong> | Domain: E-commerce Content Ecosystem & Influencer Governance</p>
+</header>
+
+<div class="controls">
+  <div>
+    <label>Min Score:</label>
+    <input type="range" id="score-slider" min="0" max="100" value="0">
+    <span id="score-val">0</span>
+  </div>
+  <div>
+    <label>Bucket:</label>
+    <select id="bucket-filter">
+      <option value="all">All</option>
+      <option value="STRONG">STRONG</option>
+      <option value="WEAK">WEAK</option>
+    </select>
+  </div>
+  <div>
+    <label>Search:</label>
+    <input type="text" id="search-box" placeholder="title / author / tag...">
+  </div>
+  <button class="lang-btn" id="lang-btn">中文 / EN</button>
+</div>
+
+<div class="summary-bar" id="summary-bar">
+  Showing <strong id="shown-count">15</strong> of <strong>15</strong> papers
+</div>
+
+<div class="grid" id="paper-grid"></div>
+
+<script>
+const papers = [
+  {
+    id: "air",
+    title: "Atomic Intent Reasoning (AIR): Bringing LLM Semantics to Industrial Cross-Domain Recommendations",
+    authors: "Zhuohang Jiang, Yuxin Chen, Shijie Wang, Haohao Qu, Jindong Zhou, Wenqi Fan, Qing Li, Dongxu Liang, Jun Wang",
+    affil: "HK PolyU + Kuaishou Technology",
+    date: "2026-06-10",
+    arxiv: "2606.10357",
+    bucket: "STRONG",
+    score: 91,
+    tags: ["e-commerce", "cross-domain", "LLM", "Kuaishou", "400x-speedup", "GMV+3.4%"],
+    method_zh: "AIR 将 LLM 推理迁移至离线阶段，通过"原子意图"将用户行为分解为细粒度可组合语义单元；在线阶段仅做轻量 ANN 检索 + 线性组合，实现约 400× 推理加速。集成到快手电商 MTL 排序模型，线上 A/B 验证 GMV +3.446%。",
+    method_en: "AIR migrates LLM reasoning offline, decomposes user behaviors into Atomic Intent units, and composes them online via lightweight ANN retrieval (no online LLM call). Achieves ~400x inference speedup. Integrated into Kuaishou E-commerce MTL ranking model. Online A/B: +3.446% GMV.",
+    innovation_zh: "首个系统化的'离线 LLM 推理 + 在线原子意图组合'工业推荐范式，400× 加速使 LLM 语义在线推荐成为可能。",
+    innovation_en: "First systematic offline-LLM + online atomic-intent composition paradigm for industrial recommendation. 400x speedup makes LLM-powered online ranking practical.",
+    metrics: [["Kuaishou E-comm A/B", "GMV", "+3.446%"], ["Inference", "Speedup vs online LLM", "~400×"]],
+    scores: {Innovation:26, Results:14, ExpQuality:14, Efficiency:10, Generalization:4, Relevance:23},
+    code: "code/AIR/"
+  },
+  {
+    id: "qar1",
+    title: "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    authors: "Dike Sun, Zheng Zou, Jingtong Zang, Qi Sun, Huaipeng Zhao, Tao Luo, Xiaoyi Zeng",
+    affil: "Alibaba International Digital Commercial Group",
+    date: "2026-06-05",
+    arxiv: "2606.05671",
+    bucket: "STRONG",
+    score: 86,
+    tags: ["e-commerce", "query-recommendation", "agent", "R1-RL", "Alibaba", "CTR+2.9%"],
+    method_zh: "QueryAgent-R1 将查询推荐定义为 Agent 任务，链式检索优化（Chain-of-Retrieval）：Agent 生成候选查询→检索商品→基于检索结果 CVR 信号进行 R1-style RL 训练，实现查询-检索-转化的端到端闭环对齐。",
+    method_en: "QueryAgent-R1 frames query recommendation as an agent task with chain-of-retrieval optimization: generate candidate query → retrieve products → score CVR → R1-style RL training. End-to-end query-retrieval-conversion alignment. Online A/B: Query CTR +2.9%, guided CVR +3.1%.",
+    innovation_zh: "首次将检索器纳入查询推荐 Agent 决策回路，R1 RL 直接以 CVR 优化，突破传统纯 CTR 优化的瓶颈。",
+    innovation_en: "First to incorporate the retriever into the query recommendation agent's decision loop. R1-style RL optimizes directly for CVR, breaking the CTR-only optimization bottleneck.",
+    metrics: [["Alibaba Int'l A/B", "Query CTR", "+2.9%"], ["Alibaba Int'l A/B", "Guided CVR", "+3.1%"]],
+    scores: {Innovation:25, Results:13, ExpQuality:14, Efficiency:7, Generalization:3, Relevance:24},
+    code: "code/QueryAgent-R1/"
+  },
+  {
+    id: "onerank",
+    title: "OneRank: Unified Transformer-Native Ranking Architecture for Multi-Task Recommendation",
+    authors: "Jiakai Tang, Sunhao Dai, Kun Wang, Zhiluohan Guo, Yu Zhao, Cong Fu, Kangle Wu, Yabo Ni, Anxiang Zeng, Xu Chen, Jun Xu",
+    affil: "Renmin University of China + Shopee + NTU",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "STRONG",
+    score: 80,
+    tags: ["e-commerce", "ranking", "multi-task", "Transformer", "Shopee"],
+    method_zh: "OneRank 提出 Transformer-native 多任务统一排序框架，任务私有通道（Task-Private Channels）+ 梯度脱钩机制（Gradient Decoupling）+ 匹配式打分，在 Shopee 主排序上完成大规模线上验证。",
+    method_en: "OneRank proposes a Transformer-native multi-task ranking framework with Task-Private Channels and Gradient Decoupling to avoid task interference while sharing parameters. Match-style scoring head. Deployed and validated at Shopee.",
+    innovation_zh: "首个将 Transformer 自注意力深度集成到工业级多任务排序的系统，任务私有通道在 Transformer 层面隔离梯度。",
+    innovation_en: "First system deeply integrating Transformer self-attention into industrial multi-task ranking. Task-Private Channels decouple gradient flow at the Transformer level.",
+    metrics: [["Shopee Main Ranking A/B", "GMV + multi-metrics", "Significant lift"]],
+    scores: {Innovation:27, Results:12, ExpQuality:13, Efficiency:9, Generalization:3, Relevance:16},
+    code: "code/OneRank/"
+  },
+  {
+    id: "liveStarPro",
+    title: "LiveStarPro: Proactive Streaming Video Understanding with Hierarchical Memory for Long-Horizon Streams",
+    authors: "Zhenyu Yang, Kairui Zhang, Bing Wang, Shengsheng Qian, Changsheng Xu",
+    affil: "Institute of Automation, Chinese Academy of Sciences",
+    date: "2026-06-16",
+    arxiv: "2606.17798",
+    bucket: "STRONG",
+    score: 80,
+    tags: ["livestream", "video-LLM", "streaming", "hierarchical-memory", "proactive", "TSHM"],
+    method_zh: "LiveStarPro 提出三组件协同：SVeD（单次困惑度验证自主判断回复时机）、SCAM（流式因果注意力掩码增量训练）、TSHM（树形层次化记忆递归组织历史事件链），实现主动式、持续性、长程记忆的直播内容实时理解。",
+    method_en: "LiveStarPro has three components: SVeD (perplexity-based proactive response timing), SCAM (streaming causal attention masks for incremental training), TSHM (tree-structured hierarchical memory for unbounded-horizon streaming). Achieves real-time proactive livestream understanding.",
+    innovation_zh: "首次将"主动式回复时机判断"系统性纳入流式 Video-LLM，树形记忆支持无界视频流，直接适用于电商直播合规审核。",
+    innovation_en: "First systematic integration of proactive response timing into streaming Video-LLM. Tree memory supports unbounded video streams. Directly applicable to e-commerce livestream compliance monitoring.",
+    metrics: [["vs prior online Video-LLMs", "Semantic Correctness", "+28.9%"], ["vs prior online Video-LLMs", "Timing Error", "-18.2%"], ["Inference", "Speedup", "1.58×"]],
+    scores: {Innovation:24, Results:13, ExpQuality:12, Efficiency:9, Generalization:4, Relevance:18},
+    code: "code/LiveStarPro/"
+  },
+  {
+    id: "harmonizing",
+    title: "Harmonizing Semantic and Collaborative in LLMs: Reasoning-based Embedding Generator for Sequential Recommendation",
+    authors: "Qidong Liu, Mingyao Huang, Moranxin Wang, Wenxuan Yang, Haiping Zhu",
+    affil: "Xi'an Jiaotong University",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 77,
+    tags: ["sequential-rec", "LLM-embedding", "RL", "long-tail", "collaborative"],
+    method_zh: "将 LLM 改造为推荐 Embedding 生成器，潜在推理（Latent Reasoning）+ 共现奖励 RL，使 LLM 生成的物品向量同时融合语义与协同过滤信号，离线预计算无在线开销。",
+    method_en: "Transforms LLM into a recommendation embedding generator. Latent reasoning + co-occurrence reward RL aligns LLM-generated item vectors with collaborative filtering signals. Offline precomputation eliminates online overhead.",
+    innovation_zh: "RL 驱动 LLM 语义-协同融合新颖，长尾改善突出，跨 backbone 泛化稳定。",
+    innovation_en: "RL-driven LLM semantic-collaborative fusion is novel. Outstanding long-tail improvement with stable cross-backbone generalization.",
+    metrics: [["Multiple datasets", "NDCG/HR", "SOTA"], ["Long-tail items", "Improvement", "Significant"]],
+    scores: {Innovation:25, Results:13, ExpQuality:13, Efficiency:9, Generalization:5, Relevance:12},
+    code: null
+  },
+  {
+    id: "mltdedup",
+    title: "MLT-Dedup: Efficient Large-Scale Online Video Deduplication via Multi-Level Representations and Spatial-Temporal Matching",
+    authors: "David Yuchen Wang, Haoying Li, Hailun Xu, Wei Chee Yew, Zirui Zhu, Sanjay Saha, Hao Hei, Kanchan Sarkar, Kun Xu",
+    affil: "Industry (KDD-2026 ADS track)",
+    date: "2026-06-12",
+    arxiv: "2606.12215",
+    bucket: "STRONG",
+    score: 77,
+    tags: ["video-deduplication", "data-quality", "content-platform", "KDD-2026", "large-scale"],
+    method_zh: "MLT-Dedup 使用多级视频编码器（稀疏 clip 级 + 精细 frame 级）双路 Embedding，配合时空匹配模块处理近重复视频的片段重排问题，构建在线流式大规模视频去重系统。",
+    method_en: "MLT-Dedup uses a Multi-Level Video Encoder (sparse clip-level + fine-grained frame-level) for efficient ANN retrieval and precise matching. Spatial-temporal matching handles clip reordering. Online streaming architecture for large-scale platforms.",
+    innovation_zh: "两级 Embedding 兼顾效率与精度，时空匹配专门处理片段重排，KDD-2026 ADS 工业规模验证。",
+    innovation_en: "Dual-level embedding balances efficiency and precision. Spatial-temporal matching handles clip-level reordering. KDD-2026 ADS track industrial validation.",
+    metrics: [["Large-scale video platform", "Precision/Recall", "Production-grade"], ["Online system", "Latency", "Real-time"]],
+    scores: {Innovation:23, Results:11, ExpQuality:12, Efficiency:9, Generalization:3, Relevance:20},
+    code: null
+  },
+  {
+    id: "aigcdetect",
+    title: "Detecting AI-Generated Content on Social Media with Multi-modal Language Models",
+    authors: "Chenyang Yang, Shen Yan, Yibo Yang, Litao Hu, Yuchen Liu, Yuan Zeng, Hanchao Yu, Yinan Zhu, Sumedha Singla, Brian Vanover, Huijun Qian, Zihao Wang, Fujun Liu, Aashu Singh, Jianyu Wang, Xuewen Zhang",
+    affil: "Carnegie Mellon University + Meta",
+    date: "2026-06-09",
+    arxiv: "2606.11200",
+    bucket: "STRONG",
+    score: 77,
+    tags: ["AIGC-detection", "content-governance", "multimodal", "Meta", "social-media"],
+    method_zh: "端到端多模态 AIGC 检测流水线：跨平台持续策划多样化社交媒体数据，训练紧凑 VLM 同时完成检测与可解释输出。已在 Meta 部署，对帖子推荐产生正向影响。",
+    method_en: "End-to-end multi-modal AIGC detection pipeline: continuously curates diverse cross-platform social media data, trains a compact VLM for detection + explanation. Deployed at Meta, positively impacting post recommendation engagement.",
+    innovation_zh: "持续数据策划跟踪新生成模型，多模态 + 可解释输出对内容治理审核员有实际价值，Meta 规模部署验证。",
+    innovation_en: "Continuous curation adapts to new generative models. Multi-modal + explainable output has direct value for content moderators. Meta-scale production deployment.",
+    metrics: [["Public AIGC benchmarks", "Detection accuracy", "SOTA"], ["Meta deployment", "User engagement", "Positive lift"]],
+    scores: {Innovation:22, Results:11, ExpQuality:12, Efficiency:8, Generalization:4, Relevance:20},
+    code: null
+  },
+  {
+    id: "synrec",
+    title: "One Sequential Recommendation Model Pretrained from Synthetic Priors Predicts Multiple Datasets",
+    authors: "Woosung Kang, Jiwon Jeong, Jonghyeok Shin, Jeongwhan Choi, Noseong Park",
+    affil: "KAIST",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 76,
+    tags: ["sequential-rec", "synthetic-data", "zero-shot", "PFN", "cold-start"],
+    method_zh: "首次将 PFN/后验预测范式引入序列推荐：合成先验预训练通用模型，单次前向传播无梯度更新适配新数据集（update-free），新类目零样本泛化，1 分钟 vs 15 小时微调基线。",
+    method_en: "First application of Prior-Fitted Networks to sequential recommendation. Pretrains on synthetic priors; adapts to new datasets in one forward pass (update-free). Zero-shot generalization to unseen categories. 1 min vs 15h fine-tuning baseline.",
+    innovation_zh: "PFN + 序列推荐首次结合，update-free 适配效率极高，对电商新类目冷启动有直接价值。",
+    innovation_en: "First PFN + sequential recommendation combination. Update-free adaption is extremely efficient. Direct value for e-commerce cold-start.",
+    metrics: [["Adaptation time", "Time", "1 min vs 15h"], ["Unseen categories", "Zero-shot Recall", "Competitive"]],
+    scores: {Innovation:27, Results:12, ExpQuality:13, Efficiency:10, Generalization:5, Relevance:9},
+    code: null
+  },
+  {
+    id: "memo",
+    title: "On the Memorization Behavior of LLMs in Generative Recommendation",
+    authors: "Sunwoo Kim, Sunkyung Lee, Clark Mingxuan Ju, Donald Loveland, Bhuvesh Kumar, Kijung Shin, Neil Shah, Liam Collins",
+    affil: "KAIST + Sungkyunkwan University + Snap Inc.",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 74,
+    tags: ["LLM", "generative-rec", "memorization", "long-tail", "Snap"],
+    method_zh: "首次系统量化 LLM GenRec 的'一跳记忆'现象，提出 IIRG 多任务训练（协同邻居生成 + 语义邻居生成），改善非记忆受益的长尾用户推荐质量。",
+    method_en: "First systematic study of one-hop memorization in LLM generative recommendation. Proposes IIRG multi-task training (collaborative + semantic neighbor generation) to improve recommendations for non-memorized long-tail users.",
+    innovation_zh: "诊断角度清晰，IIRG 即插即用，17 基线对比扎实。",
+    innovation_en: "Clear diagnostic insight. IIRG is plug-and-play. 17-baseline comparison.",
+    metrics: [["17 baselines", "SID/TID", "Consistent improvement"], ["Long-tail", "Recall", "Significant lift"]],
+    scores: {Innovation:25, Results:12, ExpQuality:13, Efficiency:6, Generalization:4, Relevance:14},
+    code: null
+  },
+  {
+    id: "umam",
+    title: "Unified Multimodal Autoregressive Modeling with Shared Context-Visual Tokenizer",
+    authors: "Wujian Peng, Lingchen Meng, Yuxuan Cai, Xianwei Zhuang, Yuhuan Yang, Rongyao Fang, Chenfei Wu, Junyang Lin, Zuxuan Wu, Shuai Bai",
+    affil: "Fudan University + Qwen Team, Alibaba Inc.",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 74,
+    tags: ["multimodal", "autoregressive", "tokenizer", "ICML-2026", "Qwen", "GPT-4o"],
+    method_zh: "共享上下文-视觉 Tokenizer：单一离散 Tokenizer 统一图像理解与生成，结合二值量化 + 并行比特自回归，生成/编辑/文本渲染多项超 GPT-4o，ICML 2026 接受。",
+    method_en: "Shared Context-Visual Tokenizer: single discrete tokenizer unifies image understanding and generation. Binary quantization + parallel bitwise autoregression. Outperforms GPT-4o on generation/editing/text rendering. ICML 2026.",
+    innovation_zh: "共享 Tokenizer 消除理解-生成模态鸿沟，并行自回归加速，Fudan + Qwen 团队顶级论文。",
+    innovation_en: "Shared tokenizer eliminates understanding-generation gap. Parallel autoregression accelerates generation. Top paper from Fudan + Qwen team.",
+    metrics: [["Image gen/edit/text", "vs GPT-4o", "Multiple wins"], ["Venue", "ICML 2026", "Accepted"]],
+    scores: {Innovation:27, Results:12, ExpQuality:13, Efficiency:9, Generalization:4, Relevance:9},
+    code: null
+  },
+  {
+    id: "cocoon",
+    title: "Do Generative Recommenders Deepen the Information Cocoon? A Closed-Loop Simulation",
+    authors: "Jiyuan Yang, Gengxin Sun, Mengqi Zhang, Lingjie Wang, Yuanzi Li, Hongxi Cui, Xin Xin, Pengjie Ren",
+    affil: "Shandong University + Renmin University of China",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "STRONG",
+    score: 73,
+    tags: ["information-cocoon", "diversity", "LLM-agent", "simulation", "content-governance"],
+    method_zh: "构建 LLM-agent 闭环仿真系统，比较生成式 vs 传统推荐器的信息茧房效应，提出原创代码空间结构茧房指标量化内容同质化程度。",
+    method_en: "LLM-agent closed-loop simulation comparing GenRec vs. traditional recommenders on information cocoon effects. Novel code-space structural cocoon metric quantifies content homogenization.",
+    innovation_zh: "首个 LLM-agent 仿真对比研究，原创茧房量化指标，对内容多样性治理有重要政策参考价值。",
+    innovation_en: "First LLM-agent closed-loop simulation comparison. Novel cocoon metric. Important policy reference for content diversity governance.",
+    metrics: [["Multi-recommender sim.", "Diversity/Cocoon metrics", "GenRec deepens cocoon in some settings"]],
+    scores: {Innovation:25, Results:9, ExpQuality:12, Efficiency:6, Generalization:2, Relevance:19},
+    code: null
+  },
+  {
+    id: "mindgap",
+    title: "Mind the Gap: Bridging Behavioral Silos with LLMs in Multi-Vertical Recommendations",
+    authors: "Nimesh Sinha, Raghav Saboo, Martin Wang, Sudeep Das",
+    affil: "DoorDash Inc.",
+    date: "2026-06-04",
+    arxiv: "2606.06779",
+    bucket: "WEAK",
+    score: 68,
+    tags: ["multi-vertical", "LLM", "RAG", "MTL", "DoorDash", "RecSys-2025"],
+    method_zh: "分层 RAG 从餐厅历史中提取多级分类特征，通过 LLM 生成式推断注入 MTL 排序模型，实现多业态跨域知识迁移（餐厅→商超）。DoorDash 生产验证。",
+    method_en: "Hierarchical RAG extracts multi-level taxonomic features from restaurant history. LLM generative inference injects features into MTL ranking model. Cross-vertical knowledge transfer (food→grocery). DoorDash production.",
+    innovation_zh: "分层 RAG + LLM + MTL 组合，DoorDash 多业态工业验证，具有参考价值。",
+    innovation_en: "Hierarchical RAG + LLM + MTL combination. DoorDash multi-vertical industrial validation.",
+    metrics: [["DoorDash A/B", "Multi-vertical metrics", "Positive (undisclosed)"]],
+    scores: {Innovation:20, Results:9, ExpQuality:11, Efficiency:7, Generalization:3, Relevance:17},
+    code: null
+  },
+  {
+    id: "moderag",
+    title: "MODE-RAG: Manifold Outlier Diagnosis and Energy-based RAG Evaluation",
+    authors: "Zehang Wei, Jiaxin Dai, Jiamin Yan, Xiang Xiang",
+    affil: "Huazhong University of Science and Technology",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 70,
+    tags: ["RAG", "outlier-detection", "energy-based", "multimodal", "hallucination"],
+    method_zh: "从流形视角诊断 RAG 检索空间离群点，利用变分自由能构建能量基门控机制动态过滤低质量检索文档，多智能体架构实现多模态内容质量治理。",
+    method_en: "Manifold-perspective outlier diagnosis in RAG retrieval space. Variational free energy-based gating filters low-quality retrieved documents. Multi-agent architecture for multimodal content quality governance.",
+    innovation_zh: "流形离群点 + 变分自由能门控理论新颖，对多模态 RAG 幻觉抑制有新视角。",
+    innovation_en: "Manifold outlier + variational free energy gating is theoretically novel. New perspective on multimodal RAG hallucination suppression.",
+    metrics: [["Self-built benchmark", "Hallucination rate", "Reduced"]],
+    scores: {Innovation:24, Results:10, ExpQuality:11, Efficiency:7, Generalization:2, Relevance:16},
+    code: null
+  },
+  {
+    id: "ragdilute",
+    title: "When More Documents Hurt RAG: Mitigating Vector Search Dilution",
+    authors: "(see paper)",
+    affil: "—",
+    date: "2026-06-09",
+    arxiv: "2606.11350",
+    bucket: "WEAK",
+    score: 63,
+    tags: ["RAG", "vector-search", "embedding", "domain-scoped", "retrieval"],
+    method_zh: "发现大规模文档集向量搜索稀释现象，提出领域作用域先过滤再密集检索方案，显著提升大规模异构文档集 RAG 精度，模型无关。",
+    method_en: "Identifies vector search dilution in large heterogeneous document collections. Domain-scoped pre-filtering + dense retrieval significantly improves RAG accuracy at scale. Model-agnostic.",
+    innovation_zh: "简洁有效，模型无关设计有广泛适用性。",
+    innovation_en: "Simple and effective. Model-agnostic design with broad applicability.",
+    metrics: [["Large-scale RAG benchmarks", "Accuracy", "Significant improvement"]],
+    scores: {Innovation:20, Results:10, ExpQuality:10, Efficiency:7, Generalization:4, Relevance:12},
+    code: null
+  },
+  {
+    id: "daraz",
+    title: "Leveraging Code-Mixed Product Metadata and User Feedback for Personalized Recommendation on Daraz Bangladesh",
+    authors: "KM Fahim A Bari, Muhammad Abdullah Adnan, Nafis Sadeq",
+    affil: "East West University + BUET",
+    date: "2026-06-17",
+    arxiv: "",
+    bucket: "WEAK",
+    score: 47,
+    tags: ["e-commerce", "low-resource", "Banglish", "recommendation", "Bangladesh"],
+    method_zh: "首个孟加拉电商 Daraz 可复现推荐基准，量化混合语言（Banglish）商品元数据对推荐系统的影响，结合多语言预训练模型改善低资源语言推荐。",
+    method_en: "First reproducible recommendation benchmark for Daraz Bangladesh. Quantifies impact of Banglish (Bengali-English code-switching) product metadata on recommendation quality. Multilingual pre-trained model integration.",
+    innovation_zh: "首个孟加拉电商推荐基准，方法论严谨，但算法创新有限。",
+    innovation_en: "First Bangladeshi e-commerce recommendation benchmark. Methodologically rigorous but limited algorithmic novelty.",
+    metrics: [["Daraz Bangladesh", "NDCG/HR", "Baseline established"]],
+    scores: {Innovation:12, Results:6, ExpQuality:12, Efficiency:6, Generalization:3, Relevance:8},
+    code: null
+  }
+];
+
+let lang = "en";
+
+function scoreClass(s) {
+  if (s >= 80) return "score-high";
+  if (s >= 65) return "score-mid";
+  return "score-low";
+}
+
+function maxScore(dim) {
+  const maxes = {Innovation:30, Results:15, ExpQuality:15, Efficiency:10, Generalization:5, Relevance:25};
+  return maxes[dim] || 10;
+}
+
+function renderCard(p) {
+  const method = lang === "zh" ? p.method_zh : p.method_en;
+  const innov  = lang === "zh" ? p.innovation_zh : p.innovation_en;
+
+  const metricsHtml = p.metrics.map(([ds,m,v]) => `
+    <tr><td>${ds}</td><td>${m}</td><td><strong>${v}</strong></td></tr>
+  `).join("");
+
+  const scoreHtml = Object.entries(p.scores).map(([dim, val]) => {
+    const max = maxScore(dim);
+    const pct = (val / max * 100).toFixed(0);
+    return `<div class="score-row">
+      <span class="score-label">${dim}</span>
+      <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+      <span class="score-num">${val}/${max}</span>
+    </div>`;
+  }).join("");
+
+  const codeLink = p.code ? `<a class="link-btn primary" href="https://github.com/Sam1224/CCReproduce/tree/main/2026-06-17/${p.code}" target="_blank">Code</a>` : "";
+  const arxivLink = p.arxiv ? `<a class="link-btn" href="https://arxiv.org/abs/${p.arxiv}" target="_blank">arXiv ${p.arxiv}</a>` : "";
+
+  return `<div class="card" data-id="${p.id}" data-score="${p.score}" data-bucket="${p.bucket}" data-search="${(p.title+p.authors+p.tags.join(' ')).toLowerCase()}">
+  <div class="card-header">
+    <div class="card-badge">
+      <span class="bucket-badge bucket-${p.bucket}">${p.bucket}</span>
+      <span class="score-badge ${scoreClass(p.score)}">${p.score} / 100</span>
+    </div>
+    <div class="card-title">${p.title}</div>
+    <div class="card-authors">${p.authors}</div>
+    <div class="card-affil">${p.affil}</div>
+    <div class="card-date">${p.date}</div>
+  </div>
+  <div class="card-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+  <div class="card-body">
+    <div class="section-toggle" onclick="toggle(this)"><span>${lang==='zh'?'方法概述':'Method'}</span><span class="arrow">▶</span></div>
+    <div class="section-content visible"><p>${method}</p></div>
+
+    <div class="section-toggle" onclick="toggle(this)"><span>${lang==='zh'?'创新性':'Innovation'}</span><span class="arrow">▶</span></div>
+    <div class="section-content"><p>${innov}</p></div>
+
+    <div class="section-toggle" onclick="toggle(this)"><span>${lang==='zh'?'关键指标':'Key Metrics'}</span><span class="arrow">▶</span></div>
+    <div class="section-content">
+      <table class="metrics-table"><tr><th>Dataset</th><th>Metric</th><th>Value</th></tr>${metricsHtml}</table>
+    </div>
+
+    <div class="section-toggle" onclick="toggle(this)"><span>${lang==='zh'?'评分详情':'Score Breakdown'}</span><span class="arrow">▶</span></div>
+    <div class="section-content"><div class="score-bars">${scoreHtml}</div><p style="margin-top:0.5rem;font-size:0.82rem;color:var(--accent);font-weight:700">Total: ${p.score} / 100</p></div>
+  </div>
+  <div class="card-footer">${arxivLink}${codeLink}</div>
+</div>`;
+}
+
+function toggle(el) {
+  el.classList.toggle("open");
+  const content = el.nextElementSibling;
+  content.classList.toggle("visible");
+}
+
+function filterAndRender() {
+  const minScore = parseInt(document.getElementById("score-slider").value);
+  const bucket   = document.getElementById("bucket-filter").value;
+  const search   = document.getElementById("search-box").value.toLowerCase().trim();
+
+  let shown = 0;
+  const grid = document.getElementById("paper-grid");
+  grid.innerHTML = papers
+    .filter(p =>
+      p.score >= minScore &&
+      (bucket === "all" || p.bucket === bucket) &&
+      (search === "" || p.title.toLowerCase().includes(search) || p.authors.toLowerCase().includes(search) || p.tags.some(t => t.includes(search)))
+    )
+    .sort((a, b) => b.score - a.score)
+    .map(p => { shown++; return renderCard(p); })
+    .join("");
+
+  document.getElementById("shown-count").textContent = shown;
+  if (shown === 0) {
+    grid.innerHTML = '<div class="no-results">No papers match the current filters.</div>';
+  }
+}
+
+document.getElementById("score-slider").addEventListener("input", e => {
+  document.getElementById("score-val").textContent = e.target.value;
+  filterAndRender();
+});
+document.getElementById("bucket-filter").addEventListener("change", filterAndRender);
+document.getElementById("search-box").addEventListener("input", filterAndRender);
+
+document.getElementById("lang-btn").addEventListener("click", () => {
+  lang = lang === "en" ? "zh" : "en";
+  filterAndRender();
+});
+
+filterAndRender();
+</script>
+</body>
+</html>
