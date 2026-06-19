@@ -7,6 +7,7 @@ const I18N = {
     minScore: "最低分",
     method: "方法概览",
     innovation: "创新点",
+    breakdown: "评分明细",
     rationale: "评分依据",
     toggleFigure: "显示/隐藏 Method Figure",
     toggleExp: "显示/隐藏 亮眼实验",
@@ -18,6 +19,7 @@ const I18N = {
     minScore: "Min score",
     method: "Method overview",
     innovation: "Key innovations",
+    breakdown: "Score breakdown",
     rationale: "Score rationale",
     toggleFigure: "Show/Hide methodology figure",
     toggleExp: "Show/Hide highlights",
@@ -25,6 +27,16 @@ const I18N = {
     empty: "No papers match the current filter.",
   },
 };
+
+// Score dimensions (key, max, labels) used to render the per-paper breakdown.
+const DIMS = [
+  { key: "innovation", max: 30, zh: "创新性", en: "Innovation" },
+  { key: "results", max: 15, zh: "实验指标", en: "Results" },
+  { key: "exp_quality", max: 15, zh: "实验质量", en: "Exp. quality" },
+  { key: "efficiency", max: 10, zh: "效率", en: "Efficiency" },
+  { key: "generalization", max: 5, zh: "泛化", en: "Generalization" },
+  { key: "relevance", max: 25, zh: "相关性", en: "Relevance" },
+];
 
 function $(id) {
   return document.getElementById(id);
@@ -130,6 +142,43 @@ function renderPapers(papers) {
     card.querySelector(".innovation").textContent = innovationText || "";
     card.querySelector(".rationale").textContent = p.rationale_zh || "";
 
+    // score breakdown (per-dimension bars)
+    const breakdown = parseJsonMaybe(p.score_breakdown) || {};
+    const bWrap = card.querySelector(".breakdown");
+    bWrap.innerHTML = "";
+    let hasBreakdown = false;
+    for (const d of DIMS) {
+      const v = breakdown[d.key];
+      if (typeof v !== "number") continue;
+      hasBreakdown = true;
+      const row = document.createElement("div");
+      row.className = "bd-row";
+
+      const label = document.createElement("span");
+      label.className = "bd-label";
+      label.textContent = lang === "zh" ? d.zh : d.en;
+
+      const track = document.createElement("div");
+      track.className = "bd-track";
+      const fill = document.createElement("div");
+      fill.className = "bd-fill";
+      fill.style.width = `${Math.max(0, Math.min(100, Math.round((v / d.max) * 100)))}%`;
+      track.appendChild(fill);
+
+      const val = document.createElement("span");
+      val.className = "bd-val mono";
+      val.textContent = `${v}/${d.max}`;
+
+      row.appendChild(label);
+      row.appendChild(track);
+      row.appendChild(val);
+      bWrap.appendChild(row);
+    }
+    if (!hasBreakdown) {
+      const sec = bWrap.closest(".section");
+      if (sec) sec.style.display = "none";
+    }
+
     const figWrap = card.querySelector(".figure-wrap");
     const expWrap = card.querySelector(".exp-wrap");
     const figBtn = card.querySelector(".toggle-figure");
@@ -142,8 +191,21 @@ function renderPapers(papers) {
       figBtn.classList.remove("btn-secondary");
     }
 
+    // experiment / results figure (optional, shown above the highlight text)
+    const expFig = card.querySelector(".exp-figure");
+    if (p.exp_figure_path) {
+      expFig.src = p.exp_figure_path;
+    } else {
+      expFig.remove();
+    }
+
     const expText = lang === "zh" ? p.key_metrics_zh : p.key_metrics_en;
     card.querySelector(".exp").textContent = expText || "";
+
+    if (!p.exp_figure_path && !expText) {
+      expBtn.disabled = true;
+      expBtn.classList.remove("btn-secondary");
+    }
 
     figBtn.addEventListener("click", () => {
       figWrap.classList.toggle("hidden");
@@ -151,6 +213,12 @@ function renderPapers(papers) {
 
     expBtn.addEventListener("click", () => {
       expWrap.classList.toggle("hidden");
+    });
+
+    // localize the cloned card's static labels (titles / buttons) for current lang
+    node.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (I18N[lang][key]) el.textContent = I18N[lang][key];
     });
 
     grid.appendChild(node);
@@ -167,7 +235,7 @@ function refresh() {
       score_total, score_breakdown, rationale_zh,
       method_overview_zh, method_overview_en,
       innovation_zh, innovation_en,
-      key_metrics_zh, key_metrics_en, reproduce_url, figure_path
+      key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
     FROM papers
     WHERE inspection_date = ? AND score_total >= ?
     ORDER BY score_total DESC, title ASC`,

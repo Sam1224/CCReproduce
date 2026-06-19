@@ -37,6 +37,7 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
           key_metrics_en TEXT,
           reproduce_url TEXT,
           figure_path TEXT,
+          exp_figure_path TEXT,
           PRIMARY KEY (inspection_date, paper_id)
         );
         """
@@ -87,14 +88,24 @@ def main() -> None:
             else:
                 figure_path = None
 
+            # experiment / results figure (optional, looked up as "{id}_exp.*")
+            exp_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.svg"
+            exp_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.png"
+            if exp_path_svg.exists():
+                exp_figure_path = f"assets/figures/{p['id']}_exp.svg"
+            elif exp_path_png.exists():
+                exp_figure_path = f"assets/figures/{p['id']}_exp.png"
+            else:
+                exp_figure_path = None
+
             conn.execute(
                 """
                 INSERT OR REPLACE INTO papers (
                   inspection_date, paper_id, title, authors, affiliations, source, published,
                   links, tags, score_total, score_breakdown, rationale_zh,
                   method_overview_zh, method_overview_en, innovation_zh, innovation_en,
-                  key_metrics_zh, key_metrics_en, reproduce_url, figure_path
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     inspection_date,
@@ -117,6 +128,7 @@ def main() -> None:
                     summary.get("en", {}).get("key_metrics"),
                     reproduce_url,
                     figure_path,
+                    exp_figure_path,
                 ),
             )
 

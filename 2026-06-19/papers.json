@@ -1,0 +1,102 @@
+[
+  {
+    "id": "2606.19534",
+    "title": "PerceptionDLM: Parallel Region Perception with Multimodal Diffusion Language Models",
+    "authors": ["Yueyi Sun", "Yuhao Wang", "Jason Li", "et al."],
+    "affiliations": ["Peking University MSALab", "ByteDance"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "date": "2026-06-19",
+    "links": {"abs": "https://arxiv.org/abs/2606.19534", "pdf": "https://arxiv.org/pdf/2606.19534v1", "code": "https://github.com/MSALab-PKU/PerceptionDLM"},
+    "tags": ["内容理解", "MLLM", "扩散语言模型", "区域描述", "并行解码", "效率"],
+    "score": {"innovation": 27, "results": 12, "exp_quality": 13, "efficiency": 9, "generalization": 4, "relevance": 23, "total": 88, "rationale_zh": "创新性极高（27/30）：首次利用扩散语言模型固有的 token 级并行性实现并行区域描述/感知，提出区域提示+结构化注意力掩码在保留全局上下文的同时强制区域间独立，打破自回归区域描述的线性延迟增长。实验指标（12/15）：扩散 VLM 中 SOTA（ParaDLC 62.4% 近翻倍），但准确率略低于 AR 模型，换来巨大速度优势。实验质量（13/15）：16 基准 + 新建 ParaDLC-Bench + 效率剖析 + 消融。效率（9/10）：密集区域最高 3.5× 提速、满并行 3.44×。泛化（4/5）：多基准但偏 captioning。相关性（23/25）：区域级内容理解/电商商品描述强相关，且来自字节。原文已提供完整官方代码（含 smallvlm/scripts/evaluation/configs，经核实非空仓库），按规则无需复现。"},
+    "reproduce": {"status": "official_code", "path": null, "note": "github.com/MSALab-PKU/PerceptionDLM 已开源完整代码（smallvlm、scripts、evaluation、configs 等），经 GitHub API 核实非空仓库，故不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "PerceptionDLM 是面向高效并行区域感知的多模态扩散语言模型。它先构建 PerceptionDLM-Base（SigLIP-2 视觉编码器 + LLaDA-8B 扩散语言骨干 + 4 阶段视觉指令微调），是当前最强的开源扩散 VLM；在其之上引入三个组件——区域提示（为每个区域配可学习嵌入）、RoI 对齐特征回放、以及结构化（块状）注意力掩码——使模型可在单次扩散去噪过程中同时为多个掩码区域生成描述，而不像自回归模型逐区域、逐 token 串行解码。",
+        "innovation": "故事线：现有 MLLM 大多依赖自回归解码，区域级密集描述时区域越多延迟线性暴涨；扩散语言模型天生并行但直接用于细粒度感知会出现感知弱、多区域相互串扰。作者用区域提示绑定区域身份、用结构化注意力掩码限定每个区域只关注全局视觉 token、共享文本提示、自身 RoI 特征与自身描述 span，从而在保留全局上下文的同时强制区域独立，把区域感知从串行变并行。这是首个利用扩散 LM 并行性实现并行区域描述/感知的工作，创新合理、工程价值高，并贡献了同时评测质量与效率的 ParaDLC-Bench。",
+        "key_metrics": "亮眼实验：PerceptionDLM-Base 在 16 个多模态基准中 15 个超过 LLaDA-V；ParaDLC-Bench 平均准确率 62.4%，近乎翻倍超过 LLaDA-V(35.2%)、SDAR-VL(31.3%)；TPF 达 2.9（AR/扩散基线均为 1），整 benchmark 推理时间从 GAR 的 479s 降至 276s（PixelRefer 718s）；密集区域（5 masks/图）吞吐最高 3.5×，4 masks 满并行时单图延迟从 10.04s 降到 2.92s（3.44×）。"
+      },
+      "en": {
+        "method_overview": "PerceptionDLM is a multimodal diffusion language model for efficient parallel region perception. It first builds PerceptionDLM-Base (SigLIP-2 vision encoder + LLaDA-8B diffusion backbone, 4-stage visual instruction tuning), the strongest open diffusion VLM. On top, region prompting (a learnable embedding per region), RoI-aligned feature replay and a structured (block-wise) attention masking mechanism let the model denoise captions for multiple masked regions simultaneously within a single diffusion process, instead of decoding each region sequentially as autoregressive (AR) models do.",
+        "innovation": "Story: most MLLMs rely on AR decoding, so dense region captioning grows linearly in latency with region count; diffusion LMs are inherently parallel but, applied naively to fine-grained perception, suffer weak perception and cross-region interference. PerceptionDLM binds region identity via region prompts and restricts each region's tokens (through structured attention masking) to global visual tokens, shared text prompt, its own RoI features and its own caption span, enforcing region independence while preserving global context. It is the first to achieve parallel region captioning/perception by exploiting diffusion-LM parallelism, with a reasonable, deployable design, and contributes ParaDLC-Bench measuring both quality and efficiency.",
+        "key_metrics": "Highlights: PerceptionDLM-Base beats LLaDA-V on 15 of 16 multimodal benchmarks; on ParaDLC-Bench it reaches 62.4% average accuracy, nearly doubling LLaDA-V (35.2%) and SDAR-VL (31.3%); TPF reaches 2.9 (AR/diffusion baselines are 1), cutting total benchmark inference time from 479s (GAR) to 276s (PixelRefer 718s); dense-region throughput speeds up to 3.5x, and at 4-mask full parallelism single-image latency drops from 10.04s to 2.92s (3.44x)."
+      }
+    }
+  },
+  {
+    "id": "2606.17910",
+    "title": "Non-negative Elastic Net Decoding for Information Retrieval",
+    "authors": ["Koki Okajima", "Yasutoshi Ida", "Tsukasa Yoshida", "Yasuaki Nakamura"],
+    "affiliations": ["NTT, Inc."],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "date": "2026-06-19",
+    "links": {"abs": "https://arxiv.org/abs/2606.17910", "pdf": "https://arxiv.org/pdf/2606.17910v1"},
+    "tags": ["信息检索", "稠密检索", "向量化表征", "嵌入", "RAG"],
+    "score": {"innovation": 25, "results": 12, "exp_quality": 12, "efficiency": 7, "generalization": 4, "relevance": 18, "total": 78, "rationale_zh": "创新性强（25/30）：把检索从“各文档独立内积打分”重构为“稀疏非负重建/联合集合选择”，并给出相对稠密检索的可证明严格分离结论；理论扎实。实验（12/15）：冻结嵌入直接套用即一致提升（完整性最高 +36%），端到端训练版在全部基准全部指标超过稠密检索。实验质量（12/15）：理论+实验+端到端训练（展开 FISTA）。效率（7/10）：引入 FISTA 求解增加解码开销。泛化（4/5）：多基准但单一任务。相关性（18/25）：向量化表征/检索/RAG 与内容生态向量召回相关。<80，不复现。"},
+    "reproduce": {"status": "skip", "path": null, "note": "评分<80，不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "NNN（非负弹性网络）解码把检索从“各文档独立内积打分”重构成“联合解码”：选出一组文档，使其嵌入以稀疏、非负的线性组合（弹性网正则）联合重建查询嵌入，从而让选择具备“语料感知”，减少冗余近重复结果。它可在测试期直接作用于冻结嵌入（仅 2 个超参），也可通过展开的 FISTA 求解器端到端优化嵌入。",
+        "innovation": "故事线：稠密检索中每个文档分数只取决于查询与它自身的嵌入，对整个语料“盲视”，因而易选出语义相似、冗余重复的集合。NNN 把检索建成对查询嵌入的稀疏非负重建，引入文档间的相互竞争与互补，在保持相关性的同时提升多样性与完整性。作者还证明了严格分离：NNN 能处理稠密检索能处理的所有查询，外加相关语料上稠密检索无法处理的查询。创新性较强、理论扎实。",
+        "key_metrics": "亮眼实验：对冻结的内积训练嵌入直接套用 NNN，在多个基准上一致提升，完整性(completeness)指标最高 +36%，且差距随相关文档数量增加而扩大；端到端训练版本在全部基准、全部指标上均超过稠密检索。"
+      },
+      "en": {
+        "method_overview": "NNN (Non-Negative elastic Net) decoding reformulates retrieval from independent inner-product scoring into a joint decoding problem: it selects a set of documents whose embeddings jointly reconstruct the query embedding as a sparse, non-negative linear combination (elastic-net regularized), making selection corpus-aware and reducing redundant near-duplicates. It works on frozen embeddings at test time (only 2 hyperparameters) and can be trained end-to-end via an unrolled FISTA solver.",
+        "innovation": "Story: in dense retrieval each document score depends only on the query and its own embedding, blind to the rest of the corpus, so it tends to pick semantically similar, redundant sets. NNN casts retrieval as sparse non-negative reconstruction of the query embedding, introducing competition and complementarity among documents to improve diversity/completeness while preserving relevance. The authors prove a strict separation: NNN handles every query dense retrieval handles, plus correlated-corpus queries it cannot. Strong novelty with solid theory.",
+        "key_metrics": "Highlights: applying NNN to frozen inner-product-trained embeddings yields consistent gains across benchmarks, up to +36% on the completeness metric, with the gap widening as the number of relevant documents grows; the end-to-end-trained version surpasses dense retrieval on all metrics and benchmarks."
+      }
+    }
+  },
+  {
+    "id": "2606.17389",
+    "title": "Visuals Lie, Consistency Speaks: Disentangling Spatial Attention from Reliability in Vision-Language Models",
+    "authors": ["Logan Mann", "Yi Xia", "Ajit Saravanan", "Ishan Dave", "Saadullah Ismail", "Shikhar Shiromani", "Emily Huang", "Ruizhe Li", "Kevin Zhu"],
+    "affiliations": ["UC Santa Barbara", "Algoverse AI Research", "UC Berkeley"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "date": "2026-06-19",
+    "links": {"abs": "https://arxiv.org/abs/2606.17389", "pdf": "https://arxiv.org/pdf/2606.17389v1"},
+    "tags": ["VLM", "可靠性", "幻觉", "可解释性", "内容治理", "分析"],
+    "score": {"innovation": 22, "results": 9, "exp_quality": 12, "efficiency": 6, "generalization": 5, "relevance": 17, "total": 71, "rationale_zh": "创新性较好（22/30）：用跨模型族证据系统性证伪“注意力即接地/可靠性”这一主流假设（R≈0.001），并指出生成期自一致性与隐状态探针才是真正可靠性信号（R=0.429）；属于有价值的洞见型工作但非新算法。实验（9/15）：以相关性/因果分析为主，非 SOTA 准确率。实验质量（12/15）：跨模型族+因果层消融+逐层动态分析。效率（6/10）：分析型工作。泛化（5/5）：覆盖多模型族。相关性（17/25）：VLM 可靠性/幻觉检测对内容治理有用，但偏机理分析。<80，不复现。"},
+    "reproduce": {"status": "skip", "path": null, "note": "分析型工作、评分<80，不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "这是一篇分析型论文（VLM 可靠性探针 VRP），挑战“注意力-置信度假设”。它提出结构化注意力指标（簇数 Ck、空间熵 Hs、跨层注意力演化 ΔHs），发现“符号脱节/早锁定”现象，并证明空间注意力与准确率近乎零相关（R≈0.001，“簇失效”）；相反，自一致性（多采样推理路径的一致率）才是真值的主导预测因子（R=0.429）。因果层消融显示 LLaVA 把预测锁死在脆弱的后期瓶颈层，而 PaliGemma/Qwen2-VL 把可靠性全局分布、即使破坏约 50% 最关键层仍极具韧性。",
+        "innovation": "故事线：大家普遍假设“注意力越聚焦于相关区域、回答越可靠”，并据此判断幻觉。作者跨模型族系统验证后发现该假设站不住脚——空间注意力与正确率几乎无关，真正的可靠性信号来自生成动态（自一致性）与隐状态分布。这为幻觉检测/可靠性评估指明了新方向：与其看注意力图，不如看生成一致性与隐状态探针。洞见有价值，但非新算法。",
+        "key_metrics": "亮眼实验：空间注意力结构指标与准确率相关性 R≈0.001（几乎无关）；自一致性与真值相关性 R=0.429（最强预测因子）；激进层消融下 Qwen2-VL/PaliGemma 即使破坏约 50%+ 最具预测力的层仍稳健，LLaVA 则迅速崩溃，揭示可靠性的架构性差异。"
+      },
+      "en": {
+        "method_overview": "An analysis paper (VLM Reliability Probe, VRP) that challenges the Attention-Confidence Assumption. It introduces structural-attention metrics (cluster counts Ck, spatial entropy Hs, cross-layer attention evolution Delta-Hs), finds Symbolic Detachment / Early Locking, and shows spatial attention has near-zero correlation (R~0.001) with accuracy (Cluster Failure). Instead, Self-Consistency (agreement across sampled reasoning paths) is the dominant truth predictor (R=0.429). Causal layer ablation shows LLaVA locks predictions in a fragile late-stage bottleneck, while PaliGemma/Qwen2-VL distribute reliability globally and stay robust even when ~50% of the most predictive layer is destroyed.",
+        "innovation": "Story: the field assumes tighter attention on relevant regions implies more reliable answers, and uses it to judge hallucination. Cross-family experiments debunk this: spatial attention is essentially uncorrelated with accuracy, and the real reliability signal comes from generation dynamics (self-consistency) and hidden-state distributions. This redirects hallucination detection/reliability estimation away from attention maps toward generation consistency and hidden-state probes. Valuable insight, but not a new algorithm.",
+        "key_metrics": "Highlights: structural-attention metrics correlate with accuracy at R~0.001 (essentially none); self-consistency correlates with truth at R=0.429 (the strongest predictor); under aggressive layer ablation, Qwen2-VL/PaliGemma stay robust even when ~50%+ of the most predictive layer is destroyed, while LLaVA collapses quickly, revealing architectural divergence in where reliability lives."
+      }
+    }
+  },
+  {
+    "id": "2606.18208",
+    "title": "Looped World Models",
+    "authors": ["Hongyuan Adam Lu", "Z.L. Victor Wei", "et al."],
+    "affiliations": ["FaceMind Research Asia"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "date": "2026-06-19",
+    "links": {"abs": "https://arxiv.org/abs/2606.18208", "pdf": "https://arxiv.org/pdf/2606.18208v1"},
+    "tags": ["世界模型", "循环Transformer", "效率", "强化学习", "热点"],
+    "score": {"innovation": 26, "results": 12, "exp_quality": 11, "efficiency": 9, "generalization": 4, "relevance": 8, "total": 70, "rationale_zh": "创新性高（26/30）：首个面向世界建模的循环/参数共享架构，提出“迭代潜在深度”这一与模型规模、数据正交的新扩展轴，并支持逐步自适应算力。实验（12/15）：最高 100× 参数效率，部分任务 SOTA（极端类别从 0% 到 100%）。实验质量（11/15）：多基线+错误分析。效率（9/10）：100× 参数效率但需自适应计算。泛化（4/5）：多任务。相关性（8/25）：世界模型/具身 RL 为当前热点，但与电商内容生态&达人治理弱相关，作为高热度论文纳入。<80，不复现。"},
+    "reproduce": {"status": "skip", "path": null, "note": "与电商内容治理弱相关、评分<80，作为热点论文收录但不复现。"},
+    "summary": {
+      "zh": {
+        "method_overview": "Looped World Models（LoopWM）是首个用于世界建模的“循环”架构。它不靠堆叠深层网络，而是反复施加同一个参数共享的 Transformer 块来迭代精炼潜在环境状态，并用自适应计算根据每一步预测的复杂度动态调整循环次数（有效深度）。这把“迭代潜在深度”确立为与模型规模、训练数据正交的新扩展轴。",
+        "innovation": "故事线：世界模型面临根本矛盾——忠实的长程模拟需要深层计算，但更深的模型部署昂贵且易累积误差。LoopWM 用参数共享循环块按需扩展有效深度，在大幅压缩参数量的同时按预测难度自适应分配算力，从而缓解“深度 vs 成本/误差累积”的张力。想法新颖、是热门方向，但与电商内容治理直接关联较弱。",
+        "key_metrics": "亮眼实验：相比常规方法最高 100× 参数效率；在 AlfWorld 等世界建模任务（基于连续 5 个动作预测计分）上超过 Hyperloop Transformer 等多个基线；极端类别如 Lifespan 分数从 0% 提升到 100%，展示参数共享循环块的强表达力。"
+      },
+      "en": {
+        "method_overview": "Looped World Models (LoopWM) are the first looped architectures for world modelling. Instead of stacking deep layers, they iteratively refine latent environment states by repeatedly applying a single parameter-shared transformer block, with adaptive computation that scales the number of loops (effective depth) to each prediction step's complexity. This establishes iterative latent depth as a new scaling axis, orthogonal to model size and training data.",
+        "innovation": "Story: world models face a fundamental tension, faithful long-horizon simulation needs deep computation, but deeper models are costly to deploy and prone to compounding errors. LoopWM uses a parameter-shared looped block to expand effective depth on demand, drastically cutting parameters while adaptively allocating compute by prediction difficulty. A novel idea in a hot direction, but only weakly tied to e-commerce content governance.",
+        "key_metrics": "Highlights: up to 100x parameter efficiency over conventional approaches; on world-modelling tasks like AlfWorld (scored by predicting five consecutive actions) it beats baselines including Hyperloop Transformers; on extreme categories such as Lifespan it lifts the score from 0% to 100%, showing the expressive power of the parameter-shared looped block."
+      }
+    }
+  }
+]
