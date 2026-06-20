@@ -1,0 +1,4 @@
+# generated artifacts (re-created by train.py)
+*.pt
+tau.json
+__pycache__/
