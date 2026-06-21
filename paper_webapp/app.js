@@ -29,14 +29,24 @@ const I18N = {
 };
 
 // Score dimensions (key, max, labels) used to render the per-paper breakdown.
+// `alt` lists alternate JSON keys so both the legacy (results/exp_quality) and the
+// newer (metrics/quality) papers.json score schemas render correctly.
 const DIMS = [
-  { key: "innovation", max: 30, zh: "创新性", en: "Innovation" },
-  { key: "results", max: 15, zh: "实验指标", en: "Results" },
-  { key: "exp_quality", max: 15, zh: "实验质量", en: "Exp. quality" },
-  { key: "efficiency", max: 10, zh: "效率", en: "Efficiency" },
-  { key: "generalization", max: 5, zh: "泛化", en: "Generalization" },
-  { key: "relevance", max: 25, zh: "相关性", en: "Relevance" },
+  { key: "innovation", alt: [], max: 30, zh: "创新性", en: "Innovation" },
+  { key: "results", alt: ["metrics"], max: 15, zh: "实验指标", en: "Results" },
+  { key: "exp_quality", alt: ["quality"], max: 15, zh: "实验质量", en: "Exp. quality" },
+  { key: "efficiency", alt: [], max: 10, zh: "效率", en: "Efficiency" },
+  { key: "generalization", alt: [], max: 5, zh: "泛化", en: "Generalization" },
+  { key: "relevance", alt: [], max: 25, zh: "相关性", en: "Relevance" },
 ];
+
+function dimValue(breakdown, d) {
+  if (typeof breakdown[d.key] === "number") return breakdown[d.key];
+  for (const k of d.alt || []) {
+    if (typeof breakdown[k] === "number") return breakdown[k];
+  }
+  return undefined;
+}
 
 function $(id) {
   return document.getElementById(id);
@@ -119,10 +129,12 @@ function renderPapers(papers) {
     const links = parseJsonMaybe(p.links) || {};
     const linksWrap = card.querySelector(".links");
     const linkItems = [];
-    if (links.abs) linkItems.push({ name: "arXiv", url: links.abs });
+    const arxivUrl = links.abs || links.arxiv; // support both schemas
+    if (arxivUrl) linkItems.push({ name: "arXiv", url: arxivUrl });
     if (links.pdf) linkItems.push({ name: "PDF", url: links.pdf });
     if (links.code) linkItems.push({ name: "Code", url: links.code });
     if (links.project) linkItems.push({ name: "Project", url: links.project });
+    if (links.dataset) linkItems.push({ name: "Dataset", url: links.dataset });
     if (p.reproduce_url) linkItems.push({ name: "Reproduce", url: p.reproduce_url });
 
     for (const it of linkItems) {
@@ -148,7 +160,7 @@ function renderPapers(papers) {
     bWrap.innerHTML = "";
     let hasBreakdown = false;
     for (const d of DIMS) {
-      const v = breakdown[d.key];
+      const v = dimValue(breakdown, d);
       if (typeof v !== "number") continue;
       hasBreakdown = true;
       const row = document.createElement("div");

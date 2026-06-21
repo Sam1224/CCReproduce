@@ -1,0 +1,223 @@
+[
+  {
+    "id": "2606.20561",
+    "title": "TimeProVe: Propose, then Verify for Efficient Long Video Temporal Reasoning in Activities of Daily Living",
+    "authors": ["Arkaprava Sinha", "Dominick Reilly", "Siddharth Krishnan", "Hieu Le", "Srijan Das"],
+    "affiliations": ["University of North Carolina, Charlotte"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20561",
+      "pdf": "https://arxiv.org/pdf/2606.20561",
+      "project": "https://thearkaprava.github.io/timeprove/"
+    },
+    "tags": ["长视频理解", "VLM", "时序定位", "高效推理", "Agent", "内容理解"],
+    "score": {
+      "total": 80,
+      "innovation": 23,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 10,
+      "generalization": 4,
+      "relevance": 19,
+      "rationale_zh": "创新性高(23/30)：提出 Propose-then-Verify 混合范式与 ACE 候选证据模块，先用轻量模块产生答案-证据假设，仅在必要时调用昂贵 VLM 做定向验证；实验指标好(12/15)：在 OTB 上超过最强 baseline 7.3%，并在 Charades-STA 上达到 SOTA；实验质量(12/15)：新建 OpenTSUBench 开放式基准并做消融；方法效率满分(10/10)：VLM 调用减少 75%、推理成本降低 93%，这是该工作的核心卖点；泛化性(4/5)：无需显式时序定位训练即具竞争力；相关性(19/25)：长视频内容理解与大规模视频内容治理/审核的效率诉求高度契合。综合 80 分，达到复现门槛。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "TimeProVe 面向小时级未剪辑长视频问答(LVQA)，提出'先提议、后验证'的高效混合框架。核心是 Action-based Candidate Evidence (ACE) 模块：先用轻量 LLM/动作定位模块把视频中时序定位到的动作转化为'查询条件下的候选答案+支撑证据时间窗'，形成答案-证据假设；随后只对这些少量候选片段调用昂贵的大 VLM 做定向验证，从而把推理复杂度与原始视频时长解耦。论文还提出开放式基准 OpenTSUBench(OTB)，评测真实日常活动(ADL)场景下的时序定位推理。",
+        "innovation": "区别于'看全片'的密集 VLM 处理(成本随时长线性增长)和纯字幕/caption 稀疏推理(易漏掉时序定位与动作细节)，TimeProVe 用廉价模块生成候选、再用昂贵模型定向验证，兼顾精度与成本。ACE 把'动作定位'显式转化为可验证的答案-证据对，使长视频推理可扩展；且无需显式时序定位训练即具竞争力，创新点合理可行。",
+        "key_metrics": "在 OpenTSUBench(OTB) 上比最强 baseline 高 7.3%，同时 VLM 调用减少 75%、推理成本降低 93%；在 Charades-STA 上无需显式定位训练即有竞争力，配合 grounding VLM 时达到 SOTA。"
+      },
+      "en": {
+        "method_overview": "TimeProVe targets hours-long untrimmed Long Video Question Answering (LVQA) with a cost-efficient propose-then-verify framework. Its core Action-based Candidate Evidence (ACE) module first uses lightweight LLM/action-localization to convert temporally localized actions into query-conditioned candidate answers plus supporting evidence windows (answer-evidence hypotheses); an expensive large VLM is then invoked only for targeted verification of these few candidates, decoupling reasoning complexity from raw video duration. The paper also introduces OpenTSUBench (OTB), an open-ended benchmark for temporally grounded reasoning in real-world Activities of Daily Living (ADL).",
+        "innovation": "Unlike dense 'watch-it-all' VLM processing (cost grows with duration) or caption-only sparse reasoning (misses temporally localized motion evidence), TimeProVe proposes cheap candidates then verifies them with the expensive model only when needed, balancing accuracy and cost. ACE explicitly turns action localization into verifiable answer-evidence pairs, making long-video reasoning scalable, and stays competitive without explicit grounding training.",
+        "key_metrics": "+7.3% over the strongest baseline on OpenTSUBench (OTB), with 75% fewer VLM calls and 93% lower inference cost; competitive on Charades-STA without explicit grounding training, and SOTA when enhanced with grounding VLMs."
+      }
+    },
+    "reproduce": {"path": "2026-06-21/TimeProVe"}
+  },
+  {
+    "id": "2606.19706",
+    "title": "NEST: Narrative Event Structures in Time for Long Video Understanding",
+    "authors": ["Ali Asgarov", "Kaushik Narasimhan", "Najibul Haque Sarker", "Hani Alomari", "Chia-Wei Tang", "Anushka Sivakumar", "Zaber Ibn Abdul Hakim", "Shaurya Mallampati", "Chris Thomas"],
+    "affiliations": ["Virginia Tech"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.19706",
+      "pdf": "https://arxiv.org/pdf/2606.19706"
+    },
+    "tags": ["长视频理解", "数据集/Benchmark", "事件抽取", "多模态", "内容理解"],
+    "score": {
+      "total": 70,
+      "innovation": 22,
+      "metrics": 9,
+      "quality": 13,
+      "efficiency": 5,
+      "generalization": 4,
+      "relevance": 17,
+      "rationale_zh": "创新性(22/30)：把长视频理解从'大海捞针检索'升级为'叙事事件结构'理解，定义 ETD/EL/EAE/ERE 四类任务，超越多选题范式；实验指标(9/15)：作为基准其 baseline 极低(ETD<8%、EL<6%、EAE<11%)，意在暴露难度而非刷 SOTA；实验质量(13/15)：1005 部完整电影(均长98分钟)、~102 事件/片、视觉+对白+音频三模态标注，对比表详尽；效率(5/10)不适用；泛化(4/5)规模大；相关性(17/25)：达人/创作者长视频内容理解相关。代码与 checkpoint 已开源，无需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "NEST 是面向完整长电影的'叙事事件结构'理解数据集与基准。包含 1005 部完整电影(平均约 98 分钟)，每部标注约 102 个多模态叙事事件，标注 grounding 于视觉、对白与音频，并通过时序顺序、层级组合、长程依赖等关系把事件连接成叙事结构。设立四个任务：事件触发检测(ETD)、事件定位(EL)、事件论元抽取(EAE)、事件关系抽取(ERE)，并给出基线。",
+        "innovation": "现有长视频基准多停留在'大海捞针'式检索或带选择偏置的多选题，无法评测低层动作如何组成事件、事件如何跨时间互动、叙事如何推进。NEST 以全片为单位、要求模型把早期伏笔与后期结果跨长间隔关联，填补了叙事级理解评测空白。",
+        "key_metrics": "基准极具挑战：grounded 事件发现的 ETD<8%、EL<6%、EAE<11%；相对而言给定事件后的关系抽取 ERE 更可解，zero-shot 35.45% F1、微调后 44.42% F1。数据总时长 1639.3 小时。"
+      },
+      "en": {
+        "method_overview": "NEST is a dataset and benchmark for narrative event structure understanding over full-length movies: 1005 films (avg ~98 min), each annotated with ~102 multimodal narrative events grounded in visual content, dialogue, and audio, and linked by relations capturing temporal ordering, hierarchical composition, and long-range dependencies. It defines four tasks—Event Trigger Detection (ETD), Event Localization (EL), Event Argument Extraction (EAE), and Event Relation Extraction (ERE)—with baselines.",
+        "innovation": "Existing long-video benchmarks emphasize needle-in-a-haystack retrieval or biased multiple-choice, failing to assess how low-level actions form events, how events interact over time, and how narratives progress. NEST works at the full-movie level and requires linking early setups to later payoffs across long gaps, filling the narrative-level evaluation gap.",
+        "key_metrics": "Highly challenging for grounded discovery: ETD <8%, EL <6%, EAE <11%; relation extraction (ERE) is more tractable once events are given, reaching 35.45% F1 zero-shot and 44.42% F1 after fine-tuning. Total duration 1639.3 hours."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.20002",
+    "title": "Connect the Dots: Training LLMs for Long-Lifecycle Agents with Cross-Domain Generalization Via Reinforcement Learning",
+    "authors": ["Yanxi Chen", "Weijie Shi", "Yuexiang Xie", "Boyi Hu", "Yaliang Li", "Bolin Ding", "Jingren Zhou"],
+    "affiliations": ["Alibaba Group"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20002",
+      "pdf": "https://arxiv.org/pdf/2606.20002",
+      "code": "https://github.com/agentscope-ai/Trinity-RFT/tree/research/cod/examples/research_cod"
+    },
+    "tags": ["LLM Agent", "强化学习", "跨域泛化", "长周期智能体", "Agent"],
+    "score": {
+      "total": 70,
+      "innovation": 24,
+      "metrics": 10,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 5,
+      "relevance": 13,
+      "rationale_zh": "创新性高(24/30)：提出'Connect the Dots(CoD)'元能力——长周期智能体在持续探索中不断从自身经验学习并自更新上下文，配套端到端 RL(长 rollout 交替 solve-task 与 update-context)与细粒度信用分配 GRPO 变体；实验指标(10/15)为 proof-of-concept、展示 OOD 泛化但缺标准 SOTA 表；质量(12/15)；效率(6/10)；泛化满分(5/5)是其核心主张；相关性(13/25)：Agent 弱相关。代码已开源(Trinity-RFT)，无需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "CoD 提出训练 LLM 获得'串联线索(Connect the Dots)'的元能力：智能体部署后会连续解决一长串任务，同时持续探索环境、从自身经验学习并迭代自更新对环境的上下文，从而在后续任务上越做越好。框架包含：(1) 端到端 RL 的算法与基础设施，支持交替'解题(solve-task)'与'更新上下文(update-context)'的长 rollout 序列；(2) 为激发该元能力定制的任务与环境，以及评测协议；并给出带细粒度信用分配的 GRPO 风格 RL 实现。",
+        "innovation": "不同于按任务独立训练或仅靠固定上下文，CoD 把'随经验自更新上下文'本身作为可被 RL 优化的目标，强调训练-评测都针对元能力(而非领域特定能力)，并验证了域内、跨域乃至到 Ralph-loop 设置的分布外泛化。",
+        "key_metrics": "概念验证实验证明端到端 RL 在 CoD 设定下有效，并展示了在训练域内、跨域以及向 Ralph-loop 迁移的 OOD 泛化潜力；开源实现于 Trinity-RFT。"
+      },
+      "en": {
+        "method_overview": "CoD trains LLMs for a meta-capability called 'Connect the Dots': a deployed agent solves a long sequence of tasks while continuously exploring, learning from its own experience, and iteratively self-updating its context about the environment, thereby improving on future tasks. It contributes (1) algorithms and infrastructure for end-to-end RL over long rollouts that interleave solve-task and update-context episodes, and (2) tasks/environments and evaluation that elicit and measure this meta-capability, with a GRPO-style RL algorithm featuring fine-grained credit assignment.",
+        "innovation": "Rather than per-task RL or fixed context, CoD makes experience-driven self-updating of context itself an RL-optimizable objective, targeting the meta-capability during both training and evaluation, and validates out-of-distribution generalization within domains, across domains, and to Ralph-loop settings.",
+        "key_metrics": "Proof-of-concept results validate end-to-end RL in the CoD setting and demonstrate OOD generalization within training domains, across domains, and from CoD to Ralph-loop settings; implementation released in Trinity-RFT."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.19911",
+    "title": "Multi-Agent Transactive Memory",
+    "authors": ["To Eun Kim", "Xuhong He", "Dishank Jain", "Ambuj Agrawal", "Negar Arabzadeh", "Fernando Diaz"],
+    "affiliations": ["Carnegie Mellon University", "University of California, Berkeley"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.19911",
+      "pdf": "https://arxiv.org/pdf/2606.19911",
+      "code": "https://github.com/kimdanny/matm"
+    },
+    "tags": ["LLM Agent", "检索增强(RAG)", "经验复用", "Learning-to-Rank", "Agent"],
+    "score": {
+      "total": 68,
+      "innovation": 21,
+      "metrics": 10,
+      "quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 14,
+      "rationale_zh": "创新性(21/30)：把 RAG 从'检索人类文档'扩展到'检索智能体生成的轨迹'，构建群体级的存取共享库(transactive memory)，形成生产者-消费者市场；实验指标(10/15)：在 ALFWorld/WebArena 上提升任务成功率并减少交互步数；质量(12/15)：单阶段检索+LTR 重排两套方案、规模增长分析；效率(7/10)：复用轨迹降低重复探索成本；泛化(4/5)；相关性(14/25)：Agent/RAG 弱相关。代码已开源，无需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "MATM(多智能体交互记忆)面向去中心化、异构的智能体群体，提出群体级的'轨迹存取共享'框架：生产者智能体把任务执行中产生的交互轨迹(动作-观测序列等程序性知识)贡献到共享库，消费者智能体检索这些轨迹来提升自身任务效果与效率。聚焦交互式环境(ALFWorld、WebArena)，轨迹长且程序性结构丰富。还引入基于 Learning-to-Rank 的轨迹重排阶段以提升检索质量。",
+        "innovation": "现有经验复用大多局限于'生产者本人'，新实例化的智能体被迫重复发现已有解法。MATM 借鉴'交互记忆(transactive memory)'概念，让异构智能体无需协调或联合训练即可共享并复用彼此经验，并支持个性化、生产者可信度建模、随群体演化更新检索器等高级功能。",
+        "key_metrics": "在 ALFWorld 与 WebArena 上，检索共享轨迹既提升下游任务成功率，又减少交互步数；LTR 重排进一步提升检索质量与步数效率；收益对弱/强智能体均成立，并随库规模增长持续改善。"
+      },
+      "en": {
+        "method_overview": "MATM (Multi-Agent Transactive Memory) provides population-level storage and retrieval of agent-generated trajectories for decentralized, heterogeneous agent populations: producer agents contribute interaction trajectories (action-observation procedural knowledge) to a shared repository, and consumer agents retrieve them to improve task effectiveness and efficiency. It focuses on interactive environments (ALFWorld, WebArena) where trajectories are long and procedurally rich, and adds a Learning-to-Rank reranking stage for retrieval quality.",
+        "innovation": "Existing experience reuse is largely limited to the original producer, forcing newly instantiated agents to rediscover solutions. Drawing on transactive memory, MATM lets heterogeneous agents share and reuse each other's experience without coordination or joint training, and enables personalization, producer trust modeling, and periodic retriever updates as the population evolves.",
+        "key_metrics": "On ALFWorld and WebArena, retrieving shared trajectories improves downstream task success and reduces interaction steps; LTR reranking further improves retrieval quality and step efficiency; benefits hold for weaker and stronger agents and grow as the repository scales."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.20527",
+    "title": "StylisticBias: A Few Human Visual Cues Drive Most Social Biases in MLLMs",
+    "authors": ["Shaghayegh Kolli", "Timo Cavelius", "Nafiseh Nikeghbal", "Samantha Dalal", "Jana Diesner"],
+    "affiliations": ["Technical University of Munich / collaborators"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20527",
+      "pdf": "https://arxiv.org/pdf/2606.20527",
+      "code": "https://github.com/timo-cavelius/StylisticBias",
+      "dataset": "https://hf.co/datasets/shaghayegh/stylistic-bias-dataset"
+    },
+    "tags": ["MLLM", "社会偏见评测", "公平性/治理", "数据集/Benchmark", "治理"],
+    "score": {
+      "total": 64,
+      "innovation": 18,
+      "metrics": 9,
+      "quality": 12,
+      "efficiency": 5,
+      "generalization": 4,
+      "relevance": 16,
+      "rationale_zh": "创新性(18/30)：受控的'单属性变化、身份固定'基准设计，干净分离外观效应与身份差异；实验指标(9/15)：发现约15个属性解释近80%偏见变化；质量(12/15)：500张基脸×约50单属性变体共约25K图，6个MLLM、25个二元社会判断场景；效率(5/10)不适用；泛化(4/5)；相关性(16/25)：与'达人/创作者形象判断的公平性治理'、电商带货人设/穿搭判断相关。代码与数据集已开源，无需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "StylisticBias 是评测 MLLM 属性级社会偏见的受控基准。生成 500 张写实基础人脸，每张产生约 50 个'单属性变体'(共约 25K 图)，在保持身份不变的前提下每次只改变一个视觉属性(年龄、体型、穿搭风格等)，从而度量特定线索如何改变模型判断。在 6 个 MLLM、25 个二元社会判断场景上评测。",
+        "innovation": "以往研究常对比不同个体，难以分离'外观效应'与'身份差异'。本工作通过'固定身份+单属性扰动'实现干净的归因，揭示偏见集中在少数视觉线索上，为细粒度偏见评测提供可控工具。",
+        "key_metrics": "年龄与体型主导身份级效应，穿搭风格等视觉线索带来最大的属性级偏移；约 15 个属性解释近 80% 的总变化；偏见在与外观语义对齐的判断(社会经济地位、风格相关)上最强。"
+      },
+      "en": {
+        "method_overview": "StylisticBias is a controlled benchmark for attribute-level social bias in MLLMs. It generates 500 photorealistic base faces and ~50 single-attribute variations each (~25K images), keeping identity fixed while changing one visual attribute at a time (age, body type, fashion style, etc.) to measure how specific cues shift model judgments, evaluated across 6 MLLMs and 25 binary social judgment scenarios.",
+        "innovation": "Prior work compares different individuals, conflating appearance effects with identity differences. By fixing identity and perturbing single attributes, StylisticBias enables clean attribution and shows bias is concentrated in a small set of visual cues, offering a controllable instrument for fine-grained bias evaluation.",
+        "key_metrics": "Age and body type dominate identity-level effects, while fashion style and other cues drive the largest attribute-level shifts; ~15 attributes account for nearly 80% of total variation; sensitivity is strongest for appearance-aligned judgments (socioeconomic, style-related)."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.20155",
+    "title": "NAMESAKES: Probing Identity Memorization in Text-to-Image Models",
+    "authors": ["Morris Alper", "Vasudha Varadarajan", "Moran Yanuka", "Angelina Wang", "Hadar Averbuch-Elor"],
+    "affiliations": ["Tel Aviv University / Cornell University"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20155",
+      "pdf": "https://arxiv.org/pdf/2606.20155"
+    },
+    "tags": ["文生图(T2I)", "身份记忆/隐私", "黑盒探测", "治理", "数据集/Benchmark"],
+    "score": {
+      "total": 63,
+      "innovation": 20,
+      "metrics": 9,
+      "quality": 11,
+      "efficiency": 5,
+      "generalization": 4,
+      "relevance": 14,
+      "rationale_zh": "创新性(20/30)：提出完全黑盒的行为探测，无需参考照片/训练数据/白盒访问即可区分'记忆 vs 虚构'的人脸生成；实验指标(9/15)：能显著预测身份记忆并区分被记忆/未识别的名字；质量(11/15)：构建 1269 个名字-人脸的 NAMESAKES 数据集，覆盖不同知名度并含扰动名；效率(5/10)；泛化(4/5)跨模型族；相关性(14/25)：与创作者/达人肖像隐私治理、深伪风险相关。属数据集+探测方法，本日无需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "NAMESAKES 研究文生图(T2I)模型对真实人物的'身份记忆'问题：当以名字为提示时，模型可能生成可辨识的真人肖像，带来隐私风险。论文提出完全黑盒的行为探测方法，无需参考照片、训练数据或模型内部访问，即可区分生成人脸是'被记忆'还是'被虚构'。并构建 NAMESAKES 数据集(1269 个名字-人脸)用于基准评测。",
+        "innovation": "以往判断是否记忆需要真值照片、训练数据或白盒访问，适用性受限。本方法仅靠模型对'名字/扰动名'的黑盒行为差异即可推断记忆，且数据集覆盖从高知名度到低知名度、含扰动名对照，使评测更严谨。",
+        "key_metrics": "在多款 SOTA T2I 模型上，该探测能显著预测身份记忆并把'被记忆'与'未识别'的名字分离开，并给出不同模型族之间差异的洞见;数据集含 1269 个名字-人脸对。"
+      },
+      "en": {
+        "method_overview": "NAMESAKES studies identity memorization in text-to-image (T2I) models: prompting with a person's name can yield recognizable likenesses, raising privacy concerns. It introduces a fully black-box behavioral probe that distinguishes memorized vs. fabricated faces without reference photos, training-data access, or model internals, and builds the NAMESAKES dataset (1,269 name-face pairs) for benchmarking.",
+        "innovation": "Distinguishing memorization previously required ground-truth photos, training data, or white-box access, limiting applicability. This probe infers memorization purely from black-box behavioral differences across names and perturbed names, with a dataset spanning fame levels and perturbed-name controls for rigorous evaluation.",
+        "key_metrics": "Across state-of-the-art T2I models, the probe substantially predicts identity memorization and separates memorized from unrecognized names, with insights into differences across model families; dataset contains 1,269 name-face pairs."
+      }
+    },
+    "reproduce": {}
+  }
+]
