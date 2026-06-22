@@ -1,0 +1,53 @@
+<svg width="680" height="300" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">
+  <rect width="680" height="300" rx="12" fill="#f8f9fa"/>
+  <text x="340" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">ELVA: Ranking-Driven Universal Multimodal Retrieval</text>
+
+  <!-- Standard contrastive (left side, crossed out) -->
+  <rect x="30" y="48" width="280" height="130" rx="8" fill="#e63946" opacity="0.08" stroke="#e63946" stroke-width="1.5" stroke-dasharray="4 2"/>
+  <text x="170" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#e63946">Standard Contrastive (InfoNCE)</text>
+  <text x="170" y="88" text-anchor="middle" font-size="10" fill="#555">Query → all negatives treated equally</text>
+  <rect x="60" y="100" width="60" height="22" rx="4" fill="#06d6a0" opacity="0.4"/>
+  <text x="90" y="115" text-anchor="middle" font-size="10" fill="#333">Positive</text>
+  <rect x="140" y="100" width="50" height="22" rx="4" fill="#e63946" opacity="0.35"/>
+  <text x="165" y="115" text-anchor="middle" font-size="10" fill="#333">Neg₁</text>
+  <rect x="203" y="100" width="50" height="22" rx="4" fill="#e63946" opacity="0.35"/>
+  <text x="228" y="115" text-anchor="middle" font-size="10" fill="#333">Neg₂</text>
+  <rect x="265" y="100" width="30" height="22" rx="4" fill="#e63946" opacity="0.35"/>
+  <text x="280" y="115" text-anchor="middle" font-size="9" fill="#333">…</text>
+  <text x="170" y="145" text-anchor="middle" font-size="10" fill="#e63946">→ Binary: +1 / −1</text>
+  <text x="170" y="162" text-anchor="middle" font-size="10" fill="#e63946">Grain blindness: misses fine details</text>
+
+  <!-- Arrow between -->
+  <text x="335" y="115" text-anchor="middle" font-size="20" fill="#888">→</text>
+
+  <!-- ELVA (right side) -->
+  <rect x="365" y="48" width="285" height="130" rx="8" fill="#4361ee" opacity="0.08" stroke="#4361ee" stroke-width="1.5"/>
+  <text x="507" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#4361ee">ELVA (RL-Ranked Negatives)</text>
+  <text x="507" y="88" text-anchor="middle" font-size="10" fill="#555">Negatives ranked by sim(neg, positive)</text>
+  <rect x="385" y="100" width="60" height="22" rx="4" fill="#06d6a0" opacity="0.4"/>
+  <text x="415" y="115" text-anchor="middle" font-size="10" fill="#333">Positive</text>
+  <rect x="460" y="100" width="55" height="22" rx="4" fill="#f72585" opacity="0.3"/>
+  <text x="487" y="115" text-anchor="middle" font-size="9" fill="#333">Hard-Neg</text>
+  <rect x="528" y="100" width="55" height="22" rx="4" fill="#e63946" opacity="0.2"/>
+  <text x="555" y="115" text-anchor="middle" font-size="9" fill="#333">Mid-Neg</text>
+  <rect x="596" y="100" width="45" height="22" rx="4" fill="#e63946" opacity="0.1"/>
+  <text x="618" y="115" text-anchor="middle" font-size="9" fill="#333">Easy-N</text>
+  <text x="507" y="145" text-anchor="middle" font-size="10" fill="#4361ee">→ Ranked reward: fine → coarse</text>
+  <text x="507" y="162" text-anchor="middle" font-size="10" fill="#4361ee">Learns grain-specific discrimination</text>
+
+  <!-- RL update -->
+  <rect x="175" y="205" width="330" height="68" rx="8" fill="#7209b7" opacity="0.10" stroke="#7209b7" stroke-width="1.5"/>
+  <text x="340" y="225" text-anchor="middle" font-size="12" font-weight="bold" fill="#7209b7">Rule-Based RL Training</text>
+  <text x="340" y="243" text-anchor="middle" font-size="10" fill="#555">Reward = f(rank of neg vs positive similarity)</text>
+  <text x="340" y="258" text-anchor="middle" font-size="10" fill="#555">Higher penalty for missing fine-grained hard negatives</text>
+  <text x="340" y="273" text-anchor="middle" font-size="10" fill="#7209b7">Inference: standard retrieval (no overhead)</text>
+
+  <!-- Arrows to RL box -->
+  <defs>
+    <marker id="arv" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto">
+      <path d="M0,0 L0,5 L7,2.5 z" fill="#7209b7"/>
+    </marker>
+  </defs>
+  <line x1="170" y1="185" x2="235" y2="203" stroke="#7209b7" stroke-width="1.5" marker-end="url(#arv)"/>
+  <line x1="507" y1="185" x2="445" y2="203" stroke="#7209b7" stroke-width="1.5" marker-end="url(#arv)"/>
+</svg>

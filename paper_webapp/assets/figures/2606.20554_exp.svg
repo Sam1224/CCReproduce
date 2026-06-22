@@ -1,0 +1,45 @@
+<svg width="680" height="290" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">
+  <rect width="680" height="290" rx="12" fill="#f8f9fa"/>
+  <text x="340" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">G2Rec — Key Experimental Results</text>
+
+  <!-- Table header -->
+  <rect x="30" y="45" width="620" height="30" rx="4" fill="#4361ee" opacity="0.85"/>
+  <text x="140" y="64" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Method</text>
+  <text x="330" y="64" text-anchor="middle" font-size="12" fill="white" font-weight="bold">NDCG@10</text>
+  <text x="480" y="64" text-anchor="middle" font-size="12" fill="white" font-weight="bold">HR@10</text>
+  <text x="610" y="64" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Venue</text>
+
+  <!-- Rows -->
+  <rect x="30" y="75" width="620" height="26" fill="#e9ecef"/>
+  <text x="140" y="92" text-anchor="middle" font-size="11" fill="#333">TIGER (heuristic tok.)</text>
+  <text x="330" y="92" text-anchor="middle" font-size="11" fill="#333">baseline</text>
+  <text x="480" y="92" text-anchor="middle" font-size="11" fill="#333">baseline</text>
+  <text x="610" y="92" text-anchor="middle" font-size="10" fill="#333">KDD'23</text>
+
+  <rect x="30" y="101" width="620" height="26" fill="white"/>
+  <text x="140" y="118" text-anchor="middle" font-size="11" fill="#333">ActionPiece (BPE tok.)</text>
+  <text x="330" y="118" text-anchor="middle" font-size="11" fill="#333">+Δ vs TIGER</text>
+  <text x="480" y="118" text-anchor="middle" font-size="11" fill="#333">+Δ vs TIGER</text>
+  <text x="610" y="118" text-anchor="middle" font-size="10" fill="#333">SIGIR'25</text>
+
+  <rect x="30" y="127" width="620" height="26" fill="#e9ecef"/>
+  <text x="140" y="144" text-anchor="middle" font-size="11" fill="#333">CoFiRec (coarse-fine tok.)</text>
+  <text x="330" y="144" text-anchor="middle" font-size="11" fill="#333">+Δ+Δ</text>
+  <text x="480" y="144" text-anchor="middle" font-size="11" fill="#333">+Δ+Δ</text>
+  <text x="610" y="144" text-anchor="middle" font-size="10" fill="#333">WWW'25</text>
+
+  <rect x="30" y="153" width="620" height="30" fill="#4361ee" opacity="0.12" stroke="#4361ee" stroke-width="1"/>
+  <text x="140" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#4361ee">G2Rec (graph-supervised)</text>
+  <text x="330" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#4361ee">SOTA ↑↑</text>
+  <text x="480" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#4361ee">SOTA ↑↑</text>
+  <text x="610" y="173" text-anchor="middle" font-size="10" fill="#4361ee">arXiv'26</text>
+
+  <!-- Note: exact numbers not in preprint search snippets -->
+  <text x="340" y="205" text-anchor="middle" font-size="10" fill="#888" font-style="italic">* Exact Δ values not disclosed in preprint snippet; see paper Table 2-3</text>
+
+  <!-- Online A/B deployment box -->
+  <rect x="30" y="218" width="620" height="54" rx="8" fill="#06d6a0" opacity="0.12" stroke="#06d6a0" stroke-width="1.5"/>
+  <text x="340" y="237" text-anchor="middle" font-size="12" font-weight="bold" fill="#027a5b">Online A/B Test — Meta Product Surfaces</text>
+  <text x="340" y="255" text-anchor="middle" font-size="11" fill="#027a5b">Deployed across multiple recommendation verticals at Meta</text>
+  <text x="340" y="270" text-anchor="middle" font-size="11" fill="#027a5b">G2Rec shows consistent significant gains over all baselines</text>
+</svg>

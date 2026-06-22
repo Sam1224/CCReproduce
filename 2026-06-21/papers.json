@@ -219,5 +219,77 @@
       }
     },
     "reproduce": {}
+  },
+  {
+    "id": "2606.20554",
+    "title": "Structuring and Tokenizing Distributed User Interest Context for Generative Recommendation",
+    "authors": ["Ruizhong Qiu", "Yinglong Xia", "Dongqi Fu", "Hanqing Zeng", "Ren Chen", "Xiangjun Fan", "Hong Li", "Hong Yan", "Hanghang Tong"],
+    "affiliations": ["University of Illinois Urbana-Champaign", "Meta"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20554",
+      "pdf": "https://arxiv.org/pdf/2606.20554"
+    },
+    "tags": ["生成式推荐", "图协同建模", "有监督分词", "工业部署", "电商推荐", "LLM"],
+    "score": {
+      "total": 81,
+      "innovation": 23,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 7,
+      "generalization": 5,
+      "relevance": 22,
+      "rationale_zh": "创新性(23/30)：首次将全局图协同参与信号作为 item tokenization 的显式监督，去除启发式依赖并解决 GNN 规模化问题，打通过去割裂的图建模与分词两个模块；指标(12/15)：Meta 多产品面在线 A/B+公开基准双重验证；实验质量(12/15)：含消融实验；效率(7/10)：图可扩展但有额外图构建开销；泛化满分(5/5)：跨 Meta 多产品面部署；相关性(22/25)：工业级电商推荐，直接与达人/商品推荐场景对齐。总分 81，需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "G2Rec 提出统一框架，将全局图协同参与建模（holistic co-engagement graph，可扩展至工业级，非局部 GNN）与有监督语义分词（用图推断的用户兴趣原型作为分词软标签）融合于端到端生成式序列推荐骨干之上。具体：先从全局用户-物品交互图推断物品的兴趣原型分配（无需真实标注），再将其作为 RQ-VAE 风格分词器的监督信号（交叉熵损失），最后在离散 token 序列上用自回归 Transformer 预测下一物品 token。总损失 L = L_rec + λ·L_tok。已在 Meta 多个产品面在线部署验证。",
+        "innovation": "与 TIGER/ActionPiece（启发式分词）和 CoFiRec/NGCF（局部 GNN）相比：(1) 图模块用全局协同参与而非 GNN 邻域聚合，规避工业规模下的 O(n²) 问题；(2) 分词器首次获得图信号驱动的显式监督，而非无监督 k-means；(3) 两模块统一端到端优化，减少优化目标不一致。",
+        "key_metrics": "Meta 内部多产品面在线 A/B 测试全面超越 baseline；公开基准（多个序列推荐标准数据集）NDCG@10/HR@10 优于 TIGER、ActionPiece、CoFiRec 等 SOTA。"
+      },
+      "en": {
+        "method_overview": "G2Rec unifies holistic graph-based co-engagement modeling (scalable, not local GNN) with supervised semantic tokenization, using graph-inferred user interest prototypes as soft supervision labels for an RQ-VAE-style tokenizer, all built on an autoregressive Transformer recommender backbone. Loss: L = L_rec + λ·L_tok. Deployed online at Meta across multiple product surfaces.",
+        "innovation": "vs. TIGER/ActionPiece (heuristic tokenization) and CoFiRec/NGCF (local GNN): (1) holistic co-engagement avoids O(n²) GNN at industrial scale; (2) first tokenizer with explicit graph-signal supervision instead of unsupervised k-means; (3) end-to-end joint optimization of graph + tokenization + recommendation.",
+        "key_metrics": "Online A/B at Meta across product surfaces shows consistent gains; public benchmarks (multiple standard sequential rec datasets) outperform TIGER, ActionPiece, CoFiRec on NDCG@10/HR@10."
+      }
+    },
+    "reproduce": {"path": "2026-06-21/code/G2Rec"}
+  },
+  {
+    "id": "2606.20280",
+    "title": "ELVA: Exploring Ranking-Driven Universal Multimodal Retrieval",
+    "authors": ["(see arxiv page)"],
+    "affiliations": ["(see arxiv page)"],
+    "source": "arXiv",
+    "published": "2026-06-18",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.20280",
+      "pdf": "https://arxiv.org/pdf/2606.20280"
+    },
+    "tags": ["多模态检索", "通用检索", "强化学习", "对比学习", "负样本挖掘"],
+    "score": {
+      "total": 68,
+      "innovation": 21,
+      "metrics": 10,
+      "quality": 10,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 17,
+      "rationale_zh": "创新性(21/30)：用 rule-based RL 排序 negative 以解决对比学习中的粒度盲区，思路新颖；指标(10/15)：在 UMR 基准上相较对比学习 baseline 有提升；质量(10/15)：需更多实验细节；效率(7/10)：训练有 RL 额外开销，推理无；泛化(3/5)：针对 UMR 但未见深度跨域分析；相关性(17/25)：多模态检索可用于电商搜索，但未直接针对电商。总分 68，不需复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "ELVA 针对通用多模态检索（UMR）中对比学习的'粒度盲区'（grain blindness）问题，提出基于规则的 RL 框架：将 batch 内 negatives 按与 positive 的余弦相似度排序，定义规则奖励，让模型分别从粗粒度（完全无关 negative）和细粒度（语义相近 hard negative）中获取不同的区分训练信号，缓解标准 InfoNCE 把所有 negative 等价对待的缺陷。",
+        "innovation": "首次用 RL 排序机制在 UMR 对比学习中显式区分 hard/soft negatives，直接针对'粒度盲区'这一根本问题；推理期与标准检索无额外开销，仅训练期增加 RL 更新步骤。",
+        "key_metrics": "在标准 UMR 基准（如 M-BEIR）上相较对比学习 baseline 有提升（具体数值见论文）。"
+      },
+      "en": {
+        "method_overview": "ELVA addresses 'grain blindness' in contrastive learning for Universal Multimodal Retrieval (UMR): negatives are ranked by cosine similarity to the positive, and a rule-based RL reward trains the model to learn different granularity information from each negative level, rather than treating all negatives as binary positives/negatives under InfoNCE.",
+        "innovation": "First to use RL-driven negative ranking in UMR contrastive training to explicitly target grain blindness; no inference overhead — only training-time RL update steps added.",
+        "key_metrics": "Outperforms contrastive learning baselines on standard UMR benchmarks (M-BEIR etc.; see paper for exact numbers)."
+      }
+    },
+    "reproduce": {}
   }
 ]

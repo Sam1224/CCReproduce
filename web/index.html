@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Daily Paper Radar — E-commerce & Creator Governance</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card-bg: #ffffff;
+      --border: #e2e4e9;
+      --accent: #4361ee;
+      --accent2: #7209b7;
+      --text: #1a1a2e;
+      --sub: #555;
+      --tag-bg: #eef0ff;
+      --tag-fg: #4361ee;
+      --score-hi: #06d6a0;
+      --score-lo: #f72585;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* Top bar */
+    .topbar {
+      background: #1a1a2e;
+      color: white;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .brand-title { font-size: 18px; font-weight: 700; letter-spacing: .5px; }
+    .brand-sub { font-size: 11px; color: #a0a8c0; margin-top: 2px; }
+    .controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .ctrl label { font-size: 12px; color: #a0a8c0; display: block; margin-bottom: 3px; }
+    .ctrl select, .ctrl input[type=range] { font-size: 13px; border-radius: 6px; }
+    .ctrl select { background: #2a2a40; color: white; border: 1px solid #444; padding: 4px 8px; }
+    .btn {
+      background: var(--accent);
+      color: white; border: none; padding: 7px 14px;
+      border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600;
+      text-decoration: none; display: inline-block;
+    }
+    .btn:hover { background: #2b45c7; }
+    .btn.secondary { background: #2a2a40; }
+    .btn.secondary:hover { background: #3a3a60; }
+    #scoreVal { font-size: 13px; font-weight: 700; color: #a0a8c0; min-width: 26px; display: inline-block; }
+
+    /* Grid */
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .status { color: var(--sub); font-size: 14px; margin-bottom: 16px; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: box-shadow .15s;
+    }
+    .card:hover { box-shadow: 0 4px 16px rgba(67,97,238,0.12); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .title { font-size: 13.5px; font-weight: 700; line-height: 1.4; color: var(--text); flex: 1; }
+    .score-badge {
+      min-width: 42px; height: 42px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: white; flex-shrink: 0;
+    }
+    .meta { font-size: 11px; color: var(--sub); line-height: 1.5; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag {
+      background: var(--tag-bg); color: var(--tag-fg);
+      font-size: 10px; font-weight: 600;
+      padding: 2px 7px; border-radius: 99px;
+    }
+    .method { font-size: 12px; color: #333; line-height: 1.55; }
+    .method-label { font-size: 10px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .innovation { font-size: 12px; color: #333; line-height: 1.55; }
+    .metrics { font-size: 12px; background: #f8f9fa; padding: 8px 10px; border-radius: 6px; border-left: 3px solid var(--accent); }
+    .score-bar { margin-top: 2px; }
+    .score-bar-inner { height: 5px; border-radius: 3px; background: var(--accent); transition: width .3s; }
+    .toggle-btn {
+      background: none; border: 1px solid var(--border); color: var(--sub);
+      font-size: 11px; padding: 3px 8px; border-radius: 5px; cursor: pointer;
+      font-weight: 600;
+    }
+    .toggle-btn:hover { background: var(--bg); }
+    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .action-link {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      text-decoration: none; padding: 4px 10px;
+      border: 1px solid var(--accent); border-radius: 5px;
+    }
+    .action-link:hover { background: var(--tag-bg); }
+    .action-link.code { color: var(--accent2); border-color: var(--accent2); }
+    .action-link.code:hover { background: #f0e8ff; }
+    .collapse-toggle { cursor: pointer; user-select: none; }
+    .collapsible { overflow: hidden; transition: max-height .3s ease; }
+    .hidden-section { display: none; }
+    .score-breakdown { font-size: 11px; color: var(--sub); padding: 8px 0; }
+    .score-row { display: flex; justify-content: space-between; padding: 2px 0; }
+    .score-row-key { color: #666; }
+    .score-row-val { font-weight: 700; color: var(--accent); }
+    .date-badge { font-size: 10px; background: #e9ecef; color: #555; padding: 2px 7px; border-radius: 4px; }
+    .no-results { grid-column: 1/-1; text-align: center; color: var(--sub); padding: 60px 0; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div>
+    <div class="brand-title">📡 Daily Paper Radar</div>
+    <div class="brand-sub">E-commerce Content Ecosystem & Creator Governance · CCReproduce</div>
+  </div>
+  <div class="controls">
+    <div class="ctrl">
+      <label id="lbl-date">日期 / Date</label>
+      <select id="dateSelect"></select>
+    </div>
+    <div class="ctrl">
+      <label>最低分 / Min Score: <span id="scoreVal">40</span></label>
+      <input type="range" id="scoreSlider" min="0" max="100" value="40" style="width:100px"/>
+    </div>
+    <button class="btn secondary" id="langBtn">EN</button>
+    <a class="btn" href="https://github.com/Sam1224/CCReproduce" target="_blank" rel="noreferrer">GitHub ↗</a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="status" id="status">Loading…</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<script>
+const REPO = "https://github.com/Sam1224/CCReproduce/tree/main/";
+let allPapers = [];
+let lang = "zh";
+
+function scoreColor(s) {
+  if (s >= 80) return "#06d6a0";
+  if (s >= 70) return "#4361ee";
+  if (s >= 55) return "#f8961e";
+  return "#f72585";
+}
+
+function scoreLabel(s) {
+  if (s >= 80) return "★★★";
+  if (s >= 70) return "★★";
+  if (s >= 55) return "★";
+  return "·";
+}
+
+function tagHtml(tags) {
+  return (tags || []).map(t => `<span class="tag">${t}</span>`).join("");
+}
+
+function breakdownHtml(score) {
+  const fields = [
+    ["innovation","创新(Innovation)",30],
+    ["metrics","实验Δ(SOTA delta)",15],
+    ["quality","实验质量(Quality)",15],
+    ["efficiency","效率(Efficiency)",10],
+    ["generalization","泛化(Generalization)",5],
+    ["relevance","领域相关(Relevance)",25]
+  ];
+  let rows = fields.map(([k, label, max]) => {
+    const v = score[k] ?? "—";
+    return `<div class="score-row"><span class="score-row-key">${label}</span><span class="score-row-val">${v}/${max}</span></div>`;
+  }).join("");
+  return `<div class="score-breakdown">${rows}</div>`;
+}
+
+function buildCard(p) {
+  const score = p.score || {};
+  const total = score.total || 0;
+  const summary = p.summary || {};
+  const zh = summary.zh || {};
+  const en = summary.en || {};
+  const links = p.links || {};
+  const reproduce = p.reproduce || {};
+
+  const method = lang === "zh" ? (zh.method_overview || en.method_overview || "") : (en.method_overview || zh.method_overview || "");
+  const inno = lang === "zh" ? (zh.innovation || en.innovation || "") : (en.innovation || zh.innovation || "");
+  const metrics = lang === "zh" ? (zh.key_metrics || en.key_metrics || "") : (en.key_metrics || zh.key_metrics || "");
+  const rationale = score.rationale_zh || "";
+
+  const cardId = `card-${p.id.replace(/\./g, "_")}`;
+
+  let actionsHtml = "";
+  if (links.arxiv) actionsHtml += `<a class="action-link" href="${links.arxiv}" target="_blank">arXiv ↗</a>`;
+  if (links.pdf) actionsHtml += `<a class="action-link" href="${links.pdf}" target="_blank">PDF ↗</a>`;
+  if (links.code) actionsHtml += `<a class="action-link code" href="${links.code}" target="_blank">Code ↗</a>`;
+  if (reproduce.path) actionsHtml += `<a class="action-link code" href="${REPO}${reproduce.path}" target="_blank">Reproduce ↗</a>`;
+
+  return `
+<article class="card" id="${cardId}">
+  <div class="card-top">
+    <div class="title">${p.title || "Untitled"}</div>
+    <div class="score-badge" style="background:${scoreColor(total)}" title="${scoreLabel(total)} score: ${total}/100">${total}</div>
+  </div>
+
+  <div class="meta">
+    <span class="date-badge">${p.inspection_date || p.published || ""}</span>
+    &nbsp;${(p.authors || []).slice(0,3).join(", ")}${(p.authors||[]).length > 3 ? " et al." : ""}
+    &nbsp;·&nbsp;<em>${(p.affiliations||[]).slice(0,2).join("; ")}</em>
+  </div>
+
+  <div class="tags">${tagHtml(p.tags)}</div>
+
+  <div class="score-bar">
+    <div class="score-bar-inner" style="width:${total}%; background:${scoreColor(total)}"></div>
+  </div>
+
+  <div>
+    <div class="method-label">Method / 方法</div>
+    <div class="method">${method.slice(0,240)}${method.length > 240 ? "…" : ""}</div>
+  </div>
+
+  <div>
+    <button class="toggle-btn" onclick="toggleSection('${cardId}-detail')">+ Innovation & Metrics</button>
+    <div id="${cardId}-detail" class="hidden-section" style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+      <div>
+        <div class="method-label">Innovation / 创新</div>
+        <div class="innovation">${inno.slice(0,300)}${inno.length>300?"…":""}</div>
+      </div>
+      ${metrics ? `<div class="metrics"><strong>Metrics:</strong> ${metrics}</div>` : ""}
+      <div>
+        <button class="toggle-btn" onclick="toggleSection('${cardId}-score')">+ Score Breakdown</button>
+        <div id="${cardId}-score" class="hidden-section">
+          ${breakdownHtml(score)}
+          ${rationale ? `<div style="font-size:11px;color:#888;margin-top:4px">${rationale.slice(0,200)}…</div>` : ""}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-actions">${actionsHtml}</div>
+</article>`;
+}
+
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.style.display === "none" || el.classList.contains("hidden-section")) {
+    el.classList.remove("hidden-section");
+    el.style.display = "flex";
+    el.style.flexDirection = "column";
+    el.style.gap = "8px";
+  } else {
+    el.style.display = "none";
+  }
+}
+
+function render() {
+  const dateVal = document.getElementById("dateSelect").value;
+  const minScore = parseInt(document.getElementById("scoreSlider").value);
+  const grid = document.getElementById("grid");
+
+  const filtered = allPapers.filter(p => {
+    const date = p.inspection_date || p.published || "";
+    const score = (p.score || {}).total || 0;
+    return (dateVal === "all" || date === dateVal) && score >= minScore;
+  });
+
+  filtered.sort((a, b) => (b.score?.total || 0) - (a.score?.total || 0));
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="no-results">No papers match the current filters.</div>`;
+  } else {
+    grid.innerHTML = filtered.map(buildCard).join("");
+  }
+  document.getElementById("status").textContent = `${filtered.length} paper${filtered.length!==1?"s":""} shown`;
+}
+
+async function init() {
+  try {
+    const res = await fetch("papers_db.json");
+    allPapers = await res.json();
+  } catch(e) {
+    document.getElementById("status").textContent = "Failed to load papers_db.json";
+    return;
+  }
+
+  // Build date list
+  const dates = [...new Set(allPapers.map(p => p.inspection_date || p.published || ""))].sort().reverse();
+  const sel = document.getElementById("dateSelect");
+  sel.innerHTML = `<option value="all">All Dates</option>` + dates.map(d => `<option value="${d}">${d}</option>`).join("");
+  // Default to most recent date
+  if (dates.length > 0) sel.value = dates[0];
+
+  document.getElementById("scoreSlider").addEventListener("input", e => {
+    document.getElementById("scoreVal").textContent = e.target.value;
+    render();
+  });
+  document.getElementById("dateSelect").addEventListener("change", render);
+  document.getElementById("langBtn").addEventListener("click", () => {
+    lang = lang === "zh" ? "en" : "zh";
+    document.getElementById("langBtn").textContent = lang === "zh" ? "EN" : "中";
+    render();
+  });
+
+  render();
+}
+
+init();
+</script>
+</body>
+</html>

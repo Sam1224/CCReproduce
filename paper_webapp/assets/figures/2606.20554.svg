@@ -1,0 +1,61 @@
+<svg width="720" height="340" viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">
+  <rect width="720" height="340" rx="12" fill="#f8f9fa"/>
+  <text x="360" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a2e">G2Rec: Graph-to-Rec Architecture</text>
+
+  <!-- Module 1: Co-Engagement Graph -->
+  <rect x="30" y="55" width="170" height="120" rx="8" fill="#4361ee" opacity="0.15" stroke="#4361ee" stroke-width="1.5"/>
+  <text x="115" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#4361ee">1. Holistic Graph</text>
+  <text x="115" y="95" text-anchor="middle" font-size="10" fill="#333">Co-Engagement</text>
+  <text x="115" y="113" text-anchor="middle" font-size="9" fill="#555">User-Item Bipartite</text>
+  <text x="115" y="128" text-anchor="middle" font-size="9" fill="#555">Global propagation</text>
+  <text x="115" y="143" text-anchor="middle" font-size="9" fill="#555">(no local GNN)</text>
+  <text x="115" y="163" text-anchor="middle" font-size="10" fill="#4361ee">→ Interest Prototypes</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="200" y1="115" x2="250" y2="115" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Module 2: Supervised Tokenizer -->
+  <rect x="250" y="55" width="180" height="120" rx="8" fill="#7209b7" opacity="0.12" stroke="#7209b7" stroke-width="1.5"/>
+  <text x="340" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#7209b7">2. Supervised Tokenizer</text>
+  <text x="340" y="95" text-anchor="middle" font-size="10" fill="#333">RQ-VAE style</text>
+  <text x="340" y="113" text-anchor="middle" font-size="9" fill="#555">Residual Quantization</text>
+  <text x="340" y="130" text-anchor="middle" font-size="9" fill="#555">M discrete codes / item</text>
+  <text x="340" y="147" text-anchor="middle" font-size="9" fill="#7209b7">Supervision: CE(code, proto)</text>
+  <text x="340" y="163" text-anchor="middle" font-size="10" fill="#7209b7">→ Item code sequences</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="430" y1="115" x2="480" y2="115" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Module 3: Autoregressive Rec -->
+  <rect x="480" y="55" width="210" height="120" rx="8" fill="#f72585" opacity="0.10" stroke="#f72585" stroke-width="1.5"/>
+  <text x="585" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#f72585">3. Autoregressive Rec</text>
+  <text x="585" y="95" text-anchor="middle" font-size="10" fill="#333">Transformer Decoder</text>
+  <text x="585" y="112" text-anchor="middle" font-size="9" fill="#555">Input: [hist_codes | tgt[:-1]]</text>
+  <text x="585" y="129" text-anchor="middle" font-size="9" fill="#555">Causal attention (no future)</text>
+  <text x="585" y="146" text-anchor="middle" font-size="9" fill="#f72585">L_rec = CE(logits, tgt_codes)</text>
+  <text x="585" y="163" text-anchor="middle" font-size="10" fill="#f72585">→ Next-item prediction</text>
+
+  <!-- Total Loss box -->
+  <rect x="175" y="210" width="370" height="60" rx="8" fill="#06d6a0" opacity="0.15" stroke="#06d6a0" stroke-width="1.5"/>
+  <text x="360" y="233" text-anchor="middle" font-size="12" font-weight="bold" fill="#027a5b">Total Loss (§3.5)</text>
+  <text x="360" y="253" text-anchor="middle" font-size="13" font-weight="bold" fill="#027a5b">L = L_rec + λ · L_tok</text>
+  <text x="360" y="268" text-anchor="middle" font-size="10" fill="#027a5b">where L_tok = CE(code₀_logit, proto_label)</text>
+
+  <!-- Arrows to loss -->
+  <line x1="340" y1="175" x2="340" y2="208" stroke="#06d6a0" stroke-width="1.5" marker-end="url(#arrowg)"/>
+  <line x1="585" y1="175" x2="490" y2="208" stroke="#06d6a0" stroke-width="1.5" marker-end="url(#arrowg)"/>
+
+  <!-- Online deployment badge -->
+  <rect x="475" y="290" width="220" height="32" rx="6" fill="#4cc9f0" opacity="0.25" stroke="#4cc9f0" stroke-width="1"/>
+  <text x="585" y="310" text-anchor="middle" font-size="11" fill="#0077b6">✓ Online A/B at Meta (multiple product surfaces)</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+    </marker>
+    <marker id="arrowg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#06d6a0"/>
+    </marker>
+  </defs>
+</svg>
