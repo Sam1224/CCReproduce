@@ -1,0 +1,5 @@
+torch>=2.0
+numpy>=1.23
+# Optional (soft-clustering init via Leiden; code falls back to KMeans if absent):
+# python-igraph>=0.10
+# leidenalg>=0.9
