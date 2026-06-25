@@ -1,0 +1,221 @@
+[
+  {
+    "id": "2606.05748",
+    "title": "UNIVID: Unified Vision-Language Model for Video Moderation",
+    "authors": ["Kejuan Yang", "Yizhuo Zhang", "Mingyuan Du", "Yue Zhang", "Dixin Zheng", "Kaili Zhao", "Yang Xiao", "Hanzhong Liang", "Kenan Xiao"],
+    "affiliations": ["ByteDance"],
+    "source": "arXiv",
+    "published": "2026-06-04",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.05748",
+      "pdf": "https://arxiv.org/pdf/2606.05748.pdf"
+    },
+    "tags": ["视频审核", "违规检测", "多模态大模型", "可解释", "工业部署", "内容治理"],
+    "score": {
+      "total": 79,
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 22,
+      "rationale_zh": "创新性(22/30)：将审核从分类器堆叠升级为‘生成式策略感知描述(policy-aware captions)’，把可解释证据作为中间表示，并配套数据精炼解决通用VLM在敏感内容上的拒答问题；实验指标(12/15)：生产模拟中显著降低漏过/误杀，并在业务子场景给出量化收益；实验质量(12/15)：训练配方、三段式系统与 CapBench 评测拆解较完整；效率(8/10)：强调 FP8 量化与较低推理成本；泛化(3/5)：跨场景复用能力主要依赖数据与RAG工程；相关性(22/25)：与电商短视频/直播内容治理高度相关。但核心资产不开放，复现实操门槛较高，因此总分控制在 80 以下。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "UNIVID 将视频审核重构为‘先生成策略感知描述，再基于描述做决策’的统一框架：模型对视频生成可被人工核验的 policy-aware captions，系统再结合检索与规则/策略进行执行。整体流程包含三阶段：Risk Filter 用嵌入做高吞吐初筛，Moderation Actor 生成描述并结合 RAG 做自动处置，Trend Governance 用少量样本快速捕捉新风险趋势。",
+        "innovation": "核心亮点是把审核证据显式化（caption 作为可验证中间层），减少黑盒分类器堆叠带来的维护与归因困难；并提出面向敏感内容的数据精炼/持续微调配方，降低通用VLM的‘安全护栏拒答’；评测上用 CapBench 把描述拆成原子事件，便于做细粒度对齐与诊断。",
+        "key_metrics": "生产模拟：违规漏过率相对降低 42.7%，误杀率相对降低 37.0%；Brand & Ads 场景匹配准确率 81%；Risk Filter 集成 UNIVID 嵌入后高热视频漏过召回提升 23.9%；结合 RAG 后漏过召回从 39.3% 提升到 53.6%。"
+      },
+      "en": {
+        "method_overview": "UNIVID reframes video moderation as an interpretable caption-driven pipeline: the model generates policy-aware captions as verifiable evidence, and downstream policy logic (with retrieval) makes the final enforcement decision. The system follows a three-stage design: a high-throughput embedding-based Risk Filter, a Moderation Actor that produces captions and uses RAG for decisions, and a Trend Governance module that adapts to emerging risks with few examples.",
+        "innovation": "The key idea is to make moderation evidence explicit (captions as a verifiable intermediate), reducing the maintenance and attribution burden of large classifier ensembles. It also proposes a human-refined data recipe to mitigate refusals caused by generic safety guardrails, and introduces CapBench to evaluate captions by decomposing them into atomic verifiable events for precise alignment.",
+        "key_metrics": "Simulated production: relative violation leakage -42.7%, overkill -37.0%; 81% matching accuracy in Brand & Ads simulations; Risk Filter leakage recall on high-view videos +23.9% with UNIVID embeddings; leakage recall 39.3% → 53.6% with RAG."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.19627v1",
+    "title": "VCG: A Multimodal Retrieval Framework for E-Commerce Video Feeds under Extreme Cold-Start Conditions",
+    "authors": ["Katya Mirylenka", "Egor Malykh", "Mahdyar Ravanbakhsh", "Michael Gygli", "Marco-Andrea Buchmann", "Andrew Dzhoha", "Svitlana Borzenko", "Francesca Catino", "Mohamed Gaafar", "Maarten Versteegh", "Thomas Kober", "Dario d’Andrea", "Ellie Langhans"],
+    "affiliations": ["TU Wien", "Zalando SE", "Zalando Switzerland AG"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.19627v1",
+      "pdf": "https://arxiv.org/pdf/2606.19627v1.pdf"
+    },
+    "tags": ["电商推荐", "视频信息流", "极端冷启动", "多模态检索", "CLIP", "向量搜索"],
+    "score": {
+      "total": 78,
+      "innovation": 23,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 19,
+      "rationale_zh": "创新性(23/30)：以‘语义一致性’替代协同过滤作为冷启动核心，并用 LVLM-as-a-judge 缓解离线评估曝光偏差；指标(12/15)：在线A/B在完播、转化上有大幅提升；质量(12/15)：对比生成式/判别式嵌入并剖析各向异性；效率(9/10)：向量检索 P50 延迟毫秒级；泛化(3/5)：主要验证在同域电商视频流；相关性(19/25)：强相关电商内容生态(视频流推荐/冷启动)。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "VCG 面向电商视频流的‘极端冷启动’，用领域适配的 CLIP 将视频帧与商品图文映射到统一语义空间。视频侧对采样帧做编码取均值形成视频向量；用户侧对历史点击商品向量做时间衰减聚合形成用户向量，在线用 kNN 向量检索召回候选视频。为克服曝光偏置，论文引入‘LVLM-as-a-judge’用 VLM 对推荐相关性做更接近人工偏好的评估。",
+        "innovation": "亮点是把冷启动推荐从‘交互驱动’切到‘语义驱动’，并系统比较了生成式 MLLM 表征与判别式 CLIP 表征在检索上的差异，指出生成式模型易出现空间塌缩/各向异性导致检索退化；同时提出用 LVLM 作为评估中介，减少离线指标对历史点击的依赖。",
+        "key_metrics": "在线A/B：深度完播(VideoProgress@50%) +50.10%，开始到25%转化 +30.32%；离线：fDNA 相似度 +37%，CLIP 相似度 +22%；在线检索 P50 延迟 17.5ms。"
+      },
+      "en": {
+        "method_overview": "VCG tackles extreme cold-start in e-commerce video feeds by aligning videos and products in a shared semantic space using a domain-adapted CLIP. Video embeddings are averaged over sampled frames, while user embeddings are time-decayed aggregates of clicked product embeddings; candidates are retrieved via kNN vector search. To reduce exposure bias of offline metrics, it adopts an LVLM-as-a-judge protocol to assess semantic relevance beyond historical clicks.",
+        "innovation": "It shifts cold-start recommendation from behavior-based CF to a semantic-first paradigm. The paper provides an empirical analysis comparing generative MLLM embeddings vs. discriminative CLIP embeddings for retrieval, highlighting anisotropy/collapse issues of generative embeddings in kNN search. It also uses LVLM judging to better approximate human preference and avoid biased offline evaluation.",
+        "key_metrics": "Online A/B: VideoProgress@50% +50.10%, Start-to-25% conversion +30.32%; Offline: fDNA similarity +37%, CLIP similarity +22%; online retrieval P50 latency 17.5ms."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.18897v1",
+    "title": "SAERec: Constructing Fine-grained Interpretable Intents Priors via Sparse Autoencoders for Recommendation",
+    "authors": ["Jiangnan Xia", "Xuansheng Wu", "Yu Yang", "Xin Wang", "Ninghao Liu"],
+    "affiliations": ["University of Georgia", "Shanghai AI Laboratory", "The Education University of Hong Kong", "Jilin University", "The Hong Kong Polytechnic University"],
+    "source": "arXiv",
+    "published": "2026-06",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.18897v1",
+      "pdf": "https://arxiv.org/pdf/2606.18897v1.pdf",
+      "code": "https://anonymous.4open.science/r/SAERec-CE84"
+    },
+    "tags": ["推荐系统", "可解释意图", "稀疏自编码器", "LLM+Rec", "评论挖掘", "序列推荐"],
+    "score": {
+      "total": 74,
+      "innovation": 22,
+      "metrics": 10,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 20,
+      "rationale_zh": "创新性(22/30)：将 SAE 用于从 LLM 文本嵌入中拆解可解释意图原子，并提出个人/公共双层意图检索注入；指标(10/15)：在多电商/本地服务数据集上 HR/NDCG 有稳定提升；质量(12/15)：方法链路完整且有消融；效率(6/10)：额外 SAE 与检索开销可控但非极致；泛化(4/5)：跨多个领域数据集验证；相关性(20/25)：直接服务电商内容/商品理解与推荐解释。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "SAERec 先用推荐感知 LLM 生成评论/文本嵌入，再用稀疏自编码器(SAE)把稠密嵌入拆成高维稀疏的‘意图方向’，并借助互信息对齐与 LLM 过滤/标注得到可解释意图集合。在线推荐时，系统检索‘个人意图’与‘公共意图’两类先验，通过多分支注意力注入到序列推荐模型中，形成更稳健、可解释的用户表示。",
+        "innovation": "把 SAE 的‘语义原子拆解’引入意图推荐，解决了传统聚类/原型式意图难解释、意图数需手设、对稀疏噪声敏感的问题；并用 LLM 完成意图筛选与命名，使意图空间可读、可运营；双层意图检索把离线语义稳定性与在线行为动态性结合起来。",
+        "key_metrics": "Amazon Beauty：HR@10 0.1055(+10.70%)、NDCG@10 0.0643(+11.63%)；Amazon Toys：HR@10 0.1147(+9.97%)、NDCG@10 0.0723(+10.89%)；Amazon Sports：HR@10 0.0611(+9.11%)；Yelp：HR@10 0.0452(+5.85%)。"
+      },
+      "en": {
+        "method_overview": "SAERec first extracts recommendation-aware text embeddings from user reviews via an LLM, then uses a Sparse Autoencoder (SAE) to decompose dense embeddings into a high-dimensional sparse intent space. With mutual-information alignment and LLM-assisted filtering/labeling, it builds a set of interpretable intent atoms. At serving time, it retrieves both personal and public intent priors and injects them into a sequential recommender via multi-branch attention to produce robust and interpretable user representations.",
+        "innovation": "It introduces SAE-based semantic disentanglement to intent recommendation, addressing the opacity and hyper-parameter sensitivity of clustering/prototype intents. LLMs are used to filter and name intent atoms to make the intent space readable and operable. The dual-level intent retrieval mechanism combines offline semantic stability with online behavioral dynamics.",
+        "key_metrics": "Amazon Beauty: HR@10 0.1055 (+10.70%), NDCG@10 0.0643 (+11.63%); Amazon Toys: HR@10 0.1147 (+9.97%), NDCG@10 0.0723 (+10.89%); Amazon Sports: HR@10 0.0611 (+9.11%); Yelp: HR@10 0.0452 (+5.85%)."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.07546",
+    "title": "Beyond Item IDs: Scaling Short-Form-Video Recommendation via Semantic-Native Long Sequence Modeling",
+    "authors": ["Ruixiao Sun", "Yuanzhen Lin", "Danfeng Guo", "Diego Uribe Mora", "Jiarui Wang", "Zhizhong Chen", "Liang Liu", "Zhimeng Jiang", "Yuening Li", "Chuan He"],
+    "affiliations": ["Google"],
+    "source": "arXiv",
+    "published": "2026-06",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.07546",
+      "pdf": "https://arxiv.org/pdf/2606.07546.pdf"
+    },
+    "tags": ["短视频推荐", "长序列建模", "语义ID", "冷启动", "工业部署", "效率优化"],
+    "score": {
+      "total": 77,
+      "innovation": 24,
+      "metrics": 11,
+      "quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 17,
+      "rationale_zh": "创新性(24/30)：以内容原生 Semantic IDs 替代 item IDs，并提出 Temporal Folding + Global Query Token 等工程化可落地的超长序列方案；指标(11/15)：线上多指标小幅稳定提升并显著改善冷启动新鲜度；质量(12/15)：给出规模化落地细节与充足消融；效率(9/10)：训练步耗时/显存大幅下降；泛化(4/5)：展示长度扩展的幂律收益；相关性(17/25)：强相关短视频内容生态，但更偏推荐基础设施。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "本文把短视频推荐从‘ID记忆’转向‘语义原生’：用 RQ-VAE 将多模态内容量化成 Semantic IDs，替代无限膨胀的 item ID 嵌入表，提升冷启动与泛化。为在毫秒级延迟下建模 2000+ 长序列，提出 Temporal Folding 将相邻 token 折叠成更短的‘超级token’，并用 Global Query Token 吸收全局意图，再与局部信号融合用于排序。",
+        "innovation": "将 Semantic ID 的可扩展性与超长序列建模结合，并通过二元组深度裁剪把词表/参数控制在可部署范围；Temporal Folding 以零额外参数换取计算大幅下降，同时扩大特征维度带来意外精度增益；给出混合同步-异步的工业落地路径，使离线长序列表征与在线实时特征对齐。",
+        "key_metrics": "线上A/B：满意观看时长 +1.42%，满意播放量 +1.08%，活跃用户数 +0.52%；Semantic IDs 使冷启动新鲜度 +6.81%，嵌入参数 -38.07%；效率：序列长度 800 时训练步耗时 -83.9%，峰值显存 -92.2%。"
+      },
+      "en": {
+        "method_overview": "This work shifts short-form video recommendation from ID memorization to semantic-native modeling. It replaces item IDs with content-native Semantic IDs generated via RQ-VAE quantization over multimodal embeddings, improving cold-start and generalization while bounding embedding growth. To scale sequence length beyond 2000 under strict latency, it proposes Temporal Folding to compress tokens into super-tokens and a Global Query Token to capture holistic intent, fused with local signals for ranking.",
+        "innovation": "It demonstrates the industrial synergy of Semantic IDs with ultra-long sequence modeling. Bi-gram depth truncation keeps vocabulary/parameters deployable, while Temporal Folding delivers major compute savings with zero extra parameters and can even improve accuracy via expanded feature dimensionality. The paper also outlines a hybrid sync-async deployment path aligning long-sequence features with real-time ranking signals.",
+        "key_metrics": "Online A/B: satisfied watch time +1.42%, satisfied views +1.08%, active users +0.52%; Semantic IDs improve cold-start freshness +6.81% and reduce embedding params -38.07%; efficiency: at length 800, training step time -83.9% and peak HBM -92.2%."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.10487v1",
+    "title": "Stop Early, Spend Less: Hidden-State Probes as a Practical Recipe for Streaming Moderation of LLM Outputs",
+    "authors": ["Huizhen Shu", "Xuying Li", "Piao Xue"],
+    "affiliations": ["ModelOneAI", "yunshanai"],
+    "source": "arXiv",
+    "published": "2026-06",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.10487",
+      "pdf": "https://arxiv.org/pdf/2606.10487.pdf"
+    },
+    "tags": ["LLM审核", "流式治理", "低延迟", "隐藏状态探测", "成本优化", "实时拦截"],
+    "score": {
+      "total": 82,
+      "innovation": 24,
+      "metrics": 13,
+      "quality": 12,
+      "efficiency": 10,
+      "generalization": 4,
+      "relevance": 19,
+      "rationale_zh": "创新性(24/30)：把审核信号从‘外挂Guard模型’挪到‘生成模型隐藏状态’，用极轻量 probe 在解码循环内做 token 级流式审核，支持早停/改写等治理动作；指标(13/15)：在公开与中文数据集上给出高F1与极低延迟；质量(12/15)：分析层选择、采样频率、双头结构等，工程可复用；效率(10/10)：~0.1ms 延迟、2-4个数量级算力下降是核心价值；泛化(4/5)：跨数据集/语言验证；相关性(19/25)：强相关平台治理(LLM生成内容审核/拦截)。综合 82 分，达到复现门槛。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文提出在不改动生成模型权重的前提下，直接在中间层隐藏状态上训练轻量 probe（线性/MLP/双头结构）来预测安全标签，并把 probe 挂到 vLLM 的解码循环中，实现 token 级的‘边生成边审核’。关键设计包括层选择(如中后层)、检测频率(每隔若干 step 触发)、以及融合线性先验与非线性分支的 DUAL-HEAD 结构。",
+        "innovation": "相较于生成后再跑 Guard 模型，streaming probe 把审核前移到生成过程，使得有害内容可以在输出完成前被拦截；同时把成本从‘跑一遍大模型’降到‘读一层隐藏状态+小MLP’，更符合线上高并发。该思路对电商客服、评论/直播间弹幕、达人内容的生成式审核都可直接复用。",
+        "key_metrics": "ZHUYI(中文) F1 0.9746；尾延迟约 0.1ms（宣称比后置审核快 3000x+）；算力 0.6 GFLOPs vs 8 TFLOPs 级别（降低 2-4 个数量级）；在 BeaverTails(英文) 上也有一致收益。"
+      },
+      "en": {
+        "method_overview": "The paper trains lightweight probes (linear/MLP/dual-head) on intermediate hidden states of a frozen generator to predict safety labels, and integrates the probe into the vLLM decode loop for token-level streaming moderation. Key knobs include layer selection (mid-to-late layers), probing frequency (every few decoding steps), and a DUAL-HEAD architecture combining linear priors with an MLP branch.",
+        "innovation": "Compared to post-hoc guard models, streaming probes move moderation inside generation, enabling early interception before harmful text is fully emitted. Compute is reduced from running an extra large model to reading hidden states plus a tiny probe, making it practical for high-QPS production. The recipe is directly relevant to e-commerce assistants, comment/live-chat moderation, and creator governance workflows.",
+        "key_metrics": "ZHUYI (Chinese) F1 0.9746; tail latency ~0.1ms (claimed 3000x+ faster than post-hoc guard); compute 0.6 GFLOPs vs ~8 TFLOPs (2–4 orders reduction); consistent gains on BeaverTails (English)."
+      }
+    },
+    "reproduce": {"path": "2026-06-25/StreamProbeModeration"}
+  },
+  {
+    "id": "2606.15307",
+    "title": "Adapting Reinforcement Learning with Chain-of-Thought Supervision for Explainable Detection of Hateful and Propagandistic Memes",
+    "authors": ["Mohamed Bayan Kmainasi", "Mucahid Kutlu", "Ali Ezzat Shahroor", "Abul Hasnat", "Firoj Alam"],
+    "affiliations": ["Qatar Computing Research Institute", "Qatar University", "APAVI.AI", "Blackbird.AI"],
+    "source": "arXiv",
+    "published": "2026-06",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.15307",
+      "pdf": "https://arxiv.org/pdf/2606.15307.pdf",
+      "code": "https://github.com/MohamedBayan/MemeReason",
+      "dataset": "https://huggingface.co/datasets/QCRI/MemeXplain"
+    },
+    "tags": ["多模态审核", "Meme检测", "仇恨言论", "宣传检测", "强化学习", "可解释推理"],
+    "score": {
+      "total": 73,
+      "innovation": 21,
+      "metrics": 10,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 20,
+      "rationale_zh": "创新性(21/30)：在多模态 meme 审核中系统化引入 GRPO 强化学习+CoT 监督，兼顾分类与可解释推理，并用思考长度正则减少奖励作弊；指标(10/15)：在 FHM 与 ArMeme 上有稳定提升；质量(12/15)：三阶段训练与奖励拆解清晰，代码/数据开源；效率(6/10)：后训练/推理成本较高；泛化(4/5)：跨语言(英/阿)验证；相关性(20/25)：与内容理解、违规检测强相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文聚焦图文交互的隐喻型 meme 审核，提出三阶段训练：先用含 CoT 的 SFT 热身，再用监督式 GRPO 通过复合奖励(分类正确、格式合规、解释相似、思考长度)做后训练，最后探索一致性伪标签的自监督 GRPO。模型在输出标签的同时生成可解释推理链，便于运营侧核验与迭代。",
+        "innovation": "把 GRPO 这种更稳定的 RL 后训练引入多模态审核，并显式把‘解释质量’写进奖励；同时用思考长度正则抑制‘短路推理/奖励投机’；并构建/使用跨语言细粒度标注与数据增强，让 meme 治理可迁移到不同语种内容生态。",
+        "key_metrics": "Facebook Hateful Memes：准确率 79.9% → 82.0%；ArMeme：Macro-F1 达 0.612（+7.6点）；解释质量：METEOR 最高 0.52。"
+      },
+      "en": {
+        "method_overview": "The paper targets implicit hateful/propagandistic memes where harmful intent emerges from image-text interplay. It uses a 3-stage pipeline: SFT warm-up with CoT distillation and fine-grained labels, supervised GRPO with a composite reward (correctness, formatting, rationale similarity, thinking length), and a self-supervised GRPO variant using consensus pseudo-labels. The model outputs both labels and explicit rationales.",
+        "innovation": "It brings GRPO-style post-training to multimodal moderation and explicitly optimizes explanation quality via reward design. A thinking-length regularizer mitigates reward hacking and collapsed reasoning traces. Cross-lingual (EN/AR) annotation and augmentation make the approach transferable across multilingual content ecosystems.",
+        "key_metrics": "Facebook Hateful Memes: accuracy 79.9% → 82.0%; ArMeme: Macro-F1 0.612 (+7.6 points); explanation quality METEOR up to 0.52."
+      }
+    },
+    "reproduce": {}
+  }
+]
