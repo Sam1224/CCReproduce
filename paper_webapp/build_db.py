@@ -43,6 +43,17 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
         """
     )
 
+    # Also persist the inspection dates themselves so the UI can show days
+    # even when a given day has zero papers.
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS days (
+          inspection_date TEXT PRIMARY KEY,
+          paper_count INTEGER NOT NULL
+        );
+        """
+    )
+
 
 def main() -> None:
     out_path = WEBAPP_DIR / "data" / "papers.sqlite"
@@ -66,10 +77,12 @@ def main() -> None:
         else:
             papers = []
 
+        paper_count = 0
         for p in papers:
             if not isinstance(p, dict):
                 continue
 
+            paper_count += 1
             links = p.get("links", {})
             score = p.get("score", {})
             summary = p.get("summary", {})
@@ -131,6 +144,11 @@ def main() -> None:
                     exp_figure_path,
                 ),
             )
+
+        conn.execute(
+            "INSERT OR REPLACE INTO days (inspection_date, paper_count) VALUES (?, ?)",
+            (inspection_date, paper_count),
+        )
 
     conn.commit()
     conn.close()

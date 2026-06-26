@@ -11,6 +11,11 @@ const I18N = {
     rationale: "评分依据",
     toggleFigure: "显示/隐藏 Method Figure",
     toggleExp: "显示/隐藏 亮眼实验",
+    inspection: "巡检日期",
+    published: "论文日期",
+    source: "来源",
+    authors: "作者",
+    affiliations: "机构",
     loading: "Loading…",
     empty: "当前筛选条件下没有论文。",
   },
@@ -23,6 +28,11 @@ const I18N = {
     rationale: "Score rationale",
     toggleFigure: "Show/Hide methodology figure",
     toggleExp: "Show/Hide highlights",
+    inspection: "Inspection",
+    published: "Published",
+    source: "Source",
+    authors: "Authors",
+    affiliations: "Affiliations",
     loading: "Loading…",
     empty: "No papers match the current filter.",
   },
@@ -107,11 +117,13 @@ function renderPapers(papers) {
 
     const authors = parseJsonMaybe(p.authors) || [];
     const affiliations = parseJsonMaybe(p.affiliations) || [];
+    const t = I18N[lang];
     const metaParts = [
-      `${p.published ? `Published: ${p.published}` : ""}`,
-      `${p.source || ""}`,
-      `${authors.length ? `Authors: ${authors.join(", ")}` : ""}`,
-      `${affiliations.length ? `Affiliations: ${affiliations.join(" / ")}` : ""}`,
+      `${p.inspection_date ? `${t.inspection}: ${p.inspection_date}` : ""}`,
+      `${p.published ? `${t.published}: ${p.published}` : ""}`,
+      `${p.source ? `${t.source}: ${p.source}` : ""}`,
+      `${authors.length ? `${t.authors}: ${authors.join(", ")}` : ""}`,
+      `${affiliations.length ? `${t.affiliations}: ${affiliations.join(" / ")}` : ""}`,
     ].filter(Boolean);
     card.querySelector(".meta").textContent = metaParts.join(" · ");
 
@@ -268,9 +280,16 @@ async function init() {
   const buf = await fetch("data/papers.sqlite").then((r) => r.arrayBuffer());
   db = new SQL.Database(new Uint8Array(buf));
 
-  const dates = query(
-    "SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC"
-  ).map((r) => r.d);
+  let dates = [];
+  try {
+    dates = query(
+      "SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC"
+    ).map((r) => r.d);
+  } catch {
+    dates = query(
+      "SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC"
+    ).map((r) => r.d);
+  }
 
   const dateSelect = $("dateSelect");
   dateSelect.innerHTML = "";
