@@ -1,0 +1,261 @@
+[
+  {
+    "id": "2605.05991",
+    "title": "A Case-Driven Multi-Agent Framework for E-Commerce Search Relevance",
+    "authors": ["Global E-Commerce Search Relevance Team"],
+    "affiliations": ["ByteDance"],
+    "source": "arXiv",
+    "published": "2026-05-07",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2605.05991",
+      "pdf": "https://arxiv.org/pdf/2605.05991v1.pdf"
+    },
+    "tags": ["电商搜索", "相关性", "多智能体", "闭环优化", "数据标注"],
+    "score": {
+      "total": 82,
+      "innovation": 24,
+      "metrics": 11,
+      "quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 24,
+      "rationale_zh": "创新性(24/30)：把工业相关性优化抽象成‘bad-case 驱动的闭环生态’，并用 Annotator/Optimizer/User/DeepSearch/Memory 等多智能体把挖掘-标注-诊断-修复-回归评测自动化；同时提出 harness-engineering + All-In-One relevance model + instruction-following model 的工程化落地组合。实验指标(11/15)：SBS win-rate 多个子任务提升 7%~12%+，少语种市场累计提升可达 13%（以人评为主）；实验质量(12/15)：任务拆解、对比与消融较完整，但缺少更开放的可复现实验基线；效率(7/10)：All-In-One 模型强调训练/推理统一，但系统级多 agent 仍需一定调度成本；泛化(4/5)：强调跨市场与跨 case 的持续迭代能力；相关性(24/25)：与电商搜索/内容理解/达人治理中的‘案例闭环治理’高度同构，因此给出高分并做复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文把电商搜索相关性优化看作‘坏例驱动’的闭环：从用户反馈挖掘 bad cases 开始，经标准澄清与多轮标注生成高质量数据，再由优化器诊断根因并修复模型，最后通过评测与部署回流进入下一轮。系统中用 User Agent 对话式挖掘差评案例，用 Annotator Agent 做多轮、带标准引用的标注，用 Optimizer Agent 把失败类型路由到数据/模型/规则修复动作；并引入 Deep Search Agent 专门针对“低估相关性”做检索扩展。为了可上线，作者采用 harness-engineering，把 All-In-One retrieval+ranking 模型、instruction-following relevance 模型、Global Memory（共享案例与标准更新）与运维 chatbot 组合成持续演化系统。",
+        "innovation": "亮点在于：把‘相关性模型迭代’从单点建模提升为可操作的系统工程闭环，并用多智能体对齐人类多角色（用户/产品/标注/算法/评测）的协作结构；用 Global Memory 缓解多角色信息不对称，使标准更新与已解决案例可复用；Deep Search 解决 underestimation 这类工业高价值失败类型；harness-engineering 提供一套将 agent 能力稳定落到生产流水线的工程范式。",
+        "key_metrics": "SBS 人评：LLM Annotator 方案 win-rate +12.38%，GRM-based annotator +9.78%，Agentic Optimizer +7.28%，User–Annotator 协作 +8.9%，Automated Pipeline +10.17%；少语种市场累计 SBS win-rate +13%。All-In-One：Coarse Rank ACC 0.798→0.815。Instruction-following：总体 ACC 0.5033→0.8402（Neutral 0.3848→0.8270）。"
+      },
+      "en": {
+        "method_overview": "The paper reframes e-commerce search relevance optimization as a bad-case-driven closed loop: mine user-perceived failures, clarify standards and run multi-turn annotation, diagnose root causes and apply repairs, then evaluate/deploy and iterate. It instantiates a User Agent to discover bad cases via conversation, an Annotator Agent to produce standard-grounded labels, and an Optimizer Agent to analyze failures and trigger data/model/policy repairs; a Deep Search Agent targets underestimation failures via query expansion. To be production-ready, it adopts a harness-engineering paradigm and combines an All-In-One retrieval+ranking model, an instruction-following relevance model, Global Memory (shared cases and standard updates), and an ops chatbot into a continually evolving system.",
+        "innovation": "Key highlights include: elevating relevance iteration from a single-model improvement problem to an operational closed-loop system; using multi-agent roles aligned with real industrial roles (user/PM/annotator/engineer/evaluator); Global Memory to reduce information asymmetry and reuse resolved cases/standards; and Deep Search dedicated to high-value underestimation failures, under a harness-engineering recipe for reliable production workflows.",
+        "key_metrics": "Human SBS: win-rate gains include +12.38% (LLM annotator), +9.78% (GRM-based annotator), +7.28% (agentic optimizer), +8.9% (user–annotator collaboration), +10.17% (automated pipeline); cumulative +13% SBS win-rate on low-resource markets. All-In-One: coarse rank ACC 0.798→0.815. Instruction-following: overall ACC 0.5033→0.8402 (Neutral 0.3848→0.8270)."
+      }
+    },
+    "reproduce": {"path": "2026-06-27/CaseDrivenMultiAgentRelevance"}
+  },
+  {
+    "id": "2606.17449",
+    "title": "MODE-RAG: Manifold Outlier Diagnosis and Energy-based Retrieval-Augmented Generation Evaluation",
+    "authors": ["Zehang Wei", "Jiaxin Dai", "Jiamin Yan", "Xiang Xiang"],
+    "affiliations": [
+      "Huazhong University of Science and Technology (School of CS & Tech)",
+      "Huazhong University of Science and Technology (School of AI and Automation)"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.17449",
+      "pdf": "https://arxiv.org/pdf/2606.17449v1.pdf"
+    },
+    "tags": ["多模态RAG", "反幻觉", "多智能体", "内容治理", "评测"],
+    "score": {
+      "total": 74,
+      "innovation": 23,
+      "metrics": 10,
+      "quality": 11,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 21,
+      "rationale_zh": "创新性(23/30)：用 Variational Free Energy(VFE)+内部 attention state 做动态干预路由，避免 RAG 干预悖论；并用多 agent（perception/retrieval/reasoning/generation 分阶段）+ MCTS 构造因果推导链，兼顾诊断与修复。实验指标(10/15)：在 ModeVent/MultiVent 子集上多类 hallucination 的 fidelity/robustness 提升明显，但指标以自建评测为主；实验质量(11/15)：对 hallucination 类型分解清晰，并给出 router/agent 组件；效率(6/10)：多 agent + MCTS 带来额外开销；泛化(3/5)：跨任务泛化仍需更多验证；相关性(21/25)：对电商内容理解/证据核验/违规判定中的多模态 RAG 反幻觉治理很有价值。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文指出多模态 RAG 易出现跨模态幻觉与“干预悖论”（静态规则过度干预/不干预又会级联错误）。作者提出 MODE-RAG：用 VFE（能量）与内部 attention state 估计风险，由 FE-Router 动态决定是否介入；高风险样本被路由到分阶段 agents（Perception/Retrieval/Reasoning/Generation 等），并用 MCTS 搜索构建可审计的因果推导路径，同时通过 logit perturbation 抑制 sycophancy。最后用 Correction/Overseer 做格式稳定与事后事实核验，并构建 ModeVent 作为更难的评测子集。",
+        "innovation": "关键创新是把“是否介入”变成基于能量/不确定性的动态决策，并把 RAG 的失败拆解为九类、四阶段的可操作诊断空间；MCTS + 多 agent 让推理链更可追溯，适合治理系统的可解释与可审计诉求。",
+        "key_metrics": "在 ModeVent（从 MultiVent 派生）上，多个 hallucination 类型的综合分数显著提升，例如 Majority Text Bias Total 5.41→6.83（+1.42），Information Sparsity 3.93→5.22（+1.30），Attribute Hijacking 2.74→3.82（+1.08）。"
+      },
+      "en": {
+        "method_overview": "The paper argues multimodal RAG is vulnerable to cross-modal hallucinations and suffers from an intervention paradox. MODE-RAG uses Variational Free Energy (VFE) and internal attention states to estimate risk and dynamically gate interventions via an FE-Router. High-risk queries are routed to stage-specific agents (perception/retrieval/reasoning/generation) and MCTS is used to build auditable causal derivations; logit perturbations penalize sycophancy. Correction/Overseer agents enforce format stability and post-hoc factual verification, and the paper introduces ModeVent as a challenging evaluation subset.",
+        "innovation": "Its core novelty is risk-aware dynamic intervention based on energy/uncertainty, coupled with a fine-grained taxonomy of hallucinations across lifecycle stages. The multi-agent + MCTS design improves traceability and auditability, which aligns well with governance requirements.",
+        "key_metrics": "On ModeVent, overall scores improve across multiple hallucination types, e.g., Majority Text Bias Total 5.41→6.83 (+1.42), Information Sparsity 3.93→5.22 (+1.30), Attribute Hijacking 2.74→3.82 (+1.08)."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.27330",
+    "title": "Empowering GUI Agents via Autonomous Experience Exploration and Hindsight Experience Utilization for Task Planning",
+    "authors": ["Tianyi Men", "Zhuoran Jin", "Pengfei Cao", "Yubo Chen", "Kang Liu", "Jun Zhao"],
+    "affiliations": [
+      "Institute of Automation, Chinese Academy of Sciences",
+      "University of Chinese Academy of Sciences"
+    ],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27330",
+      "pdf": "https://arxiv.org/pdf/2606.27330v1.pdf"
+    },
+    "tags": ["GUI Agent", "自动探索", "数据合成", "规划", "工具使用"],
+    "score": {
+      "total": 67,
+      "innovation": 24,
+      "metrics": 11,
+      "quality": 10,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 12,
+      "rationale_zh": "创新性(24/30)：把 GUI agent 的规划能力提升转化为‘自主探索→经验→hindsight 生成高层任务数据’的可扩展数据引擎，并提出 TDHAF 做层级泛化分析。实验指标(11/15)：7B 小模型 30.6% 超过 Qwen2.5-VL-32B（22.7%）与 atomic task baseline（21.7%）；实验质量(10/15)：数据构建/泛化分析较完整，但对不同站点/任务分布仍需更系统的 ablation；效率(6/10)：依赖探索与轨迹采集，成本取决于环境规模；泛化(4/5)：强调 OOD planning 提升；相关性(12/25)：对电商站点运营/治理自动化（批量上架、违规处置、内容审核工单操作）有启发，但非直接电商内容理解论文。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文关注小型 MLLM 做 GUI/Web agent 时规划弱、跨站泛化差的问题。PEEU 先让 agent 在网站上自主探索，构建 exploration tree 并收集“任务-轨迹-中间状态”经验；再利用 hindsight experience 把粗糙/不对齐的原始任务重写成严格对齐的高层任务分解数据，用于 SFT 或 GRPO 训练，从而提升高层规划与 OOD 泛化。作者进一步提出 TDHAF，把任务拆分成 low/mid/high 三层粒度，量化不同层级训练对组合泛化的贡献。",
+        "innovation": "核心亮点是把数据构建自动化：用探索把‘过程’挖出来，再用 hindsight 把过程蒸馏成可学习的高层规划监督，避免人工写复杂 task；并用 TDHAF 证明“原子技能学得好≠高层规划强”，为电商治理类的自动化操作（跨页面、多步骤合规流程）提供方法论。",
+        "key_metrics": "7B 模型在真实 benchmark 上准确率 30.6%，优于 Atomic-SFT 21.7%，也超过 Qwen2.5-VL-32B 的 22.7%；仅 0.1k trajectories 的 PEEU-GRPO 也能达 19.9%（Atomic-GRPO 10.0%）。"
+      },
+      "en": {
+        "method_overview": "PEEU targets weak planning and poor cross-website generalization of small multimodal GUI agents. It lets an agent autonomously explore websites to build an exploration tree and collect experience, then uses hindsight utilization to rewrite misaligned tasks into strictly aligned high-level task decomposition supervision for SFT/GRPO. TDHAF is proposed to analyze compositional generalization across low/mid/high task granularities.",
+        "innovation": "It turns planning improvement into a scalable data engine: exploration discovers procedural experience and hindsight distills it into learnable high-level planning supervision. TDHAF further shows why atomic skills alone do not guarantee high-level planning, which is useful for multi-step governance operations.",
+        "key_metrics": "A 7B model reaches 30.6% accuracy, outperforming Atomic-SFT (21.7%) and even Qwen2.5-VL-32B (22.7%); with only 0.1k trajectories, PEEU-GRPO achieves 19.9% vs Atomic-GRPO 10.0%."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.23543",
+    "title": "VeriEvol: Scaling Multimodal Mathematical Reasoning via Verifiable Evol-Instruct",
+    "authors": ["Haoling Li", "Kai Zheng", "Jie Wu", "Can Xu", "Qingfeng Sun", "Han Hu", "Yujiu Yang"],
+    "affiliations": ["Tsinghua University", "Tencent Hunyuan"],
+    "source": "arXiv",
+    "published": "2026-06-22",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.23543",
+      "pdf": "https://arxiv.org/pdf/2606.23543v1.pdf",
+      "project": "https://robertmarton.github.io/verievol",
+      "code": "https://github.com/RobertMarton/verievol"
+    },
+    "tags": ["数据构造", "可验证标注", "多模态推理", "GRPO", "数据质量"],
+    "score": {
+      "total": 65,
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 10,
+      "rationale_zh": "创新性(22/30)：把‘扩数据’明确拆成两轴：难度演化（evol-instruct）与答案可靠性验证（HTV-Agent 反证/假设检验），强调可审计 trace；实验指标(12/15)：五个视觉数学 benchmark 上数据规模提升带来大幅准确率增长，VeriEvol 额外 +3.88；实验质量(12/15)：组件贡献拆解清晰并承诺开放 trace；效率(6/10)：需要多通道验证与生成，构造成本较高；泛化(3/5)：集中在数学推理域；相关性(10/25)：不直接电商，但其“可验证数据构建+全链路 trace”对电商治理的数据清洗/打标质检非常有参考价值。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文认为多模态推理的 RL scaling 关键瓶颈不是‘题更难’，而是‘奖励/答案标签必须可靠’。VeriEvol 将数据构造拆成两条轴：type-aware evolution 用路由化 operators 把简单图题演化成更难且图像可落地的 prompts；HTV-Agent 用多源反证与假设检验，只有在无法反驳时才接受答案，从而得到可审计的 verified data。最终数据可直接接入 GRPO 训练，并伴随每条样本的 verifier trace 便于审计与治理。",
+        "innovation": "创新点在于把“数据扩容”做成可验证流水线：先提升难度，再对答案可靠性做严格过滤，并把全过程 trace 作为一等公民开放，便于下游做数据质量治理与回溯。",
+        "key_metrics": "五个 benchmark 上，将 evolved SFT 数据从 10K 扩到 250K，平均准确率 35.42→54.73；在同 backbone+GRPO recipe 下，VeriEvol 相比未演化 RL baseline 额外 +3.88（其中 evolved prompts +1.82，HTV-Agent +2.06）。"
+      },
+      "en": {
+        "method_overview": "VeriEvol treats RL scaling for multimodal math as a verifiable data-construction problem. It decouples two axes: a type-aware evolution module that rewrites easy image-question seeds into harder, image-grounded prompts via route-specific operators; and HTV-Agent, which enforces answer reliability via multi-source counter-evidence and hypothesis-test falsification, accepting an answer only when it cannot be refuted. The resulting verified data plugs into GRPO-style recipes and provides full verifier traces for auditing.",
+        "innovation": "It makes data scaling verifiable and auditable: difficulty evolution + strict answer verification, with end-to-end traces as first-class artifacts for downstream quality governance.",
+        "key_metrics": "Across five benchmarks, scaling evolved SFT data from 10K to 250K raises mean accuracy 35.42→54.73. With the same backbone and GRPO recipe, VeriEvol adds +3.88 over an un-evolved RL baseline (+1.82 from evolved prompts, +2.06 from HTV-Agent verification)."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.27377",
+    "title": "DanceOPD: On-Policy Generative Field Distillation",
+    "authors": [
+      "Wei Zhou",
+      "Xiongwei Zhu",
+      "Zelin Xu",
+      "Bo Dong",
+      "Lixue Gong",
+      "Yongyuan Liang",
+      "Meng Chu",
+      "Leigang Qu",
+      "Lingdong Kong",
+      "Wei Liu",
+      "Tat-Seng Chua"
+    ],
+    "affiliations": ["ByteDance Seed", "National University of Singapore", "University of Maryland", "HKUST"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27377",
+      "pdf": "https://arxiv.org/pdf/2606.27377v1.pdf",
+      "project": "https://DanceOPD.github.io"
+    },
+    "tags": ["图像生成", "蒸馏", "Flow Matching", "编辑", "多能力组合"],
+    "score": {
+      "total": 65,
+      "innovation": 24,
+      "metrics": 13,
+      "quality": 11,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 8,
+      "rationale_zh": "创新性(24/30)：把 T2I/局部编辑/全局编辑/CFG 等能力统一到“velocity field”视角，并提出 on-policy field distillation：在 student rollout 的状态上做 sample-wise hard routing 与单点 low-noise query，用简单的 velocity MSE 就能做能力组合蒸馏。指标(13/15)：多能力组合任务上相对强 baseline 提升 8%~16%+，并显著改善 realism reward；实验质量(11/15)：覆盖多种组合设置与消融；效率(6/10)：仍是大模型训练，但目标是减少多 teacher/多 head 复杂度；泛化(3/5)：主要在编辑与生成组合上验证；相关性(8/25)：对电商素材生成/商品图编辑有价值但非治理核心。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文关注一个模型同时具备 T2I、局部编辑、全局编辑等多能力时的“能力冲突”。DanceOPD 将每种能力视为 flow-matching 状态空间上的 velocity field，通过 sample-wise hard routing 让每个样本只学习一个能力场；训练时在 student rollout 的 on-policy 状态上向 teacher 查询一个低噪声语义点，并用 velocity MSE 蒸馏，从而让学生学会在同一状态空间内组合多种能力场。该表述还能自然吸收 operator-defined fields（如 CFG、realism field），统一处理多能力组合。",
+        "innovation": "主要创新是 on-policy 的 generative field 蒸馏：避免 off-policy distillation 的 student-to-teacher gap，把多能力组合问题转化为对一组 velocity fields 的可组合学习；hard routing 与单点 query 让训练目标简单但可扩展。",
+        "key_metrics": "在生成+编辑组合评测中，DanceOPD 在 GEditBench 上达到 Avg 5.347（T2I+Edit）与 5.498（Local+Global Edit），GenEval overall 约 0.848~0.849；相对最强 OPD baseline，多能力组合提升约 8.1%，local/global composition 场景相对最佳组合 baseline 提升约 16.1%。"
+      },
+      "en": {
+        "method_overview": "DanceOPD addresses capability conflicts when a single flow-matching model needs to unify T2I, local edit, and global edit. It views each capability as a velocity field over a shared flow state space, uses sample-wise hard routing so each sample learns one field, and performs on-policy distillation by querying the teacher at a single low-noise semantic state along the student rollout, optimized with a simple velocity MSE. The formulation can also absorb operator-defined fields such as CFG.",
+        "innovation": "It proposes on-policy generative field distillation to reduce the student-to-teacher gap and turns multi-capability composition into learning a composable set of velocity fields, with simple objectives enabled by hard routing and single-state queries.",
+        "key_metrics": "On composition benchmarks, DanceOPD reports GEditBench Avg 5.347 (T2I+Edit) and 5.498 (Local+Global Edit), with GenEval overall ~0.848–0.849; improvements are ~8.1% over strong OPD baselines and ~16.1% in local/global composition over the best competing combinations."
+      }
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.26907",
+    "title": "Qwen-Image-Agent: Bridging the Context Gap in Real-World Image Generation",
+    "authors": [
+      "Zekai Zhang",
+      "Jiahao Li",
+      "Jie Zhang",
+      "Kaiyuan Gao",
+      "Kun Yan",
+      "Lihan Jiang",
+      "Ningyuan Tang",
+      "Shengming Yin",
+      "Tianhe Wu",
+      "Xiaoyue Chen",
+      "Xiao Xu",
+      "Yan Shu",
+      "Yanran Zhang",
+      "Yixian Xu",
+      "Yuxiang Chen",
+      "Zhendong Wang",
+      "Zihao Liu",
+      "Zikai Zhou",
+      "Huishuai Zhang",
+      "Dongyan Zhao",
+      "Chenfei Wu"
+    ],
+    "affiliations": [],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.26907",
+      "pdf": "https://arxiv.org/pdf/2606.26907v1.pdf"
+    },
+    "tags": ["图像生成", "Agent", "上下文检索", "Memory", "创意素材"],
+    "score": {
+      "total": 63,
+      "innovation": 23,
+      "metrics": 12,
+      "quality": 10,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 9,
+      "rationale_zh": "创新性(23/30)：明确提出 Context Gap，并用统一 agentic 框架把 plan/reason/search/memory/feedback 组织成 Context-Aware Planning + Context Grounding，且训练-free、可插拔到现有生成器。指标(12/15)：IA-Bench、WISE-Verified、MindBench 上达到/刷新 SOTA，IA-score 45.4 显著高于直接生成 baseline 17.4；实验质量(10/15)：包含多维 ablation，但对真实业务成本与失败 case 分析仍可更细；效率(6/10)：需要多轮检索/反馈，推理链路变长；泛化(3/5)：跨任务泛化依赖工具与上下文源；相关性(9/25)：对电商营销素材/商品图生成有价值，但与治理弱相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文指出真实世界的图像生成请求往往隐含信息、依赖最新知识或交互历史，直接 T2I 会出现“Context Gap”。Qwen-Image-Agent 提出以“上下文”为中心的 agentic 框架：先做 Context-Aware Planning 识别缺失信息并规划获取方式，再通过 Context Grounding 从推理、搜索、记忆与反馈中补齐上下文，最后把完整 generation context 分配给生成/编辑模型；整体 training-free，兼容现有生成器。作者还提出 IA-Bench 来评测 Plan/Reason/Search/Memory 四种核心能力，并通过 ablation 展示各模块贡献。",
+        "innovation": "亮点在于把图像生成从‘一次性提示词’升级为可迭代构造上下文的 agentic pipeline，并将 context acquisition 结构化为 planning+grounding 两阶段；同时给出专门评测 agentic image generation 的 IA-Bench，便于诊断“工具使用/检索/记忆”对效果的贡献。",
+        "key_metrics": "IA-Bench 上 IA-score 45.4（Qwen-Image-2.0 直接生成 baseline 17.4）；WISE-Verified overall 0.902，MindBench overall 0.42；相比直接生成 baseline，MindBench 提升约 82.6%。"
+      },
+      "en": {
+        "method_overview": "Qwen-Image-Agent identifies a Context Gap in real-world image generation where user inputs are underspecified or depend on up-to-date knowledge and interaction history. It proposes a context-centric agentic framework: Context-Aware Planning detects missing context and plans how to acquire it, while Context Grounding gathers context from reasoning, search, memory, and feedback; the constructed generation context is then allocated to an image generator/editor. The approach is training-free and compatible with existing generators, and IA-Bench is introduced to evaluate Plan/Reason/Search/Memory capabilities.",
+        "innovation": "It upgrades image generation from one-shot prompting to an iterative context construction pipeline, and formalizes context acquisition as planning + grounding. IA-Bench provides a dedicated benchmark to diagnose agentic image generation capabilities.",
+        "key_metrics": "IA-Bench: IA-score 45.4 (direct Qwen-Image-2.0 baseline 17.4). WISE-Verified overall 0.902; MindBench overall 0.42; MindBench improves by ~82.6% over direct generation baseline."
+      }
+    },
+    "reproduce": {}
+  }
+]
