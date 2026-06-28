@@ -1,0 +1,371 @@
+[
+  {
+    "id": "2606.23911v1",
+    "title": "Scaling Dense Retrieval with LLM-Annotated Training Data: Structured Mining and Progressive Curriculum for E-Commerce Sponsored Search",
+    "authors": [
+      "Md Omar Faruk Rokon",
+      "Shasvat Desai",
+      "Jhalak Nilesh Acharya",
+      "Isha Shah",
+      "Kumar Priyam",
+      "Brahanyaa Somasundaram",
+      "Vamsee Tangirala",
+      "Minuteresa Thomas",
+      "Vivek Arora",
+      "Vijay Manchi",
+      "Hong Yao",
+      "Kuang-chih Lee"
+    ],
+    "affiliations": ["Walmart Global Tech"],
+    "source": "arXiv",
+    "published": "2026-06-22",
+    "tags": ["电商广告检索", "Sponsored Search", "Dense Retrieval", "LLM标注/蒸馏", "课程学习"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.23911",
+      "pdf": "https://arxiv.org/pdf/2606.23911v1.pdf"
+    },
+    "reproduce": {"path": "2026-06-28/EmbeddingModelV3"},
+    "score": {
+      "innovation": 26,
+      "metrics": 14,
+      "quality": 14,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 89,
+      "rationale_zh": "创新性(26/30)：把‘多检索通道的不一致’系统化为结构化训练信号（易正/难正/难负等五档难度），并用三段式课程(BCE→MNR→Triplet)显式对齐样本难度与损失函数；再叠加三模型级联+校准，使LLM标注可在240M+对上稳定规模化。实验指标(14/15)：离线NDCG@10从0.878提升到0.923（+5.1%），尾部query增益更大（+6.8%），‘尴尬检索’占比8.7%→3.5%；线上A/B给出广告spend/CTR/eCPM/转化率等一致提升。实验质量(14/15)：有独立人标30K query作为最终评测集、并有线上A/B闭环，整体扎实。效率(8/10)：级联标注显式降低推理成本，student为双塔BERT便于ANN部署，但训练与数据挖掘仍偏重。泛化(4/5)：对tail query的结构性提升较明确。相关性(23/25)：与电商内容生态中的‘广告检索、数据打标、质量治理’强相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文面向电商Sponsored Search的候选召回，核心难点是：点击信号有位置/曝光偏置、尾部query稀疏，而人工标注在亿级样本上成本不可承受。作者把线上同时运行的多路检索系统（字典/BM25/ANN等）的Top-K不一致视为‘天然监督’，把样本划分为易正、难正、难负等五档，并用一个三模型级联（Cross-Encoder→2B LLM→8B LLM）做5级相关性标注，再用三阶段课程训练（BCE→MNR→Triplet）训练双塔BERT检索模型并上线。",
+        "innovation": "亮点在于把‘检索系统互相打架’从噪声变成结构化挖掘信号，并把“样本难度→损失函数→训练阶段”做成可复用的工业化配方；LLM不参与训练时蒸馏，而只做离线标注，便于缓存/复用与独立迭代。级联+按类校准也让大模型标注在成本可控前提下逼近人标一致性。",
+        "key_metrics": "离线：NDCG@10 0.878→0.923（+5.1%），尾部query +6.8%；rating=0的‘尴尬检索’8.7%→3.5%。\n线上两周A/B（千万级请求/组）：+2.80% ad spend，+1.4% CTR，+2.8% eCPM，+2.9% click conversion rate。"
+      },
+      "en": {
+        "method_overview": "The paper targets candidate retrieval for e-commerce sponsored search, where clicks are biased and tail queries lack data. It turns multi-channel disagreement among production retrievers (lexical/BM25/ANN) into structured supervision: easy positives where all agree, hard positives found only by lexical, and hard negatives that fool one system. A calibrated three-model annotation cascade (cross-encoder → 2B LLM → 8B LLM) produces 5-grade relevance labels, and a three-stage curriculum (BCE → MNR → Triplet) trains a two-tower BERT dense retriever for deployment.",
+        "innovation": "Key novelty is operationalizing retrieval disagreement as structured mining signals and matching difficulty levels with stage-wise objectives. LLMs are used only for offline labeling (cacheable and upgradable), not online distillation. The calibrated cascade makes large-scale labeling cost-effective while keeping high agreement with human judgments.",
+        "key_metrics": "Offline: NDCG@10 0.878→0.923 (+5.1%), tail queries +6.8%; embarrassing retrievals (rating 0) 8.7%→3.5%.\nOnline A/B (2 weeks, tens of millions requests/arm): +2.80% ad spend, +1.4% CTR, +2.8% eCPM, +2.9% click conversion rate."
+      }
+    }
+  },
+  {
+    "id": "2606.15330v1",
+    "title": "OneBar: An End-to-End Content-Grounded Generative Query Recommendation Framework for E-Commerce Video Feeds",
+    "authors": ["Yao Tang", "Ying Yang", "Ben Chen", "Yufei Ma", "Zihan Liang", "Chenyi Lei", "Wenwu Ou", "Jian Liu"],
+    "affiliations": ["Zhejiang University", "Kuaishou Technology"],
+    "source": "arXiv",
+    "published": "2026-06-13",
+    "tags": ["电商短视频", "Query Recommendation", "生成式推荐", "端到端", "偏好学习"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.15330",
+      "pdf": "https://arxiv.org/pdf/2606.15330v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 23,
+      "metrics": 14,
+      "quality": 13,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 24,
+      "total": 86,
+      "rationale_zh": "创新性(23/30)：把底栏query推荐从多阶段检索级联(MCA)收敛为统一的端到端生成，并提出协同多模态意图落地+Prompt压缩+偏好内化的PIOPD，重点解决内容侧噪声与reward model依赖。实验指标(14/15)：线上Query曝光/点击/引导下单/GMV均有两位数提升。实验质量(13/15)：有线上A/B与人工坏例率评估，但公开可复现细节（数据与工程）有限。效率(9/10)：面向20–30ms的严苛时延约束给出明确的prompt压缩与统一生成架构。泛化(3/5)：主要展示在同平台电商视频场景。相关性(24/25)：与电商内容生态（短视频→搜索→交易）强相关。\n注：尽管整体质量高，但复现需要较强的工业数据与生成式偏好训练细节，因此本次巡检不将其列入>=80的‘强制复现’队列。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "OneBar针对短视频播放页底栏（Bottom Bar）的‘看视频→一键搜’query推荐，在线预算仅20–30ms。它把传统“检索候选→过滤→风险→排序”的多阶段级联替换为单一端到端生成：先用协同多模态意图落地把视频文本/多模态摘要/协同query锚点/用户历史组织成证据schema，再用BART类encoder-decoder生成query列表，并用prompt压缩降低推理成本。为了避免单独训练reward model，提出PIOPD把层级行为偏好信号直接内化进生成策略。",
+        "innovation": "主要亮点是面向工业超低时延把生成式推荐做成可上线的统一推理链路（证据schema + prompt压缩），同时用‘偏好内化’弱化reward model带来的分布偏差与reward hacking风险；在内容侧噪声较大的短视频场景下，用“多源证据清洗+协同锚点”增强生成稳定性。",
+        "key_metrics": "线上A/B（电商视频）：Query Exposure +16.91%，Query Click +18.68%，Query CTR +0.19%；引导订单 +20.36%，引导GMV +21.67%。"
+      },
+      "en": {
+        "method_overview": "OneBar tackles bottom-bar query recommendation in e-commerce short-video feeds under an ultra-tight 20–30ms latency budget. It replaces multi-stage cascades (retrieve → filter/risk → rank) with a unified encoder–decoder generator. Evidence from cleaned metadata, multimodal summaries, collaborative query anchors and filtered user history is compressed into a compact schema (prompt compression) and fed to a BART-like model; preference signals are progressively internalized via on-policy distillation (PIOPD) to avoid relying on a separate reward model.",
+        "innovation": "It focuses on making generative recommendation deployable under strict latency constraints (schema + prompt compression) and reducing reward-model dependency via preference internalization, which helps mitigate reward hacking and distribution bias. Robustness against noisy content-side metadata is improved by evidence cleaning plus collaborative anchors.",
+        "key_metrics": "Online A/B (e-commerce videos): Query Exposure +16.91%, Query Click +18.68%, Query CTR +0.19%; guided orders +20.36%, guided GMV +21.67%."
+      }
+    }
+  },
+  {
+    "id": "2606.19627v1",
+    "title": "VCG: A Multimodal Retrieval Framework for E-Commerce Video Feeds under Extreme Cold-Start Conditions",
+    "authors": [
+      "Katya Mirylenka",
+      "Egor Malykh",
+      "Mahdyar Ravanbakhsh",
+      "Michael Gygli",
+      "Marco-Andrea Buchmann",
+      "Andrew Dzhoha",
+      "Svitlana Borzenko",
+      "Francesca Catino",
+      "Mohamed Gaafar",
+      "Maarten Versteegh",
+      "Thomas Kober",
+      "Dario d’Andrea",
+      "Ellie Langhans"
+    ],
+    "affiliations": ["TU Wien", "Zalando SE", "Zalando Switzerland AG"],
+    "source": "arXiv",
+    "published": "2026-06-17",
+    "tags": ["电商视频流", "Cold-Start", "CLIP", "多模态召回", "向量检索"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.19627",
+      "pdf": "https://arxiv.org/pdf/2606.19627v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 21,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 78,
+      "rationale_zh": "创新性(21/30)：以‘语义优先’替代协同过滤解决视频feed极端冷启动，用域内CLIP把用户与视频映射到同一向量空间，并系统对比生成式(LLM)与对比式(CLIP)embedding在检索任务上的差异（embedding塌缩问题）。实验指标(12/15)：线上A/B给出deep video completion +50%提升。实验质量(12/15)：给出了系统架构、失败分析与评测协议（含LVLM-as-judge），但可复现实验与公开数据较有限。效率(8/10)：双塔+向量检索适配高吞吐；泛化(3/5)：核心在视频feed冷启动。相关性(22/25)：与电商内容生态“视频供给→推荐/召回→转化”直接相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "VCG面向电商视频feed的极端冷启动：新视频没有交互历史，watch-time等指标还存在时长/位置偏置。系统采用域内CLIP（基于约2亿图文对微调）对视频抽帧编码、平均池化成视频向量，并构建双塔把用户与视频拉到同一语义空间，实现零样本召回；同时用LVLM-as-judge做离线相关性代理评测，并比较LLM vs CLIP embedding在检索中的表现。",
+        "innovation": "亮点是把视频feed从‘协同信号驱动’切换为‘视觉语义驱动’，并明确指出生成式模型虽然擅长属性理解，但在向量检索上容易出现表示塌缩，反而不如对比学习的CLIP稳定；另外用大模型做judge来缓解离线评测的曝光偏差。",
+        "key_metrics": "线上A/B：deep video completion（深度完播）提升约50%。"
+      },
+      "en": {
+        "method_overview": "VCG targets extreme cold-start in e-commerce video feeds: new short videos have no interaction history, and engagement signals are biased by position and duration. It uses a domain-adapted CLIP to embed videos (frame sampling + mean pooling) and a two-tower retrieval system to map users and videos into a shared semantic space for zero-shot retrieval. It also proposes an LVLM-as-judge protocol and analyzes why generative embeddings may collapse for vector search.",
+        "innovation": "It reframes feed retrieval as semantic-first visual matching rather than collaborative filtering, and provides an embedding-space analysis showing that contrastive CLIP embeddings outperform generative (LLM) embeddings for retrieval due to representation collapse. LLM-as-judge is used to mitigate exposure bias in offline evaluation.",
+        "key_metrics": "Online A/B: ~50% uplift in deep video completion."
+      }
+    }
+  },
+  {
+    "id": "2606.23889v1",
+    "title": "INSPIRE: Intent-aware Neural Sponsored Product Retrieval for E-commerce",
+    "authors": ["Shasvat Desai", "Hong Yao", "Utkarsh Porwal", "Kuang-chih Lee"],
+    "affiliations": ["Walmart Global Tech"],
+    "source": "arXiv",
+    "published": "2026-06-22",
+    "tags": ["电商广告检索", "意图理解", "属性抽取", "LoRA", "弱监督"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.23889",
+      "pdf": "https://arxiv.org/pdf/2606.23889v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 22,
+      "metrics": 11,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 79,
+      "rationale_zh": "创新性(22/30)：用‘结构化意图属性’显式刻画grocery搜索中隐式偏好（无麸质/无乳糖等）与安全约束，把LLM作为teacher生成意图标签，再LoRA蒸馏成可规模化的student并注入到双塔召回表示中。实验指标(11/15)：论文主体强调NDCG/Precision等检索指标提升与线上可部署性，但摘要未给出关键数值；实验质量(12/15)：给出了失败类型、属性空间与蒸馏/共识过滤流程；效率(8/10)：vLLM serving + student LoRA适合大规模catalog推理；泛化(3/5)：集中在grocery品类；相关性(23/25)：与电商内容理解（属性/意图）、风险与治理（过敏/饮食约束）强相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "INSPIRE面向电商grocery的Sponsored Search召回，核心难点是query短且隐式意图强（品牌隐含无麸质、配料隐含素食等），还涉及过敏等安全约束。方法用多个teacher LLM对query与商品文本生成结构化意图属性（brand/flavor/dietary/ingredient/cuisine/product subtype/size等），用跨模型共识过滤噪声，再LoRA-SFT蒸馏到轻量student并用vLLM提供高吞吐意图推理；最后把意图属性注入双塔embedding实现意图增强召回。",
+        "innovation": "把隐式偏好/安全约束从“靠语义相似度碰运气”变成可解释的结构化属性空间，并用‘LLM teacher→共识过滤→student蒸馏→检索注入’形成闭环；在电商治理层面，饮食/过敏类意图本质上也是风险控制的一部分，结构化建模更利于审计与策略化。",
+        "key_metrics": "论文强调通过意图增强提升NDCG@K/Precision@K，并给出可规模化部署（student + vLLM API）。摘要未披露具体提升幅度。"
+      },
+      "en": {
+        "method_overview": "INSPIRE improves sponsored product retrieval for grocery search where queries are short and implicit intents (dietary/allergen constraints) are crucial. It uses teacher LLMs to generate structured intent attributes from queries and product content, filters noise via cross-model consensus, distills to a lightweight student LLM via LoRA-SFT (served with vLLM), and injects predicted intents into bi-encoder embeddings for intent-augmented dense retrieval.",
+        "innovation": "It turns implicit preferences and safety constraints into explicit, auditable intent attributes and builds a practical weak-supervision pipeline (LLM teachers → consensus → student distillation → retrieval integration). This reduces reliance on surface-level semantic similarity and improves controllability for governance/safety-critical intents.",
+        "key_metrics": "The paper reports retrieval gains (e.g., NDCG@K / Precision@K) and a scalable production serving design (student + vLLM). No headline numbers are provided in the abstract."
+      }
+    }
+  },
+  {
+    "id": "2606.25871v1",
+    "title": "AutoRelAnnotator: Calibrated Model Cascades for Cost-Efficient Relevance Evaluation in Sponsored Search",
+    "authors": ["Md Omar Faruk Rokon", "Shasvat Desai", "Hong Yao", "Kuang-chih Lee"],
+    "affiliations": ["Walmart Global Tech"],
+    "source": "arXiv",
+    "published": "2026-06-24",
+    "tags": ["电商相关性评测", "自动标注", "模型级联", "校准", "数据质量"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.25871",
+      "pdf": "https://arxiv.org/pdf/2606.25871v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 10,
+      "quality": 13,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 77,
+      "rationale_zh": "创新性(20/30)：核心是把离线相关性标注拆成‘先通过领域微调提升单模型准确，再通过校准级联压成本’，并引入按类isotonic做deferral。实验指标(10/15)：给出微调带来约20个点准确度提升、级联近乎不损准确且算力减半、校准再+0.6点；但不属于SOTA基准型论文。实验质量(13/15)：覆盖离线use case与大规模生产实践（150M+标注，5天→1–3小时）。效率(9/10)：非常贴近实际标注/治理成本约束。泛化(3/5)：方法可迁移到其他离线标注任务。相关性(22/25)：与电商内容治理（标注、评测、质检、回归）强相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "AutoRelAnnotator解决离线相关性标注的成本与时效问题：先训练高准确的领域分类器（Cross-Encoder、Gemma-2B、LLaMA-8B等），再用按类校准后的置信度做级联路由：能高置信预测的样本在小模型处截断，低置信才上更大模型，并在末端做多数投票兜底。该系统用于训练数据准备、NDCG评测、根因分析、Guardrail阈值校准等离线场景。",
+        "innovation": "核心思路不是“在低准确的off-the-shelf LLM之间路由”，而是先通过领域微调拉高准确天花板，再用校准+级联解决成本；按类isotonic校准适配5级相关性任务的classwise miscalibration。",
+        "key_metrics": "微调带来约+20个点准确率提升；级联在近似不损准确的情况下将计算成本减半；按类isotonic校准额外+0.6点；生产上处理150M+标注，将turnaround从约5天缩短到1–3小时。"
+      },
+      "en": {
+        "method_overview": "AutoRelAnnotator builds a calibrated model cascade for cost-efficient offline relevance labeling in sponsored search. It first fine-tunes domain-specific classifiers (cross-encoder / 2B / 8B) and then routes examples through the cascade using per-class calibrated confidence, with majority-vote fallback for ambiguous cases. The goal is to support offline labeling use cases such as training data prep, NDCG evaluation, and root-cause analysis.",
+        "innovation": "Instead of routing among low-accuracy off-the-shelf LLMs, it decouples accuracy (domain fine-tuning) from cost (calibrated cascading), and applies per-class isotonic calibration to improve deferral decisions under 5-class relevance.",
+        "key_metrics": "Fine-tuning contributes ~20 accuracy points; cascading is roughly accuracy-neutral while halving compute cost; per-class isotonic calibration adds +0.6 points; validated with 150M+ annotations and turnaround reduced from ~5 days to 1–3 hours."
+      }
+    }
+  },
+  {
+    "id": "2606.26787v1",
+    "title": "AIGP: An LLM-Based Framework for Long-Term Value Alignment in E-Commerce Pricing",
+    "authors": ["Chennan Ma", "Yanning Zhang", "Siqi Hong", "Xiuchong Wang", "Fei Xiao", "Keping Yang"],
+    "affiliations": ["Taobao & Tmall Group of Alibaba"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["电商定价", "LLM决策", "Offline RL", "DPO", "可解释性"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.26787",
+      "pdf": "https://arxiv.org/pdf/2606.26787v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 22,
+      "metrics": 14,
+      "quality": 12,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 20,
+      "total": 78,
+      "rationale_zh": "创新性(22/30)：把LLM的可解释推理引入定价决策，并用离线RL训练的长期价值估计器(LTVE)当reward model，自动生成DPO偏好对实现长期目标对齐。实验指标(14/15)：线上14天A/B给出GMV/ROI/里程碑达成率显著提升。实验质量(12/15)：工业场景强，但依赖私有数据与业务约束；效率(7/10)：通过蒸馏+SFT适配线上，但仍需复杂训练链路；泛化(3/5)：主要在Tao Factory；相关性(20/25)：与电商增长/定价强相关，但与内容理解/达人治理为弱相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "AIGP把电商动态定价建模为‘LLM决策 + 长期价值对齐’：LLM在结构化特征+文本上下文+领域知识prompt下给出可解释的价格动作；同时训练一个离线RL的长期价值估计器LTVE，对候选定价动作打分，并自动采样偏好对用于DPO，从而把定价策略对齐到GMV/ROI等长周期目标；再通过SFT蒸馏把方案压缩到可上线模型。",
+        "innovation": "把“长期价值”显式外化成可学习的LTVE（reward model），再把它用于DPO偏好对构造，相当于把业务目标对齐从手工规则/短期reward搬到可控的偏好学习闭环；同时保留LLM推理链路以提升可解释性与审计性。",
+        "key_metrics": "线上14天A/B（Tao Factory）：GMV +13.21%，ROI +7.59%，milestone achievement rate +8.20%。"
+      },
+      "en": {
+        "method_overview": "AIGP combines LLM-based decision making with long-term value alignment for large-scale e-commerce dynamic pricing. An LLM generates interpretable pricing actions from structured signals plus textual context and domain knowledge. A Long-Term Value Estimator (LTVE) trained via offline RL scores candidate actions and selects preference pairs for DPO, aligning the pricing policy with long-horizon objectives; SFT distillation enables production deployment.",
+        "innovation": "It externalizes long-horizon business objectives into a learnable value estimator (reward model) and uses it to automate DPO preference construction, bridging LLM reasoning with long-term alignment while keeping interpretability.",
+        "key_metrics": "Online 14-day A/B (Tao Factory): +13.21% GMV, +7.59% ROI, +8.20% milestone achievement rate."
+      }
+    }
+  },
+  {
+    "id": "2606.27314v1",
+    "title": "Beyond Surface Forms: A Comprehensive, Mechanism-Oriented Taxonomy of Indirect Linguistic Encoding for LLM-Based Coded Language Detection",
+    "authors": ["Hamid Reza Firoozfar", "Mohammadsadegh Abolhasani", "Reza Mousavi", "Paul Jen-Hwa Hu"],
+    "affiliations": ["University of Utah", "University of Virginia"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "Coded Language", "LLM Prompt", "Taxonomy", "数据标注"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27314",
+      "pdf": "https://arxiv.org/pdf/2606.27314v1.pdf",
+      "code": "https://github.com/hmdfiroozfar/mechanism-oriented-ile-taxonomy"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 11,
+      "quality": 13,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 79,
+      "rationale_zh": "创新性(20/30)：不是再做一个检测模型，而是提出‘面向机制的编码/解码路径taxonomy’来提升LLM prompt的稳健性，针对concept drift给出更可扩展的结构化支架。实验指标(11/15)：在3个LLM上，相比最佳基线accuracy +4.7%、F1 +5.4%。实验质量(13/15)：2000条人工标注（TikTok/Bluesky），并提供span级+doc级评测；效率(8/10)：方法以prompt为主，落地成本较低；泛化(4/5)：taxonomy与内容主题无关、可跨topic更新；相关性(23/25)：与内容生态治理（规避审查、隐语/暗语、对抗性表述）高度相关。\n代码仓库已核实为非空（包含Code/与Dataset目录）。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文关注用户为规避审核而使用的隐语/暗语（algospeak、委婉替换、对抗性混淆等）。作者提出以“编码/解码机制路径”为核心的ILE taxonomy（11个顶层机制、33个子机制），并把taxonomy注入LLM prompt来做coded language检测（doc级是否存在ILE + span级定位 + 机制分类）。同时构建2000条人工标注数据（TikTok/Bluesky），系统对比多种taxonomy与无taxonomy基线。",
+        "innovation": "关键点在于将“隐语”抽象为可扩展的机制集合，而不是依赖某一主题或词表，从而能对抗概念漂移；taxonomy作为prompt scaffolding，让LLM检测不只靠surface-form扰动，而能覆盖emoji映射、跨语种转换、隐喻/借代、加密编码等更复杂机制。",
+        "key_metrics": "在2000条标注数据上（3个LLM），相对最佳对照taxonomy，doc级准确率提升+4.7%，span级F1提升+5.4%。代码与可公开数据已提供（TikTok文本因协议不公开）。"
+      },
+      "en": {
+        "method_overview": "The paper studies coded/indirect linguistic expressions (ILE) used to evade moderation. It proposes a mechanism-oriented taxonomy (11 top-level classes, 33 sub-mechanisms) centered on encoding/decoding pathways rather than topics or intents, and uses the taxonomy as structured scaffolding in LLM prompts for coded-language detection (document-level, span-level, and mechanism labeling). A 2,000-post dataset (TikTok/Bluesky) is manually annotated for evaluation.",
+        "innovation": "Instead of focusing on surface perturbations only, it models a broader set of encoding mechanisms (emoji mapping, cross-lingual transforms, metaphor/metonymy, algorithmic encodings, etc.) to better handle concept drift. A comprehensive taxonomy provides more stable prompt scaffolding for LLM-based moderation support.",
+        "key_metrics": "Across 3 LLMs, the proposed taxonomy improves accuracy by +4.7% and span-level F1 by +5.4% over the best baseline taxonomy on the annotated dataset. Code and the publicly releasable part of the data are available on GitHub (TikTok text is not redistributed)."
+      }
+    }
+  },
+  {
+    "id": "2606.27187v1",
+    "title": "HarmVideoBench: Benchmarking Harmful Video Understanding in Large Multimodal Models",
+    "authors": [
+      "Jiajun Wu",
+      "Haoyu Kang",
+      "Yining Sun",
+      "Jiacheng Hou",
+      "Heng Zhang",
+      "Danyang Zhang",
+      "Zhenjun Zhao",
+      "Haochi Zhang",
+      "Leixin Sun",
+      "Eric Hanchen Jiang",
+      "Yushan Li",
+      "Ruiyu Li",
+      "Mengkai Huang",
+      "Yan Gao",
+      "Xu Zhang",
+      "Guancheng Wan"
+    ],
+    "affiliations": ["Central South University", "Tsinghua University", "ByteDance Inc", "Wuhan University", "Tencent"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "有害视频理解", "多模态Benchmark", "解释性", "LVLM"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27187",
+      "pdf": "https://arxiv.org/pdf/2606.27187v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 79,
+      "rationale_zh": "创新性(22/30)：把有害视频评测从‘二分类’提升为三层推理（可观察证据→片内隐含含义→片外社会/文化推理），并补齐“解释性理由”维度；同时提出BCR做边界预测+按需检索上下文。实验指标(12/15)：BCR把宏平均从61.7%提升到84.4%。实验质量(13/15)：1379视频+4137选择题，覆盖多类有害场景；并评测19个模型。效率(6/10)：评测与BCR需要额外上下文检索；泛化(3/5)：作为benchmark可复用，但数据公开与代码尚未发布。相关性(23/25)：与电商内容生态的违规检测、短视频治理直接相关。\n注：作者声明代码仓库coming soon，本次不触发复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "HarmVideoBench针对多模态大模型在内容治理中的‘有害视频理解’能力评测：指出现有benchmark多是二分类且缺少解释理由，容易让模型靠捷径得分。作者构建1379个视频与4137道多项选择题，把能力拆成三层：Observable Evidence（显式证据识别）、Clip-Internal Meaning（片内隐含含义）、Beyond-Clip Reasoning（片外社会文化推理）。并提出BCR：先预测需要推理的边界，再按需检索上下文，从而提升深层推理的准确性。",
+        "innovation": "把治理任务从‘判不判’推进到‘为什么判’与‘判的推理层级’，更贴近真实审核链路中的可解释性与审计；BCR的‘边界预测+按需检索’也为RAG式治理提供了更节省上下文的范式。",
+        "key_metrics": "Benchmark规模：1379 videos / 4137 MCQs；覆盖三层推理维度。BCR将宏平均正确率从61.7%提升到84.4%。"
+      },
+      "en": {
+        "method_overview": "HarmVideoBench benchmarks harmful-video understanding for large vision-language models in moderation settings. It argues binary harmful/non-harmful evaluation misses implicit harms and lacks rationales. The benchmark contains 1,379 videos and 4,137 multiple-choice questions across three reasoning levels (observable evidence, clip-internal meaning, beyond-clip reasoning). It also proposes BCR, which predicts reasoning boundaries and retrieves context only when needed.",
+        "innovation": "It upgrades evaluation from coarse classification to a layered reasoning + rationale-oriented diagnostic, closer to real moderation requirements. BCR’s boundary prediction plus on-demand retrieval provides a structured way to improve deep contextual reasoning.",
+        "key_metrics": "Benchmark: 1,379 videos / 4,137 MCQs; 3-level reasoning. BCR improves macro average from 61.7% to 84.4%."
+      }
+    }
+  },
+  {
+    "id": "2606.27274v1",
+    "title": "BetXplain: An Explanation-Annotated Dataset for Detecting Manipulative Betting Advertisements on Social Media",
+    "authors": ["MSVPJ Sathvik", "Parmitha Vangapadu", "Nishit Rane", "Sathwik Narkedimilli", "Mark Lee", "Akrati Saxena"],
+    "affiliations": ["University of Birmingham", "IIIT Dharwad", "National University of Singapore", "Leiden University"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "欺诈/误导广告", "Explainable NLP", "数据集"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27274",
+      "pdf": "https://arxiv.org/pdf/2606.27274v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 17,
+      "metrics": 8,
+      "quality": 12,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 18,
+      "total": 65,
+      "rationale_zh": "创新性(17/30)：主要贡献是构建带解释的操纵/欺骗性博彩广告数据集，并分析常见话术；模型方法相对标准。实验指标(8/15)：摘要未给出核心数值；实验质量(12/15)：明确标注规范与解释标注，可支持可解释检测；效率(7/10)：可用轻量模型部署；泛化(3/5)：范式可迁移到电商虚假宣传/诱导广告治理；相关性(18/25)：虽然领域为博彩广告，但对平台治理中的“误导性营销/黑产推广”具备参考价值。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "BetXplain聚焦社媒上的博彩应用推广广告，建立来自Instagram与Reddit的广告数据集，并把样本标注为manipulative / deceptive / responsible，同时给出人写的解释理由，用于训练与评测可解释的误导广告检测模型；也讨论了常见诱导策略与潜在心理健康风险。",
+        "innovation": "对治理的价值在于：把“是否误导”与“为什么误导”一起结构化成可监督信号，方便后续做可解释审核、模型诊断与策略审计；并可迁移到电商场景的虚假宣传、诱导性广告与黑产推广治理。",
+        "key_metrics": "数据集在匿名审稿版本未披露下载链接（承诺接收后公开）。论文对多类Transformer/LLM进行了检测评测，并包含解释质量相关分析。"
+      },
+      "en": {
+        "method_overview": "BetXplain introduces an explanation-annotated dataset for detecting manipulative and deceptive betting advertisements on social media (Instagram and Reddit). Ads are labeled as manipulative/deceptive/responsible, with human-written explanations to enable explainable detection models and analysis of persuasion strategies.",
+        "innovation": "It provides supervision not only for classification but also for explanation, which is useful for auditability and model debugging. The framework can generalize to other governance scenarios such as misleading e-commerce promotions and dark-pattern marketing.",
+        "key_metrics": "The dataset link is withheld in the anonymized version (to be released upon acceptance). The paper evaluates transformer and LLM baselines and analyzes explanation quality."
+      }
+    }
+  }
+]
