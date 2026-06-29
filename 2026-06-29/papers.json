@@ -1,0 +1,404 @@
+[
+  {
+    "id": "2606.28070v1",
+    "title": "JD Oxygen AI Item Center (Oxygen AIIC) V1: An Industrial-Scale LLM/VLM-Centric Solution for Item Understanding, Management, and Applications",
+    "authors": [
+      "Oxygen AIIC",
+      "Chan Long",
+      "Chao Liu",
+      "Chaofan Chen",
+      "Chaohui Dong"
+    ],
+    "affiliations": ["JD.com"],
+    "source": "arXiv",
+    "published": "2026-06-26",
+    "tags": ["电商", "商品理解", "本体/知识库", "LLM/VLM", "S2D", "数据生产"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28070",
+      "pdf": "https://arxiv.org/pdf/2606.28070v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 12,
+      "quality": 10,
+      "efficiency": 8,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 78,
+      "rationale_zh": "工业系统型论文，指标强且与电商强相关，但可复现性与对外可验证实验细节相对受限，因此未给到 80+。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "面向京东超大规模商品体系，提出 Oxygen AIIC 平台：用‘人机协同’做百万级本体工程；用“Semantic Search then Discrimination (S2D)”把本体从模型参数中解耦，先检索候选本体条目再做判别；再通过 SKU 去重、属性相关性探测、缓存与异步并行提升吞吐；并在此基础上构建可控自进化的商品理解 LLM/VLM。",
+        "innovation": "亮点在于把“本体更新”从“频繁训模/重训”中解耦出来：S2D 将问题从开放式生成转为‘检索候选+二分类判别’，同时用工程侧的双维度减负（SKU/属性）支撑百亿级规模与高频更新。",
+        "key_metrics": "知识生产：Precision 94.2%，Recall 82.8%。\n业务侧：搜索流量覆盖 80.4%，商品信息质量问题下降 37%，刊登核心属性自动填充率 >80%，创意优化 CTR +9%。"
+      },
+      "en": {
+        "method_overview": "Oxygen AIIC is an industrial-scale platform for item knowledge production and serving at JD. It combines human–AI collaborative ontology engineering with an S2D (Semantic Search then Discrimination) architecture that externalizes the evolving ontology from model parameters. It reduces compute via SKU deduplication and attribute probing, and uses caching plus asynchronous pipeline parallelism for high-throughput updates.",
+        "innovation": "Key novelty is decoupling ontology evolution from model retraining: S2D reframes recognition as retrieval of candidate ontology entries followed by discrimination, improving robustness and controllability at scale.",
+        "key_metrics": "Knowledge production: 94.2% precision / 82.8% recall.\nBusiness impact examples: 80.4% search-traffic coverage; 37% fewer item-info quality issues; >80% auto-fill rate for core attributes during listing; +9% CTR uplift in creative optimization."
+      }
+    }
+  },
+  {
+    "id": "2606.26787v1",
+    "title": "AIGP: An LLM-Based Framework for Long-Term Value Alignment in E-Commerce Pricing",
+    "authors": ["Chennan Ma", "Yanning Zhang", "Siqi Hong", "Xiuchong Wang"],
+    "affiliations": ["Taobao & Tmall Group of Alibaba"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["电商", "定价", "LLM", "离线RL", "DPO", "长期价值"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.26787",
+      "pdf": "https://arxiv.org/pdf/2606.26787v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 22,
+      "metrics": 15,
+      "quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 20,
+      "total": 79,
+      "rationale_zh": "线上 A/B 指标非常亮眼且强相关，但涉及复杂业务系统与大模型/离线RL训练链路，复现成本高，因此未进入 80+ 复现队列。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "提出 AIGP：用 LLM 融合结构化特征与文本上下文产出可解释的定价候选；用离线 RL 训练长周期价值评估器 LTVE 作为 reward model，对候选动作打分并构造偏好对；再用 DPO 把策略对齐到长期业务目标；最后通过蒸馏/微调提升线上可用性。",
+        "innovation": "把‘长期价值’显式注入到 LLM 决策中：LTVE 提供可学习的长周期偏好信号，再用 DPO 做策略对齐，兼顾可解释性与业务目标。",
+        "key_metrics": "线上 14 天 A/B（Tao Factory）：GMV +13.21%，ROI +7.59%，里程碑达成率 +8.20%。"
+      },
+      "en": {
+        "method_overview": "AIGP uses an LLM to generate interpretable pricing candidates from structured signals plus textual context. It trains a Long-Term Value Estimator (LTVE) via offline RL as a reward model to score actions and build preference pairs, then aligns the policy via Direct Preference Optimization (DPO) and distills it for deployment.",
+        "innovation": "It injects long-horizon business value into LLM decisions using an offline-RL reward model and DPO alignment, while keeping decisions interpretable.",
+        "key_metrics": "14-day online A/B (Tao Factory): +13.21% GMV, +7.59% ROI, +8.20% milestone achievement."
+      }
+    }
+  },
+  {
+    "id": "2606.28059v1",
+    "title": "Fast and Feasible: Permutation-based Constrained Reranking for Revenue Maximization",
+    "authors": ["Svetlana Shirokovskikh", "Anastasiia Soboleva", "Aleksandr Katrutsa", "Roman Loginov"],
+    "affiliations": ["Avito", "MSU AI Center"],
+    "source": "arXiv",
+    "published": "2026-06-26",
+    "tags": ["电商", "搜索/推荐", "Rerank", "约束优化", "广告收入"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28059",
+      "pdf": "https://arxiv.org/pdf/2606.28059v1.pdf"
+    },
+    "reproduce": {"path": "2026-06-29/PermR"},
+    "score": {
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 13,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 82,
+      "rationale_zh": "方法简单但工程价值高、可复现性强、并有大规模线上 A/B 结果支撑，因此进入 80+ 复现。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "将电商搜索/推荐的‘增收 rerank’写成 ILP：最大化广告/促销带来的收入，同时对相关性、风控等指标设定不劣于线上基线的约束。为满足线上延迟，提出 PermR：只做相邻交换的轻量迭代，遇到约束被破坏就优先通过交换修复，约束满足后再做收入提升。",
+        "innovation": "把难解的多约束 ILP 变成可在线部署的‘局部交换’搜索：以“线上强基线”为前提，把约束写成‘相对不降’，从而允许非常快的近似求解并可控上线。",
+        "key_metrics": "离线：PermR 达到约 63% 的 ILP 收益增量。\n线上：14 天、5600 万搜索请求 A/B，收入 +2%。"
+      },
+      "en": {
+        "method_overview": "The paper formulates revenue-aware reranking as an ILP maximizing revenue under per-query constraints (e.g., relevance, fraud safety) relative to the production ranking. To meet production latency, it proposes PermR, a lightweight neighbor-swap method that repairs violated constraints and then improves revenue while keeping constraints satisfied.",
+        "innovation": "It turns a hard multi-constraint ILP into a deployable local-search procedure based on neighbor swaps, with constraints defined as bounded degradation relative to a strong production baseline.",
+        "key_metrics": "Offline: ~63% of ILP revenue improvement. Online A/B: +2% revenue over 14 days on 56M queries."
+      }
+    }
+  },
+  {
+    "id": "2606.25871v1",
+    "title": "AutoRelAnnotator: Calibrated Model Cascades for Cost-Efficient Relevance Evaluation in Sponsored Search",
+    "authors": ["Md Omar Faruk Rokon", "Shasvat Desai", "Hong Yao", "Kuang-chih Lee"],
+    "affiliations": ["Walmart Global Tech"],
+    "source": "arXiv",
+    "published": "2026-06-24",
+    "tags": ["电商广告", "离线标注", "级联路由", "校准", "数据质量"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.25871",
+      "pdf": "https://arxiv.org/pdf/2606.25871v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 18,
+      "metrics": 9,
+      "quality": 12,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 74,
+      "rationale_zh": "非常贴近离线大规模标注/评估，但更多是系统工程+经验总结型，方法创新度中等。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "针对电商赞助搜索的离线相关性标注，提出“先提准确率、再做降成本”的两段式：先对领域任务做分类器微调，获得足够高的单模型准确率；再用 per-class isotonic calibration 做置信度校准，并以此路由到 Cross-Encoder→Gemma-2B→LLaMA-8B 的三段级联，从而在不显著损失准确率的情况下大幅降算力与周转时间。",
+        "innovation": "把‘级联路由’建立在‘已被领域微调到足够准’的模型之上，并用 per-class 校准提升路由可靠性，适合离线大批量标注/诊断场景。",
+        "key_metrics": "微调带来约 +20 个准确率点；校准额外 +0.6；处理 150M+ 样本；离线周转 5 天 → 1–3 小时。"
+      },
+      "en": {
+        "method_overview": "For offline relevance labeling in sponsored search, it decouples accuracy and cost: domain fine-tuning improves accuracy, then per-class isotonic calibration enables reliable confidence scores for routing in a calibrated cascade (Cross-Encoder → Gemma-2B → LLaMA-8B).",
+        "innovation": "It builds cascades on already-accurate domain-tuned models and uses per-class calibration to improve routing reliability for large-scale offline labeling.",
+        "key_metrics": "~+20 accuracy points from fine-tuning; +0.6 from calibration; 150M+ annotations; turnaround reduced from 5 days to 1–3 hours."
+      }
+    }
+  },
+  {
+    "id": "2606.24655v1",
+    "title": "AI-PAVE-Br: Leveraging Large Language Models for Enhanced Product Attribute Value Extraction through a Golden Set Approach",
+    "authors": ["Murilo Gazzola", "Hugo Gobato Souto", "Samuel Silva", "Caio Gomes"],
+    "affiliations": ["LuizaLabs", "Mackenzie Presbyterian University", "University of São Paulo"],
+    "source": "arXiv",
+    "published": "2026-06-23",
+    "tags": ["电商", "属性抽取", "信息抽取", "葡语", "LLM", "数据集"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.24655",
+      "pdf": "https://arxiv.org/pdf/2606.24655v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 16,
+      "metrics": 10,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 25,
+      "total": 72,
+      "rationale_zh": "与电商内容理解强相关且有可复现数据集，但方法本身更偏 prompt/流程工程。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "聚焦葡语巴西电商商品的属性值抽取（PAVE），提出 AI-PAVE-Br：用面向实体/属性列表的结构化 Prompt 让 LLM 输出规范 JSON；同时构建 Golden Set（20 类商品、12 名标注员）作为可复现的评测基准，并对比传统抽取系统。",
+        "innovation": "价值在于‘高质量可复现数据集 + 面向非英语市场的工程化 Prompt 抽取’，并给出跨品类的稳定评测与覆盖率分析。",
+        "key_metrics": "平均实体 F1：传统系统 59.79 → AI-PAVE-Br 74.68（Table 3）。"
+      },
+      "en": {
+        "method_overview": "AI-PAVE-Br targets Portuguese product attribute value extraction (PAVE) for Brazilian e-commerce. It uses structured, schema-aware prompts to make an LLM output normalized JSON, and releases a carefully annotated Golden Set across 20 product types for reproducible evaluation.",
+        "innovation": "It contributes a reproducible non-English benchmark plus a practical prompt-engineered extraction pipeline with per-category evaluation.",
+        "key_metrics": "Mean entity F1: 59.79 → 74.68 (baseline → AI-PAVE-Br)."
+      }
+    }
+  },
+  {
+    "id": "2606.27187v1",
+    "title": "HarmVideoBench: Benchmarking Harmful Video Understanding in Large Multimodal Models",
+    "authors": ["Jiajun Wu", "Haoyu Kang", "Yining Sun", "Guancheng Wan"],
+    "affiliations": ["Central South University", "Tsinghua University", "ByteDance", "Tencent"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "短视频", "有害内容", "多模态", "Benchmark"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27187",
+      "pdf": "https://arxiv.org/pdf/2606.27187v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 13,
+      "quality": 12,
+      "efficiency": 5,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 76,
+      "rationale_zh": "内容治理强相关，基准与方法都有贡献，但代码暂未公开且复现依赖视频数据/多模型评测。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "提出 HarmVideoBench：把有害视频理解从‘二分类’升级为分层推理诊断（可见证据/片内含义/片外推理），包含 1,379 个视频与 4,137 道选择题；并提出 BCR，在需要时动态检索上下文以提升高层推理。",
+        "innovation": "通过分层问题设计把‘是否理解’拆解成可诊断的能力维度，避免模型靠表层捷径过关，并补齐解释缺失。",
+        "key_metrics": "基准规模：1,379 videos / 4,137 questions；BCR 将宏平均从 61.7% 提升到 84.4%。"
+      },
+      "en": {
+        "method_overview": "HarmVideoBench is a multi-layer diagnostic benchmark for harmful video understanding, moving beyond binary classification to three reasoning levels. It contains 1,379 videos and 4,137 MC questions, and proposes BCR to dynamically retrieve context when needed.",
+        "innovation": "It operationalizes deep harmful-video understanding as diagnostic, multi-level reasoning evaluation to reduce shortcut learning and improve interpretability.",
+        "key_metrics": "1,379 videos / 4,137 questions; BCR improves macro average from 61.7% to 84.4%."
+      }
+    }
+  },
+  {
+    "id": "2606.26686v1",
+    "title": "Do Safety Guardrails Need to Reason? LeanGuard: A Fast and Light Approach for Robust Moderation",
+    "authors": ["Dongbin Na"],
+    "affiliations": ["(see paper)"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "审核/Guardrail", "效率", "CoT"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.26686",
+      "pdf": "https://arxiv.org/pdf/2606.26686v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 19,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 10,
+      "generalization": 3,
+      "relevance": 23,
+      "total": 79,
+      "rationale_zh": "强相关且很实用，但主要是实证与系统化对照，方法创新度中等偏上。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "同底座对照实验：保持数据与架构不变，仅移除推理链，发现 CoT 并不提升审核准确率。给出 LeanGuard：395M 双向 encoder 单次前向完成判决，显著降低推理开销，并开源模型与代码。",
+        "innovation": "提供强对照证据：很多‘推理链’可能是事后解释而非真实计算；并给出可直接落地的轻量审核 baseline。",
+        "key_metrics": "平均 F1 82.90±0.26；推理算力约降低 100×。"
+      },
+      "en": {
+        "method_overview": "Controlled same-backbone study shows chain-of-thought is unnecessary for moderation. LeanGuard is a 395M label-only bidirectional encoder that matches larger reasoning guards with a single forward pass, and is released as open source.",
+        "innovation": "It provides controlled evidence that CoT may be post-hoc and unnecessary, and releases a deployable lightweight guardrail baseline.",
+        "key_metrics": "Avg F1: 82.90±0.26; ~100× compute reduction."
+      }
+    }
+  },
+  {
+    "id": "2606.27314v1",
+    "title": "Beyond Surface Forms: A Comprehensive, Mechanism-Oriented Taxonomy of Indirect Linguistic Encoding for LLM-Based Coded Language Detection",
+    "authors": ["Hamid Reza Firoozfar", "Mohammadsadegh Abolhasani", "Reza Mousavi", "Paul Jen-Hwa Hu"],
+    "affiliations": ["University of Utah", "University of Virginia"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["内容治理", "暗语/规避", "Taxonomy", "LLM", "Prompt"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27314",
+      "pdf": "https://arxiv.org/pdf/2606.27314v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 17,
+      "metrics": 9,
+      "quality": 11,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 24,
+      "total": 73,
+      "rationale_zh": "治理强相关，taxonomy 思路清晰，但整体更偏方法论/提示工程增益。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "提出以“编码/解码机制”为核心的 ILE 分类体系，并将其作为 prompt scaffold 融入 LLM 检测；在 2,000 条 TikTok/Bluesky 人工标注数据上对比多种 taxonomy 与无 taxonomy 提示，验证覆盖度对提升效果的决定性。",
+        "innovation": "更强调‘机制’而非‘意图/话题’，便于迁移到新暗语；并用系统化 taxonomy 构建流程 + 对照实验证明其增益边界。",
+        "key_metrics": "准确率提升 +4.7%，span-level F1 提升 +5.4%（对比最强基线）。"
+      },
+      "en": {
+        "method_overview": "It proposes a mechanism-oriented taxonomy for Indirect Linguistic Encoding (ILE) and uses it as a prompt scaffold for LLM-based coded language detection. Experiments on 2,000 labeled posts compare multiple taxonomies vs no-taxonomy prompts.",
+        "innovation": "The taxonomy is centered on encoding/decoding mechanisms rather than topics/intent, improving transfer to emerging coded terms, and is validated with systematic baselines.",
+        "key_metrics": "+4.7% accuracy and +5.4% span-level F1 over the best baseline."
+      }
+    }
+  },
+  {
+    "id": "2606.27499v1",
+    "title": "DMV-Bench: Diagnosing Long-Horizon Multimodal Agents’ Visual Memory with Incidental Cue Injection",
+    "authors": ["Yujin Tang", "Chenming Shang", "Ruize Xu", "Nikhil Singh"],
+    "affiliations": ["Dartmouth College"],
+    "source": "arXiv",
+    "published": "2026-06-25",
+    "tags": ["Agent", "多模态", "长记忆", "电商场景", "Benchmark"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27499",
+      "pdf": "https://arxiv.org/pdf/2606.27499v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 12,
+      "quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 20,
+      "total": 74,
+      "rationale_zh": "电商弱相关（benchmark 场景是电商），对 Agent/RAG/长记忆很有启发，但与达人治理主线略弱。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "提出 DMV-Bench：在家居电商目录中注入像素级偶发线索，专门评测多模态购物 Agent 的跨 session 视觉长记忆。并提出 DualMem：视觉码+文本码并行记忆的双通道架构，显著优于多种记忆基线。",
+        "innovation": "通过文本泄漏契约把判别信号锁在像素里，使 benchmark 更干净地衡量视觉记忆能力（而非文本笔记）。",
+        "key_metrics": "DualMem TSR：Qwen2.5-VL-7B 上 J=5/10/15 为 81.1/77.2/75.1；Gemini 2.5 Flash 上为 82.7/75.2/71.3。"
+      },
+      "en": {
+        "method_overview": "DMV-Bench evaluates long-horizon visual memory for multimodal shopping agents by injecting incidental pixel-only cues into a controlled e-commerce catalog. DualMem stores visual and verbal codes in parallel and outperforms baselines across chain lengths.",
+        "innovation": "A text-leakage contract ensures discriminative cues only exist in pixels, enabling clean diagnosis of visual memory.",
+        "key_metrics": "DualMem TSR (Qwen2.5-VL-7B): 81.1/77.2/75.1 for J=5/10/15; (Gemini 2.5 Flash): 82.7/75.2/71.3."
+      }
+    }
+  },
+  {
+    "id": "2606.28062v1",
+    "title": "Single and Multi Truth Data Fusion using Large Language Models",
+    "authors": ["Hira Beril Kucuk", "Norman W Paton", "Jiaoyan Chen", "Zhenyu Wu"],
+    "affiliations": ["University of Manchester"],
+    "source": "arXiv",
+    "published": "2026-06-26",
+    "tags": ["数据质量", "多源冲突", "Truth Discovery", "LLM", "表格数据"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28062",
+      "pdf": "https://arxiv.org/pdf/2606.28062v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 18,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 21,
+      "total": 73,
+      "rationale_zh": "对电商数据质量/多源冲突融合很有价值，但更偏 Prompt 对比研究，且依赖商用 LLM 成本。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "把 truth discovery / data fusion 用 LLM 来做：设计 domain-dependent / domain-independent、0-shot/1-shot 的多种 Prompt，并引入约束提示（如‘只能从源里选值’）以减少幻觉；在 Book/Movie（多真值）与 Flight（单真值）数据上对比 DART/LTM/MV/SRV 等经典方法。",
+        "innovation": "用 LLM 的语义归一化能力补足传统方法的字面匹配/单值偏置短板，并通过约束提示控制输出可验证性。",
+        "key_metrics": "Book best F1=0.7817（DD-1shot）；Movie best F1=0.8172（DD-1shot）；Flight best F1=0.9119（DD-C1-0shot）。"
+      },
+      "en": {
+        "method_overview": "It explores LLM prompting strategies for data fusion (truth discovery) in single-truth and multi-truth tabular settings, including domain-dependent/independent prompts, 0-shot/1-shot, and constraint prompts to reduce hallucinations.",
+        "innovation": "LLM semantic normalization helps overcome surface-matching limitations and single-value biases, while constraints improve verifiability.",
+        "key_metrics": "Best F1: Book 0.7817 (DD-1shot); Movie 0.8172 (DD-1shot); Flight 0.9119 (DD-C1-0shot)."
+      }
+    }
+  },
+  {
+    "id": "2606.25415v1",
+    "title": "S2-CAR: Segmentation-Supervised Complexity-Adaptive Recommendation",
+    "authors": ["Linjiang Guo", "Nitin Bisht", "Shiqing Wu", "Guandong Xu"],
+    "affiliations": ["University of Technology Sydney", "City University of Macau", "The Education University of Hong Kong"],
+    "source": "arXiv",
+    "published": "2026-06-24",
+    "tags": ["推荐", "序列推荐", "电商数据", "TPP", "意图分段"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.25415",
+      "pdf": "https://arxiv.org/pdf/2606.25415v1.pdf"
+    },
+    "reproduce": {},
+    "score": {
+      "innovation": 20,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 20,
+      "total": 74,
+      "rationale_zh": "推荐系统方法扎实，覆盖电商数据集，但与达人治理/内容理解关联偏间接。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "用 Soft-TPP 把用户兴趣建模为连续时间的能量状态，能量衰减触发意图边界，实现无人工标注的自适应分段；再用复杂度自适应的多意图抽取与层级编码，把分段结构作为对比学习监督对齐到序列表示。",
+        "innovation": "把分段从固定时间窗/启发式升级成可学习的连续时间动力学，并让分段结构反哺到表示学习而非只做预处理。",
+        "key_metrics": "Table 4：ML-1M Recall@10=28.74±0.20；Amazon Recall@10=5.74±0.07；Steam Recall@10=14.41±0.14。"
+      },
+      "en": {
+        "method_overview": "S2-CAR uses a context-aware Soft-TPP to trigger intent boundaries based on an energy decay process (no manual segmentation labels), then performs segment-count-adaptive multi-intent extraction and aligns structural and sequential representations via contrastive learning.",
+        "innovation": "It replaces heuristic time windows with learnable continuous-time dynamics and uses segmentation structure as supervision.",
+        "key_metrics": "Table 4: Recall@10=28.74±0.20 (ML-1M), 5.74±0.07 (Amazon), 14.41±0.14 (Steam)."
+      }
+    }
+  }
+]
