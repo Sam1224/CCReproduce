@@ -1,0 +1,341 @@
+[
+  {
+    "id": "2606.27708v1",
+    "title": "ZooClaw-FashionSigLIP2: Distilled Fine-tuning for Robust Fashion Retrieval",
+    "authors": ["Siqiao Xue", "Chunxue Xu"],
+    "affiliations": ["ZooClaw.ai"],
+    "published": "2026-06-26",
+    "source": "HuggingFace Papers",
+    "tags": ["电商", "时尚检索", "多模态表征", "蒸馏", "WiSE-FT"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.27708",
+      "pdf": "https://arxiv.org/pdf/2606.27708v1.pdf",
+      "project": "https://huggingface.co/srpone/zooclaw-fashionsiglip2",
+      "dataset": "https://huggingface.co/datasets/srpone/zooclaw-fashion-eval"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "提出面向时尚检索的 SigLIP2-base 专用模型：先在策划的域内时尚数据上做知识蒸馏驱动的全量微调（full fine-tuning），再用 WiSE-FT 将微调权重与基础模型权重线性插值，以在 ID 精度与 OOD 鲁棒之间取得平衡。",
+        "innovation": "核心亮点是把“高精度微调”与“鲁棒性保持”拆成两步：先用蒸馏全量微调把检索精度推上去，再用 WiSE-FT 插值把泛化能力拉回来；同时给出 ZooClaw-Fashion 长查询评测与对既有 benchmark GT 偏差的系统分析。",
+        "key_metrics": "ZooClaw-Fashion(ZC-TRAIN-L) 上 R@10=0.659（LoRA 基线 0.612）；长查询 Long-Query R@10=0.225。论文报告在多组 OOD/外部评测上仍保持强鲁棒性，并优于更大规模 backbone。"
+      },
+      "en": {
+        "method_overview": "ZooClaw-FashionSigLIP2 is a fashion-specialized SigLIP2-base dual-encoder trained via full fine-tuning with knowledge distillation on curated in-domain data, followed by WiSE-FT weight interpolation with the base model to preserve robustness.",
+        "innovation": "It operationalizes the ID-vs-OOD trade-off as a two-step recipe: distilled full fine-tuning for precision, then weight interpolation for generalization recovery, alongside a long-query fashion retrieval benchmark and systematic bias analysis of existing ground-truth.",
+        "key_metrics": "On ZooClaw-Fashion (ZC-TRAIN-L), R@10 reaches 0.659 vs 0.612 for a LoRA baseline; long-query R@10 is 0.225."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 24,
+      "total": 82,
+      "rationale_zh": "强电商（时尚）检索相关，给出清晰可落地的‘蒸馏全量微调 + WiSE-FT’配方并有长查询评测；但训练数据与工程细节仍偏‘配方型’，因此创新性不满分。"
+    },
+    "reproduce": {
+      "path": "2026-06-30/ZooClaw-FashionSigLIP2"
+    }
+  },
+  {
+    "id": "2606.28344v1",
+    "title": "PIXELRAG: Web Screenshots Beat Text for Retrieval-Augmented Generation",
+    "authors": [
+      "Yichuan Wang",
+      "Zhifei Li",
+      "Zirui Wang",
+      "Paul Teiletche",
+      "Lesheng Jin",
+      "Matei Zaharia",
+      "Joseph E. Gonzalez",
+      "Sewon Min"
+    ],
+    "affiliations": ["UC Berkeley", "Princeton", "Databricks"],
+    "published": "2026-06-01",
+    "source": "HuggingFace Papers",
+    "tags": ["RAG", "网页截图", "文档理解", "VLM", "检索"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28344",
+      "pdf": "https://arxiv.org/pdf/2606.28344v1.pdf",
+      "code": "https://github.com/StarTrail-org/PixelRAG"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "PIXELRAG 直接把网页渲染为截图切片（visual tiles）并在像素空间完成检索与阅读，绕开 HTML→文本解析的噪声与信息损失。检索阶段对 3000 万张维基截图构建视觉索引；生成阶段把检索到的截图块直接喂给 VLM Reader，从而保留布局、表格、公式等结构化信息。",
+        "innovation": "把‘Web RAG’从文本范式改造成像素原生范式，证明即便在传统纯文本 QA 上也能反超文字 RAG；同时把检索单元从整页/整段变成视觉块，形成新的“压缩=省 token”的效率杠杆。",
+        "key_metrics": "在多个基准上相对文本 RAG 最高提升可达 +18.1% accuracy；结构化信息任务上准确率从 42.5% 提升至 48.8%；低分辨率截图还能带来最高约 3× 的 token 成本降低。"
+      },
+      "en": {
+        "method_overview": "PIXELRAG replaces brittle HTML-to-text parsing with a vision-native pipeline: websites are rendered into screenshot tiles, retrieved via visual embeddings, and read directly by a VLM.",
+        "innovation": "It demonstrates pixel-native retrieval can outperform text RAG even on text-centric QA, while enabling a new efficiency lever via image compression and region-focused context.",
+        "key_metrics": "Up to +18.1% accuracy over text RAG baselines; structured QA improves from 42.5% to 48.8%; up to ~3× token-cost reduction at lower image resolutions."
+      }
+    },
+    "score": {
+      "innovation": 26,
+      "metrics": 13,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 18,
+      "total": 81,
+      "rationale_zh": "方法创新强、工程规模大且指标提升显著；对电商内容理解可用于网页/商品页/政策页的高保真抽取与 RAG，但与达人治理本身是‘间接赋能’，相关性略减。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.26740v1",
+    "title": "LiveEdit: Towards Real-Time Diffusion-Based Streaming Video Editing",
+    "authors": ["Xinyu Wang", "Chongbo Zhao", "Fangneng Zhan", "Yue Ma"],
+    "affiliations": ["Tsinghua University", "HKUST"],
+    "published": "2026-06-25",
+    "source": "HuggingFace Papers",
+    "tags": ["视频编辑", "扩散模型", "流式生成", "创作者工具"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.26740",
+      "pdf": "https://arxiv.org/pdf/2606.26740v1.pdf",
+      "project": "https://live-edit.github.io"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "LiveEdit 面向实时流式视频编辑，把离线双向扩散编辑能力蒸馏到单向因果的流式 editor。核心是三阶段蒸馏（Foundation Tuning→Teacher Forcing→DMD）将推理压缩到 4 steps，并通过 AR-oriented mask cache 复用跨帧区域计算，兼顾背景稳定与低延迟。",
+        "innovation": "将扩散编辑从‘离线全局’迁移到‘逐帧因果’并给出系统化蒸馏路径；同时用面向自回归的缓存机制解决流式下注意力漂移与冗余计算。",
+        "key_metrics": "在流式编辑基线中达到 SOTA 视觉质量，同时推理速度提升到 12.66 FPS；推理步数压到 4 steps（常见扩散编辑 20-50 steps）。"
+      },
+      "en": {
+        "method_overview": "LiveEdit distills a powerful bidirectional diffusion video editor into a causal streaming editor via a three-stage distillation pipeline, enabling chunk-by-chunk real-time editing.",
+        "innovation": "It combines progressive distillation with an AR-oriented mask cache to preserve non-edited regions and reduce redundant per-frame computation under causal inference.",
+        "key_metrics": "Achieves 12.66 FPS with only 4 inference steps while maintaining strong preservation quality among streaming baselines."
+      }
+    },
+    "score": {
+      "innovation": 25,
+      "metrics": 12,
+      "quality": 11,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 15,
+      "total": 75,
+      "rationale_zh": "对创作者生产工具很有启发（实时编辑、低延迟），但与电商内容理解/治理的直接链路偏弱，更多是内容生态侧的‘生产力’方向。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.29705v1",
+    "title": "GUICrafter: Weakly-Supervised GUI Agent Leveraging Massive Unannotated Screenshots",
+    "authors": [
+      "Sunqi Fan",
+      "Lingshan Chen",
+      "Runqi Yin",
+      "Qingle Liu",
+      "Yongming Rao",
+      "Meng-Hao Guo",
+      "Shi-Min Hu"
+    ],
+    "affiliations": ["Tsinghua University"],
+    "published": "2026-06-29",
+    "source": "HuggingFace Papers",
+    "tags": ["Agent", "GUI", "弱监督", "数据效率"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.29705",
+      "pdf": "https://arxiv.org/pdf/2606.29705v1.pdf",
+      "code": "https://github.com/fansunqi/GUICrafter"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "GUICrafter 针对 GUI Agent 标注轨迹昂贵的问题，提出两阶段课程学习：阶段1用海量无标注截图/网页做自监督学习以获得视觉定位能力；阶段2用极少量高质量标注数据做 RL 校准，把‘看懂界面’转化为‘做对操作’。",
+        "innovation": "核心是把 GUI agent 的数据瓶颈从‘大量交互轨迹’转移到‘可爬取的无标注截图’，再用少量 RL 校准闭环，显著提升跨设备泛化与数据效率。",
+        "key_metrics": "在仅使用 UI-TARS 约 0.1% 标注数据量的情况下达到 competitive/更优表现；在同等标注量设置下超过 GUI-R1 等监督方法。"
+      },
+      "en": {
+        "method_overview": "GUICrafter trains GUI agents with a two-stage curriculum: self-supervised grounding on massive unannotated screenshots, then RL calibration with a small amount of high-quality labeled data.",
+        "innovation": "It shifts the bottleneck from expensive interaction trajectories to scalable screenshot corpora, achieving strong performance with extremely low labeled-data budgets.",
+        "key_metrics": "Competitive or better performance vs UI-TARS while using ~0.1% of its labeled data; surpasses prior methods under equal annotation budgets."
+      }
+    },
+    "score": {
+      "innovation": 24,
+      "metrics": 12,
+      "quality": 11,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 16,
+      "total": 74,
+      "rationale_zh": "对‘用海量弱监督数据训练可泛化的操作/理解模型’很有参考价值（可迁移到商家/达人后台自动化）；但与内容理解任务本体仍有距离。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.30084v1",
+    "title": "One Forward Beats Two: InnerZoom for Accurate and Efficient GUI Grounding",
+    "authors": [
+      "Chen Liu",
+      "Ling Chen",
+      "Hanzhang Zhou",
+      "Liangyu Chen",
+      "Chenglin Cai",
+      "Xin Yu",
+      "Steven Hoi",
+      "Yue Wang"
+    ],
+    "affiliations": ["Alibaba / DAMO Academy"],
+    "published": "2026-06-29",
+    "source": "HuggingFace Papers",
+    "tags": ["GUI Grounding", "MLLM", "效率优化", "Agent"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.30084",
+      "pdf": "https://arxiv.org/pdf/2606.30084v1.pdf"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "InnerZoom 研究 MLLM 形式化 GUI grounding（坐标生成）时的精度/延迟矛盾：中间层已出现目标区域线索，但最终坐标解码未能保留。它提出跨层证据桥接，把中间层定位线索压缩成 evidence state 并在后续层持续注入，从而单次 forward 达到两次 ZoomIn 的精度。",
+        "innovation": "用‘模型内部证据复用’替代外部 crop-and-rerun，两点收益：1）单次推理更快；2）跨层监督更稳定地把语义与像素级坐标对齐。",
+        "key_metrics": "六个 GUI grounding 基准上均达 SOTA：OSWorld-G 64.7、UI-Vision 40.2、OSWorld-GR 73.1、MMBench-GUI 87.6；相对此前最佳分别 +4.1/+3.2/+2.9/+2.3；端到端延迟最高降低 31.8%，TFLOPs 约降 29%。"
+      },
+      "en": {
+        "method_overview": "InnerZoom is a single-forward GUI grounding framework that bridges target-region evidence from intermediate decoder layers to the final coordinate head via a compact cross-layer evidence state.",
+        "innovation": "It removes the need for external crop-and-rerun (ZoomIn) by reusing internal localization cues, improving accuracy while cutting latency and compute.",
+        "key_metrics": "SOTA across 6 benchmarks: OSWorld-G 64.7, UI-Vision 40.2, OSWorld-GR 73.1, MMBench-GUI 87.6; up to 31.8% lower latency and ~29% fewer TFLOPs."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "metrics": 11,
+      "quality": 10,
+      "efficiency": 9,
+      "generalization": 3,
+      "relevance": 15,
+      "total": 70,
+      "rationale_zh": "对‘可交互任务（商家/达人后台）中的点击定位效率’很实用，且给出清晰的架构洞察；但与内容理解/治理的直接指标关联有限。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.30616v1",
+    "title": "Scaling the Horizon, Not the Parameters: Reaching Trillion-Parameter Performance with a 35B Agent",
+    "authors": [
+      "Lei Bai",
+      "Zongsheng Cao",
+      "Yang Chen",
+      "Zhiyao Cui",
+      "Shangheng Du",
+      "Yue Fan",
+      "Shiyang Feng",
+      "Zijie Guo",
+      "..."
+    ],
+    "affiliations": ["Shanghai AI Lab"],
+    "published": "2026-06-29",
+    "source": "HuggingFace Papers",
+    "tags": ["Agent", "长程任务", "蒸馏", "MoE", "Scaling"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.30616",
+      "pdf": "https://arxiv.org/pdf/2606.30616v1.pdf"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "Agents-A1 提出用 35B MoE 智能体通过“扩展 agent horizon（长程轨迹）”达到万亿参数级别表现。它构建连接知识/行动/观测/验证的长程轨迹基础设施（平均 45K tokens），再用三阶段训练：全域 SFT→多域 teacher→多 teacher 的 on-policy 蒸馏（含 salient vocab alignment）把六个异构域统一到一个 student。",
+        "innovation": "把 scaling 的关注点从参数量转向‘任务视界长度’，并用多 teacher 路由蒸馏提升跨域知识迁移效率；对实际 agent 场景（长链路、多工具）更贴近。",
+        "key_metrics": "在 SEAL-0 56.4、IFBench 80.6、HiPhO 46.4、FrontierScience-Olympiad 79.0、MolBench-Bind 56.8 等长程基准上取得领先；对比部分 1T 模型保持竞争力。"
+      },
+      "en": {
+        "method_overview": "Agents-A1 is a 35B MoE agentic model that scales the agent horizon via long-trajectory infrastructure and a three-stage training recipe (full-domain SFT, domain teachers, multi-teacher on-policy distillation with salient vocabulary alignment).",
+        "innovation": "It reframes scaling for agents as horizon scaling rather than parameter scaling, and unifies heterogeneous domains into one deployable student via routed distillation.",
+        "key_metrics": "Leading results on long-horizon benchmarks such as SEAL-0 (56.4) and IFBench (80.6), staying competitive against some 1T-parameter agents."
+      }
+    },
+    "score": {
+      "innovation": 22,
+      "metrics": 12,
+      "quality": 10,
+      "efficiency": 7,
+      "generalization": 3,
+      "relevance": 14,
+      "total": 68,
+      "rationale_zh": "适合关注 agent 训练与长程轨迹基础设施，但偏通用 agent scaling；对电商内容理解/治理属于方法论借鉴，直接落地需结合业务数据与工具体系。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.28480v1",
+    "title": "TUA-Bench: A Benchmark for General-Purpose Terminal-Use Agents",
+    "authors": [
+      "Shoufa Chen",
+      "Luyuan Wang",
+      "Xuan Yang",
+      "Zhiheng Liu",
+      "Yuren Cong",
+      "..."
+    ],
+    "affiliations": ["Meta AI", "Duke University", "Stanford University"],
+    "published": "2026-06-26",
+    "source": "HuggingFace Papers",
+    "tags": ["Benchmark", "Terminal", "Agent", "长程任务"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28480",
+      "pdf": "https://arxiv.org/pdf/2606.28480v1.pdf"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "TUA-Bench 提供 120 个覆盖日常办公到专家级科研/工程工作流的真实终端任务，用确定性环境脚本复现，并用基于执行的自动评分协议评估“终端使用智能体”的规划、纠错与工具调用能力。",
+        "innovation": "首次系统性把终端视为通用计算接口进行评测，补齐现有 benchmark 偏 GUI 或偏编程的空白，并引入专家共创的专业任务，提高对真实长程工作流的区分度。",
+        "key_metrics": "最强 frontier agent（Claude Code + Opus 4.8 max reasoning）总体成功率 65.8%；长程（>10 步）任务成功率下降显著，暴露执行监控与错误恢复瓶颈。"
+      },
+      "en": {
+        "method_overview": "TUA-Bench is an execution-grounded benchmark of 120 real terminal tasks spanning everyday digital work and expert-level scientific/engineering workflows.",
+        "innovation": "It treats the terminal as a general-purpose computer interface and evaluates long-horizon reliability via deterministic environments and execution-based scoring.",
+        "key_metrics": "Best frontier agent achieves 65.8% overall success; performance drops markedly on long-horizon tasks (>10 steps)."
+      }
+    },
+    "score": {
+      "innovation": 20,
+      "metrics": 8,
+      "quality": 12,
+      "efficiency": 6,
+      "generalization": 4,
+      "relevance": 14,
+      "total": 64,
+      "rationale_zh": "对内部工具链/数据治理自动化 agent 评测有参考价值，但作为 benchmark 工作本身不以 SOTA 指标为主，且与电商内容理解是间接关联。"
+    },
+    "reproduce": {}
+  },
+  {
+    "id": "2606.28733v1",
+    "title": "Agentic Abstention: Do Agents Know When to Stop Instead of Act?",
+    "authors": ["Han Luo", "Bingbing Wen", "Lucy Lu Wang"],
+    "affiliations": ["University of Leeds", "University of Washington", "AI2"],
+    "published": "2026-06-27",
+    "source": "HuggingFace Papers",
+    "tags": ["Agent", "可靠性", "WebShop", "停止策略"],
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.28733",
+      "pdf": "https://arxiv.org/pdf/2606.28733v1.pdf",
+      "project": "https://lhannnn.github.io/agentic-abstention"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文把“智能体何时该停止而不是继续行动”定义为序列决策问题（Agentic Abstention），并用 Actionability/Verification/Authority 三类 gap 分析失败原因。提出 CONVOLVE：把完整交互轨迹蒸馏成可复用的 stopping rules（playbook），在不改模型参数的情况下提升及时止损能力。",
+        "innovation": "将 abstention 从单轮答/不答扩展到多轮交互中的‘何时停止’，并给出可落地的无训练改进路径（轨迹→规则的上下文工程）。",
+        "key_metrics": "跨 WebShop/终端/QA 共 28,000+ 任务评测；在 WebShop 上 CONVOLVE 将 Llama-3.3-70B 的 timely abstention recall 从 26.7 提升到 57.4。"
+      },
+      "en": {
+        "method_overview": "Agentic Abstention is formulated as a sequential decision problem where agents must decide when to stop acting under uncertainty. CONVOLVE distills full trajectories into reusable stopping rules without parameter updates.",
+        "innovation": "It provides a gap taxonomy (actionability/verification/authority) and a practical context-engineering approach to improve timely abstention.",
+        "key_metrics": "Evaluated on 28,000+ tasks; on WebShop, timely abstention recall improves from 26.7 to 57.4 for Llama-3.3-70B with CONVOLVE."
+      }
+    },
+    "score": {
+      "innovation": 21,
+      "metrics": 10,
+      "quality": 10,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 13,
+      "total": 65,
+      "rationale_zh": "对电商 WebShop 场景与 agent 可靠性（避免无谓工具调用/错误操作）直接相关；但属于‘行为规范/停止策略’研究，和内容理解模型本体的技术栈不同。"
+    },
+    "reproduce": {}
+  }
+]
