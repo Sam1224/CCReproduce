@@ -1,0 +1,106 @@
+[
+  {
+    "id": "2606.05671",
+    "title": "QueryAgent-R1: Bridging Query Generation and Product Retrieval for E-Commerce Query Recommendation",
+    "source": "arXiv / Search",
+    "published": "2026-06-04",
+    "authors": ["Dike Sun", "Zheng Zou", "Jingtong Zang", "Qi Sun", "Huaipeng Zhao", "Tao Luo", "Xiaoyi Zeng"],
+    "affiliations": ["Alibaba International Digital Commercial Group"],
+    "links": {"arxiv": "https://arxiv.org/abs/2606.05671", "pdf": "https://arxiv.org/pdf/2606.05671", "code": "https://github.com/Sam1224/CCReproduce/tree/main/2026-07-01/QueryAgent-R1"},
+    "tags": ["电商搜索", "Agent", "RL", "用户画像", "推荐"],
+    "summary": {
+      "zh": {
+        "method_overview": "QueryAgent-R1 面向电商搜索框 Query Recommendation，核心是把“生成一个用户可能会点的 query”改成“生成后立刻通过真实商品检索沙盒验证 query 是否能召回用户可能转化的商品”。模型先用 Memory Tool 将用户三个月级别的长行为压缩成 LatestIntent 与 InterestGraph，再让策略模型调用 Product_Search 工具，基于返回商品迭代修正 query。训练上采用 Chain-of-Retrieval 奖励，把 Query EM、Item HitRate、标题 ROUGE 与格式奖励合在一起，使推荐 query 与下游商品点击/转化一致。",
+        "innovation": "过去的 query 推荐更偏 query 语义相关性，容易出现 CTR 高但 CVR 低的 generation-retrieval gap；该文把真实库存检索引入生成闭环，并用一致性奖励把 query 命中和商品命中绑定起来。Memory abstraction 让长行为不直接塞入上下文，适合电商大规模在线部署。方案创新合理且可落地，尤其适合内容电商的搜索、达人商品池召回和意图治理。",
+        "key_metrics": "工业离线集上 Q_EM=0.177、I_Hit@1=0.261、Cons@1=0.117；公开集上 I_Hit@1=0.144、Cons@1=0.063。在线 A/B 在千万 DAU 平台提升 Query CTR 2.9%、guided CVR 3.1%。"
+      },
+      "en": {
+        "method_overview": "QueryAgent-R1 reframes e-commerce query recommendation as retrieval-grounded generation. A memory tool compresses long user behavior into latest intent and an interest graph, while a product-search sandbox validates candidate queries against real inventory. The policy is optimized with a chain-of-retrieval reward that combines query exact match, item hit rate, title ROUGE, and format correctness.",
+        "innovation": "Instead of optimizing only query-level attractiveness, the method closes the generation-retrieval gap by explicitly checking whether recommended queries retrieve products aligned with downstream preference. The memory abstraction and tool loop make the recipe practical for production-scale commerce search and creator-content matching.",
+        "key_metrics": "On the industrial offline set it reports Q_EM=0.177, I_Hit@1=0.261, and Cons@1=0.117; online A/B tests improve Query CTR by 2.9% and guided CVR by 3.1%."
+      }
+    },
+    "score": {"innovation": 27, "metrics": 14, "quality": 13, "efficiency": 8, "generalization": 4, "relevance": 25, "total": 91, "rationale_zh": "电商强相关，真实库存检索+一致性RL直接击中搜索转化链路；离线、在线指标都充分，且给出大规模 A/B。主要扣分在真实系统细节和私有数据不可复现。"},
+    "reproduce": {"path": "2026-07-01/QueryAgent-R1"}
+  },
+  {
+    "id": "2606.07995",
+    "title": "Customer-Agent: Overcoming Context Limitations in Ultra-Long Shopping Trajectories via Tool-Augmented Agents and RLVR",
+    "source": "arXiv / Search",
+    "published": "2026-06-09",
+    "authors": ["Hongye Liu", "Rongmei Lin", "Anurag Kashyap", "Hejie Cui", "Ricardo Henao", "Besnik Fetahu", "Bing Yin"],
+    "affiliations": ["Amazon", "Duke University"],
+    "links": {"arxiv": "https://arxiv.org/abs/2606.07995", "pdf": "https://arxiv.org/pdf/2606.07995", "code": "https://github.com/Sam1224/CCReproduce/tree/main/2026-07-01/Customer-Agent"},
+    "tags": ["电商用户理解", "长上下文", "Tool Agent", "RLVR", "Benchmark"],
+    "summary": {
+      "zh": {
+        "method_overview": "Customer-Agent 关注多年购物轨迹导致的超长上下文问题。论文构建 ShopTrajQA：用真实商品信息与模拟购物轨迹生成 32k/64k token 级别的长轨迹 QA，并要求答案可由 SQL/代码命令验证。方法不是把完整轨迹塞入 LLM，而是把轨迹外置成本地文件，让 agent 通过代码解释器、SQL 查询等工具选择性读取；训练采用 SFT 冷启动工具调用，再用 RLVR 的可验证奖励强化正确检索和推理。",
+        "innovation": "该文把电商用户行为理解从“长 prompt 能否记住”转为“agent 能否像分析师一样读取外部轨迹文件并执行可验证查询”。这对达人治理中的长周期行为审计、异常交易链路解释、用户/达人画像追溯都很有价值。创新点在于数据构建可验证、工具链绕过上下文窗、RLVR 奖励直接来自可执行答案。",
+        "key_metrics": "ShopTrajQA 32k 下 Qwen3-1.7B 经 RLVR 从 17% 提升到 59%（+42），Qwen3-4B 从 13% 提升到 62%（+49）；64k 下 Qwen3-1.7B +36，Qwen3-4B +51，并在 AIME 2024/2025 等额外推理任务上展示泛化。"
+      },
+      "en": {
+        "method_overview": "Customer-Agent builds ShopTrajQA, a 32k/64k-token benchmark for shopping-trajectory QA with executable, verifiable answers. The framework externalizes trajectories as files and trains an agent to retrieve and parse them through code-interpreter or SQL interactions. SFT provides tool-use cold start, and RLVR reinforces answers that can be objectively verified.",
+        "innovation": "The key shift is from stuffing long shopping histories into prompts to training a tool-augmented agent that queries external trajectory files. This is highly relevant to commerce behavior audit, creator profile tracing, and long-horizon governance explanations.",
+        "key_metrics": "On ShopTrajQA-32k, Qwen3-1.7B improves from 17% to 59% after RLVR (+42), and Qwen3-4B improves from 13% to 62% (+49); the 64k setting shows gains of +36 and +51 respectively."
+      }
+    },
+    "score": {"innovation": 26, "metrics": 13, "quality": 14, "efficiency": 8, "generalization": 5, "relevance": 23, "total": 89, "rationale_zh": "强电商用户行为理解相关，benchmark 与方法闭环完整；工具外置上下文非常适合治理审计。扣分在轨迹模拟与真实线上业务仍存在 gap。"},
+    "reproduce": {"path": "2026-07-01/Customer-Agent"}
+  },
+  {
+    "id": "2606.09293",
+    "title": "One Model, Multiple Goals: Adaptive Multi-Objective Learning for E-commerce Dialogue Systems",
+    "source": "arXiv / KDD 2026",
+    "published": "2026-06-10",
+    "authors": ["Mingzhe Li", "Enguo Zhou", "Qishen Zhang", "Lang Gao", "Xiangliang Zhang", "Jing Xiang", "Tai Li", "Xiuying Chen"],
+    "affiliations": ["ByteDance", "MBZUAI", "University of Notre Dame"],
+    "links": {"arxiv": "https://arxiv.org/abs/2606.09293", "pdf": "https://arxiv.org/pdf/2606.09293", "code": "https://github.com/Sam1224/CCReproduce/tree/main/2026-07-01/MORE"},
+    "tags": ["电商对话", "多目标RL", "转化", "客服", "KDD"],
+    "summary": {
+      "zh": {
+        "method_overview": "MORE 面向电商对话系统中“答得正确”和“说得自然”两个目标冲突的问题。论文发现直接混合 reasoning reward 与 generation reward 会产生震荡，因此把用户属性推理作为训练 scaffold/constraint，而不是推理时显式输出链路。生成阶段再用自适应多奖励机制，把流畅度、自然度、语义忠实度等信号按梯度反馈动态重加权，使模型在不同对话上下文中调节目标权重。",
+        "innovation": "该文不是简单多 reward 相加，而是把推理正确性作为约束式训练信号，并用梯度反馈动态调 reward 权重，解决电商客服/导购中事实正确、用户满意和转化目标的冲突。对达人治理中的申诉解释、违规提示、商家/达人沟通机器人也有直接借鉴价值。",
+        "key_metrics": "在 ByteDance 两个真实电商对话系统、MultiWOZ 2.2 上均超过强 baseline；14 天线上实验整体转化 +16.53%、触达转化 +30.09%，用户满意 +1.12%，人工转接率 -1.83%；人机对比中恢复约 60% 的人工增量转化。"
+      },
+      "en": {
+        "method_overview": "MORE addresses the tension between reasoning correctness and natural response generation in e-commerce dialogue. It uses reasoning as a training scaffold/constraint rather than an explicit inference step, then dynamically reweights fluency, naturalness, semantic fidelity, and correctness rewards through gradient feedback.",
+        "innovation": "The method avoids unstable naive reward mixing by separating reasoning constraints from response optimization and adapting reward weights online. This is practical for commerce service, sales assistants, and governance-facing explanation bots.",
+        "key_metrics": "In 14-day ByteDance production experiments, MORE improves overall conversion by 16.53% and reached conversion by 30.09%, increases satisfaction by 1.12%, and reduces handoff rates by 1.83%."
+      }
+    },
+    "score": {"innovation": 25, "metrics": 14, "quality": 14, "efficiency": 9, "generalization": 4, "relevance": 23, "total": 89, "rationale_zh": "强电商对话业务相关，线上转化指标亮眼，方法针对多目标冲突有清晰机制；推理 scaffold 不增加推理开销。扣分在开源可复现性与私有线上数据。"},
+    "reproduce": {"path": "2026-07-01/MORE"}
+  },
+  {
+    "id": "2512.16676",
+    "title": "DataFlow: An LLM-Driven Framework for Unified Data Preparation and Workflow Automation in the Era of Data-Centric AI",
+    "source": "HuggingFace Trending / arXiv",
+    "published": "2025-12-18",
+    "authors": ["DataFlow Team"],
+    "affiliations": ["Academic / Open-source collaboration"],
+    "links": {"arxiv": "https://arxiv.org/abs/2512.16676", "pdf": "https://arxiv.org/pdf/2512.16676", "project": "https://huggingface.co/papers/2512.16676"},
+    "tags": ["数据质量", "数据清洗", "LLM Workflow", "RAG", "打标"],
+    "summary": {
+      "zh": {"method_overview": "DataFlow 把 LLM 数据准备从零散脚本升级成可组合 workflow：提供接近 PyTorch 风格的 pipeline API、约 200 个可复用 operator，以及覆盖文本、数学、代码、Text-to-SQL、Agentic RAG、知识抽取的通用流水线。DataFlow-Agent 可以把自然语言需求翻译成数据处理流水线。", "innovation": "它的价值在工程抽象而非单点模型结构：把生成、评估、过滤、清洗、增强、RAG 数据构建等治理环节统一成可审计 DAG。对电商内容治理的数据清洗、大规模打标、质检复跑很实用。", "key_metrics": "论文报告多个任务中经 DataFlow 处理的数据可提升 LLM 表现，并强调近 200 个 operator 与 6 条 domain-general pipeline 的覆盖；具体增益随任务而变化。"},
+      "en": {"method_overview": "DataFlow provides a composable LLM-driven data-preparation framework with a PyTorch-like pipeline API, nearly 200 reusable operators, and six general pipelines spanning text, math, code, Text-to-SQL, agentic RAG, and knowledge extraction.", "innovation": "Its main contribution is a system abstraction for auditable data workflows rather than a single model trick. This maps well to content-governance cleaning, labeling, evaluation, and RAG corpus construction.", "key_metrics": "The paper reports performance improvements from DataFlow-processed data across tasks, with the exact gains depending on the downstream pipeline."}
+    },
+    "score": {"innovation": 22, "metrics": 10, "quality": 12, "efficiency": 8, "generalization": 5, "relevance": 22, "total": 79, "rationale_zh": "与治理数据质量强相关，工程价值高；但不是今日新 arXiv，且指标更偏系统性展示，未达到高分复现阈值。"},
+    "reproduce": {"path": null}
+  },
+  {
+    "id": "2606.05455",
+    "title": "Disentangled Fine-Grained Prototype Learning for Incomplete Image-Tabular Classification",
+    "source": "arXiv / Search",
+    "published": "2026-06-05",
+    "authors": ["Feixiang Zhou", "Jianyang Xie", "Zhuangzhi Gao", "Qinkai Yu", "Fu Wang", "Yuheng Fan", "Jing Li", "Yalin Zheng"],
+    "affiliations": ["University of Liverpool", "University of Exeter", "South China University of Technology", "KAUST"],
+    "links": {"arxiv": "https://arxiv.org/abs/2606.05455", "pdf": "https://arxiv.org/pdf/2606.05455"},
+    "tags": ["多模态表征", "缺失模态", "商品理解", "聚类/原型"],
+    "summary": {
+      "zh": {"method_overview": "DFPL 解决图像-表格多模态分类中模态缺失的问题。方法用 Shared-Specific Prototype Modeling 抽取共享/模态特定原型，再用 Prototype-guided Fine-grained Alignment 做原型级分布匹配和类语义对齐，最后由 Class-aware Multi-scale Aggregation 融合全局与原型信息。", "innovation": "相较只对全局平均特征做对齐的方法，DFPL 把对齐粒度下沉到 token/prototype 层，更适合商品图片+结构化属性不完整的场景。与电商内容理解弱到中等相关，主要启发在缺失属性鲁棒表征。", "key_metrics": "DVM 车辆图像-表格分类中，缺失 50%/70% tabular 时准确率仍达 93.45%/92.59%，超过最接近 baseline 超过 4.0%；MIMIC 上 70% tabular 缺失时相对 complete-modality TIP 高 4% PRAUC。"},
+      "en": {"method_overview": "DFPL handles incomplete image-tabular classification by extracting shared and modality-specific prototypes, aligning them through prototype-level distribution and class-semantic constraints, and aggregating global/prototype features for robust prediction.", "innovation": "The method moves missing-modality alignment from coarse global features to fine-grained prototypes, which is useful for product-image plus structured-attribute understanding when metadata is incomplete.", "key_metrics": "On DVM, accuracy remains 93.45% and 92.59% with 50%/70% missing tabular data, more than 4 points above the closest baseline."}
+    },
+    "score": {"innovation": 20, "metrics": 11, "quality": 13, "efficiency": 7, "generalization": 4, "relevance": 12, "total": 67, "rationale_zh": "多模态与商品理解有启发，但主场景是医疗/通用图表分类，电商治理相关性不足，未达到复现阈值。"},
+    "reproduce": {"path": null}
+  }
+]
