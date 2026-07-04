@@ -1,0 +1,84 @@
+{
+  "papers": [
+    {
+      "id": "mirage",
+      "title": "MIRAGE: Metadata-guided Image Retrieval and Answer Generation for E-commerce Troubleshooting",
+      "authors": ["Rishav Sahay", "Lavanya Tekumalla", "Anoop Saladi"],
+      "affiliations": ["Amazon"],
+      "source": "ACL/EACL 2026 Industry Track",
+      "published": "2026-07-04",
+      "links": {"pdf": "https://aclanthology.org/anthology-files/pdf/eacl/2026.eacl-industry.56.pdf", "code": "https://github.com/Sam1224/CCReproduce/tree/aime/20260704-paper-patrol/2026-07-04/MIRAGE"},
+      "tags": ["E-commerce", "Multimodal RAG", "Content Understanding", "Metadata Grounding", "Troubleshooting"],
+      "score": {"innovation": 27, "results": 14, "exp_quality": 14, "efficiency": 8, "generalization": 4, "relevance": 21, "total": 88, "rationale_zh": "把结构化 metadata 提升为跨模态 grounding 的一等模态，方法新颖且适合电商内容理解；在10类商品、约100K KB chunks 与35K图片上验证，覆盖和质量提升幅度大；依赖metadata抽取质量，但实现成本可控。"},
+      "summary": {
+        "zh": {"method_overview": "MIRAGE 针对电商故障排查中“图文相似但不一定事实匹配”的痛点，先把文本 chunk 与图片都投影到统一的产品属性、问题上下文和视觉部件 schema。M-Link 用 metadata guardrail 做图文链接，M-Gen 使用图片 metadata 而不是原始像素进行 RAG 生成，M-Eval 再从相关性、属性对齐、部件对齐和图片 grounding 四个维度评价。高光点是把难以解释的 embedding 相似度约束成可审计、可治理的结构化匹配。", "innovation": "传统多模态 RAG 多依赖 CLIP/embedding 或邻近共现，MIRAGE 的差异在于用 metadata-first 的方式显式约束品牌、型号、场景和部件，能降低错配图片导致的事实错误。该设计对电商内容治理很实用，因为违规、售后和商品理解都需要可解释的跨模态证据链。", "key_metrics": "在10个产品类型、约100K troubleshooting KB chunks 与35K curated images 上，DPBrandLink 相比基于邻近 chunk 图片的 ChunkLink 平均提升约40pp视觉覆盖；相比 CLIP linking，图片相关性平均提升43.22pp，属性对齐和部件对齐也有显著pp提升。"},
+        "en": {"method_overview": "MIRAGE addresses e-commerce troubleshooting where visually similar images may not match the exact product or component. It maps both KB text chunks and images into a shared schema of product attributes, troubleshooting context, and visual aspects. M-Link performs schema-guided linking, M-Gen generates metadata-conditioned multimodal answers, and M-Eval evaluates relevance and grounding. The highlight is auditable metadata grounding instead of opaque embedding similarity.", "innovation": "Unlike embedding-only multimodal RAG, MIRAGE treats metadata as the primary modality and enforces brand, model, context, and aspect consistency. This is highly applicable to commerce content governance because every image-text match becomes inspectable.", "key_metrics": "On 10 product types with roughly 100K KB chunks and 35K curated images, DPBrandLink improves visual coverage by about 40 percentage points over proximity-based ChunkLink. Against CLIP linking, image relevance improves by 43.22 percentage points on average, with strong gains in attribute and aspect alignment."}
+      },
+      "reproduce": {"path": "2026-07-04/MIRAGE"}
+    },
+    {
+      "id": "groclm",
+      "title": "GrocLM: Grocery Category Recommendation in E-Commerce with Large Language Models",
+      "authors": ["Yuan Zhong", "Chuanwei Ruan", "Moein Hasani", "Tejaswi Tenneti", "Haixun Wang", "Fenglong Ma"],
+      "affiliations": ["Pennsylvania State University", "Instacart", "Evenup"],
+      "source": "ACL 2026 Industry Track",
+      "published": "2026-07-04",
+      "links": {"pdf": "https://aclanthology.org/2026.acl-industry.25.pdf", "code": "https://github.com/Sam1224/CCReproduce/tree/aime/20260704-paper-patrol/2026-07-04/GrocLM"},
+      "tags": ["E-commerce", "Recommendation", "LLM", "Constrained Decoding", "Rebuy Modeling"],
+      "score": {"innovation": 26, "results": 14, "exp_quality": 13, "efficiency": 8, "generalization": 4, "relevance": 22, "total": 87, "rationale_zh": "类别级LLM推荐与rebuy周期注入非常贴合电商内容生态中的召回/推荐治理；线上cart-adds提升7.5%，且有生产数据、公有数据和消融；泛化主要集中在grocery场景，跨域证据略弱。"},
+      "summary": {
+        "zh": {"method_overview": "GrocLM 把在线杂货推荐从 item-level 转成 category-level 生成问题，以适配强复购、强周期和库存约束的业务场景。方法先用类别复购统计注入长期周期先验，再用用户历史与当前查询做关系微调，最后通过 trie 约束解码保证输出只来自合法类别集合。高光点是把 LLM 的生成能力接入了强离散约束的生产推荐系统。", "innovation": "现有生成式推荐多生成 item id 或语义 id，容易忽略 grocery 的周期性复购和类别互斥约束。GrocLM 的两阶段 LoRA 与动态 trie decoding 使模型既能学习复购规律，也能避免自由文本幻觉，创新合理且工程可落地。", "key_metrics": "在 Conversion 数据集上，GrocLM 的 P@5/R@5/F1@5 为0.142/0.186/0.126，高于 Two Tower 的0.100/0.151/0.099；P@10/R@10/F1@10 为0.094/0.231/0.111。生产 restocking 任务中，cart-adds per impression 相比线上模型提升7.5%。"},
+        "en": {"method_overview": "GrocLM reframes grocery recommendation as category-level generation to capture repetitive shopping cycles and inventory-aware category exposure. It injects category rebuy statistics, fine-tunes on sequential user-query behavior, and uses trie-constrained decoding to emit only valid categories. The highlight is integrating LLM generation into a discrete, production-grade recommender.", "innovation": "Most generative recommenders focus on item or semantic IDs and do not model grocery replenishment cycles. GrocLM combines two-stage LoRA-style adaptation with constrained decoding, reducing hallucinated category outputs while preserving sequential intent modeling.", "key_metrics": "On the Conversion dataset, GrocLM reaches P@5/R@5/F1@5 of 0.142/0.186/0.126 versus Two Tower at 0.100/0.151/0.099. In a production restocking task, it improves cart-adds per impression by 7.5% over the deployed model."}
+      },
+      "reproduce": {"path": "2026-07-04/GrocLM"}
+    },
+    {
+      "id": "ecom_vlm_scale",
+      "title": "Adapting Vision-Language Models for E-commerce Understanding at Scale",
+      "authors": ["Matteo Nulli", "Vladimir Orshulevich", "Tala Bazazo", "Christian Herold", "Michael Kozielski", "Marcin Mazur", "Szymon Tuzel", "Cees G. M. Snoek", "Seyyed Hadi Hashemi", "Omar Javed", "Yannick Versley", "Shahram Khadivi"],
+      "affiliations": ["eBay Inc.", "University of Amsterdam"],
+      "source": "ACL/EACL 2026 Industry Track",
+      "published": "2026-07-04",
+      "links": {"pdf": "https://aclanthology.org/anthology-files/anthology-files/pdf/eacl/2026.eacl-industry.38.pdf", "code": "https://github.com/Sam1224/CCReproduce/tree/aime/20260704-paper-patrol/2026-07-04/EcomVLMAdapt"},
+      "tags": ["E-commerce", "VLM", "Attribute Extraction", "Data Quality", "Multimodal Benchmark"],
+      "score": {"innovation": 24, "results": 13, "exp_quality": 15, "efficiency": 6, "generalization": 5, "relevance": 23, "total": 86, "rationale_zh": "系统化回答了电商VLM如何适配的问题，评测覆盖属性预测、深度商品理解、动态属性抽取和多图合规；实验大而全，但训练开销较高，方法创新更偏工程recipe。"},
+      "summary": {
+        "zh": {"method_overview": "该论文提出面向电商理解的 VLM 适配 recipe：从约1500万条 marketplace listing 中抽取图片与卖家属性，使用 InternVL 生成细粒度caption，再用 Mistral 校验哪些属性真正可从图像推断，得到约400万电商视觉指令。模型经过视觉语言对齐、中阶段训练和视觉指令微调，并扩展到多图 Item Intelligence。高光点是把数据质量、属性抽取和多图商品理解统一成可复现实验体系。", "innovation": "与只做文本购物助手或单一VLM微调不同，论文强调视觉验证后的电商指令数据和多维benchmark，并比较多种视觉编码器与LLM组合。创新不是单个模块，而是大规模数据清洗、适配训练与评测闭环。", "key_metrics": "内部电商任务上，SigLIP2|Qwen-3-8B 在 Aspect Prediction 三项达到56.2/60.1/68.5，在 Deep Fashion Understanding 达到79.8/81.6；Qwen2.5ViT|e-Llama3.1-8B 在 Dynamic Attribute Extraction 达到70.7。公共多模态任务上，适配模型总体保持竞争力，说明电商增强未明显牺牲泛化。"},
+        "en": {"method_overview": "The paper proposes a scalable recipe for adapting VLMs to e-commerce. It starts from about 15M marketplace listings, captions images with InternVL, verifies visually grounded attributes with Mistral, and builds roughly 4M e-commerce visual instructions. Models are trained through alignment, mid-stage training, visual instruction tuning, and a multi-image item-intelligence extension. The highlight is a full data-quality and evaluation loop for product understanding.", "innovation": "Rather than a single architecture trick, the contribution is a reproducible large-scale adaptation recipe: visual verification, commerce-specific instruction mixtures, and benchmarks spanning aspect prediction, deep fashion understanding, dynamic attributes, and multi-image compliance.", "key_metrics": "On internal e-commerce tasks, SigLIP2|Qwen-3-8B obtains 56.2/60.1/68.5 on Aspect Prediction and 79.8/81.6 on Deep Fashion Understanding. Qwen2.5ViT|e-Llama3.1-8B reaches 70.7 on Dynamic Attribute Extraction while maintaining competitive public multimodal benchmark scores."}
+      },
+      "reproduce": {"path": "2026-07-04/EcomVLMAdapt"}
+    },
+    {
+      "id": "space",
+      "title": "SPaCe: Self-Paced Curriculum Learning for Efficient LLM Training",
+      "authors": ["Thai-Hoang Le", "et al."],
+      "affiliations": ["Academic research team"],
+      "source": "ACL Findings 2026",
+      "published": "2026-07-04",
+      "links": {"project": "https://thaihungle.github.io/publications/2026-07-04-SPACE"},
+      "tags": ["LLM", "Data Quality", "Curriculum Learning", "Training Efficiency"],
+      "score": {"innovation": 20, "results": 10, "exp_quality": 10, "efficiency": 8, "generalization": 4, "relevance": 14, "total": 66, "rationale_zh": "与大规模数据清洗、数据质量和训练效率相关，对电商治理模型训练有间接价值；但与电商内容理解不是强相关，因此相关性分较低。"},
+      "summary": {
+        "zh": {"method_overview": "SPaCe 用 self-paced curriculum learning 根据当前模型能力动态选择训练数据，让模型先学习更匹配能力阶段的数据，再逐步扩大难度。它关注训练数据什么时候使用、用哪些样本，而不是只扩大数据量。", "innovation": "相比静态数据混合或固定 curriculum，SPaCe 让数据选择与模型能力闭环耦合，适合治理场景中高噪声、大规模标注数据的训练调度。", "key_metrics": "公开页面披露其核心目标是提升LLM训练效率和数据选择质量；当前巡检未获取完整表格指标，因此实验指标按中等可信度计分。"},
+        "en": {"method_overview": "SPaCe uses self-paced curriculum learning to select training data according to current model capability. It optimizes when and which data to use rather than only scaling dataset size.", "innovation": "Compared with static data mixtures, SPaCe closes the loop between model capability and sample selection, which is useful for noisy large-scale labeling in governance models.", "key_metrics": "The public page emphasizes more efficient LLM training and data selection. Full tabular metrics were not available in this patrol, so the result score is treated conservatively."}
+      },
+      "reproduce": {}
+    },
+    {
+      "id": "multibbq",
+      "title": "Fairness Failure Modes in Multimodal Large Language Models",
+      "authors": ["Canyu Chen", "et al."],
+      "affiliations": ["TrustNLP 2026 authors"],
+      "source": "TrustNLP 2026",
+      "published": "2026-07-04",
+      "links": {"pdf": "https://limanling.github.io/uploads/paper/MultiBBQ.pdf"},
+      "tags": ["MLLM", "Fairness", "Governance", "Evaluation"],
+      "score": {"innovation": 18, "results": 9, "exp_quality": 11, "efficiency": 5, "generalization": 4, "relevance": 11, "total": 58, "rationale_zh": "多模态公平性失效模式对内容治理有参考价值，但主题偏可信AI评测而非电商内容理解；且部分TrustNLP议题接近安全治理，按用户要求已避开攻击/后门论文。"},
+      "summary": {
+        "zh": {"method_overview": "该研究诊断 MLLM 的多种公平性失败模式，包括专有模型与开源模型差异、不同扰动因素下的公平性退化，以及相对于底座LLM的偏见放大。它将公平性问题扩展到多模态输入场景。", "innovation": "现有公平性评测多集中在文本LLM，该工作把图像因素纳入偏见诊断，有助于电商达人/商品内容的多模态治理评测。", "key_metrics": "论文覆盖28个模型并归纳四类新的公平性失败模式；当前巡检未获取完整逐项数值表，指标分保守处理。"},
+        "en": {"method_overview": "The paper diagnoses fairness failure modes in MLLMs, including proprietary/open-source divergence, degradation under different factors, and bias amplification over backbone LLMs.", "innovation": "It extends fairness diagnosis from text-only LLMs to multimodal inputs, which can inform multimodal governance for creators and product content.", "key_metrics": "The study covers 28 models and identifies four new fairness failure modes. Full numeric tables were not available in this patrol, so metrics are scored conservatively."}
+      },
+      "reproduce": {}
+    }
+  ]
+}
