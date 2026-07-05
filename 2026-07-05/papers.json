@@ -1,0 +1,128 @@
+{
+  "papers": [
+    {
+      "id": "2607.02220",
+      "title": "DetailAnywhere: Fashion Detail Generation via Cross-Modal Feature Alignment Distillation",
+      "authors": ["Zijun Li", "Yimin Zhou", "Jia Sun", "Honglie Wang", "Pengcheng Wei", "Junlong Wu", "Yongrui Heng", "Jiyuan Wang", "Huan Ouyang", "Boheng Zhang", "Huaiqing Wang", "Dewen Fan", "Qianqian Gan", "Fan Yang", "Tingting Gao"],
+      "affiliations": ["Kuaishou Technology", "Monash University"],
+      "source": "arXiv / NeurIPS 2026",
+      "published": "2026-07-02",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.02220", "pdf": "https://arxiv.org/pdf/2607.02220"},
+      "tags": ["E-commerce", "Fashion Generation", "VLM", "Distillation", "Data Benchmark"],
+      "score": {"total": 86, "innovation": 26, "results": 13, "exp_quality": 13, "efficiency": 6, "generalization": 4, "relevance": 24, "rationale_zh": "强电商场景，提出 Fashion Detail Generation 与 FDBench，方法包含 CFAD 与一致性 reward；实验口径覆盖自动指标和人工评测。主要扣分来自扩散生成推理成本较高、真实代码与数据暂未公开。"},
+      "summary": {
+        "zh": {"method_overview": "论文把服饰商品图的局部细节生成 formalize 成新任务：给定 reference garment 与 focus box，生成目标区域的高清细节图。核心是用细粒度教师模型把 reference-with-box 与 detail close-up 对齐到共享语义空间，再把这种跨模态对齐蒸馏进 MMDiT 的文本分支和图像分支。为了减少材质、颜色、纹理 hallucination，作者再训练一致性 reward model，从 aesthetic plausibility、identity consistency、target fidelity 三个维度优化生成。", "innovation": "相较通用图像编辑或虚拟试穿，它不是做全局编辑，而是解决电商购买决策中很具体的“看领口、袖口、织物纹理”需求。CFAD 的合理性在于先用小教师桥接 box 到 detail 的语义缺口，再让大生成模型学习对齐分布；reward model 则补上细节一致性。", "key_metrics": "FDBench 包含 40K+ 人工校验 reference-detail pair 与 800 评测样本，覆盖 41 个品类；论文声称在所有自动指标和人工评测上超过开源 SOTA。"},
+        "en": {"method_overview": "The paper formalizes Fashion Detail Generation: given a garment reference image and a focus box, generate a high-fidelity close-up of the selected region. It uses Cross-modal Feature Alignment Distillation to align boxed references and detail close-ups in a teacher semantic space, then distills the alignment into both MMDiT branches. A consistency reward model further optimizes aesthetic plausibility, identity consistency, and target fidelity.", "innovation": "Unlike generic image editing, the method targets an e-commerce decision point: inspecting collars, cuffs, zippers, and fabric textures. CFAD first bridges the box-to-detail semantic gap in a compact teacher, then transfers it to the generative backbone; the reward model directly penalizes identity drift.", "key_metrics": "FDBench contains 40K+ human-verified reference-detail pairs and 800 evaluation pairs across 41 categories; the paper reports SOTA results across automatic metrics and human evaluation."}
+      },
+      "reproduce": {"path": "2026-07-05/DetailAnywhere"}
+    },
+    {
+      "id": "2606.05748",
+      "title": "UNIVID: Unified Vision-Language Model for Video Moderation",
+      "authors": ["Kejuan Yang", "Yizhuo Zhang", "Mingyuan Du", "Yue Zhang", "Dixin Zheng", "Kaili Zhao", "Yang Xiao", "Hanzhong Liang", "Kenan Xiao"],
+      "affiliations": ["ByteDance"],
+      "source": "arXiv / ACL 2026 Industry Track",
+      "published": "2026-06-04",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.05748", "pdf": "https://arxiv.org/pdf/2606.05748"},
+      "tags": ["Video Moderation", "VLM", "Caption", "Governance"],
+      "score": {"total": 79, "innovation": 23, "results": 12, "exp_quality": 12, "efficiency": 7, "generalization": 4, "relevance": 21, "rationale_zh": "与达人治理和视频违规检测强相关，policy-aware caption 很适合提高审核可解释性；未进入 80 的原因是公开 snippet 中关键指标和代码链接不完整，复现一致性风险较高。"},
+      "summary": {"zh": {"method_overview": "UNIVID 把视频审核从碎片化黑盒分类器改成统一 VLM：模型先生成 policy-aware caption，再供风险过滤、审核执行和趋势治理等下游任务复用。这样的中间表示让审核结论可被人工核查，也利于多任务维护。", "innovation": "创新点不在单个分类头，而在把 caption 作为可解释、多任务共享的语义层，减少不同违规策略之间的模型割裂。对内容生态治理而言，它能把“为什么违规”显式化。", "key_metrics": "论文公开摘要强调 global-scale moderation、fine-grained multimodal reasoning 与 interpretable outputs；具体完整指标需以 PDF 表格为准。"}, "en": {"method_overview": "UNIVID replaces fragmented video moderation classifiers with a unified VLM that generates policy-aware captions. The captions become interpretable intermediate representations reused by risk filtering, moderation actors, and trend governance. This improves human verification and system maintainability.", "innovation": "The key idea is using policy-aware captions as a shared semantic layer instead of isolated black-box heads. For content governance, it makes the reason behind a moderation decision explicit.", "key_metrics": "The abstract highlights global-scale moderation, fine-grained multimodal reasoning, and interpretable outputs; detailed metrics should be checked from the full PDF tables."}}
+    },
+    {
+      "id": "2512.03553",
+      "title": "Dynamic Content Moderation in Livestreams: Combining Supervised Classification with MLLM-Boosted Similarity Matching",
+      "authors": ["Wei Chee Yew", "Hailun Xu", "David Yuchen Wang", "Danhui Guan"],
+      "affiliations": ["TikTok"],
+      "source": "arXiv / KDD 2026",
+      "published": "2026-07-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2512.03553", "pdf": "https://arxiv.org/pdf/2512.03553"},
+      "tags": ["Livestream", "Moderation", "MLLM", "Similarity Retrieval", "Production"],
+      "score": {"total": 79, "innovation": 22, "results": 12, "exp_quality": 12, "efficiency": 8, "generalization": 4, "relevance": 21, "rationale_zh": "强相关、生产部署价值高，双路分类+相似匹配能覆盖已知和新型违规；但作为系统论文，公开可复现代码与完整离线数据较难获取，因此未设为 80+。"},
+      "summary": {"zh": {"method_overview": "论文针对直播审核的实时、多模态、长时序特点，设计双路径系统：监督分类器检测明确高置信违规，MLLM 增强的相似匹配检索已知 policy case，用语义和感知 embedding 捕获新型或微妙违规。两条路径互补，能覆盖分类模型漏掉的边界样例。", "innovation": "比单纯分类器更适合直播场景，因为直播违规形态会快速演化，reference-based similarity 可以通过案例库扩展治理能力。方法合理、工程可行，但依赖高质量违规样例库和延迟控制。", "key_metrics": "搜索结果显示论文强调 production-scale deployment 和两条检测路径存在大量 exclusive detections；具体数值需以论文表格为准。"}, "en": {"method_overview": "The system uses two paths for livestream moderation: supervised classifiers for explicit high-confidence violations and MLLM-boosted similarity matching against curated policy cases for novel or subtle violations. Semantic and perceptual embeddings allow reference-based generalization. The two paths complement each other.", "innovation": "The design is better suited to livestreams than a single classifier because violation patterns evolve quickly. Reference-based matching lets the policy case library expand governance coverage, though it depends on high-quality cases and latency control.", "key_metrics": "Search snippets report production-scale deployment and many exclusive detections across the two paths; exact numbers should be checked from the paper tables."}}
+    },
+    {
+      "id": "2607.00920",
+      "title": "GMO-E2DIT: Grounded Multi-Operation Editing for E-Commerce Images",
+      "authors": ["Zipeng Guo", "et al."],
+      "affiliations": ["unknown from snippet"],
+      "source": "arXiv",
+      "published": "2026-07-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.00920", "pdf": "https://arxiv.org/pdf/2607.00920"},
+      "tags": ["E-commerce", "Image Editing", "VLM Agent", "Grounding"],
+      "score": {"total": 77, "innovation": 24, "results": 11, "exp_quality": 11, "efficiency": 6, "generalization": 4, "relevance": 21, "rationale_zh": "强电商视觉生产场景，agentic planner + reflective judge 的结构清晰；扣分点是 VLM+编辑器链路成本较高，公开代码未确认。"},
+      "summary": {"zh": {"method_overview": "GMO-E2DIT 把电商图像编辑改写成多操作任务完成问题。VLM 同时作为 planner 和 reflective judge，把自然语言需求分解成带 source region、target region、attribute 和 optional patch 的 typed program，再编译成 operation-aware mask 交给 mask-conditioned editor 执行。", "innovation": "它解决 one-shot editor 把意图解析、空间定位、合成混在一步里导致的部分执行失败。对商家修图、多轮素材调整尤其有价值，因为每个操作可审计、可回滚、可复查。", "key_metrics": "论文摘要强调 multi-turn task completion 与局部编辑准确性；公开 snippet 未披露完整表格数值。"}, "en": {"method_overview": "GMO-E2DIT reframes e-commerce image editing as multi-operation task completion. A VLM acts as planner and reflective judge, decomposing instructions into typed program entries with source regions, target regions, attributes, and optional patch references. These are compiled into operation-aware masks for a mask-conditioned editor.", "innovation": "It addresses partial execution failures caused by one-shot editors that merge intent resolution, grounding, and synthesis. The auditable operation program is valuable for merchant image workflows.", "key_metrics": "The abstract emphasizes multi-turn task completion and localized editing accuracy; full numerical tables are not exposed in the snippets."}}
+    },
+    {
+      "id": "2607.01530",
+      "title": "IntentTune: Using user demand and personalization to resolve unknown query intents for e-commerce search",
+      "authors": ["Rachith Aiyappa", "et al."],
+      "affiliations": ["eBay", "Indiana University Bloomington"],
+      "source": "arXiv",
+      "published": "2026-07-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.01530", "pdf": "https://arxiv.org/pdf/2607.01530"},
+      "tags": ["E-commerce Search", "Personalization", "Query Understanding", "Intent"],
+      "score": {"total": 73, "innovation": 20, "results": 11, "exp_quality": 11, "efficiency": 8, "generalization": 4, "relevance": 19, "rationale_zh": "搜索 query intent 与电商强相关，用户行为和群体需求双条件设计务实；方法创新性中等，更偏产品算法优化。"},
+      "summary": {"zh": {"method_overview": "IntentTune 处理电商 Query Understanding 系统输出 unknown 或模糊 intent 的问题。它利用两类信号补全 query 中未表达的意图：个人搜索/浏览/交互历史，以及 population-level demand patterns。", "innovation": "与只看 query text 的 intent 分类不同，IntentTune 显式把用户个性化和全站需求趋势作为 latent intent 条件，适合服饰等高歧义检索。", "key_metrics": "论文聚焦 fashion-related queries；公开 snippet 暂未给出完整指标数值。"}, "en": {"method_overview": "IntentTune resolves unknown or ambiguous intents produced by e-commerce query understanding systems using user-specific behavioral signals and population-level demand patterns. These signals infer latent intent dimensions absent from query text.", "innovation": "Unlike query-only classifiers, IntentTune conditions intent inference on personalization and aggregate demand trends, which is useful for ambiguous fashion queries.", "key_metrics": "The paper focuses on fashion-related queries; full metric values are not present in the snippets."}}
+    },
+    {
+      "id": "2605.13173",
+      "title": "OxyEcomBench: Benchmarking Multimodal Foundation Models across E-Commerce Ecosystems",
+      "authors": ["unknown from snippet"],
+      "affiliations": ["unknown from snippet"],
+      "source": "arXiv",
+      "published": "2026-05-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2605.13173", "pdf": "https://arxiv.org/pdf/2605.13173"},
+      "tags": ["Benchmark", "E-commerce", "Multimodal", "Bilingual"],
+      "score": {"total": 76, "innovation": 19, "results": 12, "exp_quality": 13, "efficiency": 8, "generalization": 5, "relevance": 19, "rationale_zh": "benchmark 对模型选型和治理评估很有价值，覆盖中英双语电商生态；方法创新不是模型结构，故创新性分不高。"},
+      "summary": {"zh": {"method_overview": "OxyEcomBench 构建 6300 个高质量多模态实例，用统一 benchmark 评估 foundation model 在真实中英双语电商生态中的能力。它更像是模型评测与诊断工具，而不是新模型。", "innovation": "价值在任务体系与电商生态贴近度：商品图文理解、跨语种、多模态推理可以直接服务内容理解、商家素材质量和模型选型。", "key_metrics": "Benchmark 规模约 6300 个实例，覆盖中文和英文电商场景。"}, "en": {"method_overview": "OxyEcomBench builds about 6,300 multimodal instances to evaluate foundation models across real-world Chinese-English e-commerce ecosystems. It is primarily a diagnostic benchmark rather than a new architecture.", "innovation": "Its value lies in task coverage and e-commerce fidelity: product image-text understanding, bilingual reasoning, and multimodal evaluation directly support content understanding and model selection.", "key_metrics": "The benchmark contains roughly 6,300 high-quality instances across Chinese and English e-commerce scenarios."}}
+    },
+    {
+      "id": "2605.01278",
+      "title": "Valley3: Scaling Omni Foundation Models for E-commerce",
+      "authors": ["unknown from snippet"],
+      "affiliations": ["unknown from snippet"],
+      "source": "arXiv",
+      "published": "2026-05-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2605.01278", "pdf": "https://arxiv.org/pdf/2605.01278"},
+      "tags": ["Omni Foundation Model", "E-commerce", "Livestream", "Governance"],
+      "score": {"total": 74, "innovation": 20, "results": 12, "exp_quality": 11, "efficiency": 5, "generalization": 4, "relevance": 22, "rationale_zh": "与商品理解、直播内容分析、治理任务高度相关，平均绝对提升超过 7%；扣分来自模型规模和复现门槛。"},
+      "summary": {"zh": {"method_overview": "Valley3 是面向电商的 omni foundation model，覆盖商品理解、直播内容分析、审核治理等任务。它强调通过统一多模态底座减少任务孤岛，在多个电商业务任务上统一提升。", "innovation": "相比通用 VLM，Valley3 的创新点在电商领域规模化训练和任务族覆盖，而不是单个模块技巧。对内容生态巡检有价值，因为它把商品、内容、直播和治理放在同一模型框架内。", "key_metrics": "搜索证据显示其在 Product Understanding、Livestream Content Analysis、Moderation & Governance 上相对 baseline 平均绝对提升超过 7%。"}, "en": {"method_overview": "Valley3 is an omni foundation model scaled for e-commerce, covering product understanding, livestream content analysis, and moderation/governance tasks. It aims to reduce task silos through a unified multimodal backbone.", "innovation": "Compared with general VLMs, its novelty is domain-scaled e-commerce training and task-family coverage rather than a single module trick. It is valuable because product, content, livestream, and governance tasks share one framework.", "key_metrics": "Search evidence reports over 7% average absolute improvement over baselines across product understanding, livestream content analysis, and moderation/governance tasks."}}
+    },
+    {
+      "id": "2605.28369",
+      "title": "CyberJurors: A Multi-Agent Simulation Task for E-Commerce Disputes Verdict",
+      "authors": ["unknown from snippet"],
+      "affiliations": ["unknown from snippet"],
+      "source": "arXiv",
+      "published": "2026-05-01",
+      "links": {"arxiv": "https://arxiv.org/abs/2605.28369", "pdf": "https://arxiv.org/pdf/2605.28369"},
+      "tags": ["E-commerce Dispute", "Multi-Agent", "Governance", "Benchmark"],
+      "score": {"total": 71, "innovation": 21, "results": 10, "exp_quality": 11, "efficiency": 7, "generalization": 3, "relevance": 19, "rationale_zh": "电商治理相关性强，multi-agent jury simulation 有新意；但与内容生态/达人治理不是同一问题域，且工程落地依赖平台制度。"},
+      "summary": {"zh": {"method_overview": "CyberJurors 提出电商纠纷裁决仿真任务 EDV，并构建 VerdictBench，用多智能体模拟众包陪审视角来预测/解释争议裁决。", "innovation": "把平台治理中的“申诉/裁决”问题从单模型判别转成多 agent deliberation，更接近真实多人决策；可迁移到达人违规申诉、商家处罚复核等治理流程。", "key_metrics": "VerdictBench 包含 6000 个真实案例。"}, "en": {"method_overview": "CyberJurors introduces E-commerce Dispute Verdicts and VerdictBench, using multi-agent simulation to model crowdsourced jury decisions for dispute outcomes.", "innovation": "It reframes platform adjudication from single-model classification to multi-agent deliberation, closer to real review processes and potentially transferable to creator appeals.", "key_metrics": "VerdictBench contains 6,000 real-world cases."}}
+    },
+    {
+      "id": "2606.30077",
+      "title": "GAIA: Global Adaptive Instruction Tuning via Gaussian Processes",
+      "authors": ["Jun Wang", "et al."],
+      "affiliations": ["unknown from snippet"],
+      "source": "arXiv",
+      "published": "2026-06-29",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.30077", "pdf": "https://arxiv.org/pdf/2606.30077"},
+      "tags": ["Instruction Tuning", "Data Selection", "Data Quality", "LLM"],
+      "score": {"total": 63, "innovation": 19, "results": 10, "exp_quality": 10, "efficiency": 7, "generalization": 4, "relevance": 13, "rationale_zh": "与数据质量和大规模训练样本选择弱相关，适合治理标注数据清洗；但不是电商专用论文。"},
+      "summary": {"zh": {"method_overview": "GAIA 把 instruction tuning 的数据选择建模成全局 utility manifold 估计问题，用 Gaussian Process 在语义空间中估计样本价值，帮助选择更高效的数据子集。", "innovation": "相比启发式过滤或局部打分，它强调全局自适应估值，可用于减少低质/重复标注对模型微调的影响。", "key_metrics": "公开摘要强调 data valuation as a global estimation process；具体指标需看论文全文。"}, "en": {"method_overview": "GAIA models instruction-tuning data selection as global utility manifold estimation with Gaussian Processes over semantic space. It selects higher-utility samples for efficient tuning.", "innovation": "Unlike heuristic filtering or local scoring, it performs global adaptive valuation, which can help reduce low-quality or redundant labeled data.", "key_metrics": "The abstract highlights global data valuation; detailed metrics require the full paper."}}
+    },
+    {
+      "id": "autogaze-2026",
+      "title": "AutoGaze: Automatic Redundant Patch Removal for Efficient Video Understanding",
+      "authors": ["NVIDIA Research"],
+      "affiliations": ["NVIDIA"],
+      "source": "GitHub / CVPR 2026 Highlight",
+      "published": "2026-03-12",
+      "links": {"code": "https://github.com/NVlabs/AutoGaze"},
+      "tags": ["Video Understanding", "MLLM Efficiency", "Token Compression"],
+      "score": {"total": 81, "innovation": 25, "results": 14, "exp_quality": 13, "efficiency": 10, "generalization": 5, "relevance": 14, "rationale_zh": "与电商治理弱相关但对长视频/直播巡检很有价值；公开 GitHub 仓库存在，因此不重复复现。"},
+      "summary": {"zh": {"method_overview": "AutoGaze 自动移除视频中的冗余 patch，把 ViT/MLLM token 数减少 4x-100x，使长视频和高分辨率视频理解成本下降。它对直播巡检、达人视频抽帧审核有直接效率价值。", "innovation": "核心创新是把视觉注意力/冗余 patch 删除做成轻量模块，尽量不改变下游 MLLM 主体。对于治理场景，效率提升比单点精度提升更可能决定可用性。", "key_metrics": "官方仓库说明 token compression 达到 4x-100x，ViT speedup 最高 19x。"}, "en": {"method_overview": "AutoGaze automatically removes redundant video patches, reducing ViT/MLLM token counts by 4x-100x and making long high-resolution video understanding cheaper.", "innovation": "Its contribution is a lightweight patch-pruning module that preserves the downstream MLLM pipeline. For governance, efficiency can be the deciding factor for real-time usability.", "key_metrics": "The official repository reports 4x-100x token compression and up to 19x ViT speedup."}}
+    }
+  ]
+}
