@@ -1,0 +1,50 @@
+[
+  {
+    "context": "user wants wireless earbuds under 50 dollars with good battery and reads many reviews",
+    "rationale": "price constraint and review evidence dominate the next step",
+    "action_type": "filter",
+    "attribute": "price",
+    "value": "cheap",
+    "difficulty": 1.4
+  },
+  {
+    "context": "user searched summer dress clicks a floral product with high rating and free shipping",
+    "rationale": "the clicked product matches style rating and shipping preference",
+    "action_type": "add_to_cart",
+    "attribute": "product",
+    "value": "popular",
+    "difficulty": 1.0
+  },
+  {
+    "context": "user compares baby bottle sterilizer reviews and notices safety complaints",
+    "rationale": "negative safety reviews make the shopper stop the purchase",
+    "action_type": "abandon",
+    "attribute": "review",
+    "value": "safe",
+    "difficulty": 1.8
+  },
+  {
+    "context": "user wants running shoes from a known brand and finds a premium listing",
+    "rationale": "brand match and premium intent make product click likely",
+    "action_type": "click",
+    "attribute": "product",
+    "value": "premium",
+    "difficulty": 1.1
+  },
+  {
+    "context": "user enters waterproof phone pouch beach vacation and scans low price items",
+    "rationale": "the query should be refined before selecting a product",
+    "action_type": "search",
+    "attribute": "query",
+    "value": "cheap",
+    "difficulty": 1.2
+  },
+  {
+    "context": "user has compared office chair reviews price and shipping and returns to cart",
+    "rationale": "enough evidence has been collected to complete checkout",
+    "action_type": "purchase",
+    "attribute": "shipping",
+    "value": "fast",
+    "difficulty": 1.5
+  }
+]
