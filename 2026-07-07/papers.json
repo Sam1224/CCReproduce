@@ -1,0 +1,135 @@
+{
+  "papers": [
+    {
+      "id": "webretriever-2026",
+      "title": "WebRetriever: A Large-Scale Real-World Benchmark for Web Agent Navigation and Task Completion",
+      "authors": ["Minglü Technology Research Team"],
+      "affiliations": ["Mininglamp Technology"],
+      "source": "ECCV 2026 / press release",
+      "published": "2026-07-07",
+      "links": {
+        "news": "https://m.jiemian.com/article/14717669.html"
+      },
+      "tags": ["Web Agent", "Benchmark", "RAG", "E-commerce Operations", "Creator Governance"],
+      "score": {
+        "total": 81,
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 21,
+        "rationale_zh": "WebRetriever 与达人治理弱到中强相关：它不是电商治理论文，但真实网站导航、证据检索和任务完成能力可直接服务商家/达人资质巡检、商品详情页核验、违规素材溯源等 agent 场景。评分达到 80+ 的原因是 benchmark 规模较大、任务更贴近真实 Web；扣分点是公开论文和代码链接未检索到，关键指标来自新闻稿单源披露。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "WebRetriever 构建了面向真实在线网站的 Web Agent 评测框架，覆盖 800 个网站和 1,550 项任务，核心目标不是只看 agent 是否到达正确页面，而是同时评估其是否真正完成用户任务。它把网页检索、页面定位、状态跟踪和动作执行拆成可度量环节，从而暴露当前智能体“看起来找到了页面但任务没有闭环”的能力缺口。对电商治理而言，这类 benchmark 可迁移为达人主页巡检、商品/直播页面证据收集、治理规则验证和跨站信息核验。",
+          "innovation": "相较静态 QA 或离线网页检索 benchmark，WebRetriever 的亮点是把评测放回真实在线 Web，并区分页面到达与任务完成两个层次。这一设计合理，因为治理 agent 的失败往往发生在后半段：已找到页面，却没有抽取证据、点击正确控件或完成核验。创新性更多体现在评测协议和任务体系，而非新模型结构。",
+          "key_metrics": "新闻稿披露 benchmark 覆盖 800 个真实在线网站、1,550 项任务，并首次量化“到达正确页面”与“任务真正完成”之间的差距；具体模型排名、成功率和 baseline 提升幅度未在可访问来源中完整披露。"
+        },
+        "en": {
+          "method_overview": "WebRetriever is a real-web benchmark for Web Agents covering 800 live websites and 1,550 tasks. Instead of only checking whether an agent reaches the right page, it separately evaluates whether the task is truly completed. The protocol decomposes web retrieval, page localization, state tracking, and action execution into measurable stages. For e-commerce governance, the same setup can support creator profile inspection, product/live-page evidence collection, policy validation, and cross-site verification.",
+          "innovation": "Compared with static QA or offline web retrieval benchmarks, the main contribution is evaluating agents on live websites and separating page arrival from task completion. This is reasonable because governance agents often fail after finding the right page: they may not extract evidence, operate controls, or finish verification. The novelty is primarily in the benchmark protocol and task design rather than a new model architecture.",
+          "key_metrics": "The public release reports 800 live websites and 1,550 tasks, with a measured gap between reaching the right page and completing the task. Full model rankings, success rates, and baseline deltas were not available from accessible sources."
+        }
+      },
+      "reproduce": {"path": "2026-07-07/WebRetriever"}
+    },
+    {
+      "id": "robobrain-orca-2026",
+      "title": "RoboBrain Orca: A Multimodal Representation World Model for Next State Prediction",
+      "authors": ["Beijing Academy of Artificial Intelligence"],
+      "affiliations": ["BAAI"],
+      "source": "BAAI announcement / tech media",
+      "published": "2026-07-07",
+      "links": {"news": "https://www.163.com/tech/article/L18D6I7400098IEO.html"},
+      "tags": ["World Model", "Multimodal Representation", "VLM", "Video Understanding", "Weak Relevance"],
+      "score": {
+        "total": 74,
+        "innovation": 25,
+        "results": 9,
+        "exp_quality": 10,
+        "efficiency": 4,
+        "generalization": 5,
+        "relevance": 21,
+        "rationale_zh": "RoboBrain Orca 热度高、方法想象空间大，但与电商内容生态是弱相关：世界状态表征可迁移到商品视频理解、直播场景演化、达人行为轨迹建模。未到 80 的原因是公开材料更像发布稿，缺少可核验论文表格、代码与完整实验。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RoboBrain Orca 将多模态输入统一到世界潜在表征空间，目标从预测下一个词、下一帧或下一动作扩展为预测“下一个世界状态”。公开材料描述其采用无意识学习与有意识学习双路径：前者从海量视频中学习物体运动和场景演化规律，后者结合事件描述、任务指令和 VQA 数据学习具备语义的状态转移。它更像面向具身智能和复杂系统的基础世界模型。",
+          "innovation": "创新点在于把多模态表征学习从单一输出预测提升到状态演化建模，并尝试用双路径训练连接非标注视频规律与显式语义推理。该思路对直播/短视频治理有潜在价值，因为违规往往不是单帧属性，而是行为、场景和事件序列的变化。可行性取决于状态表征是否稳定、训练成本是否可控以及下游任务是否能有效读出状态。",
+          "key_metrics": "公开材料披露训练数据包括 12.5 万小时视频和 1.6 亿条事件标注数据，并称随预训练规模扩大模型表征和下游性能持续提升；未检索到可核验的标准 benchmark 数值。"
+        },
+        "en": {
+          "method_overview": "RoboBrain Orca maps multimodal inputs into a unified latent world representation and reframes prediction as next-state prediction rather than next-token, next-frame, or next-action prediction. Public materials describe a dual-path training setup: unconscious learning from large-scale real-world videos and conscious learning from event descriptions, task instructions, and VQA data. It is positioned as a foundation world model for embodied intelligence and complex systems.",
+          "innovation": "The contribution is shifting multimodal representation learning toward state evolution modeling and linking unannotated video dynamics with explicit semantic transitions. This can matter for livestream or short-video governance, where violations often arise from evolving behaviors rather than isolated frames. Feasibility depends on state stability, training cost, and downstream readout quality.",
+          "key_metrics": "Public materials report 125K hours of video and 160M event annotations, with scaling improvements claimed for representation and downstream performance. Standard benchmark numbers were not available from accessible sources."
+        }
+      }
+    },
+    {
+      "id": "memora-2026",
+      "title": "Memora: Memory for Long-Horizon AI Agents",
+      "authors": ["Microsoft Research"],
+      "affiliations": ["Microsoft"],
+      "source": "tech media / research release lead",
+      "published": "2026-07-07",
+      "links": {"news": "https://m.thepaper.cn/newsDetail_forward_33529708"},
+      "tags": ["Agent Memory", "RAG", "Knowledge Graph", "Long Context", "Weak Relevance"],
+      "score": {
+        "total": 67,
+        "innovation": 20,
+        "results": 8,
+        "exp_quality": 8,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "rationale_zh": "Memora 与电商治理弱相关但实用价值明显：达人/商家巡检 agent 需要长期记忆历史违规、申诉、整改和跨日证据。因未检索到完整论文和指标，仅按研究线索纳入，不做复现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Memora 针对长对话和长期任务中的 agent 记忆问题：模型不能每次都重读完整历史，简单摘要又容易丢失细节。公开报道将它放在 Mem0、RAG、Zep、GraphRAG 等路线之后，目标是在原始片段、原子事实和结构化关系之间取得更好的可检索记忆组织。对治理巡检来说，它可用于保存达人历史风险、证据链、整改记录和跨会话任务状态。",
+          "innovation": "创新性主要在 agent memory 的工程组织：不是只做向量检索，也不是只做摘要，而是让记忆在事实抽取、片段保留和关系结构之间保持可更新、可追溯。该方向合理，因为治理任务需要连续性和可解释性，但公开来源未披露完整架构与消融。",
+          "key_metrics": "当前可访问来源只描述了长对话记忆痛点与相对 Mem0/RAG/GraphRAG 的定位，没有披露标准数据集指标或 baseline 超越幅度。"
+        },
+        "en": {
+          "method_overview": "Memora targets long-horizon agent memory: repeatedly rereading full histories is expensive, while naive summaries lose details. Public reporting positions it against Mem0, RAG, Zep, and GraphRAG, aiming for a better organization of raw snippets, atomic facts, and structured relations. For governance patrol agents, it could retain creator risk history, evidence chains, remediation records, and cross-session state.",
+          "innovation": "The novelty appears to be engineering memory across fact extraction, snippet retention, and relational structure rather than relying solely on vectors or summaries. This is reasonable for governance tasks that require continuity and explainability, though full architecture and ablations were not available.",
+          "key_metrics": "Accessible sources describe the memory problem and positioning versus Mem0/RAG/GraphRAG but do not disclose benchmark scores or baseline deltas."
+        }
+      }
+    },
+    {
+      "id": "agentviss-2026",
+      "title": "Can Agents Read the Room? Benchmarking Visual Social Intelligence in Multimodal Simulation",
+      "authors": ["Unknown from accessible source"],
+      "affiliations": ["Unknown from accessible source"],
+      "source": "paper repost / benchmark lead",
+      "published": "2026-07-07",
+      "links": {"paper_repost": "https://m.book118.com/html/2026/0704/8003057050010106.shtm"},
+      "tags": ["Multimodal Agent", "Benchmark", "Social Intelligence", "Simulation", "Weak Relevance"],
+      "score": {
+        "total": 61,
+        "innovation": 19,
+        "results": 8,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 14,
+        "rationale_zh": "AGENTVISS 热点弱相关：视觉社交智能可迁移到达人直播互动理解、评论/表情/动作联动分析，但不是电商专用，也未检索到权威论文主页，因此仅作为关注项。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "AGENTVISS 关注多模态仿真场景下 agent 能否利用视觉社交信号做出合适互动。公开片段显示数据包含 240 个场景、585 个角色实例和 2,340 个角色任务，覆盖面部表情、姿态、注视和情绪变化等可见信号。它把传统文本型社交 agent benchmark 扩展为视觉+语言联合评测。",
+          "innovation": "方法价值在于把社交智能评测从纯文本推进到视觉社交线索，这对达人直播间氛围理解、互动风险识别和行为引导有间接启发。可行性较高，但由于来源为转载材料，作者、机构、指标和实验细节需要后续用原文核验。",
+          "key_metrics": "公开片段披露 240 个场景、585 个角色实例、2,340 个角色任务；未获取到完整模型指标和 baseline 对比。"
+        },
+        "en": {
+          "method_overview": "AGENTVISS evaluates whether multimodal agents can use visible social signals in simulated interactions. Public snippets mention 240 scenarios, 585 role instances, and 2,340 role tasks covering facial expressions, posture, gaze, and emotional shifts. It extends text-only social-agent evaluation to joint visual-language settings.",
+          "innovation": "The value lies in moving social-intelligence evaluation beyond text, which is indirectly useful for livestream atmosphere understanding, interaction-risk detection, and creator behavior guidance. Feasibility is reasonable, but authorship, institution, metrics, and experiments need verification from the original paper.",
+          "key_metrics": "Public snippets report 240 scenarios, 585 role instances, and 2,340 role tasks. Full model metrics and baseline comparisons were not available."
+        }
+      }
+    }
+  ]
+}

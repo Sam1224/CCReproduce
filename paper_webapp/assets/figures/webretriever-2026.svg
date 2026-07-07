@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#dbeafe"/><stop offset="1" stop-color="#dcfce7"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity="0.15"/></filter></defs>
+  <rect width="900" height="520" rx="28" fill="#f8fafc"/>
+  <text x="42" y="58" font-family="Inter,Arial" font-size="26" font-weight="800" fill="#0f172a">WebRetriever Methodology</text>
+  <text x="42" y="88" font-family="Inter,Arial" font-size="14" fill="#64748b">Separate page arrival from true task completion on live-web tasks</text>
+  <g filter="url(#s)">
+    <rect x="46" y="135" width="165" height="110" rx="18" fill="url(#g)" stroke="#bfdbfe"/><text x="74" y="178" font-family="Inter,Arial" font-size="17" font-weight="700" fill="#1e3a8a">User Goal</text><text x="69" y="205" font-family="Inter,Arial" font-size="13" fill="#334155">Verify creator shop</text>
+    <rect x="266" y="135" width="165" height="110" rx="18" fill="#fff" stroke="#cbd5e1"/><text x="300" y="178" font-family="Inter,Arial" font-size="17" font-weight="700" fill="#0f172a">Web Search</text><text x="292" y="205" font-family="Inter,Arial" font-size="13" fill="#475569">Candidate pages</text>
+    <rect x="486" y="135" width="165" height="110" rx="18" fill="#fff" stroke="#cbd5e1"/><text x="520" y="178" font-family="Inter,Arial" font-size="17" font-weight="700" fill="#0f172a">Page State</text><text x="512" y="205" font-family="Inter,Arial" font-size="13" fill="#475569">HTML + evidence</text>
+    <rect x="706" y="135" width="150" height="110" rx="18" fill="#ecfdf5" stroke="#86efac"/><text x="735" y="178" font-family="Inter,Arial" font-size="17" font-weight="700" fill="#166534">Actions</text><text x="728" y="205" font-family="Inter,Arial" font-size="13" fill="#166534">click / extract</text>
+  </g>
+  <g stroke="#2563eb" stroke-width="3" fill="none" marker-end="url(#a)"><path d="M211 190h55"/><path d="M431 190h55"/><path d="M651 190h55"/></g>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2563eb"/></marker></defs>
+  <rect x="110" y="315" width="300" height="122" rx="20" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="138" y="350" font-family="Inter,Arial" font-size="18" font-weight="800" fill="#1d4ed8">Metric A: Page Arrival</text><text x="138" y="382" font-family="Inter,Arial" font-size="14" fill="#334155">Did the agent reach the correct page?</text><text x="138" y="410" font-family="Inter,Arial" font-size="14" fill="#64748b">Good for retrieval, not enough for governance.</text>
+  <rect x="490" y="315" width="300" height="122" rx="20" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="518" y="350" font-family="Inter,Arial" font-size="18" font-weight="800" fill="#15803d">Metric B: Task Completion</text><text x="518" y="382" font-family="Inter,Arial" font-size="14" fill="#334155">Did it collect evidence and finish verification?</text><text x="518" y="410" font-family="Inter,Arial" font-size="14" fill="#64748b">Closer to creator-governance agent needs.</text>
+</svg>
