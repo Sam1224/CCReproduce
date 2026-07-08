@@ -1,0 +1,198 @@
+{
+  "papers": [
+    {
+      "id": "2606.25034",
+      "title": "Yuvion VL: A Multimodal Foundation Model for Adversarial Content and AI Safety",
+      "authors": ["Ting Cao", "et al."],
+      "affiliations": ["Yuvion AI"],
+      "source": "arXiv",
+      "published": "2026-06-23",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.25034", "pdf": "https://arxiv.org/pdf/2606.25034"},
+      "tags": ["Content Safety", "MLLM", "E-commerce Governance", "Adversarial", "Distillation"],
+      "score": {
+        "total": 82,
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 22,
+        "rationale_zh": "强领域相关性：自建电商治理 benchmark（logo 识别、品牌仿冒、商品类目合规、价格异常）；C2FT 主动挖掘混淆对并进行多图联合对比监督，思路新颖；+9.9 pts / +6.7 pts over 可比和更大的闭源模型；三级评估框架（开源通用 → 安全 → 商业 benchmark）覆盖较全面。扣分：8B/32B 推理成本偏高，训练数据未全开放，部分商业 benchmark 细节不公开。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Yuvion VL 是专为内容安全与 AI 安全设计的多模态大语言模型，提供 8B 与 32B Dense 两种规格（各有 Instruct 和 Reasoning 版本）。核心贡献包含三部分：① 对抗感知数据生产流水线——整合领域知识对齐、CoT reasoning 标注、多级质量控制与数据飞轮，系统化生成覆盖小字/水印规避、logo 变形、遮挡隐藏、AI 生成内容伪装、上下文语义混淆等真实规避策略的大规模高质量多模态训练数据；② Confuse-then-Contrast Fine-Tuning（C2FT）——在线挖掘模型自身混淆对，对多张图像进行联合对比监督，显著提升对对抗样本的细粒度安全判别；③ YVRE（Yuvion VL RiskEval）——三级渐进对抗评估框架，覆盖开源通用 benchmark、开源安全 benchmark，以及自建能力与商业 benchmark（含电商 logo 识别、品牌识别含山寨检测、商品类目合规、商品价格合规）。",
+          "innovation": "相比 LLaVA-Guard、Llama-Guard 等通用安全模型，Yuvion VL 的创新在于：将数据生产与模型训练形成对抗飞轮闭环（挖掘失败案例→有针对性增强），而非依赖静态安全数据集；C2FT 把「混淆挖掘」集成进训练循环而非仅作后处理；YVRE 把商业级电商治理指标纳入评估，直接覆盖达人违规、平台合规等场景，这是通用安全模型普遍缺失的维度。",
+          "key_metrics": "YVRE 评估：在可比开源模型中平均高出 9.9 分；在更大的闭源商业模型（如 GPT-5.4、Qwen3.5-Plus）中平均高出 6.7 分；Yuvion VL-8B 在多项安全任务上超越大部分 SOTA 基线。电商治理 benchmark 覆盖 logo 识别、品牌仿冒、类目合规与价格合规四类场景。"
+        },
+        "en": {
+          "method_overview": "Yuvion VL is an 8B/32B open-source multimodal model for content and AI safety. It introduces three components: (1) an adversarial-aware data pipeline with domain knowledge, CoT annotations, quality control, and a failure-case data flywheel covering small-text evasion, logo mutation, occlusion, AI-generated impersonation, and contextual disguise; (2) Confuse-then-Contrast Fine-Tuning (C2FT) that mines model-specific confusion pairs online and applies multi-image joint contrastive supervision; (3) YVRE, a three-level progressive evaluation framework covering open-source general benchmarks, safety benchmarks, and in-house business benchmarks including e-commerce logo, brand knock-off, product category compliance, and price outlier detection.",
+          "innovation": "Unlike static safety datasets, C2FT builds an adversarial flywheel by mining failure cases and augmenting training. YVRE includes business-grade e-commerce governance metrics absent from general safety models. The 8B variant outperforms GPT-5.4 on several safety tasks.",
+          "key_metrics": "Average +9.9 pts over comparable open-source models; +6.7 pts over larger closed-source commercial models on YVRE. Yuvion VL-8B surpasses most SOTA baselines on several safety tasks including models significantly larger than it."
+        }
+      },
+      "reproduce": {"path": "2026-07-07/YuvionVL"}
+    },
+    {
+      "id": "2606.14786",
+      "title": "MatchLM2Lite: A Scalable MLLM-to-Lite Framework for Reproduced Content Identification",
+      "authors": ["Xiaotian Fan", "Hiok Hian Ong", "David Yuchen Wang", "Zirui Zhu", "Kanchan Sarkar", "Kun Xu"],
+      "affiliations": ["TikTok"],
+      "source": "arXiv",
+      "published": "2026-06-17",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.14786", "pdf": "https://arxiv.org/pdf/2606.14786"},
+      "tags": ["Reproduced Content", "MLLM Distillation", "Video-Audio-Text", "Content Governance", "Production"],
+      "score": {
+        "total": 80,
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 3,
+        "relevance": 23,
+        "rationale_zh": "直接面向达人/内容平台的搬运内容识别（版权侵权），三模态联合建模（视频+音频+文本），教师→学生蒸馏后维持 +6.55 F1 提升且推理成本降低 35×，生产价值高。扣分：任务相对垂直（RCI 场景），代码未完全开放，详细消融需看全文。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "MatchLM2Lite 是用于规模化生产部署的搬运内容识别（RCI）系统，由两个模块组成：MatchLM（高容量 MLLM 教师）和 MatchLite（紧凑学生）。系统联合建模视频、音频与文本三种模态，以视频对为输入，输出细粒度重放复现分数。创新在于把 MLLM 作为成对视频的语义表示提取器（而非生成式 next-token predictor），直接利用富语义嵌入进行判别分类，使得知识蒸馏目标更清晰、更高效。第一阶段训练 MatchLM 确立性能上界，第二阶段将其能力蒸馏进轻量 MatchLite。",
+          "innovation": "区别于通用视频相似度检索或哈希方法，MatchLM2Lite 的创新在于利用 MLLM 捕捉语义层面的「内容重用」而非像素或音频指纹层面的相似，覆盖剪辑、配音、字幕替换等规避手段。将 MLLM 从生成器改造成紧凑语义提取器的思路是该工作的关键技术贡献，35× 推理成本削减使其具备实际部署可行性。",
+          "key_metrics": "MatchLM 相比前代生产模型 F1-score 提升 +8.57；MatchLite 蒸馏后保留 +6.55 F1-score 提升；计算成本降低 35×（推理速度大幅提升），满足大规模内容平台审核需求。"
+        },
+        "en": {
+          "method_overview": "MatchLM2Lite is a two-stage reproduced content identification (RCI) system for production deployment. MatchLM (MLLM teacher) establishes the performance ceiling by jointly encoding video, audio, and text modalities for pairwise reproduction scoring. MatchLite (lightweight student) distills this capability with 35× cost reduction. The key design choice is using the MLLM as a paired-video semantic representation extractor rather than a generative model, enabling clear distillation targets from rich embeddings.",
+          "innovation": "Unlike perceptual hashing or audio fingerprinting, MatchLM2Lite captures semantic-level content reuse, detecting clips with added subtitles, replaced audio, or reframed frames. Converting the MLLM from generator to compact semantic extractor is the core technical contribution enabling production-scale deployment.",
+          "key_metrics": "MatchLM achieves +8.57 F1-score over the prior production model. After distillation, MatchLite retains +6.55 F1-score improvement while reducing computational cost by 35×."
+        }
+      },
+      "reproduce": {"path": "2026-07-07/MatchLM2Lite"}
+    },
+    {
+      "id": "2606.04448",
+      "title": "Bridging Short Videos and Live Streams: Reasoning-Guided Multimodal LLMs for Cross-Domain Representation Learning",
+      "authors": ["Le Zhang", "Xiaolan Zhu", "Yuchen Wang", "Jiajing Ye", "Zhicheng Dou", "Ruqing Zhang", "Shuaiqiang Wang"],
+      "affiliations": ["Kuaishou Technology", "Renmin University of China"],
+      "source": "arXiv",
+      "published": "2026-06-03",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.04448", "pdf": "https://arxiv.org/pdf/2606.04448"},
+      "tags": ["Cross-Domain Recommendation", "Live Streaming", "MLLM", "Distillation", "Kuaishou"],
+      "score": {
+        "total": 77,
+        "innovation": 20,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 22,
+        "rationale_zh": "直播电商场景高度相关，跨域（短视频→直播）冷启解决方案有实际价值，A/B 验证在快手实际部署。两阶段（reasoning-aware distillation + transferability-guided 分解）思路合理；+17.59% 和 +30.93% 相对提升数字清晰。扣分：跨域仅限于「短视频→直播」路径，泛化讨论不充分；学生 MLLM 参数量仍较大。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RGCD-Rep 提出两阶段框架解决短视频→直播的跨域冷启问题。第一阶段：推理感知蒸馏——冻结教师 MLLM 生成结构化跨域推理知识，蒸馏进轻量学生 MLLM；第二阶段：可迁移性引导的跨域表示学习——把 item 表示分解为可迁移表示和领域残差表示，前者编码跨域共通语义，后者编码直播特有信息，协同行为协作与跨模态表示对齐。最终表示可离线计算，以低成本接入下游检索任务，适合工业部署。",
+          "innovation": "已有跨域推荐多依赖用户行为迁移，RGCD-Rep 改为迁移 item 语义表示并用 MLLM 推理作监督信号，核心在于「让大模型的推理输出成为弱监督标签」，降低了标注成本。可迁移/领域残差的正交分解让模型不在直播领域稀疏行为上过拟合，泛化性更强。",
+          "key_metrics": "所有指标均优于 baseline，相对提升分别为 +17.59%（指标1）和 +30.93%（指标2）；快手直播推荐系统 A/B 实验显示多个核心业务指标显著提升。"
+        },
+        "en": {
+          "method_overview": "RGCD-Rep tackles short-video-to-livestream cold-start via two stages: (1) reasoning-aware distillation — a frozen teacher MLLM generates structured cross-domain reasoning and distills it into a lightweight student MLLM; (2) transferability-guided representation learning — item representations are decomposed into transferable and domain-residual components with behavioral collaboration guidance. Representations are pre-computed offline for low-cost integration into production retrieval pipelines.",
+          "innovation": "Unlike behavior-transfer approaches, RGCD-Rep transfers item semantic representations using MLLM reasoning as weak supervision, reducing annotation cost. The transferable/residual decomposition prevents overfitting to sparse livestream behavior signals.",
+          "key_metrics": "Best performance on all metrics: +17.59% and +30.93% over the strongest baseline. A/B tests in Kuaishou's live streaming recommendation system show significant gains across multiple core business metrics."
+        }
+      }
+    },
+    {
+      "id": "2606.06970",
+      "title": "SSRLive: Live Streaming Recommendation with Dynamic Semantic ID",
+      "authors": ["Teng Shi", "Zhaoheng Li", "Yuanhang Qu", "Yi Liu", "Lixiang Lai", "Yuning Jiang"],
+      "affiliations": ["Taobao & Tmall Group, Alibaba"],
+      "source": "arXiv",
+      "published": "2026-06-07",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.06970", "pdf": "https://arxiv.org/pdf/2606.06970"},
+      "tags": ["Live Streaming", "Semantic ID", "Recommendation", "Generative", "Alibaba"],
+      "score": {
+        "total": 74,
+        "innovation": 19,
+        "results": 12,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 22,
+        "rationale_zh": "阿里巴巴直播推荐场景高度相关，动态语义 ID 解决直播内容实时变化导致的 item 表示漂移问题，生产部署并服务亿级用户。A/B 实验数字清晰（+3.38% 观看时长、+0.72% GMV、+3.12% 新粉丝、+2.92% 互动量）。扣分：静态+动态 SID 的生成-判别统一框架独创性中等，更偏工程整合；泛化到直播以外场景需要额外工作。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SSRLive 针对直播内容实时变化的特性，提出动态语义 ID（Semantic ID）驱动的直播推荐框架，统一生成模块与判别模块。生成组件采用编码器-解码器结构，同时生成静态 SID（反映直播间持续属性）和动态 SID（捕捉当前实时状态），充分利用多模态信息。判别组件将 SID 与用户特征融合，叠加主播-用户交互数据，进行多任务预测。两个模块在统一架构中共同训练，端到端优化。",
+          "innovation": "现有直播推荐多用固定 item ID 或静态嵌入，无法捕捉直播间内容随时间动态变化的特性（如节目内容切换、促销信息更新）。SSRLive 创新在于引入动态 SID 实时刻画直播内容状态，并在统一框架中把生成（内容表示）和判别（用户匹配）结合，实现内容理解与协同过滤的协同优化。",
+          "key_metrics": "离线实验在生产规模数据集上持续超越所有竞争基线；线上 A/B 实验：观看时长 +3.38%、GMV +0.72%、新粉丝 +3.12%、互动量 +2.92%；目前已全量上线，服务数亿活跃用户。"
+        },
+        "en": {
+          "method_overview": "SSRLive addresses real-time content dynamics in livestream recommendation via dynamic Semantic IDs. A unified encoder-decoder generates both static SIDs (persistent room attributes) and dynamic SIDs (current broadcast state), leveraging multimodal content. A discriminative component fuses SIDs with user features and streamer-user interaction data for multi-task prediction. Both modules are jointly trained end-to-end.",
+          "innovation": "Unlike static item embeddings, SSRLive's dynamic SIDs capture real-time content changes (program switches, promotion updates), and the unified generative-discriminative framework jointly optimizes content representation and user matching.",
+          "key_metrics": "Offline experiments consistently surpass competitive baselines at production scale. Online A/B: +3.38% watch time, +0.72% GMV, +3.12% follower growth, +2.92% interaction volume. Fully deployed serving hundreds of millions of users."
+        }
+      }
+    },
+    {
+      "id": "2606.04374",
+      "title": "DSIRM: Learning Query-Bridged Discrete Semantic Identifiers for E-commerce Relevance Modeling",
+      "authors": ["Zhenghao Liu", "et al."],
+      "affiliations": ["Taobao & Tmall Group, Alibaba"],
+      "source": "arXiv",
+      "published": "2026-06-03",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.04374", "pdf": "https://arxiv.org/pdf/2606.04374"},
+      "tags": ["E-commerce Search", "Semantic ID", "Relevance Modeling", "LLM", "Alibaba"],
+      "score": {
+        "total": 73,
+        "innovation": 20,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 21,
+        "rationale_zh": "阿里电商搜索相关性核心技术，query-bridged 对比量化+生成式 LLM 预测 SID 思路新颖，解决长尾 query 和意图歧义问题，层次前缀匹配高效可扩展。扣分：离线/线上指标数字在 snippets 中未完全披露；方法泛化到非电商搜索场景需要额外验证。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DSIRM 通过两路设计提升电商搜索相关性建模中离散语义 ID（SID）的表达能力：① Item 侧：query-bridged 对比量化（CBCQ）——在残差量化过程中注入 query-item 交互监督，使 SID 分区主动学习相关感知语义划分，而非无监督量化；② Query 侧：利用生成式 LLM 从 query 文本直接预测 item SID，解决长尾 query 和意图歧义问题。最终通过 query 与 item SID 的层次前缀匹配产生判别性特征，与密集检索信号互补。",
+          "innovation": "已有 SID 方法依赖无监督量化，缺乏 query 相关感知，对「同款不同叫法」和长尾 query 效果差。DSIRM 的创新在于把 query-item 交互信号注入量化过程，使离散码本形成「相关感知语义区间」，同时用 LLM 的生成能力补全 query 侧意图表达，两路互补提升相关性判别。",
+          "key_metrics": "在生产规模数据集上的层次前缀匹配特征与密集信号互补，带来相关性建模的显著提升（具体数值见全文表格）；已在阿里巴巴电商搜索系统中部署。"
+        },
+        "en": {
+          "method_overview": "DSIRM improves discrete Semantic ID expressiveness for e-commerce search relevance via two paths: (1) item-side query-bridged contrastive quantization (CBCQ) injects query-item interaction supervision into residual quantization, making SID partitions relevance-aware; (2) query-side generative LLMs predict item SIDs from query text, resolving tail queries and intent ambiguity. Hierarchical prefix matching between query and item SIDs produces discriminative features complementing dense retrieval.",
+          "innovation": "Unlike unsupervised quantization, CBCQ makes discrete codebooks form relevance-aware semantic partitions. LLM-based query-side SID prediction addresses the intent gap for ambiguous and tail queries.",
+          "key_metrics": "Hierarchical prefix matching features complement dense signals for significant relevance modeling gains on production-scale data; deployed in Alibaba's e-commerce search system."
+        }
+      }
+    },
+    {
+      "id": "2606.27632",
+      "title": "Yuvion LLM: An Adversarially-Aware Large Language Model for Content And AI Safety",
+      "authors": ["Ting Cao", "et al."],
+      "affiliations": ["Yuvion AI"],
+      "source": "arXiv",
+      "published": "2026-06-27",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.27632", "pdf": "https://arxiv.org/pdf/2606.27632"},
+      "tags": ["Content Safety", "LLM", "Adversarial", "Safety Alignment"],
+      "score": {
+        "total": 63,
+        "innovation": 17,
+        "results": 10,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 17,
+        "rationale_zh": "Yuvion VL 的纯文本孪生版本，对抗感知训练和安全对齐方法与 VL 版本一脉相承，但缺少多模态，在视频/图文违规检测场景中实用性低于 VL 版本。分值体现其文本安全价值（文本类违规、LLM 越狱防护）但领域相关性有限。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Yuvion LLM 是 Yuvion VL 的纯文本孪生模型，专注于文本层面的内容安全与 AI 安全，采用与 VL 版本相同的对抗感知数据生产流水线（含数据飞轮）和对比监督训练策略，在文本安全基准上达到 SOTA。模型可用于文本违规检测、越狱防护与内容合规判断。",
+          "innovation": "延续 Yuvion VL 的方法论，在纯文本领域验证对抗感知训练范式的有效性；作为 API 安全网关和文本内容审核的基础模型，补全了 Yuvion AI 在文本+多模态安全的完整产品线。",
+          "key_metrics": "在文本安全 benchmark 上达到 SOTA（具体数值见全文表格）；搭配 Yuvion VL 可覆盖文本和多模态内容安全的完整链路。"
+        },
+        "en": {
+          "method_overview": "Yuvion LLM is the text-only twin of Yuvion VL for text content safety and AI safety. It uses the same adversarial-aware data pipeline (with failure-case data flywheel) and contrastive supervision training as the VL version, achieving SOTA on text safety benchmarks.",
+          "innovation": "Validates the adversarial-aware training paradigm in pure text. Combined with Yuvion VL, it covers the full content safety stack for text and multimodal content.",
+          "key_metrics": "SOTA on text safety benchmarks; complements Yuvion VL for end-to-end platform content safety coverage."
+        }
+      }
+    }
+  ]
+}
