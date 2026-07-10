@@ -1,0 +1,270 @@
+{
+  "papers": [
+    {
+      "id": "2508.03296",
+      "title": "Towards Trustworthy Multimodal Moderation via Policy-Aligned Reasoning and Hierarchical Labeling",
+      "authors": ["Anqi Li", "Wenwei Jin", "Pengda Qin", "Jiawei Li", "Jintao Tong", "Guo Lu"],
+      "affiliations": ["Shanghai Jiao Tong University", "Xiaohongshu Inc.", "Huazhong University of Science and Technology"],
+      "source": "KDD 2026 / arXiv",
+      "published": "2025-08-06",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2508.03296",
+        "pdf": "https://arxiv.org/pdf/2508.03296",
+        "code": "https://github.com/lianqi1008/Hi-Guard"
+      },
+      "tags": ["Content Safety", "Multimodal Moderation", "Hierarchical Labeling", "GRPO", "Xiaohongshu"],
+      "score": {
+        "total": 92,
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 24,
+        "rationale_zh": "强相关且规则对齐思路很完整：两阶段过滤 + 四层风险路径 + soft-margin GRPO 同时解决解释性、边界类混淆与线上成本。论文给出了离线泛化增益、人工偏好和真实部署指标，并且官方 GitHub 已包含训练与推理代码骨架，因此列为今日最值得跟进的治理论文之一。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Hi-Guard 把多模态内容审核拆成两阶段：先用 Qwen2-VL-2B 做高召回二分类过滤，再用 Qwen2-VL-7B 在 Domain→Topic→Subtype→Behavior 四层风险树上做细粒度路径预测。它把平台规则定义直接写进 prompt，让模型输出带推理过程的结构化判决，而不是只给标签。为减少兄弟类别误判，作者又设计了 depth-aware soft-margin reward，并用 GRPO 优化 explanation 与分类边界。",
+          "innovation": "旧方法主要依赖 noisy label 学习，难跟上治理规则变化且难给人工复核提供证据；Hi-Guard 则把“规则对齐 + 分层路径搜索 + 奖励塑形”合成到一个决策层框架里。这个创新合理且可落地，因为它直接服务审核流程中的可解释性与规则迭代；短板在于规则 prompt 较长、对规则文本质量依赖较强。",
+          "key_metrics": "在 generalization evaluation 上，相比 Qwen2-VL + SFT，Hi-Guard 的 overall accuracy 提升 12.13%，precision 提升 14.02%，recall 提升 10.28%；相对单阶段 base 方案 GPU inference time 降低 22.73%。线上 10 天抽样中，整体 accuracy 为 85.06%，risky content recall 为 79.14%，人工审核率下降 56.38%，最终人工复核占比降到 0.24%。"
+        },
+        "en": {
+          "method_overview": "Hi-Guard uses a two-stage moderation stack: Qwen2-VL-2B first performs high-recall binary risk filtering, then Qwen2-VL-7B predicts a fine-grained risk path over a four-level taxonomy. Platform policy definitions are injected into the prompt so the model reasons with rules instead of relying on flat labels alone. A depth-aware soft-margin reward with GRPO further improves structured reasoning and sibling-class separation.",
+          "innovation": "Prior moderation models are label-driven and opaque, which makes policy updates and human review difficult. Hi-Guard turns moderation into a rule-grounded, hierarchical path-search problem with reward shaping for near-miss categories. The design is practical for production governance, although long prompts and rule-quality dependence may increase latency and maintenance cost.",
+          "key_metrics": "On the generalization split, Hi-Guard improves overall accuracy by 12.13%, precision by 14.02%, and recall by 10.28% over Qwen2-VL + SFT. It also cuts GPU inference time by 22.73% versus the single-stage base setup. In a 10-day online sample, it reaches 85.06% overall accuracy, 79.14% recall on risky content, and reduces human moderation rate by 56.38%."
+        }
+      },
+      "story": {
+        "zh": "黑盒多模态审核模型难解释、难快速对齐平台规则，且细粒度风险类别经常互相混淆；Hi-Guard 先用二分类把安全内容筛走，再把剩余样本放进层级风险树做规则驱动推理，并用 soft-margin reward 专门拉开兄弟类别的边界，因此能同时提高准确率、解释性与线上人工协作效率。",
+        "en": "Opaque moderation models struggle to keep pace with evolving policies and often confuse adjacent risk labels. Hi-Guard first filters safe content, then performs policy-grounded hierarchical reasoning over risky samples, with a soft-margin reward to separate sibling categories; this is why it improves both accuracy and interpretability."
+      },
+      "code_status": {
+        "zh": "已核验官方 GitHub 仓库可访问，包含 src、sft、rlvr 等目录，属于真实实现而非空仓库。",
+        "en": "The official GitHub repository is accessible and contains src, sft, and rlvr directories rather than an empty placeholder."
+      }
+    },
+    {
+      "id": "2512.03553",
+      "title": "Dynamic Content Moderation in Livestreams: Combining Supervised Classification with MLLM-Boosted Similarity Matching",
+      "authors": ["Wei Chee Yew", "Xiaotian Fan", "Kanchan Sarkar", "Hailun Xu", "Hiok Hian Ong", "Zhenheng Yang", "Sanjay Saha", "David Yuchen Wang", "Danhui Guan"],
+      "affiliations": ["TikTok Singapore", "TikTok San Jose", "TikTok Shanghai"],
+      "source": "KDD 2026 / arXiv",
+      "published": "2025-12-03",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2512.03553",
+        "pdf": "https://arxiv.org/pdf/2512.03553"
+      },
+      "tags": ["Livestream Moderation", "Similarity Retrieval", "MLLM Distillation", "Governance", "TikTok"],
+      "score": {
+        "total": 88,
+        "innovation": 22,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 25,
+        "rationale_zh": "这篇论文和达人/直播治理的业务场景几乎完全贴合：已知违规靠分类器，未知/规避型违规靠 reference matching，再用 MLLM 蒸馏保证轻量模型仍有强语义边界。学术结构不算极新，但工程完成度很高，且公开代码缺失，因此被列为最值得复现的高分论文。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把直播审核拆成两条并行路径：Preset Violation Detection 用监督式多分类处理已知违规，Reference Matching 用向量检索与多模态重排去抓新型、对抗性和微妙违规。系统按 20 秒窗口切分直播，并融合关键帧、音频、ASR/OCR 文本三种模态。为兼顾精度与实时性，作者用扩展后的 LLaVA-One-Vision 老师模型蒸馏小模型，把重推理能力压缩到 Swin-Tiny + Whisper-Base + METER 融合结构中。",
+          "innovation": "旧方案里的单一路径分类器对长尾与规避型内容覆盖不足，而直接在线跑 MLLM 又太慢；本文把分类器与检索器组合起来，在已知违规和未知违规之间建立互补。方法的可行性很强，因为每条路径都可以单独优化吞吐与精度；主要短板是核心创新更偏系统设计与蒸馏工程，而不是新网络结构。",
+          "key_metrics": "分类分支在 80% precision 下达到 66.70% recall，AP 为 75.84%，F1 为 73.61%；检索重排分支在 80% precision 下达到 66.13% recall，AP 为 74.82%，F1 为 73.49%。视频检索模型在 Top-5 的 Recall One 为 90.53%，Top-100 为 98.99%；大规模 A/B 测试中，不良直播观看量下降了 6%–8%。"
+        },
+        "en": {
+          "method_overview": "The paper uses two parallel moderation paths: a supervised preset-violation classifier for known policy breaches, and a reference-matching pipeline that retrieves and reranks similar historical violations for subtle or emerging cases. Livestreams are segmented into 20-second clips with visual, audio, and text modalities. An extended LLaVA-One-Vision teacher distills multimodal decision boundaries into a lightweight Swin-Tiny + Whisper-Base + METER student for real-time deployment.",
+          "innovation": "Single-path classifiers struggle with long-tail evasive content, while full MLLMs are too slow for live moderation. This work combines a classifier with retrieval-style policy memory so known and unknown violations are handled by complementary mechanisms. The design is highly practical, although the novelty is more system-level than architecture-level.",
+          "key_metrics": "The preset classification branch achieves 75.84% AP, 73.61% F1, and 66.70% recall at 80% precision. The multimodal reranking branch reaches 74.82% AP, 73.49% F1, and 66.13% recall at 80% precision. The retrieval model obtains 90.53% Recall-One at Top-5 and 98.99% at Top-100; online A/B tests reduce unwanted livestream views by 6%–8%."
+        }
+      },
+      "story": {
+        "zh": "直播违规形态变化太快，单纯分类器跟不上，而直接用大模型实时判别成本又过高；因此论文把“已知类别分类”与“参考案例检索”并联起来，再用 MLLM 蒸馏把大模型的跨模态判断迁移给小模型，既保持实时性，又补足了新型/规避型内容的覆盖。",
+        "en": "Livestream violations evolve faster than a static classifier can track, yet full MLLMs are too expensive for online use. The paper therefore combines supervised detection for known cases with policy-memory retrieval for novel cases, then distills multimodal judgment into a fast student model."
+      },
+      "code_status": {
+        "zh": "未发现公开可用代码仓库，因此本次在仓库中补充了 toy-but-runnable 的 PyTorch 复现版本。",
+        "en": "No public code repository was found, so a toy-but-runnable PyTorch reproduction is included in this repo."
+      },
+      "reproduce": {
+        "path": "2026-07-10/HybridLivestreamModeration"
+      }
+    },
+    {
+      "id": "2607.08768",
+      "title": "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+      "authors": ["Zhekai Chen", "Chengqi Duan", "Kaiyue Sun", "Bohao Li", "Yuqing Wang", "Manyuan Zhang", "Xihui Liu"],
+      "affiliations": ["HKU MMLab", "Meituan"],
+      "source": "arXiv",
+      "published": "2026-07-09",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.08768",
+        "pdf": "https://arxiv.org/pdf/2607.08768",
+        "code": "https://github.com/HKU-MMLab/UniClawBench",
+        "project": "https://uniclawbench.github.io/"
+      },
+      "tags": ["Agent Benchmark", "Proactive Agent", "Multimodal", "Long Context", "Meituan"],
+      "score": {
+        "total": 78,
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 15,
+        "rationale_zh": "从主动智能体评测角度看非常强，且由美团/HKU 推出，今天热度也高；但它与电商内容治理的关系主要体现在 agent 平台能力评估和跨平台操作，不如治理论文那样直接，因此总分压在 80 以下。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "UniClawBench 是一个 capability-driven 的主动智能体评测基准，不按场景分任务，而按 Skill Usage、Exploration、Long-Context、Multimodal、Cross-Platform 五类基础能力拆分。它在真实 Docker 活环境里运行 400 个中英双语任务，并用 executor、hidden supervisor、user simulator 三角色闭环评估代替静态答案比对。论文还显式对比了 OpenClaw、EDICT、Nanobot 等不同 agent framework，分析框架设计对结果的影响。",
+          "innovation": "旧 benchmark 多是单轮、静态、沙盒化评测，失败后很难知道是模型能力差还是 agent 框架拖后腿；UniClawBench 通过能力拆分 + 隐式 rubric + 多轮用户反馈，把“真实世界 agent 为什么失败”这个问题分析得更清楚。短板是任务规模仍只有 400 个，且实时环境会引入一定执行波动。",
+          "key_metrics": "在跨框架对比中，Claude Opus-4.8 + OpenClaw 的 overall pass rate 为 0.475、average score 为 0.702，高于同模型在 EDICT 上的 0.415/0.687 和 Nanobot 上的 0.385/0.587；GPT-5.4 + OpenClaw 为 0.407/0.774，高于 EDICT 的 0.338/0.744。结果说明 framework choice 对主动智能体表现影响很大。"
+        },
+        "en": {
+          "method_overview": "UniClawBench is a capability-driven benchmark for proactive agents. Instead of organizing tasks by scenario, it decomposes evaluation into Skill Usage, Exploration, Long-Context, Multimodal Understanding, and Cross-Platform Coordination. The benchmark runs 400 bilingual tasks in live Docker environments and uses an executor, a hidden supervisor, and a user simulator for closed-loop evaluation. It also compares multiple agent frameworks to separate model capability from system design.",
+          "innovation": "Most prior agent benchmarks are static, single-turn, and sandboxed, which makes root-cause analysis difficult. UniClawBench combines capability decomposition, hidden rubrics, and user feedback to expose whether failures come from the base model or the framework. Its main limitation is that 400 manually curated tasks are still modest in scale and live environments can introduce noise.",
+          "key_metrics": "In cross-framework experiments, Claude Opus-4.8 + OpenClaw reaches an overall pass rate / average score of 0.475 / 0.702, ahead of EDICT at 0.415 / 0.687 and Nanobot at 0.385 / 0.587. GPT-5.4 + OpenClaw reaches 0.407 / 0.774 versus EDICT at 0.338 / 0.744. These gaps show that framework choice strongly shapes proactive-agent performance."
+        }
+      },
+      "story": {
+        "zh": "旧的 agent benchmark 太像考试题，评不出真实世界中的多轮协作和框架瓶颈；UniClawBench 用活环境任务、隐藏监督者和用户模拟器把 agent 放回真实工作流里，因此能发现基础模型之外的系统设计问题。",
+        "en": "Older agent benchmarks resemble static exams and hide real-world multi-turn failures. UniClawBench puts the agent back into live workflows, so framework bottlenecks become measurable instead of being mixed into model quality."
+      },
+      "code_status": {
+        "zh": "官方 GitHub 与项目主页均已公开，可用于二次评测和基准复现实验。",
+        "en": "The official GitHub repository and project page are public, so the benchmark is reproducible without extra reverse engineering."
+      }
+    },
+    {
+      "id": "2607.08763",
+      "title": "OpenCoF: Learning to Reason Through Video Generation",
+      "authors": ["Xinyan Chen", "Ziyu Guo", "Renrui Zhang", "Dongzhi Jiang", "Hongsheng Li"],
+      "affiliations": ["ByteDance Seed", "CUHK MMLab", "CUHK IMIXR"],
+      "source": "arXiv",
+      "published": "2026-07-10",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.08763",
+        "pdf": "https://arxiv.org/pdf/2607.08763",
+        "project": "https://opencof.github.io/"
+      },
+      "tags": ["Video Reasoning", "Video Generation", "CoF", "Multimodal", "ByteDance"],
+      "score": {
+        "total": 75,
+        "innovation": 24,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 5,
+        "generalization": 4,
+        "relevance": 19,
+        "rationale_zh": "今天最热的视频推理论文之一，和内容理解/视频审核的可迁移性较强。它的亮点在于把 reasoning 放进视频生成过程本身，但整体仍偏基础研究，且训练成本不低，所以没有进入 80+ 队列。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "OpenCoF 提出用视频生成来承载推理过程，把传统 Chain-of-Thought 扩展为 Chain-of-Frame。作者先构建了包含 17,312 个视频、覆盖 11 类任务的 OpenCoF-17K 数据集，再在 Wan2.2-I2V-A14B 上微调得到 Wan-CoF。进一步地，论文设计了 visual reasoning tokens 和 textual reasoning tokens，让模型分别在视觉潜空间和文本条件侧显式组织中间推理状态。",
+          "innovation": "旧的视频推理工作更多是在 benchmark 或 test-time trick 上做文章，缺少专门针对 CoF 能力的数据与结构；OpenCoF 同时补上了数据和结构两侧，因此比纯粹的数据缩放更完整。它的短板是训练与推理成本较高，而且当前任务更偏空间/物理逻辑，对开放语义推理的覆盖仍有限。",
+          "key_metrics": "在 MME-CoF 上，Wan-CoF 的 overall score 从基线 1.00 提升到 1.30；再加入 reasoning tokens 后，Wan-CoFvt 达到 1.34，Wan-CoFtt 达到 1.35。RULER-Bench 上，Wan-CoF 的 overall 从 55.8 提升到 56.8，其中 Game split 的平均分从 45.6 提升到 52.6，显示了对跨基准视频推理的正迁移。"
+        },
+        "en": {
+          "method_overview": "OpenCoF treats reasoning as a video-generation process, extending Chain-of-Thought into Chain-of-Frame. It introduces OpenCoF-17K, a 17,312-video dataset spanning 11 reasoning families, then fine-tunes Wan2.2-I2V-A14B into Wan-CoF. The paper further adds visual reasoning tokens and textual reasoning tokens so the model can organize intermediate reasoning states explicitly.",
+          "innovation": "Most prior work focused on benchmarks or test-time scaling rather than data and architecture designed for CoF reasoning. OpenCoF addresses both sides at once with a dedicated reasoning dataset and token-level reasoning mechanisms. Its main downside is high training cost and a task distribution still centered on spatial and physical reasoning.",
+          "key_metrics": "On MME-CoF, Wan-CoF improves the baseline overall score from 1.00 to 1.30, while Wan-CoFvt and Wan-CoFtt further reach 1.34 and 1.35. On RULER-Bench, Wan-CoF improves the overall score from 55.8 to 56.8, with the Game split average rising from 45.6 to 52.6, indicating transferable gains on external video-reasoning suites."
+        }
+      },
+      "story": {
+        "zh": "静态视觉 CoT 难以表达连续时序推理，而通用视频生成模型又没有专门学过推理；OpenCoF 用一套推理视频数据和显式 reasoning token 机制，让视频模型在生成过程中真正学会“按帧推演”。",
+        "en": "Static visual CoT misses temporal reasoning, while generic video generators were never trained for reasoning in the first place. OpenCoF equips them with dedicated reasoning data and explicit reasoning tokens so the generation trajectory itself becomes a reasoning path."
+      },
+      "code_status": {
+        "zh": "论文与项目页声明将开源数据、模型与代码；目前官方 project page 已公开。",
+        "en": "The paper states that dataset, model, and code are open-sourced or scheduled for release, and the official project page is already public."
+      }
+    },
+    {
+      "id": "2606.30534",
+      "title": "Orca: The World is in Your Mind",
+      "authors": ["Orca Team"],
+      "affiliations": ["Beijing Academy of Artificial Intelligence (BAAI)"],
+      "source": "BAAI Technical Report / arXiv",
+      "published": "2026-07-01",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2606.30534",
+        "pdf": "https://arxiv.org/pdf/2606.30534",
+        "project": "https://orca-wm.github.io/"
+      },
+      "tags": ["World Model", "Foundation Model", "Multimodal", "Embodied AI", "BAAI"],
+      "score": {
+        "total": 73,
+        "innovation": 25,
+        "results": 10,
+        "exp_quality": 11,
+        "efficiency": 4,
+        "generalization": 5,
+        "relevance": 18,
+        "rationale_zh": "世界模型方向很前沿，今天热度也高，对内容理解、动作理解和多模态表征有启发；但它与电商治理的关系是中长期迁移价值，不是短期可直接落地的治理方案，因此总分中等偏上。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Orca 把世界建模的统一目标定义成 Next-State-Prediction，而不是 next-token / next-frame / next-action 的割裂目标。它通过 unconscious learning 学连续视频中的稠密状态迁移，通过 conscious learning 学带语言约束的稀疏事件迁移，从而在统一潜空间里建模物理世界。预训练后，作者冻结 backbone，只训练轻量 readout decoders 去做文本生成、图像预测和动作生成，验证世界潜空间的可读性。",
+          "innovation": "旧路线往往分别优化语言、视觉或动作预测，难以形成统一的跨模态世界表征；Orca 的价值在于把“状态迁移”设为总目标，并用双学习范式去逼近这个潜空间。设计合理但非常吃数据和算力，且对真实开放世界长程一致性的验证仍然有限。",
+          "key_metrics": "预训练数据规模达到 125K 小时视频和 160M 事件标注；实验中 backbone 冻结、仅训练轻量 decoder 仍能在文本、图像和动作读出任务上超过同规模 specialized baselines。论文更强调 scaling trend 与统一表征能力，而不是单一任务的绝对 SOTA 榜单。"
+        },
+        "en": {
+          "method_overview": "Orca reframes world modeling as Next-State Prediction instead of separate next-token, next-frame, or next-action objectives. It combines unconscious learning from dense video transitions with conscious learning from language-described sparse events to build a unified latent world space. After pretraining, the backbone is frozen and only lightweight readout decoders are trained for text, image, and action outputs.",
+          "innovation": "Most prior directions optimize language, vision, and action separately, which limits unified cross-modal state modeling. Orca makes state transition the central objective and supports it with dual learning paradigms. The design is compelling, but it is extremely data- and compute-intensive and still leaves long-horizon world consistency open.",
+          "key_metrics": "The pretraining corpus contains 125K hours of video and 160M event annotations. With the backbone frozen, lightweight text/image/action readouts still outperform similarly sized specialized baselines. The paper emphasizes scaling behavior and latent-space utility more than a single leaderboard number."
+        }
+      },
+      "story": {
+        "zh": "如果模型只会预测下一个词、下一帧或下一步动作，它就始终停留在单模态局部优化；Orca 试图先学世界状态本身，再把文本、图像和动作都当作这个潜空间的读出接口，因此更接近统一多模态智能。",
+        "en": "If a model only predicts the next token, frame, or action, it remains trapped in isolated objectives. Orca instead learns the latent world state first and treats text, images, and actions as readouts from that shared space."
+      },
+      "code_status": {
+        "zh": "官方项目主页已发布，但公开代码/权重状态仍需继续跟踪。",
+        "en": "The official project website is public, but code and weight availability still require follow-up tracking."
+      }
+    },
+    {
+      "id": "2601.04200",
+      "title": "Attribute-Aware Controlled Product Generation with LLMs for E-commerce",
+      "authors": ["Virginia Negri", "Víctor Martínez Gómez", "Sergio A. Balanya", "Subburam Rajaram"],
+      "affiliations": ["Amazon Spain", "Amazon Germany"],
+      "source": "arXiv",
+      "published": "2026-01-14",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2601.04200",
+        "pdf": "https://arxiv.org/pdf/2601.04200"
+      },
+      "tags": ["E-commerce", "Synthetic Data", "Data Quality", "LLM", "Amazon"],
+      "score": {
+        "total": 79,
+        "innovation": 20,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 23,
+        "rationale_zh": "和电商内容理解/属性抽取/数据清洗高度相关，实验数据也很扎实；但方法本质上是高质量 LLM 数据工程框架，创新更偏 controlled generation recipe，而不是模型结构突破，所以总分卡在 80 以下。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文面向电商产品信息抽取场景，提出 attribute-aware controlled generation 框架，用 LLM 按结构化属性受控地改写商品文案。它包含三种策略：属性保持修改、受控负样本生成、系统性属性移除，并通过 Value Provider 与 Generation LLM 的多步流程保证语义一致性。整个系统还显式约束品牌匿名化、多语言与 marketplace-specific 规则，使合成商品既自然又可用于监督训练。",
+          "innovation": "传统人工标注很难覆盖电商属性表达的长尾变体，而普通数据增强又不容易保证属性逻辑一致；本文把生成目标拆成正样本、负样本和 unknown case 三种受控操作，因此更贴合真实属性抽取与数据清洗流程。可行性很高，但也会继承 LLM 生成的偏差与额外成本。",
+          "key_metrics": "2000 个合成商品的人评中，99.6% 被认为自然、96.5% 具有有效属性值、90%+ 保持属性一致。仅用合成数据在公开 MAVE 数据集上取得 60.5% accuracy，接近真实训练数据的 60.8%，显著高于 13.4% 的 zero-shot baseline；真实+合成混合训练可进一步提升到 68.8%。"
+        },
+        "en": {
+          "method_overview": "The paper proposes an attribute-aware controlled generation framework for e-commerce product information. LLMs rewrite product entries under structured attribute constraints using three strategies: attribute-preserving edits, controlled negative generation, and systematic attribute removal. A multi-step pipeline with a Value Provider and a Generation LLM keeps the outputs coherent while enforcing marketplace-specific constraints such as brand anonymization and multilingual compatibility.",
+          "innovation": "Manual annotation cannot cover the long tail of attribute expressions, while naive augmentation often breaks semantic consistency. This work reframes augmentation as controlled generation of positive, negative, and unknown cases, which aligns well with real extraction and data-cleaning workflows. The trade-off is that it still inherits LLM cost and potential hallucination bias.",
+          "key_metrics": "In a 2,000-sample human evaluation, 99.6% of synthetic products are judged natural, 96.5% contain valid attribute values, and over 90% preserve attribute consistency. On MAVE, synthetic-only training reaches 60.5% accuracy versus 60.8% with real data and 13.4% for the zero-shot baseline; hybrid real+synthetic training improves accuracy to 68.8%."
+        }
+      },
+      "story": {
+        "zh": "电商属性抽取最缺的不是模型结构，而是覆盖足够长尾表达、冲突表达和缺失表达的高质量训练数据；这篇论文把 LLM 当成受控数据工厂，用三种受控生成策略补齐这些监督缺口，所以对治理里的数据质量建设很有参考价值。",
+        "en": "The bottleneck in product information extraction is often not model architecture but high-quality data that covers long-tail, contradictory, and missing attribute expressions. This work turns the LLM into a controlled data factory to close that supervision gap."
+      },
+      "code_status": {
+        "zh": "论文未提供公开代码，当前更适合作为数据工程范式参考。",
+        "en": "No public code was released, so this paper is currently more useful as a data-engineering recipe than a drop-in implementation."
+      }
+    }
+  ]
+}
