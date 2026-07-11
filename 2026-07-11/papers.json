@@ -1,0 +1,68 @@
+{
+  "inspection_date": "2026-07-11",
+  "note": "At the GMT+8 midnight run, exact 2026-07-11 arXiv submissions were not yet available from the queried feeds, so this radar uses the newest available relevant releases/updates in the 2026-07-06 to 2026-07-09 window and excludes security/backdoor-only papers.",
+  "papers": [
+    {
+      "id": "2607.05242v1",
+      "title": "CanniUplift: A Holistic Framework for Mitigating Seller and Incentive Cannibalization in E-commerce Uplift Modeling",
+      "authors": ["Zuwang He", "Shihao Shu", "Yuli Qu", "Hanyu Gao", "Ziliang Zhang", "Diwei Chen", "Xiangda Yan", "Buyu Gao", "Tanchao Zhu", "Yumeng Li", "Junxiong Zhu"],
+      "affiliations": ["Taobao & Tmall Group of Alibaba"],
+      "source": "arXiv / KDD 2026",
+      "published": "2026-07-06",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.05242", "pdf": "https://arxiv.org/pdf/2607.05242"},
+      "tags": ["E-commerce", "Uplift Modeling", "Causal Inference", "Marketplace Governance"],
+      "score": {"total": 90, "innovation": 27, "results": 14, "exp_quality": 14, "efficiency": 8, "generalization": 4, "relevance": 23, "rationale_zh": "强电商平台相关，直接解决多卖家优惠分配中的伪增量与平台 GMV 损失；PGA+RDD 的结构创新明确，有工业离线、消融和线上 A/B 验证。扣分点是依赖内部日志，跨平台泛化仍需外部验证。"},
+      "summary": {"zh": {"method_overview": "论文指出传统 uplift model 默认 SUTVA，在多卖家电商中会把跨店铺替代和未核销优惠导致的自然转化误判为增量。CanniUplift 用 Platform-level Global Alignment 约束 seller-level uplift 与平台总 GMV 增量一致，用 Redemption-based Decomposition Denoising 将核销与未核销转化路径拆开降噪，并用 Treat-Attention 建模用户行为和优惠类型交互。高光点是从“卖家局部赢”切到“平台整体增量赢”，非常贴合电商治理和资源分配。", "innovation": "相较 EUEN、DragonNet 等单元独立估计，它显式建模跨 seller 干扰和 coupon redemption 噪声，创新合理且可落地。PGA 解决 seller cannibalization，RDD 解决 incentive cannibalization，两者互补；主要风险是需要稳定的核销/行为链路数据。", "key_metrics": "工业数据上 Seller AUUC/QINI 为 0.769/0.314、User AUUC/QINI 为 0.849/0.348，均高于 EUEN baseline；线上 A/B 降低营销成本 2.45%，平台 ΔGMV +4.08%，ROI +6.69%。"}, "en": {"method_overview": "The paper argues that standard uplift models break under marketplace interference: coupons can shift demand across sellers and non-redeemed conversions can be organic rather than incremental. CanniUplift adds Platform-level Global Alignment to align seller-level uplift with platform-wide GMV, Redemption-based Decomposition Denoising to split redeemed and non-redeemed conversion paths, and Treat-Attention for treatment-user interaction modeling.", "innovation": "Unlike unit-independent uplift models such as EUEN or DragonNet, it explicitly models cross-seller interference and redemption noise. PGA targets seller cannibalization, while RDD targets incentive cannibalization; the design is practical when redemption and behavior logs are reliable.", "key_metrics": "On industrial data, Seller AUUC/QINI reaches 0.769/0.314 and User AUUC/QINI reaches 0.849/0.348; online A/B reports -2.45% marketing cost, +4.08% platform ΔGMV, and +6.69% ROI."}},
+      "reproduce": {"path": "2026-07-11/CanniUplift"}
+    },
+    {
+      "id": "2607.04605v1",
+      "title": "Do All Visual Tokens Matter Equally? Object-Evidence Preserving Token Merging for Vision-Language Retrieval",
+      "authors": ["Suhyeong Park", "Junha Jung", "Jungwoo Park", "Jaewoo Kang"],
+      "affiliations": ["The Catholic University of Korea", "Korea University", "AIGEN Sciences Inc."],
+      "source": "arXiv",
+      "published": "2026-07-06",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.04605", "pdf": "https://arxiv.org/pdf/2607.04605", "code": "https://github.com/dmis-lab/SaMer"},
+      "tags": ["VLM", "Retrieval", "Token Compression", "Content Understanding"],
+      "score": {"total": 85, "innovation": 26, "results": 13, "exp_quality": 13, "efficiency": 10, "generalization": 4, "relevance": 19, "rationale_zh": "面向大规模图文检索的 token 压缩，和电商内容向量化/相似检索高度相关；代码仓库已验证存在，因此不复现。"},
+      "summary": {"zh": {"method_overview": "SaMer 认为多向量 VLM 检索不能只删 token，而要保留未来 query 可选择的 object evidence。它把 post-projector visual tokens 软聚类成 K 个 centroid，训练期用 object annotation 作为 merge prior，推理期不需要检测框或标签。高光点是在极端压缩下还保留 late-interaction MaxSim 的细粒度证据。", "innovation": "区别于普通 pooling/pruning，SaMer 关注 object-instance collapse，使用对象先验约束跨实例混合，并只微调 shared projection layer，工程侵入小。", "key_metrics": "K=64 时移除 93%+ image-side tokens、ColPali 存储降 16.09×；Flickr30K R@1 从 77.0 提到 82.4，MSCOCO 从 47.4 提到 51.6。"}, "en": {"method_overview": "SaMer frames visual-token compression for multi-vector VLM retrieval as evidence preservation rather than token deletion. It softly merges post-projector visual tokens into K centroids, uses object annotations only as a training-time merge prior, and keeps the MaxSim late-interaction interface unchanged at inference.", "innovation": "Compared with generic pooling or pruning, SaMer directly addresses object-instance collapse and adapts only the shared projection layer, making it practical for existing retrieval stacks.", "key_metrics": "With K=64 it removes over 93% image-side tokens and cuts ColPali storage by 16.09×; Flickr30K R@1 improves from 77.0 to 82.4 and MSCOCO from 47.4 to 51.6."}}
+    },
+    {
+      "id": "2607.05927v1",
+      "title": "CMDR: Contextual Multimodal Document Retrieval",
+      "authors": ["Ryota Tanaka", "Taku Hasegawa", "Kyosuke Nishida"],
+      "affiliations": ["Human Informatics Labs., NTT, Inc."],
+      "source": "arXiv",
+      "published": "2026-07-07",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.05927", "pdf": "https://arxiv.org/pdf/2607.05927", "project": "https://cmdr-bench.github.io"},
+      "tags": ["RAG", "Multimodal Retrieval", "Document Understanding", "Embeddings"],
+      "score": {"total": 84, "innovation": 25, "results": 12, "exp_quality": 14, "efficiency": 8, "generalization": 4, "relevance": 21, "rationale_zh": "对商品说明、达人内容审核证据链、治理 SOP 文档检索有价值；有新 benchmark 与训练目标，代码未确认公开，因此完成 toy 复现。"},
+      "summary": {"zh": {"method_overview": "CMDR 提出上下文多模态文档检索：query 可能不直接命中目标页，需要借助前后页语义、引用或说明关系定位答案页。CMDR-Embed 将多页联合编码，再拆分成 page-level embeddings，并用 CMCL 在上下文建模和页级可区分性之间平衡。高光点是把 Document RAG 从单页匹配推进到跨页理解。", "innovation": "相较 ColPali 等独立编码页面的方法，它让 page embedding 吸收 document context，同时用同文档 hard negatives 防止信息泄漏导致页级不可分。创新点合理，尤其适合长商品手册、政策文档和治理证据检索。", "key_metrics": "CMDR-EmbedQwen 在 CMDR-Bench Overall 达 56.6，显著高于 ColQwen finetuned on ViDoRe 的 32.6；token pooling 可减少 80% 向量、检索加速 3.57× 且保留 97.3% 性能。"}, "en": {"method_overview": "CMDR targets contextual multimodal document retrieval where the relevant page may only be identifiable through neighboring or global document context. CMDR-Embed jointly encodes multiple pages, splits contextual representations back to page embeddings, and trains with CMCL to balance context use and page discriminability.", "innovation": "Unlike page-independent retrievers such as ColPali, it contextualizes each page while using same-document hard negatives to prevent leakage from destroying page-level ranking. This is useful for long manuals, policy documents, and governance evidence retrieval.", "key_metrics": "CMDR-EmbedQwen reaches 56.6 Overall on CMDR-Bench versus 32.6 for ColQwen finetuned on ViDoRe; token pooling cuts stored vectors by 80%, speeds search by 3.57×, and keeps 97.3% of performance."}},
+      "reproduce": {"path": "2026-07-11/CMDR-Embed"}
+    },
+    {
+      "id": "2607.08497v1",
+      "title": "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing",
+      "authors": ["Feng Wang", "Canmiao Fu", "Zhipeng Huang", "Chen Li", "Jing Lyu", "Ge Li"],
+      "affiliations": ["Peking University", "WeChat Vision, Tencent Inc."],
+      "source": "arXiv",
+      "published": "2026-07-09",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.08497", "pdf": "https://arxiv.org/pdf/2607.08497", "code": "https://github.com/caseclose/cma-harness", "project": "https://caseclose.github.io/cma-harness/"},
+      "tags": ["MLLM", "Agent", "Visual Memory", "Multimodal Generation"],
+      "score": {"total": 82, "innovation": 24, "results": 13, "exp_quality": 12, "efficiency": 9, "generalization": 4, "relevance": 20, "rationale_zh": "弱相关但热度和方法价值高：长程视觉记忆对达人内容理解、多轮审核和素材复用有启发；代码仓库已验证存在。"},
+      "summary": {"zh": {"method_overview": "论文把长程多模态对话拆成认知结构：PAE 将图片抽象成视觉记忆条目，CoRE 检索历史视觉 episode，MEC 决定理解、生成、编辑或组合任务。为了解决多轮监督缺口，作者构建 Unified Scenario Engine 生成带检索标注的对话，并用 SFT+RL 优化。高光点是用外部视觉记忆替代反复塞历史图片 token。", "innovation": "与单体 MLLM 扩 context 不同，它把视觉历史外置化并模块化调度工具，降低长对话 token 爆炸和跨轮引用漂移；设计对电商达人素材库和多轮治理审核很有迁移价值。", "key_metrics": "8B agent 在 20-turn session 上达到 91.4% retrieval accuracy，比 32B baseline 高 +8.2%，单轮推理时间从 23.1s 降到 12.7s。"}, "en": {"method_overview": "The paper decomposes long-horizon multimodal dialogue into cognitive modules: PAE abstracts images into memory entries, CoRE retrieves historical visual episodes, and MEC routes understanding, generation, editing, or composition tasks. A Unified Scenario Engine creates retrieval-labeled conversations for SFT+RL.", "innovation": "Instead of expanding a monolithic MLLM context, it externalizes visual history and uses modular tool orchestration, reducing visual-token explosion and cross-turn reference drift. This transfers well to creator asset memory and multi-turn governance review.", "key_metrics": "The 8B agent reaches 91.4% retrieval accuracy over 20-turn sessions, +8.2% over 32B baselines, while reducing per-turn inference time from 23.1s to 12.7s."}}
+    },
+    {
+      "id": "2607.08071v1",
+      "title": "COBART: Controlled, Optimized, Bidirectional and Auto-Regressive Transformer for Ad Headline Generation",
+      "authors": ["Yashal Shakti Kanungo", "Gyanendra Das", "Pooja A", "Sumit Negi"],
+      "affiliations": ["Amazon"],
+      "source": "arXiv / KDD archive update",
+      "published": "2026-07-09",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.08071", "pdf": "https://arxiv.org/pdf/2607.08071"},
+      "tags": ["E-commerce", "Ad Generation", "Controlled Generation", "CTR Optimization"],
+      "score": {"total": 76, "innovation": 20, "results": 12, "exp_quality": 12, "efficiency": 8, "generalization": 3, "relevance": 21, "rationale_zh": "电商广告内容生产强相关，方法成熟可用；但论文主体是较早 KDD 工作的更新，创新性和今日新鲜度低于其他候选。"},
+      "summary": {"zh": {"method_overview": "COBART 在 BART 输入侧加入 CTR bucket、长度等 prefix control tokens，让生成 headline 同时受创意长度和点击率目标控制。训练时用历史 observed CTR 构造控制标签，推理时替换为目标 bucket；也可以与 self-critical 训练结合提升 CTR。高光点是单模型支持不同广告版式下的长度控制与优化。", "innovation": "区别于简单 length penalty 或只筛高 CTR 数据微调，它直接把控制变量注入 encoder 输入，避免输出端拼接控制信号效果弱的问题。方法简单、可迁移，但依赖 CTR oracle 和合规审核数据。", "key_metrics": "SC-COBART 相对 UniLM baseline Rouge-L +25.82%、estimated CTR 相对 baseline +5.82%；COBART 15 个 CTR bucket 相对 human-written headline CTR +11.76%。"}, "en": {"method_overview": "COBART adds prefix control tokens such as CTR bucket and desired length to BART inputs, allowing headline generation to optimize engagement while satisfying ad-format length constraints. Training uses observed CTR-derived tags, while inference replaces them with desired control buckets.", "innovation": "Compared with length penalties or high-CTR-only finetuning, it injects control variables into the encoder input, making the decoder condition on the target creative attributes. The approach is simple and portable but relies on a CTR oracle and approved ad data.", "key_metrics": "SC-COBART improves Rouge-L by 25.82% and estimated CTR by 5.82% over the UniLM baseline; COBART with 15 CTR buckets improves estimated CTR by 11.76% over human-written headlines."}}
+    }
+  ]
+}
