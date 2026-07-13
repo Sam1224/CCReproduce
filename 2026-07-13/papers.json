@@ -1,0 +1,233 @@
+{
+  "papers": [
+    {
+      "id": "2607.01426",
+      "title": "When Should Service Agents Reconsider? Difficulty-Routed Control in Customer-Service Operations",
+      "authors": ["Qian Chen", "Chengyuan Liu", "Xin Yu"],
+      "affiliations": ["The Pennsylvania State University"],
+      "source": "arXiv / Customer-Service Operations / 今日相关发现",
+      "published": "2026-07",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.01426",
+        "pdf": "https://arxiv.org/pdf/2607.01426"
+      },
+      "tags": ["Agent", "Operations", "Governance", "Customer Service", "Write Verification"],
+      "score": {
+        "total": 82,
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 21,
+        "rationale_zh": "把高控制资源只路由到高风险写操作前，思路非常适合达人治理申诉、处罚执行和运营工单。论文在 retail/airline focus set 上稳定提升可靠性，且 toy 复现可落成可运行 pipeline。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把客服 Agent 的风险控制问题 formalize 为“何时需要 reconsider before write”。核心架构包含一个轻量 Difficulty Router，用于把 routine session 留在低成本 baseline 路径，把 operationally coupled session 路由到 escalated workflow。升级路径在每次关键 backend write 前触发 pre-write reconsideration，并通过 conflict-aware communication 收集证据、绑定记录、拆解多实体请求。作者在 retail 与 airline 任务上证明，这种 selective control 比对所有请求一刀切加控制更有效。",
+          "innovation": "创新点在于把 agent 可靠性问题从“更强模型”转成“把 deliberation 与 safeguards 放在最值钱的地方”。它不是给所有对话都增加反思，而是围绕高风险写操作建立 write-triggered reconsideration 控制点；这个设计既节省成本，又提高复杂治理工单的稳定性。对电商达人治理而言，封禁、解封、赔付、申诉等流程都能复用这一控制范式。",
+          "key_metrics": "在 retail focus set 上，Gemini 2.5 user + Gemini 3.5 agent 组合从 60.7% 提升到 73.8%；Gemini 2.5 user + ChatGPT 5.5 agent 从 78.7% 提升到 86.9%。airline focus set 上两组设置都从 45%-55% 提升到 65%。",
+          "story": "统一低成本流程会在复杂请求上写错对象或顺序 -> 先用 router 识别 operational conflict，再在 write 前做 reconsideration 和证据核对 -> 把高强度控制集中用在真正高风险的请求上。"
+        },
+        "en": {
+          "method_overview": "The paper frames service-agent reliability as deciding when to reconsider before backend writes. A lightweight Difficulty Router keeps routine sessions on a cheap baseline path and routes operationally coupled sessions to an escalated workflow. The escalated path performs conflict-aware communication and write-triggered reconsideration before consequential writes. This selective control improves reliability on human-verified retail and airline tasks.",
+          "innovation": "Its key innovation is allocating deliberation and safeguards only where they matter: high-risk write operations. Instead of adding reflection to every turn, it creates a control point right before consequential backend writes. This makes the design cost-aware and deployment-friendly for governance operations.",
+          "key_metrics": "On the retail focus set, reliability improves from 60.7% to 73.8% and from 78.7% to 86.9% under two model settings. On the airline focus set, reliability rises from 45%-55% to 65%.",
+          "story": "Uniform low-cost execution fails on coupled requests -> route only conflict-heavy sessions to an escalated path -> verify evidence right before the write and preserve fallback plans."
+        }
+      },
+      "reproduce": {
+        "path": "2026-07-13/DifficultyRoutedControl"
+      }
+    },
+    {
+      "id": "2607.00446",
+      "title": "VideoSearch-R1: Iterative Video Retrieval and Reasoning via Soft Query Refinement",
+      "authors": ["Seohyun Lee", "Seoung Choi", "Dohwan Ko", "Jongha Kim", "Hyunwoo J. Kim"],
+      "affiliations": ["KAIST", "Korea University"],
+      "source": "arXiv / ECCV 2026 / 今日热点",
+      "published": "2026-07-02",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.00446",
+        "pdf": "https://arxiv.org/pdf/2607.00446",
+        "project": "https://mlvlab.github.io/VideoSearch-R1/",
+        "code": "https://github.com/mlvlab/VideoSearch-R1"
+      },
+      "tags": ["Video Retrieval", "Agent", "Temporal Grounding", "Governance", "Soft Query"],
+      "score": {
+        "total": 79,
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 19,
+        "rationale_zh": "很适合电商短视频巡检、违规片段定位和案例检索。SQR + 多轮检索的设计清晰，且项目页与真实代码仓库已公开，因此本次不重复复现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "VideoSearch-R1 把视频检索与时序定位串成一个可自我纠错的 agent loop：先检索 top-1 视频，再判断是否匹配查询，不匹配就继续 refine query。核心模块 Soft Query Refinement 不是生成新的文本查询，而是在 embedding 空间里生成连续 soft tokens，以更少 token 成本细调查询向量。训练上结合 SFT、InfoNCE 与 GRPO，让 retrieval 和 downstream temporal grounding 一起优化。论文在三套 VCMR 基准上都拿到更好的检索与定位结果。",
+          "innovation": "创新点是把“检索失败可自救”做成 agentic retrieval 框架，并用 soft query 而非离散 rewrite 降低冗余 token。对于内容治理，这意味着系统能在海量视频库里多轮收窄到更相关的候选，再做精确定位。该设计既兼容向量检索引擎，也给后续 RAG/审核案例检索提供了统一接口。",
+          "key_metrics": "ActivityNet-FIG 上 VR R@1 从 55.1 提升到 61.1；DiDeMo-FIG 上 VCMR 0.5/R@1 从 22.1 提升到 30.2；SQR 只用 8 个 soft tokens，而硬查询改写平均需要 26.8 个 tokens。",
+          "story": "一次检索错了，后续时序推理就全部崩掉 -> 让模型先核验检索结果，再在连续空间 refine query -> 逐轮把目标视频拉到更高排名后再做细粒度定位。"
+        },
+        "en": {
+          "method_overview": "VideoSearch-R1 turns retrieval plus temporal grounding into a self-correcting agent loop. It retrieves a top-1 video, verifies the match, and refines the query if needed. Soft Query Refinement appends latent soft tokens in embedding space instead of rewriting the query in text. Joint optimization with SFT, contrastive learning, and GRPO improves both retrieval and temporal grounding.",
+          "innovation": "The key innovation is recoverable retrieval: the system can detect a wrong first hit and refine itself. Using soft tokens rather than discrete rewrites reduces token cost while keeping fine-grained control over dense retrieval embeddings.",
+          "key_metrics": "On ActivityNet-FIG, VR R@1 improves from 55.1 to 61.1. On DiDeMo-FIG, VCMR 0.5/R@1 improves from 22.1 to 30.2. SQR uses 8 latent tokens versus 26.8 text tokens for hard refinement.",
+          "story": "Static retrieval pipelines fail once the first hit is wrong -> verify and refine the query in latent space -> retrieve a better video before doing temporal grounding."
+        }
+      }
+    },
+    {
+      "id": "2607.09024",
+      "title": "Video Generation Models are General-Purpose Vision Learners",
+      "authors": ["Letian Wang", "Chuhan Zhang", "Rishabh Kabra", "Jasper Uijlings", "Steven Waslander", "Andrew Zisserman", "Joao Carreira", "Kaiming He", "Misha Andriluka", "Eduard Gabriel Bazavan", "Andrei Zanfir", "Cristian Sminchisescu"],
+      "affiliations": ["Google DeepMind", "University of Toronto", "University College London", "University of Oxford", "MIT", "Lund University"],
+      "source": "Hugging Face Daily Papers / Google DeepMind / 今日热点",
+      "published": "2026-07-13",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024",
+        "project": "https://genception.github.io"
+      },
+      "tags": ["Vision Foundation Model", "Video Generation", "Generalist Vision", "Dense Prediction"],
+      "score": {
+        "total": 78,
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 15,
+        "rationale_zh": "方法新颖、实验非常强，是今天最值得关注的通用视觉热点之一；但和电商内容生态&达人治理是中等相关，更偏底层视觉基础模型。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 GenCeption：把大规模 text-to-video 扩散模型改造成 feed-forward 视觉感知器，用统一架构完成深度、法线、相机位姿、指代分割与 3D keypoint 等任务。作者通过统一任务表示、文本指令控制和单步前向推理，把生成式视频先验转成通用视觉表征能力。实验显示它在多项任务上达到或超过专用模型，并表现出出色的数据效率。",
+          "innovation": "真正亮点在于把视频生成视作视觉领域的 next-token prediction，对齐出一条“生成式预训练 -> 通用感知”的统一路线。它不是为某个任务设计额外 head，而是把多种任务挤进一个可扩展框架，对后续内容理解与结构化标注非常有启发。",
+          "key_metrics": "Average depth 结果达到 AbsRel 0.071 / δ1 93.8；Ref-DAVIS expression-referring segmentation 达到 75.8；多项任务匹配或超过 DepthAnything3、D4RT、SAM3 等专用方法。",
+          "story": "视觉模型仍然被大量任务专用架构割裂 -> 用视频生成模型学习统一时空先验 -> 通过统一表示和单步前向把生成骨干改造成通用视觉感知器。"
+        },
+        "en": {
+          "method_overview": "GenCeption repurposes large text-to-video diffusion backbones into feed-forward perception models. It uses unified task representations and text instructions to handle depth, normals, pose, referring segmentation, and 3D keypoints within one architecture. The paper argues that video generation acts as the next-token-style pretraining catalyst for vision. Results show strong performance and data efficiency across diverse tasks.",
+          "innovation": "Its main contribution is turning video generation into a general-purpose visual pretraining path rather than a synthesis-only tool. The design favors a single expandable architecture over task-specific heads.",
+          "key_metrics": "Average depth reaches AbsRel 0.071 / δ1 93.8, and expression-referring segmentation on Ref-DAVIS reaches 75.8, matching or surpassing several specialized baselines.",
+          "story": "Task-specific vision stacks fragment capability -> use video generation as scalable pretraining -> convert the generative backbone into a unified perception model."
+        }
+      }
+    },
+    {
+      "id": "2607.08964",
+      "title": "Long-Horizon-Terminal-Bench: Testing the Limits of Agents on Long-Horizon Terminal Tasks with Dense Reward-Based Grading",
+      "authors": ["Zongxia Li", "Zhongzhi Li", "Yucheng Shi", "Ruhan Wang", "Junyao Yang", "Zhichao Liu", "Xiyang Wu", "Anhao Li", "Yue Yu", "Ninghao Liu", "Lichao Sun", "Haotao Mi", "Leowei Liang"],
+      "affiliations": ["Tencent Hunyuan", "University of Maryland", "University of Georgia", "University of Minnesota", "Indiana University", "Lehigh University", "National University of Singapore", "The Hong Kong Polytechnic University"],
+      "source": "Hugging Face Daily Papers / Tencent Hunyuan / 今日热点",
+      "published": "2026-07-13",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.08964",
+        "pdf": "https://arxiv.org/pdf/2607.08964",
+        "project": "https://zli12321.github.io/LHTB/"
+      },
+      "tags": ["Agent Benchmark", "Terminal Tasks", "Evaluation", "Long Horizon"],
+      "score": {
+        "total": 76,
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 17,
+        "rationale_zh": "非常适合评估治理类 Agent 的长链路可靠性，但它更偏 benchmark/harness。对内部巡检和自动修复 agent 的评估体系很有参考价值。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Long-Horizon-Terminal-Bench 构建 46 个长时程终端任务，并用 dense reward-based grading 给每个子任务打分，避免 pass/fail 只看最终结果。它能够细分“完全失败”和“做对大半但收尾失败”的差异，更适合评估真正的工作流型 Agent。论文还配套 stress suite 与成本/时间统计，让 benchmark 更接近真实软件工程与自动化场景。",
+          "innovation": "创新在于把长链路 agent 的评测做成确定性、可解释、可部分得分的系统，而不是依赖模糊的人类主观判断。对治理巡检来说，这种 partial credit 和 failure mode 分析非常重要，因为很多问题不是零一成败，而是在哪个步骤掉链子。",
+          "key_metrics": "最强模型在 R≥0.95 阈值下 pass@1 只有 15.2%，满分通过率 10.9%；跨模型平均分别只有 4.3% 和 1.7%。论文还报告平均每任务约 9.66M tokens、85.1 分钟和 228 个 episode。",
+          "story": "短任务 + 终态评测无法反映真实工作流 -> 把任务拆成可验证子步骤并给 partial reward -> 更准确地定位长时程 Agent 的瓶颈。"
+        },
+        "en": {
+          "method_overview": "Long-Horizon-Terminal-Bench builds 46 long-horizon terminal tasks and grades them with dense subtask rewards instead of pure pass/fail. This distinguishes partial progress from total failure and better reflects real workflow-style agent behavior. The benchmark also measures cost, time, and stress robustness.",
+          "innovation": "Its contribution is a deterministic, interpretable evaluation pipeline for long-horizon agents with partial credit. That makes failure analysis much more actionable than outcome-only grading.",
+          "key_metrics": "The top model reaches only 15.2% pass@1 at R≥0.95 and 10.9% at full score. Cross-model averages are 4.3% and 1.7%, with about 9.66M tokens and 85.1 minutes per task on average.",
+          "story": "Outcome-only terminal benchmarks hide where agents fail -> decompose tasks into graded subtasks -> expose long-horizon reliability bottlenecks."
+        }
+      }
+    },
+    {
+      "id": "2607.09657",
+      "title": "Scalable Visual Pretraining for Language Intelligence",
+      "authors": ["Yiming Zhang", "Zhonghan Zhao", "Wenwei Zhang", "Haiteng Zhao", "Tianyang Lin", "Yunhua Zhou", "Demin Song", "Kuikun Liu", "Haochen Ye", "Haian Huang", "Yuzhe Gu", "Haijun Lv", "Qipeng Guo", "Bin Liu", "Gaoang Wang", "Kai Chen"],
+      "affiliations": ["Shanghai Artificial Intelligence Laboratory", "University of Science and Technology of China", "Zhejiang University", "Shanghai Jiao Tong University"],
+      "source": "Hugging Face Daily Papers / 今日热点",
+      "published": "2026-07-13",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.09657",
+        "pdf": "https://arxiv.org/pdf/2607.09657"
+      },
+      "tags": ["Multimodal Pretraining", "Document Intelligence", "Visual Latent", "LLM"],
+      "score": {
+        "total": 74,
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 14,
+        "rationale_zh": "视觉富文档预训练路线非常有启发，对规则文档、知识库和图表理解很有帮助；但与达人治理直接距离稍远。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 Visual Pretraining：不把 PDF/OCR 转成纯文本，而是直接在渲染后的页面图像上做 next visual latent prediction。作者使用冻结视觉编码器提取前景 patch，再把它们输入同一个自回归 LLM 骨干，使模型在保留版式、图表和公式结构的同时学习语言智能。与 matched text pretraining 对比，VP 在多项文本与多模态推理任务上都有提升。",
+          "innovation": "创新点在于把文档视觉结构本身当成预训练信号，而不是只把它变成文字。它给了“富结构页面 -> 语言模型”的一条新路径，对平台规则、知识库、商品文档等高结构文本都有启发。",
+          "key_metrics": "Qwen 3.5 上 MMLU-Pro 从 83.91 提升到 85.09，GPQA 从 76.24 提升到 79.29；MathVista 从 85.50 提升到 86.70。论文还指出 VP 只用约 25% token budget 就超过 matched TP。",
+          "story": "OCR/text-only 预训练会丢掉页面结构 -> 直接在视觉页面上预测 next visual latent -> 让模型同时吸收文档结构与语言知识。"
+        },
+        "en": {
+          "method_overview": "The paper proposes Visual Pretraining, which predicts the next visual latent directly from rendered PDF pages instead of converting them into plain text first. Foreground patches from a frozen vision encoder are fed into the same autoregressive language backbone. This preserves layout, charts, and formula structure while improving language intelligence. VP outperforms matched text pretraining on several textual and multimodal benchmarks.",
+          "innovation": "The key idea is to treat document visual structure itself as the pretraining signal. This provides a new path from rich pages to stronger language models.",
+          "key_metrics": "On Qwen 3.5, MMLU-Pro improves from 83.91 to 85.09 and GPQA from 76.24 to 79.29. MathVista improves from 85.50 to 86.70, while using roughly one quarter of the token budget of matched text pretraining.",
+          "story": "Text-only document pretraining drops page structure -> predict visual latents on rendered pages -> retain layout and chart information during pretraining."
+        }
+      }
+    },
+    {
+      "id": "2607.00310",
+      "title": "RetailSMV: Exocentric vs. Egocentric Adaptation of Foundation Video World Models in Retail",
+      "authors": ["Amirreza Rouhi", "Rajat Aggarwal", "Parikshit Sakurikar", "Anoop M. Namboodiri", "Sashi P. Reddi"],
+      "affiliations": ["Retail / video world model study"],
+      "source": "arXiv / Retail Video / 今日相关发现",
+      "published": "2026-07-02",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.00310",
+        "pdf": "https://arxiv.org/pdf/2607.00310"
+      },
+      "tags": ["Retail", "Video World Model", "LoRA", "Store Operations"],
+      "score": {
+        "total": 66,
+        "innovation": 18,
+        "results": 10,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 15,
+        "rationale_zh": "更偏零售场景视频世界模型适配，但对门店内容理解和训练数据采集策略很有参考价值。与达人治理直接相关性一般。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RetailSMV 研究把公开视频世界模型用 LoRA 适配到真实零售门店场景，并比较 exocentric 与 egocentric 视角数据哪个更适合训练。作者构建同步双视角数据集，在相同预算下训练 ego-only、exo-only 和 combined 三种配置。结果显示 exo-only 在大多数指标上不弱于甚至优于 combined，说明多视角联合并不天然更优。",
+          "innovation": "论文的价值在于直接回答“同步多视角数据该怎么投放训练预算”的工程问题，而不是提出更复杂的模型结构。对于门店巡检、具身零售训练和场景模拟，这是非常实用的结论。",
+          "key_metrics": "统一验证损失从 1.006 降到约 0.36；exo-only 在 LPIPS、PSNR、DreamSim 上显著优于 combined，R3D-Fréchet 达到 35.14，JEDi 达到 0.829。",
+          "story": "泛域视频世界模型落到零售场景会快速漂移 -> 用 LoRA 做低成本 domain adaptation，并系统比较 ego/exo 视角 -> 发现 exo-only 反而更稳定。"
+        },
+        "en": {
+          "method_overview": "RetailSMV studies parameter-efficient LoRA adaptation of a foundation video world model to real retail stores and asks whether exocentric or egocentric data is better for training. The authors build synchronized multi-view retail videos and compare ego-only, exo-only, and combined adaptation under the same budget. Exo-only matches or beats combined on most metrics.",
+          "innovation": "Its main contribution is answering a practical data-allocation question for domain adaptation rather than inventing a more complex model. This is directly useful for retail simulation and store-scene modeling.",
+          "key_metrics": "Validation loss drops from 1.006 to about 0.36 after adaptation. Exo-only achieves stronger LPIPS, PSNR, and DreamSim than combined, with R3D-Fréchet 35.14 and JEDi 0.829.",
+          "story": "Generic video world models drift in retail scenes -> adapt with LoRA under synchronized ego/exo data -> discover that exocentric-only adaptation can be the better use of data budget."
+        }
+      }
+    }
+  ]
+}
