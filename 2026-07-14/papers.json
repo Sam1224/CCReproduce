@@ -1,0 +1,195 @@
+{
+  "papers": [
+    {
+      "id": "2607.11886",
+      "title": "Read It Back: Pretrained MLLMs Are Zero-Shot Reward Models for Text-to-Image Generation",
+      "authors": ["Runhui Huang", "Qihui Zhang", "Zhe Liu", "Yu Gao", "Jie Wu", "Hengshuang Zhao"],
+      "affiliations": ["The University of Hong Kong", "ByteDance Seed", "Peking University"],
+      "source": "arXiv / 今日热点 / AIGC 内容质量",
+      "published": "2026-07-14",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.11886",
+        "pdf": "https://arxiv.org/pdf/2607.11886",
+        "project": "https://huangrh99.github.io/SpectraReward/",
+        "code": "https://github.com/huangrh99/AlphaGRPO"
+      },
+      "tags": ["AIGC", "Reward Model", "MLLM", "Text-to-Image", "Content Quality"],
+      "score": {
+        "total": 81,
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 5,
+        "relevance": 15,
+        "rationale_zh": "SpectraReward 把预训练 MLLM 直接变成“零样本奖励模型”：不做偏好标注/不做 RM 微调，而是用 teacher-forced 的 prompt log-likelihood 来衡量“生成图能否被读回原始意图”。这种 read-it-back 视角等价于把对齐问题转为可度量的信息恢复问题，既训练-free、又天然兼容不同扩散 policy 与 RL 算法。更重要的是它能落到 AIGC 内容质量与对齐：对电商图生图/广告素材/图文一致性，reward 可以直连“提示词可恢复性/文本一致性”，并在 GenEval、DPG-Bench 等 OOD 评测上带来稳定提升。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 SpectraReward：把预训练 MLLM 当作现成 reward model，用一次 image-conditioned、teacher-forced forward pass 计算“prompt 被读回的平均对数似然”（prompt log-likelihood），作为 text-to-image 强化学习的奖励。与让 MLLM 直接打分/问答式验证不同，它把奖励定义为“生成图对原始文本意图的信息可恢复性”。进一步，作者提出 Self-SpectraReward：在统一多模态模型（同一骨干既能理解也能生成）的场景下，用其理解分支给生成分支打分，形成无需外部 RM 的闭环自我改进。",
+          "innovation": "核心创新是 reward 定义的“读回范式”：将对齐/质量度量从主观打分转为可计算的条件似然，从而做到训练-free、可迁移、且对 reward-policy 的表示对齐更友好；Self-SpectraReward 则把 reward-policy 对齐显式内生化，减少“更大 RM 未必更好”的不稳定来源。对内容质量治理而言，它提供了一个可直接工程化的、面向文本一致性/提示词忠实度的奖励信号。",
+          "key_metrics": "在五个 OOD 图像生成评测上（GenEval、TIIF-Bench、DPG-Bench、GenEval2、WISE）一致提升。以 512 分辨率为例，GenEval 从 BAGEL 的 84.0 提升到 88.3（SpectraReward）/ 89.5（Self-SpectraReward），DPG-Bench 从 85.0 提升到 88.1；同时覆盖 2 个扩散模型、3 种 RL 算法、9 个 reward MLLM（4B–235B）。",
+          "story": "图生图 RL 的瓶颈是“奖励难做”：偏好数据贵、RM 迁移差、模型越大也不一定更稳定 -> 把奖励改成“能否把 prompt 从图里读回来”的条件似然 -> 用现成 MLLM 即插即用做 reward，并进一步用 Self-SpectraReward 把 reward 和 policy 放进同一多模态体系统一对齐。"
+        },
+        "en": {
+          "method_overview": "SpectraReward turns a frozen pretrained MLLM into an off-the-shelf reward model for text-to-image RL. It scores a generated image by the teacher-forced, image-conditioned log-likelihood of recovering the original prompt (prompt log-likelihood). The paper further introduces Self-SpectraReward for unified multimodal models, where the model’s own understanding branch rewards its generation branch, forming a closed-loop self-improving setup.",
+          "innovation": "The key innovation is a training-free “read-it-back” reward: alignment is measured as conditional likelihood (information recoverability) rather than subjective judgments. Self-SpectraReward internalizes reward-policy alignment, reducing instability where a larger external reward model is not necessarily better.",
+          "key_metrics": "Across five out-of-distribution T2I benchmarks, SpectraReward consistently improves generation quality. At 512 resolution, GenEval improves from 84.0 to 88.3 (SpectraReward) / 89.5 (Self-), and DPGBench improves from 85.0 to 88.1. The study spans 2 diffusion models, 3 RL algorithms, and 9 reward MLLMs (4B–235B).",
+          "story": "T2I RL is bottlenecked by costly or brittle reward modeling -> define reward as prompt recoverability from the generated image -> reuse frozen MLLMs as plug-and-play reward models, and close the loop via Self-SpectraReward."
+        }
+      }
+    },
+    {
+      "id": "2607.11862",
+      "title": "Evidence-Backed Video Question Answering",
+      "authors": ["Shijie Wang", "Honglu Zhou", "Ziyang Wang", "Ran Xu", "Caiming Xiong", "Silvio Savarese", "Chen Sun", "Juan Carlos Niebles"],
+      "affiliations": ["Salesforce", "Brown University"],
+      "source": "arXiv / Video QA / Governance / Explainability",
+      "published": "2026-07-14",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.11862",
+        "pdf": "https://arxiv.org/pdf/2607.11862",
+        "code": "https://github.com/SalesforceAIResearch/EVQA"
+      },
+      "tags": ["Video QA", "Grounding", "Governance", "Explainability", "Evidence"],
+      "score": {
+        "total": 83,
+        "innovation": 27,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "rationale_zh": "EVQA 把“可解释/可核验”从附加文字解释推进到像素级证据：输出答案的同时给出 temporal segment + tracked masklets，让回答可回溯到具体帧与目标实例。这类 evidence-backed 输出非常契合内容治理、申诉与复核链路（能直接拿证据对齐规则）。论文还给出 ST-Evidence（human-verified）与 160k 规模的 ST-Evidence-Instruct 自动生成数据，并在 7B 级别带来显著增益，且代码数据公开，落地门槛较低。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 Evidence-Backed Video QA（E-VQA）：模型不仅输出语义答案，还必须输出精确的时空证据，包括时间段（temporal segments）与可跟踪的目标分割 masklets（dense, tracked object segmentation）。为此作者构建 ST-Evidence：首个面向判别式/生成式、像素级 grounding 的 human-verified 基准；并提出可扩展的自动化生成流水线，产出 160k 规模的 ST-Evidence-Instruct，将高层推理与细粒度视觉证据对齐，用于微调 grounded Video LLM。",
+          "innovation": "创新点在于把视频 QA 的“解释性”升级为可机器评测、可复核的证据输出（masklet + 时段），从而把黑盒回答变成可审计结果；同时用自动化数据生成把像素级标注扩展到 160k 量级，解决传统人工标注难以规模化的问题。对治理场景尤其关键：证据可以直接用于规则匹配、争议复核与 failure case 归因。",
+          "key_metrics": "ST-Evidence-Instruct 规模约 160k。用该数据微调后，7B 模型相对 size-matched UniPixel baseline 提升 +27.2 t-mean 与 +13.8 J&F（论文示例设置），展示 QA 正确率与真实感知/grounding 之间的“脱钩”可被数据显著缓解。",
+          "story": "现有 Video LLM 虽能答对，但缺少可核验依据，治理与审计不可用 -> 定义必须同时给出答案与像素级时空证据的 E-VQA -> 先建 human-verified 基准，再用可扩展流水线生成 160k 指令数据 -> 让模型真正学会“用证据说话”。"
+        },
+        "en": {
+          "method_overview": "EVQA introduces Evidence-Backed Video QA (E-VQA), where models must output both the semantic answer and precise spatio-temporal evidence: temporal segments plus dense tracked segmentation masklets. The paper releases ST-Evidence, a human-verified benchmark for pixel-level grounding, and a scalable pipeline that produces ST-Evidence-Instruct (160k) to fine-tune grounded Video LLMs.",
+          "innovation": "It elevates explainability from free-form text rationales to auditable pixel-level evidence. The scalable data generation pipeline makes fine-grained grounding supervision practical at large scale, which is critical for governance and review.",
+          "key_metrics": "ST-Evidence-Instruct contains ~160k examples. Fine-tuning a 7B model yields +27.2 t-mean and +13.8 J&F over a size-matched UniPixel baseline.",
+          "story": "Video LLMs can answer correctly but remain unauditable -> require answers plus spatio-temporal evidence -> build a human-verified benchmark and scale supervision via automated data generation -> train models to be evidence-grounded."
+        }
+      }
+    },
+    {
+      "id": "2607.11844",
+      "title": "Beyond the Single Camera: Agentic Multi-View Reasoning in Sports Video Understanding",
+      "authors": ["Kerui Chen", "Jinglu Wang", "Xiaoyi Zhang", "Yan Lu"],
+      "affiliations": ["Zhejiang University", "Microsoft Research Asia"],
+      "source": "arXiv / Multi-View / Agent / Evidence",
+      "published": "2026-07-14",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.11844",
+        "pdf": "https://arxiv.org/pdf/2607.11844"
+      },
+      "tags": ["Multi-View", "Agent", "Video Understanding", "Governance", "Evidence"],
+      "score": {
+        "total": 75,
+        "innovation": 25,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 17,
+        "rationale_zh": "SportMV-Agent 把多视角视频理解做成可控的 agent loop：主动选视角、调用感知工具、再做 evidence-grounded 推理，并配套 SportMV-Bench（787 个多视角 bundle、2592 QA）评估“是否真的用上多视角证据”。虽然场景在体育，但“多视角证据 + 主动选择 + 可核验输出”的范式可迁移到电商治理的多路摄像头/多源内容审核与复核流程。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文指出单视角视频理解在体育场景会被遮挡、快速运动与复杂交互卡死，而真实比赛依赖多机位证据。作者提出 SportMV-Bench：从官方比赛多机位录像构建的多视角基准，涵盖 787 个 multi-view bundles 与 2592 个 QA，任务分为 PAR（感知识别）、REI（规则事件解释）与 ADR（裁决推理）。在此基础上提出 SportMV-Agent：通过“主动视角选择 → 感知工具执行 → 证据驱动推理”的迭代闭环，让模型更有效利用多视角信息。",
+          "innovation": "创新在于把“多视角是否被利用”显式变成 benchmark 维度，并给出 agentic 解决范式：先决策看哪路镜头，再调用跟踪/分割等工具补足细粒度感知，最后在证据约束下推理。这对治理类系统很重要，因为多源证据往往比更复杂的语言推理更稀缺也更关键。",
+          "key_metrics": "SportMV-Bench 含 787 个多视角视频包与 2592 条 QA。SportMV-Agent 相比最强 MLLM baseline 取得 14.46% 的相对提升（论文报告）。",
+          "story": "单视角理解遇到遮挡与歧义 -> 引入多机位证据但模型不会“主动看” -> 用 benchmark 定位瓶颈在视角选择与细粒度感知 -> 通过 agent loop 主动选视角+工具感知，把多视角优势转成可验证增益。"
+        },
+        "en": {
+          "method_overview": "The paper introduces SportMV-Bench, a multi-view sports video benchmark built from official match recordings (787 multi-view bundles, 2592 QA pairs) across perception-aware recognition, rule-aware event interpretation, and adjudicative decision reasoning. It also proposes SportMV-Agent, an iterative loop of active view selection, perception tool execution, and evidence-grounded reasoning to better exploit multi-camera evidence.",
+          "innovation": "It makes multi-view utilization measurable and improves it with an agentic pipeline: decide which view to inspect, run perception tools for fine-grained cues, and reason under explicit evidence.",
+          "key_metrics": "SportMV-Agent achieves a 14.46% relative improvement over the strongest MLLM baseline on SportMV-Bench.",
+          "story": "Single-view sports videos are ambiguous under occlusion -> multi-view evidence exists but is underused -> actively select views and extract perception evidence -> improve decision-level reasoning with verifiable cues."
+        }
+      }
+    },
+    {
+      "id": "2607.11465",
+      "title": "Score-Only Distillation for Compact Dense Retrieval",
+      "authors": ["Kirill Dubovikov", "Martin Takac", "Salem Lahlou"],
+      "affiliations": ["Mohamed bin Zayed University of Artificial Intelligence"],
+      "source": "arXiv / Dense Retrieval / Distillation / Efficiency",
+      "published": "2026-07-13",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.11465",
+        "pdf": "https://arxiv.org/pdf/2607.11465"
+      },
+      "tags": ["Retrieval", "Distillation", "Embedding", "Efficiency", "Vector Search"],
+      "score": {
+        "total": 68,
+        "innovation": 20,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 9,
+        "generalization": 2,
+        "relevance": 15,
+        "rationale_zh": "这篇工作解决“强 teacher 很大、线上代价高”的典型检索痛点：只用 teacher 的 score vectors（不依赖 hidden states）来蒸馏 compact retriever，并给出 row-centered 的 PairMSE（uniform all-pairs）实现，工程上更易接入现有向量检索链路。结果显示 0.6B student 编码速度显著提升，但跨协议/跨域 transfer 仍不稳定，因此适合作为“匹配协议下的压缩提速”方案。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文研究 score-only distillation：学生模型不看 teacher 的中间表征，只学习 teacher 对候选集合的打分/排序行为。训练数据由“真阳性 + 负样本候选”组成的行（row）构建，目标函数采用 row-centered score-vector objective，并实现为内存友好的 uniform all-pairs PairMSE。作者还单独评估 student-teacher hard-negative mining 作为扩展。最终目标是在保持检索协议一致的前提下，把昂贵 teacher 排序能力压缩到更小的 student encoder。",
+          "innovation": "创新点是将蒸馏信号压缩到 score vectors，避免依赖 teacher hidden states/特定架构接口，从而更适合工业检索系统里“多 teacher 融合、异构模型、不可导组件”的现实；row-centered PairMSE 也更便于大规模训练与工程实现。",
+          "key_metrics": "在固定 8-task 评测面板上，蒸馏最多可恢复 base-to-teacher gap 的 50%。0.6B student 的 query 编码速度比 sequential online teacher fusion 快 4.7×，document 编码快 9.7×（论文报告）。",
+          "story": "大 embedding teacher 效果好但线上太贵 -> 只取 teacher 的分数向量做蒸馏，不依赖内部表征 -> 用 row-centered PairMSE 学习排序行为 -> 得到更快的 compact encoder，同时在 matched protocol 下尽量保住效果。"
+        },
+        "en": {
+          "method_overview": "The paper studies score-only distillation for dense retrieval: a compact student learns the teacher’s ranking behavior from score vectors without accessing teacher hidden states. Training uses rows composed of ground-truth positives and mined negatives, optimized with a row-centered score-vector objective implemented as a memory-efficient uniform all-pairs PairMSE.",
+          "innovation": "By distilling only from score vectors, the method avoids reliance on teacher internals and is easier to integrate with heterogeneous or fused teacher systems. The row-centered PairMSE objective is also implementation-friendly at scale.",
+          "key_metrics": "On an 8-task evaluation panel, the protocol recovers up to 50% of the base-to-teacher gap. The distilled 0.6B student is 4.7× faster for query encoding and 9.7× faster for document encoding than sequential online teacher fusion.",
+          "story": "Large retrievers are effective but costly -> distill from teacher score vectors only -> train a compact student with row-centered PairMSE -> achieve major speedups while retaining a significant portion of teacher gains under matched protocols."
+        }
+      }
+    },
+    {
+      "id": "2607.11392",
+      "title": "Beyond Semantic IDs: Encoding Business-Value Ranking into Document Identifiers for Generative Retrieval",
+      "authors": ["Gui Ling", "Zhihong Chen", "Yu Li", "Tong Xiong", "Kunhai Lin", "Kaixuan Zhang", "Yuliang Yan", "Dan Ou", "Haihong Tang", "Bo Zheng"],
+      "affiliations": ["Taobao & Tmall Group of Alibaba"],
+      "source": "arXiv / E-commerce / Generative Retrieval / Business Value",
+      "published": "2026-07-13",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.11392",
+        "pdf": "https://arxiv.org/pdf/2607.11392"
+      },
+      "tags": ["E-commerce", "Generative Retrieval", "Ranking", "DocID", "Business Value"],
+      "score": {
+        "total": 85,
+        "innovation": 25,
+        "results": 14,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 23,
+        "rationale_zh": "CRID 针对 generative retrieval 的核心瓶颈——DocID 设计——提出“语义聚类 + 商业价值排序”解耦：先做 collision-free 的语义聚类，再在簇内按业务价值重排生成 DocID，使得 ID 的学习目标与 GMV/排序目标一致，并支持增量更新（簇内 reranking）。在 3 亿规模淘宝语料上超过最强 embedding baseline，并在全流量实验带来 +1.06% GMV，属于非常典型的电商检索/排序直接增量论文。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文研究 Generative Retrieval（把检索变成 seq2seq 生成 DocID），指出现有 DocID 学习方案存在 collision 与“ID 编码目标 ≠ 业务优化目标”的错配。作者提出 Cluster-Ranked Identifier（CRID）：将 DocID 设计解耦为两步——(1) 语义聚类：为文档分配 collision-free 的 cluster；(2) 簇内排序：在每个 cluster 内按业务价值（如成交/转化相关信号）进行 reranking，把业务 prior 编进 DocID 的 token 序列中。该设计还支持增量更新：新增文档仅需在簇内重排而不破坏全局 ID 体系。论文同时给出一个分析框架，将收益拆分为个性化偏好与统计先验泛化，并指出 cluster size 决定二者平衡。",
+          "innovation": "创新点在于把“DocID 既要表达语义又要表达业务价值”的冲突显式拆开：语义负责分桶避免碰撞，业务负责簇内序位对齐线上目标；这种结构化 ID 设计比纯离散表征学习更可控、更利于线上增量维护。对电商而言，这是把 generative retrieval 从学术指标直接拉到 GMV 的可落地路线。",
+          "key_metrics": "在 3 亿（300M）商品规模淘宝语料上，CRID 在 top-K Hitrate 上超过最强 embedding-based retrieval baseline；并在全流量线上部署带来 +1.06% GMV（论文报告）。",
+          "story": "GR 的效果高度依赖 DocID，但现有 DocID 会碰撞且很难对齐业务目标 -> 把 DocID 拆成“语义聚类 + 簇内业务排序” -> collision-free 且能把业务 prior 编进生成空间，并支持增量更新 -> 线上 GMV 取得可观增量。"
+        },
+        "en": {
+          "method_overview": "The paper studies DocID design for Generative Retrieval and identifies collisions and misalignment between DocID learning objectives and business ranking targets. CRID decouples DocIDs into semantic clustering (collision-free groups) and intra-cluster business-value ranking, encoding business priors directly into the identifier sequence while supporting incremental updates via intra-cluster reranking. It also provides an analysis that decomposes gains into personalized preference and statistical-prior generalization.",
+          "innovation": "CRID separates semantics (for collision-free grouping) from business value (for ordering within clusters), making DocIDs controllable, maintainable, and aligned with online objectives.",
+          "key_metrics": "On a 300M-item Taobao corpus, CRID outperforms the strongest embedding-based retrieval baseline on top-K hitrate and delivers +1.06% GMV in full-traffic deployment.",
+          "story": "DocID quality is the bottleneck of generative retrieval -> collisions and objective mismatch hurt online value -> decouple DocIDs into semantic clusters plus business-value ranks -> achieve both offline improvements and measurable GMV lift."
+        }
+      },
+      "reproduce": {
+        "path": "2026-07-14/CRID_Generative_Retrieval"
+      }
+    }
+  ]
+}
