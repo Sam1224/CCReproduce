@@ -1,0 +1,160 @@
+{
+  "papers": [
+    {
+      "id": "2607.08434",
+      "title": "DeltaV: Thinking with Visual State Updates in Unified Large Multimodal Models",
+      "authors": ["Pengjie Wang", "Linger Deng", "Zujia Zhang", "Shaojie Zhang", "Zhenbo Luo", "Pei Fu", "Jian Luan", "Xiang Bai", "Yuliang Liu"],
+      "affiliations": ["Huazhong University of Science and Technology", "Alibaba Group"],
+      "source": "arXiv / Unified MLLM / 今日巡检热点",
+      "published": "2026-07-09",
+      "tags": ["MLLM", "Visual Reasoning", "Token Efficiency", "Content Understanding"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.08434",
+        "pdf": "https://arxiv.org/pdf/2607.08434",
+        "code": "https://github.com/Pengjie-W/DeltaV"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DeltaV 面向 unified large multimodal models 的多步图文推理，核心是把每一步完整生成一张视觉状态图，改成只生成相对上一状态的 compact visual update tokens。它用 TSIM Router 根据视觉变化幅度动态决定 token 预算，边际重建收益低于阈值时停止分配 token，从而减少重复建模未变化区域。论文还构建 StructCoT，覆盖 44 个任务域、105 万样本，用于训练更泛化的 interleaved multimodal reasoning。高光点在于把视觉推理中的“状态演进”显式增量化，直接对应电商内容理解里商品图局部变化、违规要素定位、图文一致性校验等场景。",
+          "story": "现有 ULMM 在多步推理时每步重画整图，视觉 token 冗余大且稀疏关键变化被稀释 -> 需要只关注状态差异，并让 token 预算随变化量自适应 -> DeltaV 用 visual update token 与 TSIM Router 取代 full-image state generation。",
+          "innovation": "创新点合理且工程价值强：它没有继续堆大模型，而是改变中间视觉状态的表示粒度，把“完整图像监督”变成“差分视觉监督”。与普通压缩或 token pruning 不同，DeltaV 的预算由跨状态相似度驱动，能把计算集中到真正变化的区域；这对电商图文审核中局部贴纸、文本、Logo、违规元素变化尤其契合。",
+          "key_metrics": "论文摘要报告：visual-update paradigm 平均减少 55.6% 新生成视觉 token，同时 multimodal reasoning 较 full-image generation 提升 3.3%；DeltaV-2B 在 in-domain multimodal reasoning 上超过更大开源模型 8.4%，在外部 multimodal reasoning/understanding benchmark 上超过同尺度 Qwen3-VL-2B 5.9%。"
+        },
+        "en": {
+          "method_overview": "DeltaV replaces full-image intermediate-state generation in unified large multimodal models with compact visual update tokens. A TSIM Router dynamically allocates the update-token budget according to the magnitude of visual change, stopping when marginal reconstruction gain falls below a threshold. The paper also introduces StructCoT, a 1.05M-sample interleaved multimodal reasoning dataset across 44 domains.",
+          "story": "Existing ULMMs redraw full visual states at every reasoning step, wasting visual tokens and diluting sparse but critical state changes -> model only the delta between states -> use visual update tokens plus a temporal-similarity router for adaptive token budgets.",
+          "innovation": "The key novelty is representing visual reasoning as state deltas rather than repeated full images. Unlike generic pruning, DeltaV allocates visual budget by temporal similarity, focusing supervision and compute on changed regions.",
+          "key_metrics": "The abstract reports 55.6% fewer newly generated visual tokens on average, +3.3% reasoning over full-image generation, +8.4% over larger open-source models on in-domain reasoning, and +5.9% over Qwen3-VL-2B on external multimodal reasoning/understanding benchmarks."
+        }
+      },
+      "score": {"innovation": 27, "results": 13, "exp_quality": 13, "efficiency": 9, "generalization": 5, "relevance": 19, "total": 86, "rationale_zh": "方法创新很强，直接解决 MLLM 视觉状态冗余；实验指标覆盖效率与推理效果，且包含大规模 StructCoT。与电商强相关度不是最高，但对图文内容理解、局部变化审核、商品图编辑审查非常有迁移价值。原文代码仓库已确认存在且包含 deltav/modeling、tsim_router、inference、data_processing 等实现文件，因此不再重复复现。"}
+    },
+    {
+      "id": "2607.00920",
+      "title": "GMO-E2DIT: Grounded Multi-Operation Editing for E-Commerce Images",
+      "authors": ["Zipeng Guo", "Xiaoan Liu", "Lichen Ma", "Cheng Wang", "Yu He", "Xiaolong Fu", "Jingling Fu", "Xinyuan Shan", "Shaojie Guo", "Luohang Liu", "Junshi Huang", "Yan Li"],
+      "affiliations": ["JD.com", "Wuhan University", "Xi'an Jiaotong University", "Sun Yat-sen University"],
+      "source": "arXiv / E-commerce Image Editing / 强相关",
+      "published": "2026-07-01",
+      "tags": ["E-commerce", "VLM Agent", "Image Editing", "Content Quality"],
+      "links": {"arxiv": "https://arxiv.org/abs/2607.00920", "pdf": "https://arxiv.org/pdf/2607.00920"},
+      "reproduce": {"path": "2026-07-15/GMO_E2DIT"},
+      "summary": {
+        "zh": {
+          "method_overview": "GMO-E2DIT 把电商图片编辑重新定义为 grounded multi-operation task completion，而不是一次性全局生成。VLM agent 先把模糊自然语言指令拆成区域绑定的 edit agenda，包括 add/remove/move/replace/exchange 等操作、源/目标区域和约束；mask-conditioned editor 再按子程序执行。反思循环会检查中间结果并决定 success/continue/rollback，保留已完成的安全局部进展并重试失败操作。论文还构建电商编辑数据管线与 EComEditBench，对规划、执行、反思进行对齐监督。",
+          "story": "电商图的 Logo、贴纸、价格标签、文案块等元素有业务意义，一次性编辑很容易只完成一部分或误改背景 -> 需要先显式规划“改哪里、做什么、如何验收” -> GMO-E2DIT 用 VLM 规划+mask 编辑器执行+反思回路，把不可控生成变成可审计的多操作流程。",
+          "innovation": "创新点非常贴合电商内容生态：把本来黑盒的一步图像编辑拆成可追踪 edit agenda 与可回滚执行状态，并把 VLM 从辅助 prompt 生成提升为 planner + judge。与传统 mask/box-guided editor 相比，它不要求用户手工标注区域；与 one-shot editor 相比，它能显式保留未编辑区域并处理组合指令。",
+          "key_metrics": "在 EComEditBench precise setting 中总体 IA/EF/BP 达到 9.82/9.62/9.85，超过 Nano Banana Pro 的 9.18/9.01/9.49 和 Seedream 5.0 的 9.29/9.04/9.49；1000 个 fuzzy-instruction 人评中，GMO-E2DIT 在 instruction following 上相对三类强基线获得 36.3%、40.4%、46.6% 偏好率，对手分别为 28.5%、26.6%、21.2%。"
+        },
+        "en": {
+          "method_overview": "GMO-E2DIT formulates e-commerce image editing as grounded multi-operation task completion. A VLM agent converts ambiguous instructions into a region-grounded edit agenda, a mask-conditioned editor executes each sub-program, and a reflection loop marks operations as success, continue, or rollback.",
+          "story": "E-commerce images contain business-critical local elements, so one-shot editing often misses operations or corrupts untouched content -> make every operation explicit and auditable -> combine VLM planning, mask-conditioned execution, and reflective verification.",
+          "innovation": "The paper turns black-box editing into a traceable program of grounded operations. Compared with one-shot editors, it separates cognitive reasoning from rendering; compared with mask-guided editors, it does not require users to manually annotate regions.",
+          "key_metrics": "On EComEditBench precise setting, GMO-E2DIT reaches 9.82/9.62/9.85 overall IA/EF/BP, outperforming Nano Banana Pro at 9.18/9.01/9.49 and Seedream 5.0 at 9.29/9.04/9.49. In a 1,000-case user study, it is preferred for instruction following at 36.3%, 40.4%, and 46.6% against three strong baselines."
+        }
+      },
+      "score": {"innovation": 25, "results": 13, "exp_quality": 14, "efficiency": 7, "generalization": 4, "relevance": 25, "total": 88, "rationale_zh": "强电商场景、方法闭环完整、指标明显优于闭源强基线，实验覆盖模糊指令、精确指令和人评；效率项略低，因为依赖 VLM agent 与多轮反思。未发现原文提供可用代码，因此已按论文核心流程做 toy PyTorch 复现。"}
+    },
+    {
+      "id": "2607.00448",
+      "title": "Real-Time Hard Negative Sampling via LLM-based Clustering for Large-Scale Two-Tower Retrieval",
+      "authors": ["Authors not fully disclosed in parsed preview"],
+      "affiliations": ["Industry recommendation system team"],
+      "source": "arXiv / Recommendation Retrieval / 强相关",
+      "published": "2026-07-01",
+      "tags": ["Recommendation", "Retrieval", "LLM Clustering", "E-commerce"],
+      "links": {"arxiv": "https://arxiv.org/abs/2607.00448", "pdf": "https://arxiv.org/pdf/2607.00448"},
+      "reproduce": {"path": "2026-07-15/GOOBS_Cluster_Negative_Sampling"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 GOOBS/Cluster GOOBS：在两塔召回训练中维护实时 out-of-batch item pool，并利用 LLM-based item clustering 从正样本同语义簇中在线抽取 hard negatives。它解决 in-batch negatives 覆盖不足、随机 OOB negatives 太容易、以及点击反馈导致流行度偏置的问题。工程上通过 update engine 与 sampling engine 在训练中持续刷新 item pool，使 hard negative 生成可工业级扩展。",
+          "story": "大规模电商召回需要两塔模型高效检索，但负样本要么太少、要么太容易、还会放大热门物品偏置 -> 需要实时、语义相近、可扩展的困难负样本 -> Cluster GOOBS 用 LLM 聚类把同类目/同语义 item 作为在线 hard negatives，并保持训练/服务一致性。",
+          "innovation": "创新主要在工程化负采样系统：不是离线 ANN 周期刷新，也不是固定 batch 内负样本，而是通过簇索引把 semantic hard negatives 实时注入训练。LLM clustering 让“难负样本”更贴近内容语义，对电商商品/达人/内容向量召回与相似内容治理都有直接价值。",
+          "key_metrics": "公开数据集上 Cluster GOOBS 在所有数据集和 HR@50/HR@100 指标均最佳；相对 in-batch baseline，MovieLens-1M HR@50 +7.2%，Amazon-Grocery HR@50 +55.6%，Amazon-Electronics HR@50 +47.3%，Amazon-Home HR@100 +42.3%。工业线上作为一个 retrieval source 时，其 served impressions CTR 相比旧 source +53%，训练 QPS 仅 -1.4%，推理 QPS 无回退。"
+        },
+        "en": {
+          "method_overview": "The paper proposes GOOBS / Cluster GOOBS for two-tower retrieval. It maintains a real-time out-of-batch item pool and samples semantically hard negatives from the same LLM-derived item cluster as the positive item, addressing limited in-batch exposure, overly easy random OOB negatives, and popularity bias.",
+          "story": "Large-scale e-commerce retrieval needs efficient two-tower training, but negatives are either too few, too easy, or popularity-biased -> sample real-time semantic hard negatives -> use LLM-based clusters and a scalable update/sampling engine.",
+          "innovation": "The novelty is a production-oriented hard-negative system rather than another static loss. It injects semantic hard negatives online without global ANN refresh, making the retrieval model sharper and less popularity-biased.",
+          "key_metrics": "Cluster GOOBS is best on all reported public HR@50/HR@100 metrics, with gains such as +55.6% HR@50 on Amazon-Grocery, +47.3% HR@50 on Amazon-Electronics, and +42.3% HR@100 on Amazon-Home. In production, the retrieval source achieves +53% CTR on served impressions with only -1.4% training QPS and no inference QPS regression."
+        }
+      },
+      "score": {"innovation": 23, "results": 14, "exp_quality": 13, "efficiency": 9, "generalization": 4, "relevance": 24, "total": 87, "rationale_zh": "这是强电商召回基础设施论文：相关性与线上指标都很高，且兼顾效果、偏置缓解和工业吞吐；创新性主要是系统与采样设计，理论新颖度略低于 MLLM 方法。未发现原文代码，因此已复现可运行的两塔+簇负采样 pipeline。"}
+    },
+    {
+      "id": "2607.08497",
+      "title": "Cognitive-structured Multimodal Agent for Multimodal Understanding, Generation, and Editing",
+      "authors": ["Feng Wang", "Canmiao Fu", "Zhipeng Huang", "Chen Li", "Jing Lyu", "Ge Li"],
+      "affiliations": ["Peking University", "WeChat Vision, Tencent Inc."],
+      "source": "arXiv / Multimodal Agent / 今日巡检热点",
+      "published": "2026-07-09",
+      "tags": ["Multimodal Agent", "Memory", "Generation", "Editing"],
+      "links": {"arxiv": "https://arxiv.org/abs/2607.08497", "pdf": "https://arxiv.org/pdf/2607.08497", "project": "https://caseclose.github.io/cma-harness/", "code": "https://github.com/caseclose/cma-harness"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 Cognitive-structured Multimodal Agent，把长期多模态对话中的视觉历史外置为 Episodic Visual Memory，再由 Perceptual Abstraction Engine、Cognitive Retrieval Engine 与 Multimodal Executive Controller 分别负责视觉抽象、跨轮检索和任务执行。Unified Scenario Engine 自动生成带 turn-level retrieval annotation 的多轮对话，用 SFT+RL 优化记忆写入与检索策略。CMA-Harness 则把同一结构扩展到持久记忆、网页访问、图像生成/编辑/合成与 OpenAI-compatible serving。",
+          "story": "统一多模态模型在长对话中反复塞入全部历史图片，导致视觉 token 爆炸和跨轮引用漂移 -> 需要把视觉记忆结构化外置，并按当前问题检索相关片段 -> CMA 用 PAE/EVM/CoRE/MEC 将记忆、检索、执行模块化。",
+          "innovation": "它的价值在 agent 架构：把多模态长上下文问题从“更大模型+全上下文”改成“结构化视觉记忆+可学习检索+模块化执行”。这对电商达人治理的多轮证据核查、内容溯源、跨图对比很有潜力，但论文主场景是通用多模态生成/编辑，对电商强相关度不如 GMO-E2DIT。",
+          "key_metrics": "8B agent 在 20-turn English sessions 上 retrieval accuracy 达 91.4%，中文 89.6%，超过最强 32B agent baseline +8.2%；per-turn inference time 从 23.1s 降至 12.7s。Hard subset 中从 72.1% 提升到 82.0%，并且 M2CA-Bench generation quality 达 8.49。"
+        },
+        "en": {
+          "method_overview": "The paper externalizes visual history into Episodic Visual Memory and decomposes long-horizon multimodal dialogue into perceptual abstraction, cognitive retrieval, and executive control. A Unified Scenario Engine generates retrieval-supervised multi-turn dialogues, and SFT+RL optimizes memory writing and retrieval policies.",
+          "story": "Unified multimodal models keep feeding all historical images into context, causing visual-token explosion and cross-turn drift -> externalize and retrieve visual memory -> modularize abstraction, retrieval, and execution.",
+          "innovation": "The main innovation is an agentic memory architecture for multimodal dialogue: structured visual memory and learned retrieval replace brute-force all-context scaling.",
+          "key_metrics": "The 8B agent reaches 91.4% English and 89.6% Chinese retrieval accuracy over 20-turn sessions, exceeds the strongest 32B baseline by +8.2%, and reduces per-turn inference time from 23.1s to 12.7s."
+        }
+      },
+      "score": {"innovation": 25, "results": 13, "exp_quality": 13, "efficiency": 9, "generalization": 4, "relevance": 15, "total": 79, "rationale_zh": "方法很强、实验充分且效率明显提升，但更偏通用多模态 agent；与电商治理是弱到中等相关。代码仓库已确认存在但主要为项目页/资源，未发现完整训练代码；因评分低于 80，本轮不触发复现。"}
+    },
+    {
+      "id": "2607.00578",
+      "title": "Caption Bottleneck Models",
+      "authors": ["Authors not fully parsed"],
+      "affiliations": ["Unknown from search snippet"],
+      "source": "arXiv / Interpretable Vision / 内容理解相关",
+      "published": "2026-07-01",
+      "tags": ["Caption", "Interpretability", "Concept Bottleneck", "Content Understanding"],
+      "links": {"arxiv": "https://arxiv.org/abs/2607.00578", "pdf": "https://arxiv.org/pdf/2607.00578"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文从 Concept Bottleneck Models 出发，尝试用 caption 作为更自然、可解释的中间瓶颈，避免人工定义固定概念集合的高成本。它与电商内容理解的关系在于：商品图、达人视频帧和图文素材都可以先转成可审计 caption，再用于分类、聚类、检索或违规解释。",
+          "story": "传统 CBM 需要专家概念或只靠类别名生成概念，覆盖不足且维护成本高 -> 需要更开放的语义中间层 -> 用 caption bottleneck 让模型先形成可读描述，再进行下游预测。",
+          "innovation": "创新偏稳健：caption 作为 bottleneck 比固定 concept list 更灵活，也更适合内容审核解释；但从检索片段看，暂未确认其在大规模电商/多模态治理上的系统实验。",
+          "key_metrics": "本轮未能可靠抽取完整实验表，仅确认论文围绕 CBM 的概念集合定义成本与 LLM-generated lists 的局限展开；因此实验指标项保守评分。"
+        },
+        "en": {
+          "method_overview": "The paper explores captions as a natural interpretable bottleneck for vision models, avoiding the need to manually define a fixed concept set. It is relevant to auditable content understanding because product images and creator media can be converted into inspectable text before classification or retrieval.",
+          "story": "Concept bottleneck models depend on costly or incomplete concept sets -> use captions as a richer semantic bottleneck -> support interpretable downstream predictions.",
+          "innovation": "The idea is practical and interpretable, but the current inspection did not confirm strong e-commerce-scale experiments.",
+          "key_metrics": "Full quantitative tables were not reliably extracted in this run, so metrics are conservatively scored."
+        }
+      },
+      "score": {"innovation": 20, "results": 6, "exp_quality": 7, "efficiency": 7, "generalization": 3, "relevance": 18, "total": 61, "rationale_zh": "caption bottleneck 对可解释内容理解有价值，但本轮缺少完整实验与工程落地证据，故不进入高分复现。"}
+    },
+    {
+      "id": "2607.05438",
+      "title": "Modality Relevance is not Modality Utility: Post-hoc Selective Modality Escalation for Cost-Aware Multimodal RAG",
+      "authors": ["Authors not fully parsed"],
+      "affiliations": ["Unknown from search snippet"],
+      "source": "arXiv / Multimodal RAG / 治理检索相关",
+      "published": "2026-07-03",
+      "tags": ["RAG", "VLM", "Cost-Aware Inference", "Governance"],
+      "links": {"arxiv": "https://arxiv.org/abs/2607.05438", "pdf": "https://arxiv.org/pdf/2607.05438"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文讨论 multimodal RAG 中“模态相关性”不等于“模态效用”：不是问题看起来需要图像就一定调用昂贵 VLM，而是在文本/表格管线先尝试回答后，再 post-hoc 判断是否需要升级到图像模态。它适合电商治理中的证据检索：优先低成本文本/结构化证据，只有当答案不充分或图像证据关键时才调用 VLM。",
+          "story": "多模态 RAG 预先决定是否看图，会导致要么成本过高、要么漏用关键视觉证据 -> 需要在初步答案之后判断图像是否真正带来增量效用 -> Post-hoc selective modality escalation 以效用而非相关性触发升级。",
+          "innovation": "创新是决策时机与目标函数的转变：从 pre-retrieval relevance prediction 转向 post-answer utility estimation。对大规模治理系统很实用，因为成本控制和召回充分性同样重要。",
+          "key_metrics": "本轮未下载到完整论文，未可靠抽取指标；基于摘要可确认其关注 text/table/image 异构证据、低成本 pipeline 与 VLM escalation 的选择机制。"
+        },
+        "en": {
+          "method_overview": "The paper argues that modality relevance is not the same as modality utility in multimodal RAG. Instead of deciding upfront whether every image needs expensive VLM processing, it first attempts a cheaper text/table answer and then escalates to image evidence only when the expected utility is high.",
+          "story": "Pre-retrieval modality choice either overuses VLMs or misses useful visual evidence -> estimate utility after a first answer -> selectively escalate modality for cost-aware multimodal RAG.",
+          "innovation": "The key shift is from relevance prediction to post-answer utility estimation, which is directly useful for scalable governance evidence retrieval.",
+          "key_metrics": "Full quantitative tables were not extracted in this run; the score is based on abstract-level method fit and expected engineering value."
+        }
+      },
+      "score": {"innovation": 22, "results": 7, "exp_quality": 8, "efficiency": 9, "generalization": 4, "relevance": 20, "total": 70, "rationale_zh": "成本感知 multimodal RAG 对治理场景有价值，但本轮未获得完整指标，保守评分。"}
+    }
+  ]
+}
