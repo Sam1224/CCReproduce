@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420">
+  <rect width="980" height="420" rx="28" fill="#f8fafc"/>
+  <text x="42" y="58" font-family="Inter, Arial" font-size="30" font-weight="800" fill="#0f172a">Experiment Highlights</text>
+  <text x="42" y="92" font-family="Inter, Arial" font-size="17" fill="#64748b">Abstract-level evidence available in this run; numeric benchmark tables were not accessible from metadata.</text>
+  <g transform="translate(70 135)" font-family="Inter, Arial">
+    <line x1="0" y1="210" x2="800" y2="210" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="0" y1="0" x2="0" y2="210" stroke="#cbd5e1" stroke-width="2"/>
+    <g fill="#94a3b8" font-size="14">
+      <text x="90" y="244">Standard DPO</text>
+      <text x="315" y="244">Strong Baselines</text>
+      <text x="575" y="244">Groc-PO</text>
+    </g>
+    <rect x="95" y="112" width="94" height="98" rx="12" fill="#bfdbfe"/>
+    <rect x="350" y="91" width="94" height="119" rx="12" fill="#99f6e4"/>
+    <rect x="604" y="45" width="94" height="165" rx="12" fill="#2563eb"/>
+    <g fill="#0f172a" font-size="16" font-weight="700">
+      <text x="92" y="102">baseline</text>
+      <text x="338" y="80">stronger</text>
+      <text x="586" y="34">reported best</text>
+    </g>
+    <text x="720" y="74" fill="#475569" font-size="15">Reported gains:</text>
+    <text x="720" y="105" fill="#475569" font-size="15">hallucination mitigation</text>
+    <text x="720" y="134" fill="#475569" font-size="15">faithful reasoning</text>
+    <text x="720" y="163" fill="#475569" font-size="15">overall reliability</text>
+  </g>
+</svg>

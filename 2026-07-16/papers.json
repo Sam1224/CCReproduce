@@ -1,0 +1,44 @@
+{
+  "papers": [
+    {
+      "id": "2607.13712",
+      "title": "Groc-PO: Grounded Context Preference Optimization for Truthful Multimodal LLMs",
+      "authors": ["Zhixiao Zheng", "Zheren Fu", "Zhiyuan Yao", "Chunxiao Liu", "Dongming Zhang", "Zhendong Mao"],
+      "affiliations": ["Not disclosed in available metadata"],
+      "source": "arXiv / MLLM truthful grounding / 今日巡检强相关",
+      "published": "2026-07-15",
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.13712",
+        "pdf": "https://arxiv.org/pdf/2607.13712"
+      },
+      "tags": ["MLLM", "Preference Optimization", "Grounding", "Hallucination Mitigation", "Content Understanding", "Governance"],
+      "summary": {
+        "zh": {
+          "method_overview": "Groc-PO 面向多模态大模型的幻觉和不忠实推理问题，把偏好优化从最终答案层推进到 grounding 形成过程。论文将偏好样本组织为 Object Grounding、Contextual Grounding、Grounded Reasoning 三个阶段，让模型分别学习对象定位、上下文整合和基于证据推理。相比只在最终答案做 DPO，它给早期 grounding 错误更直接的 credit assignment，减少错误在多步推理中传播。对电商内容理解和达人治理的价值在于：商品图、直播切片、达人内容审核经常需要先定位可见对象/文本，再判断上下文和违规风险，这种分阶段对齐能降低“看错后仍自信输出”的风险。",
+          "story": "现有 MLLM 的偏好对齐多在 final answer 层做，早期对象定位或上下文 grounding 漂移只能通过最终答案间接受罚，导致错误沿推理链传播 -> 需要把偏好监督拆到 grounding 形成的关键阶段 -> Groc-PO 构建 GCPD，并用分阶段 grounded preference optimization 强化真实、可追溯的多模态推理。",
+          "innovation": "创新点合理且可行：它没有只增加数据量或换更大 backbone，而是重新定义偏好样本的粒度，把“答案偏好”变为“grounded context 的形成过程偏好”。与标准 DPO/RLHF 的区别在于，它显式覆盖对象 grounding、上下文 grounding 和最终推理三个阶段，更适合多模态内容审核中需要证据链的任务。风险在于需要高质量分阶段偏好数据，真实业务落地时标注成本和阶段切分一致性会是主要瓶颈。",
+          "key_metrics": "当前可用摘要只给出定性实验结论：相较标准 DPO 和强 baseline，Groc-PO 在幻觉缓解、忠实推理和整体可靠性上均有提升；摘要未披露具体数据集、指标数值和超过 baseline 的百分比，因此本次评分对实验指标和实验质量作保守计分。"
+        },
+        "en": {
+          "method_overview": "Groc-PO targets hallucination and unfaithful reasoning in multimodal LLMs by moving preference optimization from final answers to the formation of grounded context. It organizes preference data around Object Grounding, Contextual Grounding, and Grounded Reasoning, giving direct supervision to early grounding stages. Compared with final-answer-only DPO, it provides clearer credit assignment for grounding drift and context inconsistency. This is useful for e-commerce content understanding and creator governance, where systems must localize visible products/text before judging context or violation risk.",
+          "story": "Final-answer-level preference optimization weakly supervises early object or context grounding errors, allowing mistakes to propagate through multi-step reasoning -> supervise the key stages where grounded context is formed -> use GCPD and stage-wise grounded preference optimization to improve faithful multimodal reasoning.",
+          "innovation": "The main novelty is changing the unit of preference supervision from answer preference to grounded-context formation preference. Unlike standard DPO/RLHF, Groc-PO explicitly covers object grounding, contextual grounding, and grounded reasoning stages, which better matches evidence-chain requirements in multimodal governance tasks. The main deployment risk is the cost and consistency of high-quality stage-wise preference annotation.",
+          "key_metrics": "The available abstract reports qualitative gains over standard DPO and strong baselines in hallucination mitigation, faithful reasoning, and overall reliability. It does not disclose concrete dataset names, metric values, or improvement margins, so the results and experiment-quality scores are conservative."
+        }
+      },
+      "score": {
+        "total": 81,
+        "innovation": 25,
+        "results": 10,
+        "exp_quality": 10,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 25,
+        "rationale_zh": "方法创新强，直接解决 MLLM grounding drift 与幻觉传播，对电商内容理解、图文一致性和违规审核证据链高度相关。摘要未披露具体 benchmark 数值、ablation 和资源开销，实验部分只能保守打分；由于未发现公开代码，本次已补充 toy PyTorch 复现。"
+      },
+      "reproduce": {
+        "path": "2026-07-16/Groc_PO_Grounded_Context_Preference_Optimization"
+      }
+    }
+  ]
+}
