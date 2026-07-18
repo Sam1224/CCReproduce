@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420">
+  <rect width="960" height="420" rx="28" fill="#f8fafc"/>
+  <text x="46" y="56" font-family="Inter,Arial" font-size="26" font-weight="800" fill="#0f172a">EVADE-Bench reported scale</text>
+  <text x="46" y="86" font-family="Inter,Arial" font-size="15" fill="#64748b">Expert-curated multimodal evasive content benchmark for e-commerce</text>
+  <g transform="translate(70,130)">
+    <rect x="0" y="0" width="250" height="210" rx="22" fill="#fff" stroke="#e2e8f0"/>
+    <text x="28" y="52" font-family="Inter,Arial" font-size="48" font-weight="900" fill="#2563eb">2,833</text>
+    <text x="28" y="88" font-family="Inter,Arial" font-size="18" fill="#334155">annotated text samples</text>
+    <rect x="28" y="126" width="180" height="18" rx="9" fill="#dbeafe"/>
+    <rect x="28" y="126" width="92" height="18" rx="9" fill="#2563eb"/>
+  </g>
+  <g transform="translate(355,130)">
+    <rect x="0" y="0" width="250" height="210" rx="22" fill="#fff" stroke="#e2e8f0"/>
+    <text x="28" y="52" font-family="Inter,Arial" font-size="48" font-weight="900" fill="#10b981">13,961</text>
+    <text x="28" y="88" font-family="Inter,Arial" font-size="18" fill="#334155">annotated images</text>
+    <rect x="28" y="126" width="180" height="18" rx="9" fill="#d1fae5"/>
+    <rect x="28" y="126" width="154" height="18" rx="9" fill="#10b981"/>
+  </g>
+  <g transform="translate(640,130)">
+    <rect x="0" y="0" width="250" height="210" rx="22" fill="#fff" stroke="#e2e8f0"/>
+    <text x="28" y="52" font-family="Inter,Arial" font-size="48" font-weight="900" fill="#f59e0b">6</text>
+    <text x="28" y="88" font-family="Inter,Arial" font-size="18" fill="#334155">violation categories</text>
+    <rect x="28" y="126" width="180" height="18" rx="9" fill="#fef3c7"/>
+    <rect x="28" y="126" width="120" height="18" rx="9" fill="#f59e0b"/>
+  </g>
+  <text x="70" y="380" font-family="Inter,Arial" font-size="14" fill="#64748b">Paper-reported benchmark counts are used as quality evidence; the local reproduction uses synthetic toy data for runnable training/testing.</text>
+</svg>

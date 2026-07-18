@@ -1,0 +1,178 @@
+{
+  "papers": [
+    {
+      "id": "evade_bench_toy",
+      "title": "EVADE-Bench: Expert-Curated Chinese Multimodal Benchmark for Evasive Content Detection in E-Commerce",
+      "authors": ["Unknown from public snippet"],
+      "affiliations": ["ACM / arXiv indexed source"],
+      "source": "ACM / arXiv-adjacent / E-commerce governance",
+      "published": "2026-07-16",
+      "links": {
+        "paper": "https://dl.acm.org/doi/10.1145/3805712.3808579",
+        "code": "https://github.com/Sam1224/CCReproduce/tree/aime/20260718-paper-radar/2026-07-18/EVADE_Bench_Toy"
+      },
+      "tags": ["E-commerce Governance", "VLM", "MLLM Evaluation", "Violation Detection", "Benchmark"],
+      "score": {
+        "innovation": 26,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 25,
+        "total": 88,
+        "rationale_zh": "强相关：直接面向电商场景中的规避式违规内容检测，覆盖文本和图片两种模态。方法形态更偏 benchmark 和评测协议，模型创新不是最高，但数据构造、专家标注、违规类别覆盖对达人/内容治理价值很高。公开检索未发现可用代码仓库，因此本次提供 toy but runnable 的 PyTorch 复现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "EVADE-Bench 针对电商内容治理中常见的“规避式表达”建立多模态评测基准，覆盖中文文本与商品/直播图像中的隐晦违规线索。它把检测任务拆成违规识别、违规类别判断、跨模态一致性和规避区域定位，强调 LLM/VLM 在真实电商审核中的鲁棒性。高光点是将电商治理里最难的变体表达、图文错配、视觉遮挡等问题抽象成可评测 benchmark。",
+          "story": "传统内容审核容易依赖单模态关键词或显著视觉特征，遇到谐音、拆字、遮挡、图文错配时容易漏检 -> 需要一个同时覆盖文本、图像和跨模态一致性的专家标注基准 -> EVADE-Bench 用多违规类别和规避样式衡量 LLM/VLM 的治理鲁棒性。",
+          "innovation": "创新点主要在 benchmark 定义和数据治理价值，而不是提出新的大模型结构。与普通内容安全集不同，它聚焦电商语境下的规避表达，并把文本样本、图像样本和违规类别统一在同一个评估框架中；这非常适合迁移到达人直播切片、商品卡、评论和短视频封面审核。",
+          "key_metrics": "公开摘要显示数据集包含 2,833 条标注文本、13,961 张标注图片，覆盖 6 类违规类别。由于未拿到完整论文表格，本次不虚构 SOTA 数字；本地复现脚本报告 category accuracy、violation accuracy、cross-modal consistency accuracy 和 evasion-mask IoU。"
+        },
+        "en": {
+          "method_overview": "EVADE-Bench builds a multimodal benchmark for evasive violation detection in Chinese e-commerce content. It evaluates text, image, cross-modal consistency, and evasive-region localization, stressing robustness of LLMs/VLMs under disguised policy violations. Its highlight is turning practical e-commerce moderation failure modes into measurable benchmark tasks.",
+          "story": "Keyword or single-modal moderation misses homophones, split words, occlusion, and image-text mismatch -> a benchmark must evaluate text, vision, and cross-modal consistency together -> EVADE-Bench measures LLM/VLM robustness on expert-curated e-commerce evasions.",
+          "innovation": "The novelty is benchmark and governance design rather than a new model architecture. Unlike generic moderation datasets, it focuses on evasive e-commerce expressions and unifies text/image/category evaluation in one protocol.",
+          "key_metrics": "The public snippet reports 2,833 annotated text samples, 13,961 annotated images, and six violation categories. Full SOTA numbers were not visible in the accessible snippet; the local reproduction reports category accuracy, violation accuracy, cross-modal consistency accuracy, and evasion-mask IoU."
+        }
+      },
+      "reproduce": {"path": "2026-07-18/EVADE_Bench_Toy"}
+    },
+    {
+      "id": "2607.15278v1",
+      "title": "Hierarchical Denoising For Multi-Step Visual Reasoning",
+      "authors": ["Zezhong Qian", "Xiaowei Chi", "Chak-Wing Mak", "Tianze Zhou", "Ruibin Yuan", "Yuhan Rui", "Hengzhe Sun", "Zhuoqun Wu", "Yuming Li", "Siyuan Qian", "Sirui Han", "Shanghang Zhang"],
+      "affiliations": ["Not listed in arXiv snippet"],
+      "source": "arXiv / MLLM visual reasoning / weakly related hot paper",
+      "published": "2026-07-16",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.15278", "pdf": "https://arxiv.org/pdf/2607.15278v1", "project": "https://hierarchical-diffusion-reasoning.github.io/"},
+      "tags": ["VLM", "Visual Reasoning", "Diffusion", "Efficiency", "Weak E-commerce Transfer"],
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 9,
+        "total": 77,
+        "rationale_zh": "方法创新和效率指标非常亮眼，但与电商内容治理只是弱相关，主要可迁移到商品图多步变化理解、复杂短视频状态推理和视觉链路解释，因此未达到复现阈值。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "HDR 把多步视觉推理中的视频/视觉状态建模成树状层级 latent，先在粗层保留不确定假设做全局规划，再在细层逐步细化成可输出视觉状态。它用稀疏层级注意力降低时间维度计算，并保持流式输出能力。高光点是兼顾全局修订能力和低延迟推理。",
+          "story": "自回归流式扩散推理快但缺少全局修订，双向扩散能全局修订但代价高 -> 需要粗到细的中间视觉规划结构 -> HDR 用层级 latent 与稀疏注意力实现多步视觉推理。",
+          "innovation": "区别于单层 latent 或逐帧密集去噪，HDR 把推理状态显式层级化，让模型先计划再细化。这个设计合理，尤其适合复杂状态演进，但迁移到电商治理需要把任务改造成商品/短视频状态序列。",
+          "key_metrics": "arXiv 摘要报告：相对流式自回归扩散 baseline，成功率从 34.22 提升到 60.29，平均进度从 76.00 提升到 89.56；推理延迟 0.70 秒/latent，比双向扩散快 54.2 倍；仅用 2% 训练数据保留 82.9% 全量性能。"
+        },
+        "en": {
+          "method_overview": "HDR introduces tree-structured hierarchical latents for multi-step visual reasoning. Coarse layers preserve uncertain hypotheses for global planning, while fine layers refine concrete visual states, and sparse hierarchical attention reduces temporal cost.",
+          "story": "Streaming autoregressive diffusion is fast but weak at global revision, while bidirectional diffusion is costly -> introduce coarse-to-fine visual planning -> use hierarchical latents and sparse attention for consistent reasoning trajectories.",
+          "innovation": "Unlike flat latent denoising or dense frame-level revision, HDR explicitly separates planning and refinement. The design is plausible for visual state evolution, though e-commerce transfer is indirect.",
+          "key_metrics": "The abstract reports success improving from 34.22 to 60.29, average progress from 76.00 to 89.56, 0.70 seconds per latent, 54.2× faster inference than bidirectional diffusion, and 82.9% full-data performance with 2% training data."
+        }
+      }
+    },
+    {
+      "id": "2607.15272v1",
+      "title": "SciDiagramEdit: Learning to Edit Scientific Diagrams from Paper Revisions",
+      "authors": ["Yasheng Sun", "Zezi Zeng", "Yifan Yang", "Chong Luo", "Wenyi Wang", "Ziwei Liu", "Jürgen Schmidhuber"],
+      "affiliations": ["Not listed in arXiv snippet"],
+      "source": "arXiv / Agentic visual editing / weakly related",
+      "published": "2026-07-16",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.15272", "pdf": "https://arxiv.org/pdf/2607.15272v1"},
+      "tags": ["Agent", "Image Editing", "Instruction Following", "Data Mining", "Weak E-commerce Transfer"],
+      "score": {
+        "innovation": 24,
+        "results": 9,
+        "exp_quality": 11,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 12,
+        "total": 65,
+        "rationale_zh": "从论文版本历史挖掘可编辑图像修订信号很新颖，但目标是科研图编辑，和电商治理的关系主要在商品图/营销图编辑审查、素材自动修订与图文可编辑表示。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SciDiagramEdit 从 arXiv 论文版本历史中挖掘 before/after 图表修订对，并把作者修订意图作为自然语言编辑指令。它让 agent 在可编辑矢量源上操作，并通过 skill evolution 从执行轨迹中持续改进技能描述。高光点是把真实修订历史转化成指令式图编辑训练信号。",
+          "story": "图表编辑需要理解元素、排版和语义，但人工构造数据成本高 -> 论文修订天然包含前后版本和修改意图 -> 用修订历史训练可协作的图编辑 agent。",
+          "innovation": "区别于合成编辑数据，它使用真实论文修订历史作为监督来源，并把可编辑 vector primitive 暴露给 agent。思路可行，但对电商图片编辑需要重新构建商品图/营销图修订数据。",
+          "key_metrics": "摘要称 skill evolution 在 held-out validation set 上持续提升 edit accuracy，但可访问摘要未给出具体数值，因此评分中实验指标保守处理。"
+        },
+        "en": {
+          "method_overview": "SciDiagramEdit mines before/after figure pairs from arXiv paper revision histories and grounds edits in authors' revision intent. An agent operates on editable vector sources and improves via skill evolution from execution traces.",
+          "story": "Instruction-driven diagram editing lacks realistic data -> paper revisions naturally provide before/after figures and intent -> train an editable-source agent that evolves its skills.",
+          "innovation": "The novelty is using natural paper revisions instead of synthetic edits and exposing vector primitives for co-editing. E-commerce transfer requires analogous product/marketing revision data.",
+          "key_metrics": "The abstract states skill evolution improves edit accuracy on a held-out validation set, but the accessible snippet does not expose exact numbers."
+        }
+      }
+    },
+    {
+      "id": "2607.15240v1",
+      "title": "TikStance: A Multimodal and Hierarchical Dataset for Multi-target Stance Analysis in TikTok Political Conversations",
+      "authors": ["Yazhi Zhang", "Fuqiang Niu", "Bowen Zhang"],
+      "affiliations": ["Not listed in arXiv snippet"],
+      "source": "arXiv / Social content understanding / creator governance adjacent",
+      "published": "2026-07-16",
+      "links": {"arxiv": "https://arxiv.org/abs/2607.15240", "pdf": "https://arxiv.org/pdf/2607.15240v1"},
+      "tags": ["Short Video", "Multimodal Dataset", "Stance", "Creator Governance", "Content Understanding"],
+      "score": {
+        "innovation": 20,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 16,
+        "total": 68,
+        "rationale_zh": "不是电商论文，但短视频平台、多模态内容、评论树和多目标立场标注对达人治理、直播评论风险理解、舆情/争议内容分析有参考价值。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TikStance 构建 TikTok 政治对话中的多模态、多层级立场分析数据集，把 host video、元数据、父子评论树和多目标立场标签关联起来。它同时标注视频到目标、评论到目标的 Favor/Against/None 立场。高光点是保留短视频语境和层级评论结构。",
+          "story": "短视频讨论不只是单条文本，视频、元数据和评论树共同决定语义 -> 需要保留上下文和多目标标签的数据集 -> TikStance 用多模态与层级对话支持 stance analysis。",
+          "innovation": "创新主要在数据结构完整性：同时保留视频、评论树、多目标标签和人工一致性。迁移到达人治理时，可用于商品/达人争议话题、直播间评论链路和风险观点识别。",
+          "key_metrics": "摘要报告数据集包含 161 个视频、13,876 条评论；最终 Krippendorff's α 在三个目标子集上分别达到 0.743、0.723、0.722；嵌套回复占所有评论的 23.3%。"
+        },
+        "en": {
+          "method_overview": "TikStance is a multimodal hierarchical dataset for stance analysis in TikTok conversations. It links host videos, metadata, parent-linked comment trees, and multi-target Favor/Against/None labels.",
+          "story": "Short-video discourse depends on video context and comment hierarchy, not isolated text -> preserve audiovisual and conversational context -> build a multi-target stance dataset.",
+          "innovation": "The key novelty is dataset structure: video context, hierarchical replies, multi-target labels, and reliability measurement. It is useful for creator-governance transfer despite its political domain.",
+          "key_metrics": "The abstract reports 161 videos, 13,876 comments, Krippendorff's α of 0.743/0.723/0.722 across target subsets, and nested replies accounting for 23.3% of comments."
+        }
+      }
+    },
+    {
+      "id": "2606.23919",
+      "title": "Unified Multi-Task Relevance Modeling for E-Commerce: Comparing Task Routing Architectures Across LLMs and Cross-Encoders",
+      "authors": ["Md Omar Faruk Rokon", "Jhalak Nilesh Acharya", "Shasvat Desai", "Hong Yao", "Kuang-chih Lee"],
+      "affiliations": ["Walmart Global Tech"],
+      "source": "arXiv / Strong e-commerce relevance carry-over",
+      "published": "2026-06-22",
+      "links": {"arxiv": "https://arxiv.org/abs/2606.23919", "pdf": "https://arxiv.org/pdf/2606.23919"},
+      "tags": ["E-commerce", "Relevance", "LLM", "Cross-Encoder", "Multi-task Learning"],
+      "score": {
+        "innovation": 22,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 79,
+        "rationale_zh": "强电商相关，统一多任务相关性建模对商品、内容、广告、达人素材召回/排序都有价值；但不是今日新论文，且方法偏系统性对比而非全新结构，因此列为 carry-over，未达到本次新增复现阈值。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "该论文把电商中的六类 entity-pair 相关性任务放进统一多任务框架，并使用共享三档相关性标尺共同训练。它系统比较 LLM LoRA 方案与 cross-encoder 全量微调方案下的任务路由结构。高光点是给出实际电商 relevance 系统中任务路由架构选择的可操作经验。",
+          "story": "电商搜索/推荐/广告存在多种相关性任务，各自训练会导致低资源任务弱、标签体系不统一 -> 需要共享相关性标尺和多任务训练 -> 比较不同 task routing 架构找到适合 LLM 与 cross-encoder 的方案。",
+          "innovation": "创新在工程系统整合和任务路由对比，不是提出单一新模型。它与现有单任务 relevance 模型不同，强调统一标尺、多任务共享和模型家族差异化路由选择，落地可行性强。",
+          "key_metrics": "搜索摘要报告多任务训练在低资源任务上相对单任务 baseline 最高带来 +14% 提升。完整指标需要阅读全文表格确认，因此本次只引用该公开摘要可见数字。"
+        },
+        "en": {
+          "method_overview": "The paper unifies six e-commerce entity-pair relevance tasks under a shared three-point relevance scale and compares task-routing architectures across LoRA-adapted LLMs and fine-tuned cross-encoders.",
+          "story": "E-commerce relevance tasks are fragmented and low-resource tasks underperform -> train them jointly with a shared relevance scale -> compare routing architectures for LLM and cross-encoder families.",
+          "innovation": "The novelty is practical system unification and routing comparison rather than a single new architecture. It is highly actionable for production relevance modeling.",
+          "key_metrics": "The public search snippet reports up to +14% improvement on low-resource tasks over single-task baselines. Full table-level numbers require paper reading."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fbff"/><stop offset="1" stop-color="#eef7f2"/></linearGradient>
+    <linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#10b981"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-opacity="0.16"/></filter>
+  </defs>
+  <rect width="960" height="520" rx="28" fill="url(#bg)"/>
+  <text x="48" y="58" font-family="Inter,Arial" font-size="28" font-weight="800" fill="#0f172a">EVADE-Bench Toy Pipeline</text>
+  <text x="48" y="88" font-family="Inter,Arial" font-size="16" fill="#64748b">Multimodal evasive content detection for e-commerce governance</text>
+  <g filter="url(#shadow)">
+    <rect x="55" y="130" width="210" height="235" rx="20" fill="#fff" stroke="#dbeafe"/>
+    <text x="82" y="166" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#1e3a8a">Input Post</text>
+    <rect x="82" y="188" width="72" height="72" rx="12" fill="#fee2e2"/>
+    <path d="M92 205h50M92 222h50M92 239h50" stroke="#111827" stroke-width="5" opacity="0.75"/>
+    <text x="170" y="207" font-family="Inter,Arial" font-size="13" fill="#334155">image patch</text>
+    <text x="170" y="229" font-family="Inter,Arial" font-size="13" fill="#334155">with stripes</text>
+    <rect x="82" y="282" width="150" height="42" rx="12" fill="#f1f5f9"/>
+    <text x="96" y="307" font-family="Inter,Arial" font-size="14" fill="#0f172a">r3pl1ca + hidden</text>
+  </g>
+  <path d="M290 248h85" stroke="url(#accent)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M365 232l26 16-26 16" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g filter="url(#shadow)">
+    <rect x="405" y="118" width="245" height="265" rx="22" fill="#fff" stroke="#d1fae5"/>
+    <text x="432" y="156" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#065f46">Evidence Encoders</text>
+    <rect x="432" y="184" width="190" height="46" rx="14" fill="#eff6ff"/>
+    <text x="455" y="212" font-family="Inter,Arial" font-size="14" fill="#1d4ed8">Text evidence encoder</text>
+    <rect x="432" y="247" width="190" height="46" rx="14" fill="#ecfdf5"/>
+    <text x="450" y="275" font-family="Inter,Arial" font-size="14" fill="#047857">Visual evidence encoder</text>
+    <rect x="432" y="310" width="190" height="46" rx="14" fill="#fef3c7"/>
+    <text x="445" y="338" font-family="Inter,Arial" font-size="14" fill="#92400e">Cross-modal consistency</text>
+  </g>
+  <path d="M670 248h85" stroke="url(#accent)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M745 232l26 16-26 16" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g filter="url(#shadow)">
+    <rect x="785" y="130" width="130" height="235" rx="20" fill="#fff" stroke="#e0e7ff"/>
+    <text x="814" y="166" font-family="Inter,Arial" font-size="18" font-weight="700" fill="#3730a3">Outputs</text>
+    <circle cx="832" cy="211" r="9" fill="#ef4444"/><text x="850" y="216" font-family="Inter,Arial" font-size="13" fill="#334155">Violation</text>
+    <circle cx="832" cy="251" r="9" fill="#f59e0b"/><text x="850" y="256" font-family="Inter,Arial" font-size="13" fill="#334155">Category</text>
+    <circle cx="832" cy="291" r="9" fill="#10b981"/><text x="850" y="296" font-family="Inter,Arial" font-size="13" fill="#334155">Mask IoU</text>
+    <circle cx="832" cy="331" r="9" fill="#2563eb"/><text x="850" y="336" font-family="Inter,Arial" font-size="13" fill="#334155">Consistency</text>
+  </g>
+  <text x="50" y="455" font-family="Inter,Arial" font-size="15" fill="#475569">Synthetic toy data mirrors the benchmark story: evasive text/image transformations make single-modal moderation brittle, so the model combines text evidence, visual evidence, and cross-modal consistency.</text>
+</svg>

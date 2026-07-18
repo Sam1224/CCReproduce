@@ -144,6 +144,7 @@ function renderPapers(papers) {
     const arxivUrl = links.abs || links.arxiv; // support both schemas
     if (arxivUrl) linkItems.push({ name: "arXiv", url: arxivUrl });
     if (links.pdf) linkItems.push({ name: "PDF", url: links.pdf });
+    if (links.paper) linkItems.push({ name: "Paper", url: links.paper });
     if (links.code) linkItems.push({ name: "Code", url: links.code });
     if (links.project) linkItems.push({ name: "Project", url: links.project });
     if (links.dataset) linkItems.push({ name: "Dataset", url: links.dataset });
