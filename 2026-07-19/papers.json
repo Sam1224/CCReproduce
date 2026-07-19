@@ -1,0 +1,249 @@
+{
+  "inspection_date": "2026-07-19",
+  "timezone": "GMT+8",
+  "query_window": {
+    "primary": "2026-07-19 00:00:00~2026-07-20 00:00:00 GMT+8",
+    "note": "arXiv submitted-date exact-day query returned zero relevant new submissions; patrol expanded to recent papers surfaced or updated by today's cross-source scan, excluding red-team/backdoor/security-only work."
+  },
+  "scoring_mechanism": {
+    "innovation": 30,
+    "results": 15,
+    "exp_quality": 15,
+    "efficiency": 10,
+    "generalization": 5,
+    "relevance": 25,
+    "total": 100
+  },
+  "papers": [
+    {
+      "id": "2607.05910",
+      "title": "PolicyShiftGuard: Benchmarking and Improving Policy-Adaptive Image Guardrails",
+      "authors": ["Mingyang Song", "Luxin Xu", "Haoyu Sun", "Minzhou Pan", "Yu Cheng", "Bo Li"],
+      "affiliations": ["Fudan University", "Tongji University", "Virtue AI", "The Chinese University of Hong Kong", "University of Chicago", "University of Illinois Urbana-Champaign"],
+      "source": "arXiv / Project page / 今日巡检高相关治理论文",
+      "published": "2026-07-07",
+      "tags": ["Content Moderation", "VLM", "Policy-adaptive Guardrail", "Benchmark", "Governance"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.05910",
+        "pdf": "https://arxiv.org/pdf/2607.05910",
+        "project": "https://policyshiftguard.github.io/",
+        "dataset": "https://huggingface.co/datasets/PolicyShiftGuard/PolicyShiftBench",
+        "code": "https://github.com/ssmisya/PolicyShiftGuard"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "PolicyShiftGuard 关注生产审核中最常见但学术基准较少覆盖的问题：同一张图在不同地区、年龄层、广告主或平台政策下可能从允许变成禁止。论文先构造 PolicyShiftBench，把 265 张图扩展为 2,000 个 policy-conditioned 实例、28 个政策变体，并提出 PSS 衡量模型能否处理同图 policy flip。方法上先用 Randomized Policy SFT 让模型阅读完整政策包并输出结构化判定，再用 Boundary-Pair Policy Adaptation 对同图同风险类别的 pass/block 边界对做成对学习。高光点是把“识别风险内容”与“遵循运行时政策”解耦，特别适合电商内容治理里分国家、分达人等级、分商品类目的动态规则。",
+          "story": "固定安全分类器会把图片安全性当作图像固有属性 -> 真实电商/社区治理的政策会随地区、品类、年龄、广告主要求变化 -> 需要让 VLM 显式读取 policy bundle，并用同图 pass/block 边界对训练模型学习政策翻转。",
+          "innovation": "创新合理且工程价值强。与传统 unsafe image benchmark 或固定 taxonomies 不同，PolicyShiftBench 强制同一视觉证据在不同政策下产生不同标签，PSS 直接惩罚只会识别敏感视觉元素、不懂政策边界的模型；BP-Adapt 的 matched boundary pair 也比单纯 SFT 更贴近审核策略变更时的真实决策边界。",
+          "key_metrics": "PolicyShiftGuard-7B 在 PolicyShiftBench 上达到 76.9 Avg. F1 与 72.1 Avg. PSS；相对 Qwen2.5-VL-7B，Avg. F1 从 20.6 提升到 76.9，Avg. PSS 从 4.8 提升到 72.1；推理延迟从基础模型 273.3ms 降到 163.9ms。PolicyShiftBench 含 2,000 eval instances、265 images、28 policies。"
+        },
+        "en": {
+          "method_overview": "PolicyShiftGuard targets a production moderation failure mode: the same image may be allowed under one active policy but blocked under another. The paper builds PolicyShiftBench with 2,000 policy-conditioned instances over 265 images and 28 policy variants, then introduces PSS to measure same-image policy flips. The model is trained with Randomized Policy SFT for policy-bundle following and Boundary-Pair Policy Adaptation for matched pass/block examples. The highlight is separating visual risk recognition from runtime policy compliance, which maps directly to marketplace governance with region-, category-, and creator-level rules.",
+          "story": "Fixed safety classifiers treat safety as an intrinsic image property -> real governance policies shift by region, age, advertiser, or category -> the model must explicitly read policy bundles and learn pass/block boundary pairs for identical visual evidence.",
+          "innovation": "Unlike fixed unsafe-image benchmarks, PolicyShiftBench forces policy-conditioned label flips for the same image, and PSS directly evaluates policy sensitivity. BP-Adapt is a practical training innovation because matched pass/block pairs focus learning on policy boundaries rather than generic unsafe recognition.",
+          "key_metrics": "PolicyShiftGuard-7B reaches 76.9 Avg. F1 and 72.1 Avg. PSS on PolicyShiftBench; compared with Qwen2.5-VL-7B, Avg. F1 improves from 20.6 to 76.9 and Avg. PSS from 4.8 to 72.1, while latency drops from 273.3ms to 163.9ms. The benchmark contains 2,000 eval instances, 265 images, and 28 policies."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 91,
+        "rationale_zh": "强相关治理论文。benchmark、metric、训练方法和消融都完整，指标提升非常明显；已有项目页、HuggingFace 模型/数据与 GitHub 代码，已确认代码仓库存在，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2606.05748",
+      "title": "UNIVID: Unified Vision-Language Model for Video Moderation",
+      "authors": ["Kejuan Yang", "Yizhuo Zhang", "Mingyuan Du", "Yue Zhang", "Dixin Zheng", "Kaili Zhao", "Yang Xiao", "Hanzhong Liang", "Kenan Xiao"],
+      "affiliations": ["ByteDance"],
+      "source": "arXiv / DBLP / 今日巡检强相关治理论文",
+      "published": "2026-06-04",
+      "tags": ["Video Moderation", "VLM", "Caption", "Governance", "Industrial Deployment"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2606.05748",
+        "pdf": "https://arxiv.org/pdf/2606.05748",
+        "code": "https://github.com/Sam1224/CCReproduce/tree/aime/1784459501-paper-patrol-20260719/2026-07-19/UNIVID"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "UNIVID 把视频审核从上千个黑盒政策分类器，改造成一个统一的 policy-aware captioning VLM。模型基于 LLaVA-OneVision/Mistral-7B 风格架构，用人工精修标签与高质量合成数据做政策对齐，输出可给人审查的违规证据 caption。系统侧将 UNIVID caption/embedding 复用于 Risk Filter、Moderation Actor 和 Trend Governance 三段链路，并通过 UNIVID-Lite 与 UNIVID-RAG 支撑决策与漏审召回。高光点是“caption 作为中间治理表征”：既提升可解释性，又能复用给趋势发现、广告安全和推荐安全。",
+          "story": "传统视频审核依赖大量 policy-specific 黑盒分类器，维护成本高、解释性弱、政策更新慢 -> 需要一个统一、可解释、可复用的多模态内容表征 -> UNIVID 用政策感知 caption 连接视频理解、审核动作与趋势治理。",
+          "innovation": "创新主要在工业系统范式：不是只做一个离线 VLM benchmark，而是把 caption VLM 作为治理基础设施的核心表征层。与通用 VLM 相比，UNIVID 针对违规内容减少拒答并对齐内部政策；与传统分类器相比，它用自然语言证据减少排障成本，且通过缓存 embedding/caption 支持多业务复用。",
+          "key_metrics": "线上系统 view-weighted violation leakage 相对下降 42.7%，从 0.255% 降至 0.146%；overkill rate 从 35.4% 降至 22.3%，相对下降 37.0%；广告业务 beta simulation 达到 81% matching accuracy；推理成本约 180 美元/百万视频，相比商业 VLM 的 >3,000 美元降低约 15×。"
+        },
+        "en": {
+          "method_overview": "UNIVID replaces thousands of policy-specific black-box video classifiers with a unified policy-aware captioning VLM. Built in the LLaVA-OneVision/Mistral-7B style, it uses expert-refined labels plus synthetic data to align captions with moderation policy. The production pipeline reuses UNIVID captions and embeddings across Risk Filter, Moderation Actor, and Trend Governance, with UNIVID-Lite and UNIVID-RAG supporting decisions and leakage recall. Its highlight is treating captions as an interpretable governance representation reusable across moderation, ads safety, and recommendation safety.",
+          "story": "Traditional video moderation depends on many opaque policy classifiers with high maintenance cost and weak interpretability -> governance needs a unified, auditable, reusable multimodal representation -> UNIVID uses policy-aware captions to connect video understanding, enforcement actions, and trend discovery.",
+          "innovation": "The main novelty is an industrial system paradigm: a caption VLM becomes the representation layer for governance infrastructure. Compared with generic VLMs it avoids refusal and aligns with fine-grained policies; compared with classifiers it provides natural-language evidence and reusable cached features.",
+          "key_metrics": "The deployed system reduces view-weighted violation leakage by 42.7%, from 0.255% to 0.146%, and reduces overkill rate by 37.0%, from 35.4% to 22.3%. It also reaches 81% matching accuracy in ads beta simulation and costs about $180 per million videos, roughly 15x lower than commercial VLMs above $3,000."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 25,
+        "total": 90,
+        "rationale_zh": "与电商内容生态、视频内容理解和治理强相关，且有真实工业效果。论文未发现公开代码，因此已按方法复现 toy 版 UNIVID pipeline。"
+      }
+    },
+    {
+      "id": "2607.07469",
+      "title": "SynthAVE: Scalable Synthetic Labeling for E-Commerce with LLM-Arena Validation",
+      "authors": ["Andrea Scarinci", "Virginia Negri", "Brayan Impata", "Suleiman Khan", "Victor Martinez", "Marcello Federico"],
+      "affiliations": ["Amazon"],
+      "source": "arXiv / Semantic Scholar / 今日巡检强相关电商数据质量论文",
+      "published": "2026-07-08",
+      "tags": ["E-commerce", "Synthetic Labeling", "Data Quality", "LLM-as-Judge", "Attribute Extraction"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.07469",
+        "pdf": "https://arxiv.org/pdf/2607.07469",
+        "code": "https://github.com/Sam1224/CCReproduce/tree/aime/1784459501-paper-patrol-20260719/2026-07-19/SynthAVE"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SynthAVE 面向电商属性值抽取的数据质量瓶颈：产品类型、属性和语言组合爆炸，使人工标注成本不可承受。论文构建 12,726 个产品、229 个产品类型、792 个属性、4 种语言的人类验证 benchmark，并用 7 个模型家族 × 3 个 prompts 组成 21 个 judge configuration 进行多数投票审核。核心不是让单个 LLM 当裁判，而是利用模型多样性抵消偏差，并把低一致性样本作为需要人工复核的重点。高光点是把合成标注、自动质检和人工 triage 串成可规模化的数据清洗闭环。",
+          "story": "跨品类、跨属性、跨语言的电商 AVE 需要海量标签，纯人工太贵，单模型合成标签又有系统性偏差 -> 需要可校准、可分流人工复核的质量控制机制 -> SynthAVE 用多模型 arena 多数投票与 disagreement-based triage 提升标签可靠性。",
+          "innovation": "创新点非常贴近数据治理：它不是只报告 LLM 生成标签，而是把 21 个异质 judge 的一致性当作置信度信号，结合人工抽检验证多数投票质量。相比单 LLM judge 或分类器过滤，多模型 arena 更适合属性 schema 多变、多语言、多品类的电商目录。",
+          "key_metrics": "数据集覆盖 12,726 products、229 product categories、792 attributes 和 4 languages；多数投票与人类专家 Cohen’s κ=0.92、95.2% agreement；个体 judge 的 Fleiss’ κ=0.757；作为数据清洗机制将原始合成管线 92.6% accuracy 提升到约 97%，错误纠正率 83.1%，F1=96.6%；总验证成本 290.50 美元，即每千产品 22.83 美元。"
+        },
+        "en": {
+          "method_overview": "SynthAVE addresses the data-quality bottleneck in e-commerce attribute value extraction, where product types, attributes, and languages create combinatorial labeling cost. It builds a human-validated benchmark of 12,726 products, 229 product types, 792 attributes, and 4 languages, then validates synthetic labels with 21 judge configurations from 7 model families and 3 prompts. The key idea is not relying on a single LLM judge, but using judge diversity and majority voting while routing low-agreement cases to human review. The highlight is a scalable loop for synthetic labeling, automated QA, and targeted human triage.",
+          "story": "Multilingual e-commerce AVE needs massive labels, pure human annotation is too expensive, and single-model synthetic labels can be biased -> scalable quality control is needed -> SynthAVE combines multi-model arena voting with disagreement-based triage to improve label reliability.",
+          "innovation": "The novelty is highly practical for data governance: 21 heterogeneous judges provide both labels and confidence signals via agreement levels. Compared with a single LLM judge or classifier filtering, the arena design is better suited to evolving product schemas, multilingual catalogs, and cross-category ambiguity.",
+          "key_metrics": "The benchmark spans 12,726 products, 229 product categories, 792 attributes, and 4 languages. Majority voting reaches Cohen’s κ=0.92 and 95.2% agreement with human experts, with Fleiss’ κ=0.757 among judges. As data cleaning, it improves the synthetic pipeline from 92.6% accuracy to about 97%, with 83.1% error correction and F1=96.6%. Total validation cost is $290.50, or $22.83 per 1,000 products."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 25,
+        "total": 89,
+        "rationale_zh": "电商数据质量和大规模标注强相关，实验覆盖成本、协议一致性、人类一致性和清洗效果。未发现公开代码，已复现 toy 版多模型 arena + 属性抽取训练/测试 pipeline。"
+      }
+    },
+    {
+      "id": "2511.20867",
+      "title": "E-GEO: A Testbed for Generative Engine Optimization in E-Commerce",
+      "authors": ["Puneet S. Bagga", "Vivek F. Farias", "Tamar Korkotashvili", "Tianyi Peng", "Yuhang Wu"],
+      "affiliations": ["MIT", "Columbia University"],
+      "source": "arXiv v2 / 今日巡检电商 LLM 推荐相关论文",
+      "published": "2026-07-14",
+      "tags": ["E-commerce", "LLM Re-ranking", "Generative Engine Optimization", "Prompt Optimization", "Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2511.20867",
+        "pdf": "https://arxiv.org/pdf/2511.20867",
+        "code": "https://github.com/Sam1224/CCReproduce/tree/aime/1784459501-paper-patrol-20260719/2026-07-19/E_GEO"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "E-GEO 研究 LLM shopping agent 时代商品内容如何影响生成式引擎排序。论文构建 13,747 条多句真实消费查询，每条配 10 个 Amazon listing，并在 5 个 LLM re-ranker、7 个 LLM rewriter 和 15 个手写启发式 prompt 上做大规模对比。进一步把 GEO 写成 prompt meta-optimization：元优化器根据历史排名反馈迭代生成更有效的描述改写 prompt。高光点是把电商内容优化从经验 SEO 迁移到可测量、可优化、可红队验证的 LLM re-ranking 问题。",
+          "story": "传统 SEO 经验无法直接解释 LLM shopping agent 为什么推荐某个商品 -> 电商需要可量化的生成式引擎优化 benchmark 与算法 -> E-GEO 用查询-listing 数据集、跨引擎 leaderboard 和 prompt meta-optimizer 研究哪些内容改写能真实提升排序。",
+          "innovation": "创新点在任务定义和实验体系：以商品排序提升作为 GEO 的经济代理指标，比网页曝光分更贴近电商；meta-optimizer 相比手写 prompt 更数据驱动。论文还加入 adversarial red-team 与 in-prompt defense，尝试区分真实内容改善和操纵排序。",
+          "key_metrics": "E-GEO 包含 13,747 queries，test set 2,000 queries；人工抽样审计显示 Q1/Q2 100% Yes，相关商品数平均 8.81/10，自然度 4.30/5；启发式 prompt 多数不稳定，11/15 个差于 simple prompt；meta-optimization 相对初始化 prompt 在多 re-ranker 上带来最高 +2.24 的 mean rank improvement。"
+        },
+        "en": {
+          "method_overview": "E-GEO studies how product content affects ranking in LLM-powered shopping agents. It builds 13,747 realistic multi-sentence consumer queries, each paired with 10 Amazon listings, and evaluates five LLM re-rankers, seven LLM rewriters, and fifteen handcrafted prompts. It then formulates GEO as prompt meta-optimization, where a meta-optimizer iteratively proposes rewriting prompts from ranking feedback. The highlight is turning e-commerce content optimization from heuristic SEO into a measurable LLM re-ranking problem with red-team checks.",
+          "story": "Classical SEO heuristics do not explain what LLM shopping agents prefer -> e-commerce needs a measurable benchmark and optimizer for generative engines -> E-GEO combines query-listing data, cross-engine leaderboards, and prompt meta-optimization to study ranking-improving content rewrites.",
+          "innovation": "The innovation is in task framing and empirical design: product rank improvement is a more marketplace-relevant metric than generic web exposure scores, and meta-optimization is more data-driven than manual prompt recipes. The paper also red-teams the optimizer to separate genuine content improvement from manipulation.",
+          "key_metrics": "E-GEO contains 13,747 queries and a 2,000-query test set. Manual audit reports Q1/Q2 100% Yes, 8.81/10 average relevant products, and 4.30/5 naturalness. Most handcrafted prompts are unstable, with 11 of 15 worse than the simple prompt. Meta-optimization yields up to +2.24 mean-rank-improvement over initialization across re-rankers."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 84,
+        "rationale_zh": "电商强相关，任务定义与 benchmark 价值高；指标是排名提升而非传统模型 SOTA，实验范围很大但复现依赖外部 LLM。原文页面显示 Website/Code/Data 但检索未能确认可用公开代码仓库，因此已复现 toy 版 meta-optimization pipeline。"
+      }
+    },
+    {
+      "id": "2607.09024",
+      "title": "Video Generation Models are General-Purpose Vision Learners",
+      "authors": ["Letian Wang", "Chuhan Zhang", "Rishabh Kabra", "Jasper Uijlings", "Steven Waslander", "Andrew Zisserman", "Joao Carreira", "Kaiming He", "Misha Andriluka", "Eduard Gabriel Bazavan", "Andrei Zanfir", "Cristian Sminchisescu"],
+      "affiliations": ["Google DeepMind", "University of Toronto", "University College London", "University of Oxford", "MIT", "Lund University"],
+      "source": "arXiv / Google DeepMind project page / 今日 AI 热点弱相关论文",
+      "published": "2026-07-10",
+      "tags": ["VLM", "Video Generation", "Generalist Vision", "Foundation Model", "Weakly Related"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.09024",
+        "pdf": "https://arxiv.org/pdf/2607.09024",
+        "project": "https://genception.github.io/"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "GenCeption 把预训练文本到视频扩散模型改造成统一的 feed-forward 视觉理解模型，用文本指令切换深度估计、表面法线、相机位姿、分割和 3D keypoint 等任务。核心假设是视频生成预训练天然学习时空世界先验和视觉-语言对齐，类似 NLP 中 next-token prediction 对通用能力的作用。后训练阶段主要用合成数据把多种 dense/sparse 任务统一到一个 backbone、head 和 loss 设计中。高光点是“生成即理解”：视频生成模型不只是合成工具，而可能成为通用视觉基座。",
+          "story": "计算机视觉仍大量依赖专用任务模型 -> 需要类似 LLM 的统一预训练范式 -> GenCeption 用视频生成预训练提供时空先验，再用指令化多任务后训练统一多种视觉任务。",
+          "innovation": "创新性很强但与电商治理为弱相关。与 V-JEPA、VideoMAE 等表征预训练不同，它直接复用 text-to-video diffusion backbone 并转成单步前向感知模型；对电商可迁移到商品视频理解、图文一致性和达人短视频结构化标签，但论文没有直接治理实验。",
+          "key_metrics": "论文报告 GenCeption 在深度、法线、相机位姿、分割、3D keypoint 等任务上匹配或超过 DepthAnything3、SAM3、D4RT、VGGT-Ω、Sapiens、DAVID、Genmo、Lotus-2 等专用模型；相对 D4RT/VGGT-Ω 可用 7× 到 500× 更少训练数据达到可比效果；项目页显示 Code TBA。"
+        },
+        "en": {
+          "method_overview": "GenCeption repurposes a pretrained text-to-video diffusion model into a unified feed-forward perception model steered by text instructions across depth, normals, camera pose, segmentation, and 3D keypoints. The core hypothesis is that video generation pretraining learns spatiotemporal world priors and vision-language alignment, analogous to next-token prediction in NLP. Multi-task post-training, mainly with synthetic data, unifies dense and sparse tasks under a shared backbone, head, and loss design. The highlight is generation-as-understanding: video generators may become general-purpose vision foundations.",
+          "story": "Computer vision still relies heavily on task-specific specialists -> it needs a general pretraining paradigm like LLMs -> GenCeption uses video generation pretraining for world priors, then instruction-style multi-task post-training for unified perception.",
+          "innovation": "The idea is highly innovative but only weakly tied to e-commerce governance. Unlike V-JEPA or VideoMAE representation pretraining, it reuses a text-to-video diffusion backbone as a single-step perception model. It could transfer to product-video understanding, image-text consistency, and creator-video tagging, but the paper has no direct governance experiment.",
+          "key_metrics": "The paper reports matching or surpassing DepthAnything3, SAM3, D4RT, VGGT-Ω, Sapiens, DAVID, Genmo, and Lotus-2 across depth, normals, camera pose, segmentation, and 3D keypoints. It reaches comparable performance to D4RT/VGGT-Ω with 7x to 500x less training data. The project page lists Code TBA."
+        }
+      },
+      "score": {
+        "innovation": 29,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 10,
+        "total": 79,
+        "rationale_zh": "AI 热度和方法创新都很高，实验强，但与电商治理只是弱相关。项目页显示 Code TBA；按评分机制低于 80 分，今日不触发强制复现，仅在网页中纳入关注。"
+      }
+    },
+    {
+      "id": "2607.00448",
+      "title": "Real-Time Hard Negative Sampling via LLM-based Clustering for Large-Scale Two-Tower Retrieval",
+      "authors": ["Authors not fully listed in converted metadata"],
+      "affiliations": ["Industrial recommendation system paper"],
+      "source": "arXiv / 今日巡检推荐召回相关论文",
+      "published": "2026-07-06",
+      "tags": ["Retrieval", "Two-tower", "Clustering", "Representation", "Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.00448",
+        "pdf": "https://arxiv.org/pdf/2607.00448",
+        "code": "https://github.com/Sam1224/CCReproduce/tree/main/2026-07-15/GOOBS_Cluster_Negative_Sampling"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "该论文提出 GOOBS，用基于内容 embedding 的 item clusters 为两塔召回模型实时生成 hard negatives，解决 in-batch negatives 候选少、OOB negatives 太简单的问题。训练时根据用户正样本所在簇或相近簇动态抽取更难区分的负样本，并配套可在线服务的大规模系统框架。对电商内容生态的价值在于：商品/内容向量化表征、聚类与相似召回可直接服务达人内容推荐、相似商品治理和重复/低质内容发现。",
+          "story": "两塔召回训练中的负样本要么太少要么太容易，且会放大流行度偏差 -> 需要实时、可扩展的 hard negative 生成机制 -> GOOBS 用内容 embedding 聚类在线生成更有信息量的负样本。",
+          "innovation": "方法工程性强，创新点在将 LLM/多模态内容 embedding 聚类与工业两塔训练/服务闭环结合。相比普通 in-batch/OOB 采样，它能让模型持续看到语义相近但未点击的候选，从而改善召回质量并缓解 popularity bias。",
+          "key_metrics": "论文报告 public datasets 与 industrial datasets 均显著优于 in-batch/OOB/mixed negative sampling；生产候选源相对 prior source model 在 served impressions 上获得 +53% CTR improvement，并帮助缓解 popularity bias。"
+        },
+        "en": {
+          "method_overview": "The paper proposes GOOBS, a real-time hard-negative sampling framework for two-tower retrieval models using clusters derived from content embeddings. Instead of relying on limited in-batch negatives or overly easy out-of-batch negatives, it samples semantically close cluster negatives on the fly during training. For e-commerce content ecosystems, the approach is relevant to item representation, clustering, similarity retrieval, creator-content recommendation, and duplicate/low-quality content discovery.",
+          "story": "Two-tower retrieval negatives are either too few or too easy and can amplify popularity bias -> training needs scalable hard negatives -> GOOBS samples semantically close negatives from content-embedding clusters in real time.",
+          "innovation": "The innovation is mainly engineering-oriented: it closes the loop between LLM/multimodal content embedding clusters and industrial-scale two-tower training/serving. Compared with in-batch or random OOB sampling, it continually exposes the model to semantically similar unclicked items.",
+          "key_metrics": "The paper reports significant gains over in-batch, OOB, and mixed negative sampling on public and industrial datasets. In production, the retrieval source achieves +53% CTR improvement on served impressions relative to the prior source model and helps mitigate popularity bias."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 20,
+        "total": 76,
+        "rationale_zh": "与向量化表征、聚类、相似召回相关，对内容生态有工程价值，但论文主题偏推荐召回而非内容理解/治理；已有 2026-07-15 复现，不重复实现。"
+      }
+    }
+  ]
+}
