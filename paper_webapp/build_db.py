@@ -90,7 +90,8 @@ def main() -> None:
 
             reproduce_url = None
             if reproduce and reproduce.get("path"):
-                reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/main/{reproduce['path']}"
+                branch = reproduce.get("branch", "main")
+                reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/{branch}/{reproduce['path']}"
 
             fig_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.svg"
             fig_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.png"

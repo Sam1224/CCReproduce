@@ -1,0 +1,202 @@
+{
+  "papers": [
+    {
+      "id": "2607.18230",
+      "title": "Simple Domain Generalization for Strong Pixel-Level Image Tampering Detection in Modern VLMs",
+      "authors": ["Yi Tang", "Xinyi Shang", "Jiacheng Cui", "Sondos Mahmoud Bsharat", "Jiacheng Liu", "Xiaohan Zhao", "Tran Dinh Tien", "Ahmed Elhagry", "Salwa K. Al Khatib", "Tianjun Yao", "Yonina C. Eldar", "Jing-Hao Xue", "Hao Li", "Salman Khan", "Zhiqiang Shen"],
+      "affiliations": ["Mohamed bin Zayed University of Artificial Intelligence", "University College London", "Weizmann Institute of Science"],
+      "source": "arXiv / VLM Tampering Detection / 强相关",
+      "published": "2026-07-20",
+      "tags": ["Governance", "Tampering Detection", "VLM", "Content Authenticity", "Image Forensics"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.18230",
+        "pdf": "https://arxiv.org/pdf/2607.18230",
+        "code": "https://github.com/VILA-Lab/PIXAR-DG"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文关注现代 VLM 生成/编辑图像下的像素级篡改定位泛化问题。作者没有再堆更复杂的新骨干，而是围绕训练策略做了两个非常实用的改造：一是每个 batch 中平衡采样真实图与篡改图，避免模型偏向伪造纹理或真实先验；二是在大规模基础域收敛后，再把少量新兴生成器分布以 late injection 方式注入训练。整体上它仍兼容现有分割式 tampering detector，但显著提升跨生成器 OOD 鲁棒性。高光点是它把“新模型不断冒出来、目标域数据很少”这个真实治理痛点直接转化为可执行训练 recipe。",
+          "story": "现有篡改检测器往往记住的是某个生成器的伪影，而不是篡改本身 -> 新闭源/新发布 VLM 一上线就会域外失效 -> 需要在不重做整套架构的情况下学到更可迁移的定位线索 -> 论文用 balanced minibatch + late injection + 低学习率适配，把 detector 从“记生成器”改成“记篡改模式”。",
+          "innovation": "创新性不在于提出全新大模型，而在于把 domain generalization 的关键控制变量压缩成简单但有效的训练配方。相比大量复杂 DG 正则或 domain-invariant 设计，它更像一套高可落地的工程策略；对内容生态治理尤其有价值，因为真实生产里模型上线节奏快、标注成本高、目标域数据永远不足。",
+          "key_metrics": "摘要报告其方法在 GPT-Images-2.0、Gemini-3.1、FLUX.2、Seedream 4.5 等 OOD VLM 上，相对 PIXAR 平均 gIoU 提升 26.1%、cIoU 提升 26.8%。原文还指出仅使用原始 PIXAR 训练规模的 19.2% 数据，依然能稳定超过已有方法。"
+        },
+        "en": {
+          "method_overview": "The paper studies pixel-level tampering localization under cross-generator shifts caused by modern VLM image editing systems. Instead of inventing a heavier detector, it improves robustness through two practical strategies: balanced minibatches containing both real and tampered images, and a late-injection schedule that introduces a small amount of new-domain data only after stable base-domain convergence. The approach remains compatible with existing segmentation-style tampering detectors while materially improving OOD transfer. Its main highlight is that it directly addresses the production reality where new closed-source generators appear faster than labeled target-domain data can be collected.",
+          "story": "Existing tampering detectors often memorize generator-specific artifacts rather than tampering itself -> once a new VLM appears, localization quality drops sharply -> we need a detector that learns transferable manipulation cues without redesigning the whole architecture -> the paper uses balanced sampling and late-domain injection to shift learning from generator fingerprints to tampering patterns.",
+          "innovation": "The novelty is a deployment-oriented domain-generalization recipe rather than a brand-new backbone. Compared with heavier DG regularizers, it focuses on optimization schedule and source composition, which is unusually practical for real moderation systems with rapidly evolving generators and limited target-domain labels.",
+          "key_metrics": "The abstract reports relative gains of 26.1% in average gIoU and 26.8% in average cIoU over PIXAR across OOD VLMs including GPT-Images-2.0, Gemini-3.1, FLUX.2, and Seedream 4.5. The paper also states that the method uses only 19.2% of the original PIXAR data scale while still outperforming prior approaches."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 22,
+        "total": 84,
+        "rationale_zh": "与内容治理强相关，直指篡改定位泛化；实验强调跨生成器 OOD，指标增益扎实。方法创新主要来自训练策略而非新架构，所以创新分略低于全新系统范式。已验证原始代码仓库非空，包含 model / preprocess / train_PIXAR.py / inference.py 等完整实现，因此不再重复复现。"
+      }
+    },
+    {
+      "id": "2607.18142",
+      "title": "O-VAD: Industrial Video Anomaly Detection through Object-Centric Tracking and Reasoning",
+      "authors": ["Mei Yuan", "Qi Long", "Qifeng Wu", "Zhenyang Li", "Yizhou Zhao", "Lei Wang", "Yang Liu", "Min Xu"],
+      "affiliations": ["Carnegie Mellon University", "University of Alabama at Birmingham", "Griffith University"],
+      "source": "arXiv / Object-centric VLM Reasoning / 治理相关",
+      "published": "2026-07-20",
+      "tags": ["Anomaly Detection", "Object Tracking", "Agentic Reasoning", "Governance", "Video Understanding"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.18142",
+        "pdf": "https://arxiv.org/pdf/2607.18142",
+        "project": "https://o-vad.github.io/"
+      },
+      "reproduce": {
+        "path": "2026-07-21/O_VAD",
+        "branch": "aime/1784636017-daily-paper-patrol"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "O-VAD 是一个 training-free 的工业视频异常检测 agent。它不直接让 VLM 看整段视频下结论，而是先做 object-centric grounding，把关键对象在时序中跟踪起来，再围绕对象状态演化去做 anomaly reasoning，最终输出异常类别、异常片段和证据描述。相较于 caption-first 或全局视频特征路线，它更强调『先构造对象状态证据，再做语义推理』。高光点是 grounded → track → reason 的链式范式，非常契合内容治理里对局部违规要素、证据链和可解释报告的要求。",
+          "story": "直接提示 VLM 看长视频时，模型往往只给出一个高层语义判断，既容易漏掉细粒度异常，也无法解释异常从哪一帧开始出现 -> 工业异常与治理异常都更依赖对象状态如何变化 -> 需要把对象轨迹、状态转移和最终异常判断拆开 -> O-VAD 通过 object grounding、状态跟踪和基于轨迹的推理，恢复可审计的异常证据链。",
+          "innovation": "创新点在于把开放式异常理解从『整段视频描述』改成『对象中心的时序状态推理』，且全流程无需额外训练数据。虽然应用域是工业视频，但其方法对达人内容治理、商品展示异常、直播片段异常和流程违规检测都很有迁移意义，因为这些场景同样依赖对象级证据和时间线分析。",
+          "key_metrics": "在 Phys-AD 上，O-VAD 平均 video-level AUROC 达 0.584，超过 Qwen3-VL-32B 的 0.513、GPT-5 的 0.503、VERA 的 0.456，也高于训练方法 S3R 的 0.555；在 LiquidAD 上取得最佳 training-free video-level AUROC 0.692；在 IPAD 上 video-level / frame-level AUROC 分别为 0.565 / 0.518，并在 16 个场景里有 12 个视频级第一。"
+        },
+        "en": {
+          "method_overview": "O-VAD is a training-free agentic framework for industrial video anomaly detection. Instead of asking a VLM to judge the entire video globally, it first grounds important objects, tracks their temporal state evolution, and then reasons over object-wise trajectories to produce anomaly type, anomaly segments, and evidence. Compared with caption-first or holistic feature pipelines, it explicitly constructs object-level evidence before semantic reasoning. The key highlight is the grounded → track → reason chain, which is highly aligned with auditable governance scenarios.",
+          "story": "When a VLM is prompted over a long video directly, it often returns a high-level semantic verdict, missing subtle anomalies and failing to explain when they emerged -> both industrial inspection and governance need state-change evidence at the object level -> decompose the problem into object grounding, temporal tracking, and trajectory-based reasoning -> O-VAD rebuilds the evidence chain before making the anomaly decision.",
+          "innovation": "The main novelty is reframing open-ended anomaly understanding as object-centric temporal state reasoning without task-specific retraining. Although the paper is set in industrial inspection, the paradigm transfers well to creator/content governance where local evidence, temporal chronology, and interpretable reports matter.",
+          "key_metrics": "On Phys-AD, O-VAD reaches an average video-level AUROC of 0.584, outperforming Qwen3-VL-32B at 0.513, GPT-5 at 0.503, VERA at 0.456, and even the trained S3R baseline at 0.555. It also achieves the best training-free video-level AUROC of 0.692 on LiquidAD, and 0.565 / 0.518 video-level / frame-level AUROC on IPAD, ranking first on 12 of 16 video-level scenarios."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 82,
+        "rationale_zh": "对象中心状态推理很有新意，且 zero-shot / training-free 设定对生产部署友好。虽然应用域不是电商，但对视频治理与证据链抽取迁移价值高。未发现可用训练/推理代码仓库，因此已按论文核心范式补做 toy 复现。"
+      }
+    },
+    {
+      "id": "2607.17017",
+      "title": "WHALE: A Scalable Unified Model for Recommendation with Wukong-HSTU Architecture",
+      "authors": ["Renqin Cai", "Dawei Sun", "Yuanjun Yao", "Zhiyong Wang", "Velvin Fu", "Maggie Zhuang", "Yu Shi", "Zhongnan Fang", "Xuan Cao", "Jing Qian", "Rui Li"],
+      "affiliations": ["Meta Platforms, Inc."],
+      "source": "arXiv / Large-scale Recommendation / 强相关",
+      "published": "2026-07-19",
+      "tags": ["Recommendation", "Retrieval-Ranking", "E-commerce", "Sequence Modeling", "Industrial ML"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.17017",
+        "pdf": "https://arxiv.org/pdf/2607.17017"
+      },
+      "reproduce": {
+        "path": "2026-07-21/WHALE",
+        "branch": "aime/1784636017-daily-paper-patrol"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "WHALE 试图把推荐系统里两条长期各自扩张的主线真正统一起来：一条是建模 user/item/context/cross feature 的高阶非序列交互，一条是建模长行为序列的 HSTU 路线。它不是先把序列压成几个 summary token 再喂给静态交叉网络，而是在每一层同时保留 Wukong 分支和 HSTU 分支，再用 attention fusion 让非序列交叉去查询长历史中的细粒度行为证据。这样高阶特征交叉与时序行为可以逐层交换信息，而不是浅层拼接一次就结束。高光点是『层内统一 + 渐进交互』，非常贴合电商内容分发、召回后精排和达人内容推荐。",
+          "story": "传统推荐要么强在静态特征交互、要么强在长行为序列，但候选内容真正相关的往往是“当前上下文 × 某段历史行为”的组合证据 -> 浅层混合会把历史压缩得太早，导致后续交叉无法回到细粒度行为上取证 -> 需要在网络深层持续交换两种表示 -> WHALE 用 Wukong 模块、HSTU 模块和 fusion 模块组成递归层，让 feature crosses 多次从长序列中检索相关行为证据。",
+          "innovation": "WHALE 的价值偏系统和架构统一，而非全新学习目标。相比 shallow hybrid，它把 unified recommendation 从“拼接两个 backbone”推进到“每层显式互动”；相比单独放大 Wukong 或 HSTU，它更符合推荐场景中静态画像、上下文和长期行为共振的真实结构。对电商内容生态和达人推荐场景相关性非常高。",
+          "key_metrics": "在线 A/B 测试运行 14 天，在与基线相同候选与延迟约束下，WHALE 将主评估指标提升 0.113%，Metric 1 / Metric 2 分别提升 0.824% / 1.820%，代价仅为 inference QPS -5%。系统侧优化还将训练吞吐提升 30%，并在未优化替代方案上额外带来 22% 推理吞吐提升。"
+        },
+        "en": {
+          "method_overview": "WHALE unifies two scaling paths in large recommendation systems: high-order non-sequential feature interaction (Wukong-style) and long behavioral sequence modeling (HSTU-style). Instead of compressing the sequence once and feeding it into a static cross network, WHALE keeps both branches alive inside every layer and uses attention fusion so that non-sequential interaction representations can query fine-grained evidence from long user histories. This enables progressive interaction between static/contextual crosses and temporal behaviors. The main highlight is layer-wise unification rather than shallow one-shot fusion.",
+          "story": "Recommendation models are usually strong either at static/contextual feature interaction or at long behavioral sequence modeling, but real relevance often depends on combinations like current context × specific past behavior -> shallow hybrids compress history too early, preventing later crosses from revisiting fine-grained evidence -> keep both branches active and let them exchange information throughout the stack -> WHALE uses recursive Wukong, HSTU, and fusion modules to repeatedly retrieve the most relevant behavioral evidence.",
+          "innovation": "The innovation is architectural and system-oriented: it advances unified recommendation from simply concatenating two backbones to explicit layer-wise interaction. Compared with scaling Wukong or HSTU alone, the design better matches real recommendation workloads where static profiles, request context, and long histories must resonate together.",
+          "key_metrics": "In a 14-day online A/B test under the same production serving constraints, WHALE improves the primary evaluation metric by 0.113%, Metric 1 by 0.824%, and Metric 2 by 1.820%, with only a -5% inference-QPS regression. On the systems side, its optimization stack improves training throughput by 30% and further raises serving throughput by 22% relative to the unoptimized alternative."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 85,
+        "rationale_zh": "推荐/分发基础设施强相关，在线实验增益清晰，且设计直接面向工业约束。创新更偏架构统一与系统 co-design，理论新颖度不是顶格，但业务价值很高。未发现公开代码，因此已补做 toy 复现。"
+      }
+    },
+    {
+      "id": "2607.16165",
+      "title": "An Exam for Active Observers",
+      "authors": ["Jiarui Zhang", "Muzi Tao", "Shangshang Wang", "Ollie Liu", "Xuezhe Ma", "Willie Neiswanger"],
+      "affiliations": ["University of Southern California"],
+      "source": "arXiv / MLLM Benchmark / 今日热点",
+      "published": "2026-07-17",
+      "tags": ["MLLM", "Benchmark", "Active Vision", "Visual Reasoning"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.16165",
+        "pdf": "https://arxiv.org/pdf/2607.16165",
+        "project": "https://activevision.dev"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文提出 ActiveVision，专门测量 MLLM 是否具备真正的 active observation，而不是只会把图像一次性编码后做静态描述。基准覆盖 Distributed Scanning、Sequential Traversal、Visual Attribute Transfer 三大类共 17 个任务，要求模型在推理过程中反复回到像素证据，而不是靠一句文字摘要完成。论文还把程序化结构先构造，再用 GPT-image-2 渲染成逼真的视觉输入，避免 benchmark 变成低级几何题。高光点是它直指当下多模态模型的一个真实盲区：看得见不等于会反复看。",
+          "story": "很多多模态 benchmark 已接近饱和，但真实世界任务仍要求模型在视觉推理过程中不断回看证据 -> 传统 VQA 与 caption 类任务并不能衡量这种能力 -> 需要一个让“主动观察”可测量的基准 -> ActiveVision 通过计数、曲线跟踪、跨区域属性迁移等任务，把反复取证能力独立出来。",
+          "innovation": "创新主要在 benchmark 设计范式：它不是继续做多选题或语言偏置控制，而是把 perception-reasoning loop 单独抽出来做强对抗式测量。对电商内容理解而言，这类能力对细粒度图文一致性、商品属性核对、违规元素溯源有启发，但论文本身更偏通用认知诊断。",
+          "key_metrics": "在公开 85 个样本上，最佳 GPT-5.5 xhigh 仅 10.6% 准确率，且 17 个任务中有 11 个任务得分为 0；Claude Fable 5 仅 3.5%；三位人类参与者平均达到 96.1%。即便允许模型写并运行视觉代码，代理准确率也只有 24.7%–50.6%。"
+        },
+        "en": {
+          "method_overview": "The paper introduces ActiveVision, a benchmark designed to measure whether MLLMs truly perform active observation rather than relying on a single one-shot visual encoding. It spans 17 tasks across distributed scanning, sequential traversal, and visual attribute transfer, forcing models to return to the pixels during reasoning. Procedural structures are first generated and then rendered photorealistically with GPT-image-2, so the benchmark remains visually realistic rather than cartoon-like. Its core highlight is exposing the gap between seeing once and looking repeatedly.",
+          "story": "Many multimodal benchmarks are nearing saturation, yet real applications still require iterative evidence checking -> standard VQA and caption tasks do not isolate this capability -> build a benchmark where answers depend on repeated returns to the image -> ActiveVision turns active observation into counting, tracing, and fine-grained cross-region comparison tasks.",
+          "innovation": "The novelty is benchmark design: instead of another bias-controlled VQA set, it isolates the perception–reasoning loop as a first-class capability. For e-commerce content understanding, this is relevant as an inspiration for auditing subtle visual evidence, though the paper itself is more of a general diagnostic benchmark.",
+          "key_metrics": "On the released 85-item split, the best GPT-5.5 xhigh reaches only 10.6% exact-match accuracy and scores zero on 11 of the 17 tasks; Claude Fable 5 reaches 3.5%; three humans average 96.1%. Even autonomous coding agents only achieve 24.7% to 50.6% accuracy."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 12,
+        "total": 73,
+        "rationale_zh": "benchmark 设计非常强，结果冲击力大，但与电商内容生态/达人治理是弱相关，更偏通用 MLLM 能力诊断。由于并非直接业务落地方法，相关性分适度保守。"
+      }
+    },
+    {
+      "id": "2607.10350",
+      "title": "ABot-AgentOS: A General Robotic Agent OS with Lifelong Multi-modal Memory",
+      "authors": ["AMAP CV Lab Alibaba Group et al."],
+      "affiliations": ["AMAP CV Lab", "Alibaba Group"],
+      "source": "arXiv / Agent Memory / 今日热点",
+      "published": "2026-07-10",
+      "tags": ["Agent", "Memory", "Multimodal", "Graph Retrieval", "Long-horizon"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.10350",
+        "pdf": "https://arxiv.org/pdf/2607.10350",
+        "project": "https://amap-cvlab.github.io/ABot-AgentOS",
+        "code": "https://github.com/amap-cvlab/ABot-AgentOS"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "ABot-AgentOS 想做的是一个通用的 Agent Operating System：它在底层控制器之上增加 deliberative agent layer，负责规划、技能执行、验证、长期记忆和 edge-cloud 协同。核心记忆结构是 Universal Multi-modal Graph Memory，把对话、视觉观察、时空关系和任务轨迹写成可检索的 typed graph，再通过失败驱动的 self-evolution 去持续修正写入/检索策略。高光点是把『多模态长期记忆』从上下文窗口技巧升级成独立运行时层。",
+          "story": "长周期 agent 任务如果只靠上下文窗口，历史视觉证据和任务轨迹很快就爆炸且不可审计 -> 需要一个能持久保存、按关系检索、还能把失败归因回运行时策略的 memory substrate -> ABot-AgentOS 用 typed graph memory + hybrid retriever + failure-driven evolution，把 memory 从 prompt engineering 变成系统层能力。",
+          "innovation": "创新点在于系统完整性：不是单做 memory benchmark 或单做 embodied agent，而是把规划、执行、验证和多模态图记忆统一到 Agent OS 视角。对电商内容治理的直接迁移不如推荐/篡改检测强，但对多轮证据审查、达人历史行为归因、跨会话治理 agent 很有启发。",
+          "key_metrics": "在 EmbodiedWorldBench 子集上，同样使用 Qwen3.6-Plus 时，作者方法相对单控制器基线 TSR 提升 11.99%、GCR 提升 10.84%；记忆模块在 LoCoMo 上 87.5、OpenEQA 59.9、Mem-Gallery 88.6、NExT-QA Acc@All 76.5，self-evolution 后 LoCoMo / OpenEQA / Mem-Gallery 分别进一步到 88.7 / 60.4 / 89.0。"
+        },
+        "en": {
+          "method_overview": "ABot-AgentOS proposes a general Agent Operating System that adds a deliberative runtime layer above low-level controllers for planning, skill execution, verification, persistent memory, and edge-cloud collaboration. Its core memory substrate is Universal Multi-modal Graph Memory, which writes dialogue, visual observations, temporal-spatial relations, and task traces into a typed graph and retrieves local evidence subgraphs at answer time. A failure-driven self-evolution loop then improves memory writing and retrieval policies over time. The highlight is treating long-horizon multimodal memory as a runtime system rather than a prompt trick.",
+          "story": "Long-horizon agents cannot rely on context windows alone because visual evidence and task traces explode in size and become unauditable -> build a persistent, relational, source-grounded memory substrate -> combine typed graph memory, hybrid retrieval, and failure-driven runtime evolution -> turn memory from prompt engineering into an operating-system capability.",
+          "innovation": "The main innovation is system completeness: the paper unifies planning, execution, verification, and multimodal graph memory under an Agent OS perspective rather than focusing on only one module. Its direct fit to e-commerce governance is moderate, but it is highly relevant to multi-session evidence review and history-aware governance agents.",
+          "key_metrics": "On an EmbodiedWorldBench subset under the same Qwen3.6-Plus backbone, the method improves TSR by 11.99% and GCR by 10.84% over the single-controller baseline. Its static memory system reaches 87.5 on LoCoMo, 59.9 on OpenEQA, 88.6 on Mem-Gallery, and 76.5 Acc@All on NExT-QA, while self-evolution further lifts LoCoMo / OpenEQA / Mem-Gallery to 88.7 / 60.4 / 89.0."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 5,
+        "relevance": 14,
+        "total": 77,
+        "rationale_zh": "从 agent OS + graph memory 的角度看方法很强，实验也覆盖多类 benchmark；但与电商内容理解/达人治理仅中等相关。已验证公开代码仓库目前基本只有 README / 项目落地说明，未见完整训练与运行代码；但因总分未到 80，本轮不触发复现。"
+      }
+    }
+  ]
+}
