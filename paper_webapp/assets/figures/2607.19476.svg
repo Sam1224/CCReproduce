@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f8fbff"/>
+  <rect x="24" y="24" width="672" height="372" rx="24" fill="#ffffff" stroke="#dbe7ff"/>
+  <text x="40" y="58" font-size="24" font-weight="700" fill="#0f172a">Detect Early, Escalate Rarely · Streaming AIGC Video Detection</text>
+  <text x="40" y="84" font-size="14" fill="#475569">Compressed-bitstream screening catches risky videos before full decoding.</text>
+  <rect x="42" y="118" width="144" height="92" rx="18" fill="#eef4ff" stroke="#bfd3ff"/>
+  <text x="58" y="148" font-size="16" font-weight="700" fill="#1d4ed8">Incoming Video</text>
+  <text x="58" y="176" font-size="13" fill="#334155">creator short video</text>
+  <text x="58" y="194" font-size="13" fill="#334155">or livestream clip</text>
+  <rect x="214" y="118" width="164" height="92" rx="18" fill="#effcf6" stroke="#b7f0cf"/>
+  <text x="230" y="148" font-size="16" font-weight="700" fill="#047857">Bitstream Features</text>
+  <text x="230" y="176" font-size="13" fill="#334155">motion vectors</text>
+  <text x="230" y="194" font-size="13" fill="#334155">macroblock patterns</text>
+  <rect x="406" y="118" width="128" height="92" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="422" y="148" font-size="16" font-weight="700" fill="#c2410c">Early Judge</text>
+  <text x="422" y="176" font-size="13" fill="#334155">anytime-valid</text>
+  <text x="422" y="194" font-size="13" fill="#334155">risk threshold</text>
+  <rect x="560" y="108" width="118" height="112" rx="18" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="576" y="136" font-size="16" font-weight="700" fill="#6d28d9">Escalate Only</text>
+  <text x="576" y="162" font-size="13" fill="#334155">low-confidence</text>
+  <text x="576" y="180" font-size="13" fill="#334155">segments to VLM</text>
+  <text x="576" y="198" font-size="13" fill="#334155">for verification</text>
+  <path d="M186 164H214" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M378 164H406" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M534 164H560" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="44" y="254" width="632" height="104" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="282" font-size="16" font-weight="700" fill="#0f172a">Governance value</text>
+  <text x="60" y="310" font-size="14" fill="#334155">Use cheap full-coverage screening for all creator videos, then spend heavy-model budget only on suspicious cases.</text>
+  <text x="60" y="336" font-size="14" fill="#334155">This is well suited for platform-scale moderation of AI-generated product demos, synthetic spokespersons, and edited promotional clips.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker></defs>
+</svg>

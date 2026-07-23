@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f8fbff"/>
+  <rect x="24" y="24" width="672" height="372" rx="24" fill="#ffffff" stroke="#dbe7ff"/>
+  <text x="40" y="58" font-size="24" font-weight="700" fill="#0f172a">SPD Decoding · Multi-objective Generative Recommendation</text>
+  <text x="40" y="84" font-size="14" fill="#475569">Inject platform constraints directly into the decoding loop of a generative recommender.</text>
+  <rect x="42" y="118" width="150" height="94" rx="18" fill="#eef4ff" stroke="#bfd3ff"/>
+  <text x="58" y="148" font-size="16" font-weight="700" fill="#1d4ed8">User Context</text>
+  <text x="58" y="176" font-size="13" fill="#334155">intent + history</text>
+  <text x="58" y="194" font-size="13" fill="#334155">target constraints</text>
+  <rect x="218" y="118" width="160" height="94" rx="18" fill="#effcf6" stroke="#b7f0cf"/>
+  <text x="234" y="148" font-size="16" font-weight="700" fill="#047857">Generator</text>
+  <text x="234" y="176" font-size="13" fill="#334155">next-item logits</text>
+  <text x="234" y="194" font-size="13" fill="#334155">for slate decoding</text>
+  <rect x="404" y="108" width="148" height="114" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="420" y="136" font-size="16" font-weight="700" fill="#c2410c">Primal-Dual Update</text>
+  <text x="420" y="162" font-size="13" fill="#334155">relevance + business</text>
+  <text x="420" y="180" font-size="13" fill="#334155">+ creator exposure</text>
+  <text x="420" y="198" font-size="13" fill="#334155">+ diversity constraints</text>
+  <rect x="578" y="118" width="98" height="94" rx="18" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="594" y="148" font-size="16" font-weight="700" fill="#6d28d9">Slate</text>
+  <text x="594" y="176" font-size="13" fill="#334155">items picked</text>
+  <text x="594" y="194" font-size="13" fill="#334155">step by step</text>
+  <path d="M192 165H218" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M378 165H404" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M552 165H578" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="44" y="254" width="632" height="104" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="282" font-size="16" font-weight="700" fill="#0f172a">Business intuition</text>
+  <text x="60" y="310" font-size="14" fill="#334155">The decoder can trade off relevance with creator fairness, diversity, and platform objectives without retraining the whole model.</text>
+  <text x="60" y="336" font-size="14" fill="#334155">This matches real e-commerce feeds where conversion, new-creator exposure, and assortment quality must be balanced online.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker></defs>
+</svg>

@@ -1,0 +1,235 @@
+{
+  "papers": [
+    {
+      "id": "2607.19747",
+      "title": "Beyond Relevance-Centric Retrieval: Rubric-Oriented Document Set Selection and Ranking",
+      "authors": ["Kailin Jiang", "Lei Liu", "Jian Xi", "Hui Xu", "Junlin Liu", "Baochen Fu", "Shaoqing Ren", "Bin Li", "Vichwang", "Yu Lu", "Haibo Shi"],
+      "affiliations": ["University of Science and Technology of China", "Tencent Hunyuan Yuanbao", "University of Chinese Academy of Sciences", "Shandong University"],
+      "source": "arXiv / RAG Retrieval / 强相关",
+      "published": "2026-07-23",
+      "tags": ["RAG", "Setwise Ranking", "Document Quality", "Governance", "Retrieval"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19747",
+        "pdf": "https://arxiv.org/pdf/2607.19747",
+        "code": "https://github.com/Rubric4Setwise/Rubric4Setwise",
+        "project": "https://rubric4setwise.github.io",
+        "dataset": "https://huggingface.co/datasets/kailinjiang/SetwiseEvalKit"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把检索质量从‘单文档相关性’扩展到‘文档集合协同质量’，提出覆盖文档级、集合级、全局级的 SETWISEEVALKIT，并用约 2.8 万条 query-specific rubrics 描述互补性、冗余、冲突、真实性等九个维度。作者随后提出免训练的 RUBRIC4SETWISE，把 rubrics 直接转成文档集筛选与排序信号，不再只依赖相似度分数。它同时完成评估、诊断和优化闭环：先发现现有 reranker 的集合级缺陷，再把评估信号反向用于 setwise 选择。高光点在于把 RAG 检索从‘相关即可’推进为‘证据充分、互补且不冲突’的工业化指标体系。",
+          "story": "现有 RAG/检索系统主要优化单文档相关性，容易得到一组彼此冗余、甚至事实冲突的文档 -> 需要从文档集合整体质量出发，明确什么叫‘适合回答问题的一组证据’ -> 论文用 query-specific rubrics 描述集合级质量，并把 rubrics 直接用于无训练 setwise ranking。",
+          "innovation": "创新性很强，核心不在于再造一个打分模型，而是重新定义检索目标函数：从单文档相关性转向集合级证据质量。Rubric 驱动的 setwise 选择兼具可解释性和落地性，尤其适合治理类场景中对冗余、冲突、真实性和覆盖度都有明确要求的证据检索。",
+          "key_metrics": "SETWISEEVALKIT 覆盖约 2.8 万条高质量 rubrics、12 类 reranker；rubric 覆盖得分与下游生成质量 Pearson r=0.92。RUBRIC4SETWISE 在短文本多跳 QA 上取得 27.71 平均分（EM 26.10 / F1 29.32），且平均只需 2.66 篇文档；在长文本调研场景中 LLM-judge 得分 70.57，优于次优方法，同时使用更少文档（20.52 vs 29.23）和更少搜索轮次（4.52 vs 4.73）。"
+        },
+        "en": {
+          "method_overview": "The paper reframes retrieval quality from single-document relevance to document-set quality. It introduces SETWISEEVALKIT, a rubric-based benchmark spanning document-, set-, and global-level criteria such as complementarity, redundancy, conflict, and authenticity. On top of that, RUBRIC4SETWISE is a training-free selector that directly converts query-specific rubrics into setwise document ranking signals. The work closes the loop across evaluation, diagnosis, and optimization for RAG retrieval.",
+          "story": "Standard retrieval optimizes single-document relevance, which often returns sets that are redundant or mutually conflicting -> retrieval should optimize the quality of the whole evidence set -> build query-specific rubrics and use them directly for setwise selection and ranking.",
+          "innovation": "The novelty is not just another reranker, but a new objective for retrieval: evidence-set quality. Rubric-oriented setwise ranking is both interpretable and actionable for industrial governance pipelines that care about redundancy, conflict, authenticity, and coverage.",
+          "key_metrics": "SETWISEEVALKIT contains about 28k high-quality rubrics and evaluates 12 rerankers. Rubric coverage correlates strongly with downstream generation quality (Pearson r=0.92). RUBRIC4SETWISE reaches 27.71 average score on short-text multi-hop QA (EM 26.10 / F1 29.32) with only 2.66 documents on average, and achieves 70.57 LLM-judge score on long-form research while using fewer documents and search rounds than the runner-up."
+        }
+      },
+      "score": {
+        "innovation": 28,
+        "results": 14,
+        "exp_quality": 15,
+        "efficiency": 9,
+        "generalization": 5,
+        "relevance": 23,
+        "total": 94,
+        "rationale_zh": "重新定义了 RAG 证据检索的优化目标，数据集、诊断分析和无训练优化闭环都很完整；对电商内容治理中的证据筛选、多样性控制、冲突检测和事实核查都具有直接迁移价值。原仓库已确认包含 run_pipeline.py、judge_scoring、rankify 等实现文件，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.19987",
+      "title": "UniRank: Benchmarking Ranking Models for Unified Sequential Modeling and Feature Interaction",
+      "authors": ["Honghao Li", "Xianquan Wang", "Kangyi Lin", "Zibin Zhang", "Yiwen Zhang", "Yi Zhang"],
+      "affiliations": ["Anhui University", "University of Science and Technology of China", "Tencent"],
+      "source": "arXiv / Ranking Benchmark / 强相关",
+      "published": "2026-07-23",
+      "tags": ["Ranking", "Benchmark", "Long Sequence", "E-commerce", "Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19987",
+        "pdf": "https://arxiv.org/pdf/2607.19987",
+        "code": "https://github.com/salmon1802/UniRank"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "UniRank 提出面向工业级排序任务的统一基准，聚焦‘行为序列建模 + 特征交互’融合架构，覆盖 15 种代表性模型与 5 个亿级公开数据集。它把工业里常见的时间序点式自回归训练范式标准化，而不是继续沿用学术界简化采样设置。作者还同步提供高性能 PyTorch 工具包，集成 Flash Attention、混合精度等优化，用于研究排序模型的 scaling law 和超长行为序列建模。高光点在于首次把内容消费、互动、转化等多反馈目标放到一个统一、可复现的开源排名基准里。",
+          "story": "工业界排序模型依赖私有数据和私有训练流水线，学术界很难公平比较不同序列+交互架构 -> 需要一个贴近真实工业训练范式、同时覆盖超长行为序列和多任务反馈的统一基准 -> UniRank 统一数据、模型、算子优化和评测协议，建立可扩展的排序 benchmark。",
+          "innovation": "创新点更偏‘基石型工程研究’：它不是提出单一新模型，而是把过去零散的 long-sequence ranking、feature interaction 和多反馈训练整合成可复现基准。对于电商内容生态，这类工作价值非常高，因为选型、压测、扩容和线上演进都需要先有可信的统一对照系。",
+          "key_metrics": "数据集包括 QK-Video（4.9 亿）、KuaiRand（3.2 亿）、TAAC-25（7.5 亿）、Taobao、MerRec。论文报告在 KuaiRand 上层级化交互模型 EST 的 Long View AUC 达到 0.8157；工具包在 4 卡 H20 上实现 14.24 倍吞吐加速，并完整输出 15 种模型的 AUC/Logloss 排行。"
+        },
+        "en": {
+          "method_overview": "UniRank is an industrial-scale benchmark for ranking models that unify sequential behavior modeling with feature interaction. It standardizes a production-like pointwise autoregressive training setup, covers 15 representative models, and spans five public datasets at hundred-million scale. The benchmark is paired with an optimized PyTorch toolkit using techniques such as Flash Attention and mixed precision for scaling-law studies and ultra-long sequence modeling. Its main contribution is turning fragmented ranking research into a reproducible industrial baseline suite.",
+          "story": "Industrial ranking models are hard to compare because they depend on private data and private training pipelines -> the field needs a public benchmark that mirrors real production training and multi-feedback objectives -> UniRank standardizes data, models, optimization, and evaluation into one scalable benchmark.",
+          "innovation": "This is a foundational engineering contribution rather than a single new model. It creates a trustworthy comparison layer for long-sequence ranking, feature interaction, and multi-feedback training, which is exactly what production recommendation systems need for model selection and iteration.",
+          "key_metrics": "The benchmark includes QK-Video (490M), KuaiRand (320M), TAAC-25 (750M), Taobao, and MerRec. On KuaiRand, the hierarchical interaction model EST reaches 0.8157 AUC on the Long View task. The toolkit also reports up to 14.24x training throughput speedup on 4x H20 GPUs while benchmarking 15 models with AUC and Logloss."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 14,
+        "exp_quality": 15,
+        "efficiency": 10,
+        "generalization": 5,
+        "relevance": 25,
+        "total": 93,
+        "rationale_zh": "虽然不是单模型创新，但它对电商排序基础设施的价值极高：数据规模、任务覆盖和复现实验都很强，且代码仓库已确认包含 model_zoo、benchmark、unirank 等完整实现，适合作为后续选型和复验基线，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.19739",
+      "title": "Personalized Recommendation Tool Learning via Autonomous Language Agents",
+      "authors": ["Mingdai Yang", "Zhiwei Liu", "Weizhi Zhang", "Yibo Wang", "Hao Peng", "Philip Yu"],
+      "affiliations": ["University of Illinois Chicago", "Microsoft", "Beihang University"],
+      "source": "arXiv / Agentic Recommendation / 强相关",
+      "published": "2026-07-23",
+      "tags": ["Agent", "Recommendation", "Tool Learning", "Personalization", "LLM"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19739",
+        "pdf": "https://arxiv.org/pdf/2607.19739",
+        "code": "https://github.com/mdyfrank/RecToolAgent"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "PRTA 把推荐系统中的多个传统推荐模型视为可调用工具，由 LLM 代理充当中央规划者，在用户级别学习‘该调用哪些工具、权重如何分配、结果如何聚合’。框架核心是 Personalized Tool Memory，用来记录用户对不同推荐工具的偏好权重；LLM 通过局部工具评估、全局工具比较和排名比较三种反思机制持续更新该记忆。推理阶段，代理聚合 LightGCN、SASRec、SimpleX 等模型输出，并结合上下文重排序完成最终推荐。高光点在于用轻量代理调度替代端到端大模型排序，把 LLM 的语义推理能力和传统推荐器的全量候选处理能力结合起来。",
+          "story": "纯 LLM 推荐代理容易受幻觉、上下文窗口和全量候选排序能力限制，传统推荐器又难以在复杂语义偏好下动态切换 -> 需要让 LLM 只负责‘何时使用哪种推荐工具’，而不是独自完成所有排序 -> PRTA 用个性化工具记忆和三类反思机制学习用户级工具调度策略。",
+          "innovation": "它真正的创新不在于再加一个 reranker，而是把推荐模型抽象成可学习工具，并把调度问题变成 LLM agent 的记忆与反思问题。这种分层设计非常适合电商内容生态：不同用户、不同内容模态、不同达人类型，往往对应不同召回/精排器的优势区间。",
+          "key_metrics": "在 Amazon、Yelp、Goodreads 等数据集上，PRTA 全量排序明显超过纯 LLM 和传统基线；例如 Amazon 上 Recall@10 从 0.0625 提升到 0.1000（约 +60%），Goodreads 上 Recall@10 从 0.1000 提升到 0.1688（约 +68.8%）。"
+        },
+        "en": {
+          "method_overview": "PRTA treats multiple recommendation models as tools and lets an LLM agent serve as the central planner. Its Personalized Tool Memory stores user-specific tool preferences, while local evaluation, global comparison, and rank comparison reflections update those weights over time. At inference, the agent aggregates outputs from models such as LightGCN, SASRec, and SimpleX, then performs contextual reranking. The key idea is to use the LLM for tool orchestration instead of forcing it to rank the entire candidate pool alone.",
+          "story": "Pure LLM recommenders struggle with hallucination, context limits, and full-candidate ranking, while classical recommenders cannot flexibly adapt to complex semantic preferences -> let the LLM decide which recommendation tools to use rather than doing all ranking itself -> learn user-level tool orchestration with memory and reflection.",
+          "innovation": "The paper reframes recommendation as tool learning for an autonomous language agent. This hierarchical design is highly practical for e-commerce because different users and content types often benefit from different retrieval and ranking specialists.",
+          "key_metrics": "Across Amazon, Yelp, and Goodreads, PRTA substantially outperforms pure-LLM and classical baselines in full-ranking settings. Reported gains include Recall@10 improving from 0.0625 to 0.1000 on Amazon (about +60%) and from 0.1000 to 0.1688 on Goodreads (about +68.8%)."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 87,
+        "rationale_zh": "LLM agent + 推荐工具调度的思路兼具创新性与落地性，对达人内容、商品内容、用户偏好异质性很有价值。原仓库已确认包含 main.py、memory_bank.py、prompt_bank.py、SimpleX/、SASRec/、LightGCN-PyTorch/ 等实现，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.19476",
+      "title": "Detect Early, Escalate Rarely: Anytime Detection of AI-Generated Video from the Compressed Bitstream",
+      "authors": ["Mert Onur Cakiroglu", "Mehmet Dalkilic", "Hasan Kurban"],
+      "affiliations": ["Indiana University Bloomington", "Hamad Bin Khalifa University"],
+      "source": "arXiv / AIGC Video Detection / 强相关",
+      "published": "2026-07-23",
+      "tags": ["AIGC Detection", "Video Moderation", "Compressed Bitstream", "Governance"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19476",
+        "pdf": "https://arxiv.org/pdf/2607.19476",
+        "code": "https://github.com/KurbanIntelligenceLab/streamdet"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把 AI 生成视频检测重构为流式感知任务：先直接从压缩码流提取运动场等轻量特征进行早期判断，再只把少量低置信度片段上报给更昂贵的视觉模型。它同时引入 anytime-valid 阈值和‘早检、少升级’的阶梯式决策机制，使系统在尚未完整解码视频前就能输出可用风险判断。相比离线像素级检测器，该方案把治理链路前移到码流层，并通过 deferral 机制把大模型调用预算压到很低。高光点是把海量短视频内容治理从重模型全量扫视频，变成轻特征全量预筛 + 小流量精检。",
+          "story": "电商短视频和直播录屏量大、时效强，逐帧像素级检测很难承受成本 -> 需要在不完整解码视频的前提下尽早发现 AIGC 风险，并只把少数难例交给重模型 -> 论文用压缩码流特征、随时有效阈值和分级上报机制完成低成本流式检测。",
+          "innovation": "创新点集中在治理系统设计：检测入口从像素域前移到码流域，同时把早停判断、置信度控制和分级升级整合在一个 anytime 流式框架里。这非常适合达人内容治理中的 AI 换脸、AI 造景、AI 商品演示视频识别。",
+          "key_metrics": "公开网页信息显示：在 CPU 上其计算量比像素级 CNN 低 5 个数量级，在 GenVidBench 上获得 0.64 全长 AUC；当仅将约 15% 片段升级给高阶模型时，准确率可由 0.75 提升到 0.78，总体算力仍较全量像素分析低约 7 倍。"
+        },
+        "en": {
+          "method_overview": "The paper reformulates AI-generated video detection as a streaming task. It first uses lightweight features parsed directly from the compressed bitstream, then escalates only low-confidence segments to a more expensive visual model. With anytime-valid thresholds and a staged escalation policy, the detector can act before the entire video is decoded. The overall design turns large-scale moderation into cheap full-coverage prefiltering plus sparse expensive verification.",
+          "story": "E-commerce short videos and livestream recordings are too numerous for full pixel-level analysis -> the system needs to detect suspicious AIGC content as early as possible and escalate only hard cases -> use compressed-bitstream features, anytime thresholds, and deferral to enable low-cost streaming detection.",
+          "innovation": "The main novelty is moving the moderation entry point from pixel space to bitstream space while integrating early stopping and escalation in one anytime framework. This is highly aligned with creator-governance workloads at platform scale.",
+          "key_metrics": "Publicly available details indicate CPU-side compute that is five orders of magnitude lower than pixel-level CNN baselines while reaching 0.64 full-length AUC on GenVidBench. Escalating only about 15% of segments improves accuracy from 0.75 to 0.78 while keeping total compute roughly 7x lower than full pixel analysis."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 84,
+        "rationale_zh": "非常适合大规模视频内容治理，尤其是 AI 生成内容检测的全量预筛。由于公开网页层面的实验细节仍有限，结果与实验质量项略保守；但原仓库已确认包含 streamdet/features、analysis、tests、scripts 等实现，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.19357",
+      "title": "Stochastic Primal-Dual Decoding for Multiobjective Generative Recommender Systems",
+      "authors": ["Denis Beslic", "Melissa Yalla", "Alice Y Wang", "Mounia Lalmas"],
+      "affiliations": ["Spotify"],
+      "source": "arXiv / Generative Recommendation / 强相关",
+      "published": "2026-07-23",
+      "tags": ["Generative Recommendation", "Multi-objective Optimization", "Decoding", "E-commerce"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19357",
+        "pdf": "https://arxiv.org/pdf/2607.19357"
+      },
+      "reproduce": {
+        "path": "2026-07-23/SPD_Decoding"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把生成式推荐中的序列生成问题改写为带约束的多目标优化：既要最大化用户相关性，又要兼顾公平性、商业目标或新内容曝光等辅助目标。为此作者提出随机原对偶解码，在解码阶段对 logits 注入对偶变量控制，让模型边生成边根据约束违反程度更新权重，而不必事后重排或重新训练整个模型。该方法给出关于约束违反与 regret 的理论保证，并在大规模真实场景中验证在线收益。它的亮点是把多目标博弈直接嵌进生成式推荐的 decoding 环节。",
+          "story": "生成式推荐常常只优化用户相关性，平台却还需要兼顾商业目标、内容多样性和新作者扶持 -> 如果靠后处理重排，往往会破坏生成分布或带来额外系统复杂度 -> 论文把约束优化直接放进 decoding，用随机原对偶更新在生成时实时平衡多个目标。",
+          "innovation": "方法创新性较强：它不是改训练损失，而是在推理阶段通过 primal-dual 机制完成多目标控制，既减少重训成本，也便于在线调权。对电商内容生态来说，这类方法非常适合同时控制转化率、内容丰富度、达人曝光公平和新商品冷启动。",
+          "key_metrics": "公开网页信息显示：Spotify 真实推荐场景在线 A/B 中，辅助目标提升约 +1.8%，且用户满意度相关指标基本零损失；论文同时声明离线实验在多目标 trade-off 上优于传统启发式或 reranking 方案。"
+        },
+        "en": {
+          "method_overview": "The paper reformulates generative recommendation as constrained multi-objective sequence generation. Its stochastic primal-dual decoder adjusts token logits with dual variables during decoding so that relevance and auxiliary goals such as fairness or business objectives are balanced on the fly, without expensive retraining or post-hoc reranking. The method also provides theoretical guarantees on regret and constraint violation. The key contribution is pushing multi-objective control directly into the decoding loop.",
+          "story": "Generative recommenders often optimize only user relevance, while platforms also care about business goals, diversity, and creator exposure -> post-hoc reranking adds complexity and can distort the generative distribution -> move constraint optimization into decoding through stochastic primal-dual updates.",
+          "innovation": "This is a strong inference-time innovation: instead of redesigning the training objective, it introduces primal-dual control into decoding for online multi-objective balancing. That is highly relevant to e-commerce ranking and recommendation systems with competing platform objectives.",
+          "key_metrics": "Public information indicates about +1.8% improvement on the auxiliary objective in a large-scale Spotify online A/B test with essentially no loss on user satisfaction metrics. The paper also reports better offline multi-objective trade-offs than heuristic and reranking alternatives."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 82,
+        "rationale_zh": "多目标生成式推荐与电商内容生态的业务约束高度契合，推理时控制多目标的设计也很有工程价值。由于公开代码暂未确认，因此本轮按论文核心思想补充了一个可运行的 toy PyTorch 复现，保留了生成式 slate 模型、原对偶约束更新和多目标评测接口。"
+      }
+    },
+    {
+      "id": "2607.19793",
+      "title": "Silent Failures in Multimodal Agentic Search: A Diagnostic Taxonomy and Cross-Judge Evaluation",
+      "authors": ["Zhengxian Wu", "Junjie Gao", "Kai Yang"],
+      "affiliations": ["Ant Group"],
+      "source": "arXiv / Multimodal Agentic Search / 弱相关热点",
+      "published": "2026-07-23",
+      "tags": ["Multimodal Agent", "Search", "Reliability", "Evaluation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.19793",
+        "pdf": "https://arxiv.org/pdf/2607.19793"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文关注多模态 Agent Search 中的‘静默失败’：最终答案看似正确，但检索证据、模态对齐或中间推理轨迹其实已经出错。作者提出六类错误分类，包括模态捷径、幻觉接地、证据错位等，并构建轨迹级诊断评估管线，用多法官（人工、LLM、VLM）交叉评审 agent 的全过程，而不只看最终答案。工作重点不在提升某个模型分数，而在揭示随着模型能力增强，失败模式会变得更隐蔽。高光点在于把多模态搜索 agent 的‘过程正确性’独立出来评估。",
+          "story": "多模态搜索 agent 的最终答案可能偶然正确，但证据检索和接地过程早已偏离，这会让线上系统产生不可见风险 -> 需要一种能诊断 agent 轨迹级错误类型的评估体系，而不是只看 answer accuracy -> 论文提出静默失败 taxonomy 和 cross-judge 评估框架。",
+          "innovation": "这类工作更偏评估与诊断创新，但对工业系统非常重要。对于电商搜索、拍照搜同款、AI 导购问答等场景，‘证据错位但答案碰巧正确’是非常危险的失败模式，因此这篇论文对治理 Agent 可信度很有参考价值。",
+          "key_metrics": "公开网页信息表明：论文系统性展示了六类静默失败随模型规模变化的迁移现象，指出最终答案准确率无法充分反映证据接地质量；更多量化表格需阅读全文确认。"
+        },
+        "en": {
+          "method_overview": "The paper studies silent failures in multimodal agentic search, where the final answer looks correct but the evidence retrieval or grounding trajectory is actually wrong. It proposes a six-type diagnostic taxonomy and a trajectory-level evaluation pipeline with cross-judge assessment from humans, LLMs, and VLMs. The focus is not on maximizing one benchmark score, but on exposing hidden reliability risks as models become stronger. Its main contribution is to make process correctness a first-class evaluation target for multimodal agents.",
+          "story": "A multimodal search agent can produce the right answer for the wrong reasons, creating invisible production risk -> answer accuracy alone is insufficient -> introduce a silent-failure taxonomy and cross-judge trajectory evaluation for process-level diagnosis.",
+          "innovation": "This is primarily an evaluation and diagnostics contribution, but it is highly relevant to trustworthy multimodal search and shopping-assistant systems where evidence grounding matters as much as the answer itself.",
+          "key_metrics": "Publicly visible information shows six silent-failure categories and highlights that answer accuracy does not reliably capture grounding quality; full quantitative tables still require full-paper reading."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 10,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 76,
+        "rationale_zh": "对多模态搜索 Agent 的可靠性治理很有启发，但更偏评估框架而非直接提升效果的方法；同时公开网页层面的量化细节有限，因此本轮作为弱相关热点关注，不触发代码复现。"
+      }
+    }
+  ]
+}

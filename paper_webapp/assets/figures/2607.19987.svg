@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f8fbff"/>
+  <rect x="24" y="24" width="672" height="372" rx="24" fill="#ffffff" stroke="#dbe7ff"/>
+  <text x="40" y="58" font-size="24" font-weight="700" fill="#0f172a">UniRank · Benchmark Pipeline</text>
+  <text x="40" y="84" font-size="14" fill="#475569">A unified industrial ranking benchmark for sequential modeling + feature interaction.</text>
+  <rect x="42" y="118" width="150" height="96" rx="18" fill="#eef4ff" stroke="#bfd3ff"/>
+  <text x="58" y="148" font-size="16" font-weight="700" fill="#1d4ed8">Industrial Logs</text>
+  <text x="58" y="176" font-size="13" fill="#334155">click · like · follow</text>
+  <text x="58" y="194" font-size="13" fill="#334155">comment · purchase</text>
+  <rect x="218" y="118" width="162" height="96" rx="18" fill="#effcf6" stroke="#b7f0cf"/>
+  <text x="234" y="148" font-size="16" font-weight="700" fill="#047857">Unified Data Flow</text>
+  <text x="234" y="176" font-size="13" fill="#334155">pointwise autoregressive</text>
+  <text x="234" y="194" font-size="13" fill="#334155">sequence + feature schema</text>
+  <rect x="408" y="118" width="138" height="96" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="424" y="148" font-size="16" font-weight="700" fill="#c2410c">15 Models</text>
+  <text x="424" y="176" font-size="13" fill="#334155">EST · TokenFormer</text>
+  <text x="424" y="194" font-size="13" fill="#334155">UltraHSTU · Zenith...</text>
+  <rect x="572" y="118" width="104" height="96" rx="18" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="588" y="148" font-size="16" font-weight="700" fill="#6d28d9">Leaderboard</text>
+  <text x="588" y="176" font-size="13" fill="#334155">AUC / Logloss</text>
+  <text x="588" y="194" font-size="13" fill="#334155">throughput / scale</text>
+  <path d="M192 166H218" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M380 166H408" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M546 166H572" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="44" y="252" width="632" height="104" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="280" font-size="16" font-weight="700" fill="#0f172a">Why it matters for e-commerce</text>
+  <text x="60" y="308" font-size="14" fill="#334155">A single benchmark spans creator-content ranking, long-term preference modeling, and conversion-related multi-feedback tasks.</text>
+  <text x="60" y="334" font-size="14" fill="#334155">Teams can compare models under the same data protocol before deploying to search, feed, or recommendation surfaces.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker></defs>
+</svg>
