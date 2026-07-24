@@ -1,0 +1,273 @@
+{
+  "papers": [
+    {
+      "id": "2607.21028",
+      "title": "Bridging the Structural Gap: Adapting Autoregressive Generation for Recommendation",
+      "authors": ["Junchao Zeng", "Junzhang Zhu", "Junyang Chen", "Yudong Li", "Wei Liu", "Chengxiang Zhuo", "Zang Li"],
+      "affiliations": ["Tencent Platform & Content Group", "Shenzhen University", "Sun Yat-sen University"],
+      "source": "arXiv / Generative Recommendation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Generative Recommendation", "Hierarchical Code", "Reranking", "Sequential Modeling", "E-commerce"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.21028",
+        "pdf": "https://arxiv.org/pdf/2607.21028"
+      },
+      "reproduce": {
+        "path": "2026-07-24/BARGE"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 BARGE，用于修复生成式推荐里‘把层级语义 ID 展平成 token 序列’后带来的结构失真。作者首先用 Item Context-Aware Attention 在编码端恢复 item 级边界信息，再用 Hierarchical Path Reranking 在每一层语义路径上做语义一致性重排，最后通过 Dual-Path Decoding 用两条互补 ID 通道联合纠错。它不是简单换一个更大的 backbone，而是在编码、路径选择和解码三个位置同时抑制语义漂移。高光点是把工业生成式推荐里最常见的 early-token 错误传播问题，显式拆成可处理的两个结构鸿沟。",
+          "story": "已有自回归生成式推荐把 item 的层级语义 ID 压扁后进行 token 级生成，容易丢失 item 边界且一旦前层 token 预测错就会永久走歪 -> 需要同时补 item 级结构感知与层级路径纠错 -> BARGE 用 ICA 恢复 item 上下文、用 HPR 评估路径与用户意图的一致性、再用 DPD 通过互补通道纠错，降低语义漂移。",
+          "innovation": "创新性很强，真正针对的是生成式推荐的结构失配而不是通用语言建模性能。ICA/HPR/DPD 三个模块分工清晰，兼顾线上复杂度与效果提升；尤其 DPD 的互补路径设计，对于电商内容推荐中长序列、多候选和语义 ID 编码都很有参考价值。",
+          "key_metrics": "在 Amazon Beauty 上，BARGE 的 Recall@10 达到 0.1118，而最强基线 TIGER 为 0.0935，提升约 19.6%。论文还报告腾讯线上 A/B 测试 CTR +0.60%、Click UV +1.34%、总阅读时长 +1.70%，说明方法并非只在离线指标上有效。"
+        },
+        "en": {
+          "method_overview": "BARGE targets the structural mismatch of autoregressive generative recommendation. It restores item-level boundaries with Item Context-Aware Attention, reranks semantic paths with Hierarchical Path Reranking, and uses Dual-Path Decoding to correct early decoding mistakes through complementary code channels. Rather than scaling the backbone, it explicitly attacks the item-boundary gap and the semantic-drift gap. The highlight is a production-oriented design that improves path reliability without abandoning autoregressive generation.",
+          "story": "Flattened semantic IDs destroy item-level structure, and wrong early tokens trap autoregressive recommenders in bad semantic subtrees -> recommendation needs both structural restoration and path-level correction -> BARGE combines ICA, HPR, and DPD to recover item structure and suppress drift during decoding.",
+          "innovation": "The main novelty is a recommendation-specific diagnosis of autoregressive failure modes, followed by three lightweight but targeted modules. The design is technically reasonable and industrially feasible because each module adds corrective signals without rewriting the whole recommendation stack.",
+          "key_metrics": "On Amazon Beauty, BARGE reaches 0.1118 Recall@10 versus 0.0935 for TIGER, a gain of about 19.6%. The paper also reports Tencent online A/B gains of +0.60% CTR, +1.34% click UV, and +1.70% total reading time."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 85,
+        "rationale_zh": "非常贴合电商内容分发与推荐系统的生成式排序演进路径，方法创新点清晰且有腾讯线上收益验证。原文未确认公开代码，因此本轮补充了一个可运行的 toy PyTorch 复现，重点保留 ICA、层级路径重排和双路径解码思想。"
+      }
+    },
+    {
+      "id": "2607.21519",
+      "title": "Diffusion Language Model for Recommendation",
+      "authors": ["Chengyi Liu", "Yongqi Zhou", "Junwei Pan", "Zhixiang Feng", "Chengguo Yin", "Haijie Gu", "Jie Jiang", "Yinghao Liu", "Yujuan Ding", "Qing Li", "Wenqi Fan"],
+      "affiliations": ["The Hong Kong Polytechnic University", "Tencent"],
+      "source": "arXiv / Diffusion Recommendation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Diffusion Language Model", "Recommendation", "Generative Recommendation", "LLM", "E-commerce"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.21519",
+        "pdf": "https://arxiv.org/pdf/2607.21519",
+        "code": "https://github.com/ChengyiLIU-cs/DLMRec"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DLMRec 把生成式推荐从传统的自回归范式切换到离散扩散语言模型范式。它用协作感知随机 tokenizer（CAST）把图协同信号量化为扩散友好的离散 token，再配合课程式训练和稳定性感知投票机制，逐步恢复用户偏好而不是单向逐 token 承诺。相比左到右生成，扩散式建模能利用双向上下文，减少前缀错误放大的问题。高光点在于它把推荐建模中‘结构依赖强、顺序约束弱’这一现实，与扩散模型的迭代去噪特性对齐了。",
+          "story": "传统自回归 LLM 推荐把 next-token 目标硬套到推荐任务上，容易过度强调顺序而忽略 item 间结构依赖，而且早期错误无法回头修正 -> 需要一种能并行考虑全局上下文的生成范式 -> DLMRec 用 CAST、课程训练和投票去噪，把推荐恢复过程改造成多轮偏好纠错。",
+          "innovation": "把离散扩散语言模型用于推荐是有分量的范式创新，尤其适合长序列偏好建模和复杂 item 依赖场景。方法也不是单纯把扩散照搬过来，而是针对推荐补了协同感知 tokenization 和稳定投票机制，因此可行性较高。",
+          "key_metrics": "论文报告相对最强 LLM 推荐基线 LLaRA，在三个公开数据集上平均 Recall 提升 6.75%，平均 NDCG 提升 5.19%。作者同时给出了 LastFM、ML-1M、Beauty 等数据集上的稳定提升，说明收益并不依赖单一数据域。"
+        },
+        "en": {
+          "method_overview": "DLMRec replaces autoregressive recommendation generation with a discrete diffusion language model. It introduces the CAST tokenizer to encode collaborative graph signals into diffusion-friendly tokens, then uses curriculum training and stability-aware voting to iteratively recover user preference. The bidirectional denoising process avoids the one-way commitment problem of left-to-right decoding. Its key idea is that recommendation depends more on structural dependencies than on strict token order, which diffusion models can capture better.",
+          "story": "Autoregressive recommenders overemphasize next-token order and accumulate irreversible early mistakes -> recommendation needs a generation paradigm that can revise itself with global context -> DLMRec turns recommendation into iterative preference denoising with CAST, curriculum training, and voting.",
+          "innovation": "This is a substantial paradigm shift for generative recommendation. The work is also practically grounded because it adds recommendation-specific tokenization and voting mechanisms rather than naively reusing generic diffusion modeling.",
+          "key_metrics": "Relative to the strongest LLM recommendation baseline LLaRA, DLMRec reports average gains of +6.75% Recall and +5.19% NDCG across three public datasets. The improvements are consistently shown on LastFM, ML-1M, and Beauty."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 83,
+        "rationale_zh": "扩散范式切入生成式推荐非常有新意，也与复杂内容分发和长行为序列建模需求高度相关。作者公开仓库包含 LightGCN、量化模块和训练代码，属于真实可用实现，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.20465",
+      "title": "DataPrep-Bench: Benchmarking LLMs as Training Data Preparators",
+      "authors": ["Hao Liang", "Qifeng Cai", "Yibo Lin", "Jianzhuo Du", "Qifeng Xia", "Sizhe Qiu", "Linzhuang Sun", "Meiyi Qiang", "Zhaoyang Han", "Xiaochen Ma", "Bohan Zeng", "Ruichuan An", "Conghui He", "Wentao Zhang"],
+      "affiliations": ["Peking University", "Shanghai Academy of AI", "OriginHub Technology", "Zhongguancun Laboratory"],
+      "source": "arXiv / Data Preparation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Data Preparation", "Data Quality", "Benchmark", "Annotation", "LLM"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.20465",
+        "pdf": "https://arxiv.org/pdf/2607.20465",
+        "code": "https://github.com/haolpku/Data-Preparation-Bench",
+        "project": "https://datapreparationbench.github.io/",
+        "dataset": "https://huggingface.co/datasets/lhpku20010120/Data-Prep-Bench"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DataPrep-Bench 首次把 LLM 驱动的数据构建与数据质量评估统一放进同一个 benchmark 中。它把训练数据准备拆成两个同等重要的能力：一类是把原始素材转成监督数据，另一类是无需微调就预测候选数据集的下游训练价值。作者同时发布 Data-Construction-Skill 智能体方案和 Distributional Alignment Score（DAS）指标，形成‘构造-评价-下游验证’一体化闭环。高光点在于它不再用表面文本质量做代理指标，而是直接以下游训练收益定义数据质量。",
+          "story": "电商治理、审核和内容理解模型越来越依赖高质量标注/清洗数据，但当前 LLM 数据准备方法缺乏统一、下游导向的比较标准 -> 需要把数据构建和数据价值预测放到一个可重复协议里评测 -> DataPrep-Bench 用双赛道 benchmark、Skill agent 和 DAS 指标，把数据准备从经验活变成可量化工程。",
+          "innovation": "这篇论文更像基础设施型创新，但对大规模数据打标、清洗和训练集建设价值非常高。特别是把质量定义为 downstream utility 而不是文本表面属性，这与电商场景中的数据治理目标更一致。",
+          "key_metrics": "在 Llama-3.1-8B Finance 上，Data-Construction-Skill 相比 Dolly-only baseline 提升接近 20 个绝对百分点。DAS 是唯一在 Math、Science、Medical 三个领域同时达到 Pearson r>0.70 的质量评估指标，并在 6 个领域中的 4 个取得最强跨模型相关性。"
+        },
+        "en": {
+          "method_overview": "DataPrep-Bench is the first unified benchmark for LLM-driven training data preparation. It jointly evaluates data construction, which turns raw sources into supervised data, and data quality evaluation, which predicts downstream utility before fine-tuning. The work also releases a Data-Construction-Skill agent and the Distributional Alignment Score (DAS), closing the loop between construction, evaluation, and downstream validation. The most important shift is to define quality by training utility rather than by surface text heuristics.",
+          "story": "Data-centric model building increasingly depends on high-quality annotation and cleaning, but LLM-based data preparation lacks a downstream-grounded benchmark -> the field needs a unified protocol for both data construction and value prediction -> DataPrep-Bench turns data preparation into a measurable engineering workflow.",
+          "innovation": "This is infrastructure-level innovation with high practical value for large-scale labeling, cleaning, and corpus curation. Measuring quality by downstream utility is especially relevant for e-commerce governance and moderation pipelines.",
+          "key_metrics": "On Llama-3.1-8B Finance, Data-Construction-Skill improves nearly 20 absolute points over the Dolly-only baseline. DAS is the only metric that clears Pearson r>0.70 simultaneously on Math, Science, and Medical, and it is the strongest cross-model evaluator in four of six domains."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 81,
+        "rationale_zh": "与大规模数据打标、清洗、质检和训练集建设直接相关，对电商内容治理与审核体系的上游数据基础很有价值。仓库已核查存在 benchmark、data-selection、evaluation 等真实代码与数据，因此不重复复现。"
+      }
+    },
+    {
+      "id": "2607.20938",
+      "title": "Controllable and Content-Based Recommendations",
+      "authors": ["Fırat Öncel", "Jihoon Jeong", "Emiliano Penaloza", "Mirco Ravanelli", "Laurent Charlin", "Cem Subakan"],
+      "affiliations": ["Concordia University", "Université de Montréal", "McGill University", "Mila"],
+      "source": "arXiv / Controllable Recommendation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Controllable Recommendation", "Multimodal", "Content Understanding", "Personalization", "Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.20938",
+        "pdf": "https://arxiv.org/pdf/2607.20938",
+        "project": "https://firatoncel.github.io/ccbr/"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "CCBR 用多模态大模型从图像、音频和视频内容中生成自然语言用户画像，再把这个文本瓶颈接入协同过滤推荐器，实现‘可解释且可编辑’的推荐控制。它不是只使用文本元数据，而是直接从内容模态中抽取可 verbalize 的偏好摘要，并通过对比学习与标签监督对齐文本表示和推荐表示。用户可以通过改写文本摘要或提供新的多模态内容来主动 steer 推荐结果。高光点是把可控推荐从‘改 latent 向量’变成‘改人能看懂的文本偏好’。",
+          "story": "传统推荐模型依赖隐向量，用户很难理解也无法直接干预；而已有可控方法多基于文本元数据，无法覆盖图像/音视频信号 -> 需要一个从多模态内容直接生成可编辑画像的框架 -> CCBR 用多模态 verbalization、用户摘要聚合和对比对齐实现内容驱动的可控推荐。",
+          "innovation": "从多模态原始内容到可编辑文本画像的设计很有新意，对商品内容、达人内容和用户兴趣解释都很友好。缺点是依赖较强的预处理与多模态模型，因此效率和工程复杂度略高。",
+          "key_metrics": "在 ML-20M 视频数据集上，CCBR+Multi-VAE 的 NDCG@100 为 0.4964，优于可控推荐基线 TEARS 的 0.4836，并在添加/删除属性的 steering 实验中展现出稳定单调响应。"
+        },
+        "en": {
+          "method_overview": "CCBR builds controllable recommendation through a text bottleneck generated from multimodal content. Instead of relying on metadata, it verbalizes user preference from images, audio, and video, then aligns the text representation with a collaborative filtering backbone through contrastive and label-guided learning. Users can steer recommendation by editing the generated profile text or by providing new multimodal content. The key idea is to turn latent preference control into human-readable text control.",
+          "story": "Latent recommenders are hard to interpret and hard to control, while earlier controllable systems mostly depend on text metadata -> recommendation needs editable preference representations directly grounded in content modalities -> CCBR uses multimodal verbalization, text bottlenecks, and alignment losses to make content-based control practical.",
+          "innovation": "The contribution is compelling because it moves controllable recommendation from latent-vector manipulation to editable textual preference summaries grounded in multimodal content. The engineering cost is higher, which slightly limits immediate deployability.",
+          "key_metrics": "On the ML-20M video setup, CCBR+Multi-VAE reaches 0.4964 NDCG@100 versus 0.4836 for TEARS, while also showing stable monotonic behavior in add/remove attribute steering experiments."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 79,
+        "rationale_zh": "对多模态内容理解驱动的推荐控制非常契合电商与达人内容分发，但当前更偏研究原型，且公开项目页未直接确认完整训练代码仓库，因此本轮先纳入重点关注，不触发复现。"
+      }
+    },
+    {
+      "id": "2607.20863",
+      "title": "Probabilistic Residual Learning for Online Recommendations",
+      "authors": ["Wenyuan Wang", "Yusong Zhao", "Zihao Xu", "Hengyi Wang", "Qi Xu", "Zhigang Hua", "Yan Xie", "Yi Wang", "Zihao Zhao", "Bo Long", "Chengzhi Mao", "Shuang Yang", "Hengguan Huang", "Hao Wang"],
+      "affiliations": ["Rutgers University", "Meta", "University of Illinois Urbana-Champaign", "University of Copenhagen"],
+      "source": "arXiv / Online Recommendation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Recommendation", "Residual Learning", "Causal Modeling", "Online Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.20863",
+        "pdf": "https://arxiv.org/pdf/2607.20863"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "PRL 把推荐增强建模成‘基础推荐器预测残差’的概率学习问题。它利用用户概率聚类、因果混杂建模和贝叶斯残差推断，专门去修正现有深度推荐系统在跨域和异质人群上的偏差。作为 plug-and-play 框架，PRL 不需要重训整个基础模型，而是在其预测之上做局部残差校正。高光点是把推荐器调优从纯黑盒工程，转成了带因果解释的后验残差修正。",
+          "story": "工业推荐器在复杂市场和用户异质性下会出现系统性偏差，纯深度模型又很难解释这些误差从何而来 -> 需要一个能显式建模用户群差异和混杂因素的增强模块 -> PRL 用概率聚类、因果混杂和残差校正，在不推翻基础模型的前提下提升线上推荐质量。",
+          "innovation": "残差学习本身不新，但将分层贝叶斯与因果去偏结合到推荐残差修正里较有意思，尤其适合需要低侵入式增强现有排序系统的场景。整体可行性较高，但实验覆盖面和公开可复现性稍弱于今天最顶级的几篇。",
+          "key_metrics": "在 XMRec 跨国迁移场景中，PRL 将 CDL 的 Recall@20 从 0.0143 提升到 0.1091；也把 PerK 的 Recall@20 从 0.1098 提升到 0.1635，说明其对困难迁移场景尤为有效。"
+        },
+        "en": {
+          "method_overview": "PRL treats recommendation enhancement as probabilistic residual learning on top of an existing recommender. It combines user-level probabilistic clustering, causal confounder modeling, and Bayesian residual correction to fix systematic errors in deep recommendation systems. Because it is plug-and-play, the method improves a deployed base model without retraining the whole stack. Its main appeal is turning black-box recommendation refinement into an interpretable residual correction problem.",
+          "story": "Production recommenders suffer from systematic bias across heterogeneous users and markets, while pure deep models make those errors hard to diagnose -> recommendation needs a low-intrusion correction layer with causal awareness -> PRL learns probabilistic residuals conditioned on user clusters and confounders.",
+          "innovation": "Residual learning is not new, but combining hierarchical Bayesian modeling with causal debiasing for recommendation correction is valuable. The method is feasible and deployment-friendly, though the overall evidence package is slightly weaker than the strongest papers of the day.",
+          "key_metrics": "On XMRec cross-market transfer, PRL improves Recall@20 from 0.0143 to 0.1091 over CDL, and from 0.1098 to 0.1635 over PerK."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 21,
+        "total": 78,
+        "rationale_zh": "适合作为现有电商推荐系统的低侵入增强方案，跨域与异质用户场景价值较高。但公开代码未确认，且整体方法更偏增强型模块，因此分数略低于今日最强方法类论文。"
+      }
+    },
+    {
+      "id": "2607.21401",
+      "title": "When Are Reasoning-Based Guardrails Not Efficient? ResponseGuard: A Fast Vision-Language Guard for Real-Time Moderation",
+      "authors": ["Dongbin Na"],
+      "affiliations": ["Independent / project-page only public release"],
+      "source": "arXiv / VLM Moderation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Moderation", "Vision-Language Model", "Real-Time Guard", "Governance"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.21401",
+        "pdf": "https://arxiv.org/pdf/2607.21401",
+        "code": "https://github.com/ndb796/ResponseGuard",
+        "project": "https://ndb796.github.io/ResponseGuard"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "ResponseGuard 质疑了‘做多模态安全审核一定要先推理再判断’这一假设，提出一个无 CoT 的轻量级视觉语言审核器。它直接用请求、图像和响应的池化表征做单次前向分类，不再生成长链路解释，从而能在流式输出中实时拦截不安全响应。作者还引入参考向量库与概率标定策略，使小模型也能稳定输出高置信度审核结论。高光点是证明了实时审核场景里，推理型 guardrail 并不一定划算。",
+          "story": "内容治理系统越来越多地依赖 VLM 审核，但 reasoning-based guardrail 延迟高，很难在直播、图文生成和流式问答里及时拦截风险 -> 需要一个不依赖长推理链、却能保持精度的轻量审核器 -> ResponseGuard 用池化表征分类和参考向量库，实现快速响应级 moderation。",
+          "innovation": "这篇更偏系统与效率创新，而不是更强的语义理解模型。对电商内容治理来说价值很直接，因为它解决的是‘实时拦截是否可行’而不是离线排行榜问题。仓库层面只有 README 与 docs 资源，未确认完整训练推理代码，因此不把它算作已公开完整实现。",
+          "key_metrics": "ResponseGuard-2B 在响应有害性检测上的 All-average F1 为 77.31，高于 3B reasoning baseline 的 76.56；单次判定耗时约 67.6ms，而推理型方法约 10.12s，速度提升约 150 倍。"
+        },
+        "en": {
+          "method_overview": "ResponseGuard challenges the assumption that multimodal safety guarding must rely on chain-of-thought reasoning. It uses pooled request-image-response representations for one-shot classification, avoiding long generation traces and enabling streaming moderation. A reference-vector-bank design and calibration strategy help a small model maintain stable guard performance. The highlight is that real-time moderation may benefit more from direct classification than from reasoning-heavy guardrails.",
+          "story": "Reasoning-based VLM guardrails are too slow for streaming moderation in live or interactive content systems -> moderation needs a lightweight but accurate response-time guard -> ResponseGuard performs direct pooled-representation classification with calibrated reference vectors.",
+          "innovation": "This is primarily a systems-efficiency contribution rather than a new semantic understanding model. Its production relevance is high, but the public repository currently looks more like a project-page release than a full training and inference codebase.",
+          "key_metrics": "ResponseGuard-2B reaches 77.31 all-average F1 on harmful-response detection versus 76.56 for a 3B reasoning baseline, while reducing latency from about 10.12 seconds to 67.6 milliseconds, roughly a 150x speedup."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 20,
+        "total": 77,
+        "rationale_zh": "对图文/视频内容审核非常有启发，尤其适合实时治理链路。但公开 GitHub 主要是 README 与 docs，未确认完整训练代码；同时工作更偏 guardrail 系统优化，因此本轮不触发复现。"
+      }
+    },
+    {
+      "id": "2607.20873",
+      "title": "LO-FAR: A Cost-Aware Local Filter for Sparse Feature Ranking in Industrial Ad Recommendation",
+      "authors": ["Egemen Erbayat", "Luis Duque", "Sohini Roychowdhury", "Mohammad Amin", "Srihari Reddy"],
+      "affiliations": ["Meta"],
+      "source": "arXiv / Ad Recommendation / 强相关",
+      "published": "2026-07-24",
+      "tags": ["Ad Recommendation", "Feature Ranking", "Efficiency", "Industrial Recommendation"],
+      "links": {
+        "arxiv": "https://arxiv.org/abs/2607.20873",
+        "pdf": "https://arxiv.org/pdf/2607.20873"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "LO-FAR 面向工业广告推荐中的稀疏高基数特征筛选，提出一种纯 CPU、模型无关的局部过滤工作流。它不依赖昂贵的 GPU 重训练，而是用局部 ID 级估计器快速评估每个候选特征的独立预测价值，再按预算做特征保留。对于 embedding 成本巨大、迭代节奏快的广告/推荐系统，这类方法能显著降低筛选开销。高光点在于把‘特征重要性估计’从重型交互建模，降成了可快速上线的 local filter。",
+          "story": "工业广告推荐里稀疏特征占存储和训练成本的大头，传统特征选择方法依赖反复 GPU 重训，无法跟上业务迭代 -> 需要一种低成本、快速但结果仍可用的特征筛选流程 -> LO-FAR 用局部 held-out 信号和 CPU 并行评分，在预算约束下近似保留最有价值的稀疏特征。",
+          "innovation": "更偏工程系统优化而非算法突破，但实用性很强。对于电商广告、商品推荐和内容分发的特征治理，这种成本感知的筛选思路有直接借鉴意义。",
+          "key_metrics": "在包含 100 多万交互、475 个稀疏特征的生产数据集上，LO-FAR 可在约 2 CPU 小时内完成排序，成本约 100 美元，而重型替代方案约 4000 美元；在 CTR/CVR 任务上与 shuffle-based importance、BSN 等方法的 NE Gain 基本持平。"
+        },
+        "en": {
+          "method_overview": "LO-FAR is a CPU-only, model-agnostic workflow for sparse feature ranking in industrial ad recommendation. Instead of expensive GPU retraining loops, it estimates the marginal predictive value of each sparse feature with lightweight local predictors and ranks features under budget constraints. This makes sparse-feature governance much faster for production recommendation stacks dominated by embedding costs. Its main contribution is reframing feature selection as a deployable local filter.",
+          "story": "Industrial recommenders spend most of their storage and training budget on sparse high-cardinality features, while classic feature-selection methods are too expensive to iterate -> the system needs a cheap but reliable filtering workflow -> LO-FAR uses local held-out signal and CPU-parallel scoring to rank sparse features efficiently.",
+          "innovation": "The novelty is mainly engineering-oriented rather than algorithmically disruptive, but it is directly useful for production feature governance in ads and recommendation systems.",
+          "key_metrics": "On a production dataset with more than one million interactions and 475 sparse features, LO-FAR finishes ranking in about two CPU hours at roughly 100 USD cost versus about 4000 USD for heavier alternatives, while keeping NE gains competitive on CTR and CVR tasks."
+        }
+      },
+      "score": {
+        "innovation": 19,
+        "results": 10,
+        "exp_quality": 11,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 21,
+        "total": 74,
+        "rationale_zh": "非常符合工业推荐的成本治理需求，但更像高质量工程经验总结而不是方法级突破；且暂无公开代码，因此本轮作为工程参考保留，不做复现。"
+      }
+    }
+  ]
+}
