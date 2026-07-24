@@ -82,7 +82,7 @@ def main() -> None:
 
             optimizer.zero_grad()
             outputs = model(history, main_codes, aux_codes)
-            loss, stats = training_loss(model, outputs, main_codes, aux_codes)
+            loss, stats = training_loss(outputs, main_codes, aux_codes)
             loss.backward()
             optimizer.step()
 

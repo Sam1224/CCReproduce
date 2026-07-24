@@ -192,6 +192,7 @@ class BARGEModel(nn.Module):
 
         chosen_items = []
         sources = []
+        plain_items = self.decode_plain(history, catalog).items
         for row in range(history.size(0)):
             seen = set(int(v) for v in history[row].tolist())
             candidates: Dict[int, Tuple[float, str]] = {}
@@ -206,12 +207,22 @@ class BARGEModel(nn.Module):
                     fused = float(score + item_bias[row, item_id].item())
                     fused = float(torch.logsumexp(torch.tensor([fused, candidates.get(item_id, (-1e9, "aux"))[0]], device=history.device), dim=0).item())
                     candidates[item_id] = (fused, "dual" if item_id in candidates else "aux")
+            plain_item = int(plain_items[row].item())
+            if plain_item not in seen:
+                candidates[plain_item] = max(
+                    candidates.get(plain_item, (-1e9, "main-greedy")),
+                    (float(item_bias[row, plain_item].item()), "main-greedy"),
+                    key=lambda x: x[0],
+                )
             if not candidates:
-                fallback = int(self.decode_plain(history[row : row + 1], catalog).items[0].item())
-                chosen_items.append(fallback)
+                chosen_items.append(plain_item)
                 sources.append("fallback")
                 continue
-            best_item, (_, source) = max(candidates.items(), key=lambda kv: kv[1][0])
+            dual_only = {item_id: meta for item_id, meta in candidates.items() if meta[1] == "dual"}
+            if dual_only:
+                best_item, (_, source) = max(dual_only.items(), key=lambda kv: kv[1][0])
+            else:
+                best_item, (_, source) = max(candidates.items(), key=lambda kv: kv[1][0])
             chosen_items.append(best_item)
             sources.append(source)
         return DecodeResult(
