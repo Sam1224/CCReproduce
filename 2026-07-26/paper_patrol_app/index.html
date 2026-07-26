@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今日 Paper 巡检结果 · 2026-07-26</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="paper-grain"></div>
+    <header class="hero">
+      <nav class="topbar" aria-label="Paper patrol controls">
+        <div class="brand">
+          <span class="brand-mark">P</span>
+          <div>
+            <strong>Paper Patrol</strong>
+            <small>Research Watch · Content Ecosystem</small>
+          </div>
+        </div>
+        <div class="language-switch" role="group" aria-label="language switch">
+          <button class="lang-btn is-active" data-lang="zh">中文</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </nav>
+
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">2026-07-26 巡检日报</p>
+          <h1 data-i18n="heroTitle">今日 paper 巡检结果分享台</h1>
+          <p class="hero-desc" data-i18n="heroDesc">聚焦内容治理、多模态、Agent 与数据治理方向，用轻量本地数据库持久化每日巡检，支持按日期、分数、来源与标签快速筛选。</p>
+          <div class="hero-actions">
+            <a href="#paperGrid" class="primary-action" data-i18n="viewPapers">查看论文卡片</a>
+            <span class="db-pill" id="dbStatus">IndexedDB · booting</span>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="summary statistics">
+          <div class="metric-card accent">
+            <span data-i18n="papersCount">论文数</span>
+            <strong id="statTotal">7</strong>
+          </div>
+          <div class="metric-card">
+            <span data-i18n="avgScore">平均分</span>
+            <strong id="statAvg">80.7</strong>
+          </div>
+          <div class="metric-card">
+            <span data-i18n="topSource">最高相关</span>
+            <strong id="statTopSource">业务强相关</strong>
+          </div>
+          <div class="mini-chart" id="scoreBars" aria-label="score distribution"></div>
+        </div>
+      </section>
+    </header>
+
+    <main class="shell">
+      <section class="toolbar" aria-label="filters">
+        <div class="field compact">
+          <label for="reportDate" data-i18n="reportDate">Report date</label>
+          <input id="reportDate" type="date" value="2026-07-26" />
+        </div>
+        <div class="field score-field">
+          <label for="scoreThreshold"><span data-i18n="scoreThreshold">分数阈值</span> <strong id="scoreValue">75</strong></label>
+          <input id="scoreThreshold" type="range" min="70" max="95" value="75" step="1" />
+        </div>
+        <div class="field wide">
+          <label data-i18n="sourceClass">Source 分类</label>
+          <div class="segmented" id="sourceFilter"></div>
+        </div>
+      </section>
+
+      <section class="tag-board">
+        <div>
+          <h2 data-i18n="tagFilter">标签过滤</h2>
+          <p data-i18n="tagHint">点击标签组合筛选，再次点击可取消。</p>
+        </div>
+        <div class="tag-cloud" id="tagCloud"></div>
+      </section>
+
+      <section class="result-header">
+        <div>
+          <p class="eyebrow small" data-i18n="filteredResult">筛选结果</p>
+          <h2><span id="resultCount">0</span> <span data-i18n="papersUnit">篇论文</span></h2>
+        </div>
+        <button class="ghost-btn" id="resetFilters" data-i18n="resetFilters">重置过滤</button>
+      </section>
+
+      <section class="paper-grid" id="paperGrid" aria-live="polite"></section>
+      <section class="empty-state" id="emptyState" hidden>
+        <strong data-i18n="emptyTitle">没有匹配论文</strong>
+        <p data-i18n="emptyDesc">请降低分数阈值，或取消部分标签 / 来源过滤。</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Built for qianxiong.xu · 徐千雄</span>
+      <span>Local-first IndexedDB research cards</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
