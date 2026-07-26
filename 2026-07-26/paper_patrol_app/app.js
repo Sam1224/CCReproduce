@@ -148,7 +148,7 @@ const seedReport = {
         zh: "实验重点覆盖对抗 OCR、长尾噪声内容与多模态审核场景，证明小参数模型仍可通过阶段化训练获得工业可用能力。",
         en: "Experiments emphasize adversarial OCR, long-tail noisy content, and multimodal moderation, showing that a compact model can become industrially useful through staged training."
       },
-      codeLink: { localPath: null, githubUrl: null }
+      codeLink: { localPath: null, githubUrl: "https://github.com/Sam1224/CCReproduce/tree/aime/1785065085-daily-paper-patrol/2026-07-26/Xuanwu_VL_2B" }
     },
     {
       id: "evolving_user_intent",
@@ -175,7 +175,7 @@ const seedReport = {
         zh: "将静态任务包装为多轮变更轨迹，衡量模型是否保留最新约束并丢弃过期目标，适合作为 Agent 记忆与规划链路压力测试。",
         en: "Static tasks are wrapped into multi-turn change trajectories to measure whether agents preserve the latest constraints and discard obsolete goals."
       },
-      codeLink: { localPath: null, githubUrl: null }
+      codeLink: { localPath: null, githubUrl: "https://github.com/Sam1224/CCReproduce/tree/aime/1785065085-daily-paper-patrol/2026-07-26/Evolving_User_Intent" }
     },
     {
       id: "plane_meta_planning",
