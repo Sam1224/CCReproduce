@@ -1,0 +1,222 @@
+{
+  "patrol_date": "2026-07-27",
+  "timezone": "Asia/Shanghai",
+  "papers": [
+    {
+      "arxiv_id": "2607.21653",
+      "title": "Molt: A Scalable PyTorch-Native Training Framework for Agentic Reinforcement Learning",
+      "submitted_on": "2026-07-22",
+      "authors": "Jian Hu; Huiying Li; Hao Zhang; Binfeng Xu; Yifan Zhang; Shaokun Zhang; Hemil Desai; Michael Demoret; Pavlo Molchanov; Jan Kautz; Yi Dong",
+      "affiliations": "NVIDIA",
+      "arxiv_abs": "https://arxiv.org/abs/2607.21653",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.21653",
+      "code_urls": ["https://github.com/NVIDIA-NeMo/labs-molt"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Agentic RL", "RL Infra", "Distributed Training", "MoE", "Multimodal"],
+      "score": 77,
+      "score_breakdown": {"innovation": 24, "metrics": 12, "quality": 13, "efficiency": 9, "generalization": 4, "relevance": 15},
+      "summary_zh": {
+        "method": "Molt 把 Ray、vLLM 与 NeMo AutoModel(FSDP2/EP/CP/TP) 组合为单一异步训练闭环，并强调 token-first：训练端严格使用生成端真实采样的 token id/logprob，避免重分词或多处语义不一致。它还能 token-exact 捕获 OpenAI/Anthropic SDK 流量，让现有 agent/harness 低成本接入在线 RL。",
+        "story": "hyperscale 框架层次深、改动成本高 → 需要可读性优先的研究栈 → 采用单后端+单循环并用 token/版本/forward 一致性 invariant 去消除 online RL 的静默失败。",
+        "innovation": "系统与正确性约束创新为主：token-first + 明确一致性 invariant + 去多后端抽象层，换取更可读可改。",
+        "metrics": "35B 多模态 MoE、2 节点×8 H100 的匹配协议对比中，训练 step time 119.4±2.3s（Molt）vs 109.5±10.3s（Megatron 系栈），统计上可比。"
+      },
+      "summary_en": {
+        "method": "Molt composes Ray, vLLM, and NeMo AutoModel (FSDP2/EP/CP/TP) into a single asynchronous training loop with a token-first invariant: the trainer consumes the exact sampled token ids/logprobs from the rollout engine. It also supports token-exact capture of OpenAI/Anthropic SDK traffic so existing agents/harnesses can be trained with minimal integration.",
+        "story": "Hyperscale stacks are complex to modify → a readability-first research stack is needed → Molt collapses the system into a single-backend async loop and enforces token/version/forward consistency invariants.",
+        "innovation": "Systems-level novelty: token-first training plus explicit correctness invariants while removing multi-backend abstraction layers.",
+        "metrics": "On a 35B multimodal MoE workload with 2 nodes × 8 H100, the paper reports step time 119.4±2.3s (Molt) vs 109.5±10.3s (Megatron-based), arguing statistical comparability."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": true, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.22529",
+      "title": "Skill Self-Play: Pushing the Frontier of LLM Capability with Co-Evolving Skills",
+      "submitted_on": "2026-07-24",
+      "authors": "Siyuan Huang; Pengyu Cheng; Haotian Liu; Tao Chen; Yihao Liu; Jingwei Ni; Shijie Zhou; Ziyi Yang; Gangwei Jiang; Mengyu Zhou; Yu Cheng; Xiaoxi Jiang; Guanjun Jiang",
+      "affiliations": "Qwen Large Model Application Team, Alibaba; CUHK; RUC; SYSU; PKU; ETH Zürich; University of Zurich; University at Buffalo",
+      "arxiv_abs": "https://arxiv.org/abs/2607.22529",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.22529",
+      "code_urls": ["https://github.com/Qwen-Applications/skill-self-play"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Self-Play", "Skill Library", "Tool-use", "Curriculum", "RL"],
+      "score": 82,
+      "score_breakdown": {"innovation": 26, "metrics": 14, "quality": 13, "efficiency": 7, "generalization": 4, "relevance": 18},
+      "summary_zh": {
+        "method": "Skill-SP 用“技能包”把任务生成先验与可执行验证合同绑定，并让 proposer/solver/controller 在 RL 闭环中协同演化：proposer 在 skill 引导下出题，solver 解题拿到可验证反馈，controller 从轨迹中更新/裁剪/诱导新 skill 并动态路由。",
+        "story": "环境绑定 self-play 可靠但窄；开放自生成覆盖广但噪声大 → 以 skill 作为中间层，把结构化验证变成可复用、可演化对象 → 同时兼顾多样性与可靠验证。",
+        "innovation": "把 evolving skill library 作为训练时接口来治理“生成-验证-课程-知识沉淀”，而非仅推理时工具包。",
+        "metrics": "在 APIBank/BFCL 工具调用与 ZebraLogic 推理上报告提升：工具调用最高 +42.9 分、逻辑推理最高 +12.0 分。"
+      },
+      "summary_en": {
+        "method": "Skill-SP binds generation priors and executable verification into skills, and co-evolves a proposer, a solver, and a controller in an RL loop. The proposer generates tasks conditioned on routed skills; the solver attempts solutions under verifiable feedback; the controller refines/prunes/induces skills from trajectories and routes them dynamically.",
+        "story": "Environment-bound self-play is reliable but narrow; open-ended self-generation is broad but noisy → use skills as the middle layer to make structured verification reusable and evolvable → balance diversity and reliable verification.",
+        "innovation": "Using an evolving skill library as a training-time interface to govern generation, verification, curriculum, and knowledge distillation.",
+        "metrics": "Reports gains on APIBank/BFCL tool use and ZebraLogic reasoning, with up to +42.9 points on tool use and +12.0 points on reasoning."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": true, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.22043",
+      "title": "Scaling Native Multimodal Pre-Training From Scratch",
+      "submitted_on": "2026-07-24",
+      "authors": "Haoyuan Wu; Aoqi Wu; Hai Wang; Jiajia Wu; Jinxiang Ou; Bei Yu",
+      "affiliations": "The Chinese University of Hong Kong; Tencent LLM Department",
+      "arxiv_abs": "https://arxiv.org/abs/2607.22043",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.22043",
+      "code_urls": [],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Scaling Law", "Native Multimodal Pretraining", "Compute Allocation"],
+      "score": 65,
+      "score_breakdown": {"innovation": 20, "metrics": 9, "quality": 13, "efficiency": 6, "generalization": 3, "relevance": 14},
+      "summary_zh": {
+        "method": "在固定 FLOPs 下分别拟合语言目标与多模态目标的 compute law 与最优 N/D 分配指数，并建模多模态比例 r 对 allocation 的影响，得到语言-多模态的 Pareto frontier。",
+        "story": "原生多模态从零训练更深融合但缺乏 scaling 指南 → 用 compute-optimal 分析刻画 N/D 与 r 的关系 → 产出可预测的配方与边界。",
+        "innovation": "经验规律/方法论型贡献：把数据配比对 scaling 的影响显式进指数模型。",
+        "metrics": "固定 250B 文本 token 时，加入最多 75B 多模态 token 后，16 个文本 benchmark 平均准确率偏差 <1 个百分点；A3B 规模多模态 3-shot 相对 0-shot 平均增益 +1.80。"
+      },
+      "summary_en": {
+        "method": "Fits compute laws and compute-optimal allocation exponents for language vs multimodal objectives under fixed FLOPs, modeling how multimodal ratio r affects optimal N/D and deriving a text–multimodal Pareto frontier.",
+        "story": "Native multimodal-from-scratch training needs scaling guidance → apply compute-optimal analysis over N/D and r → produce predictable recipes and frontiers.",
+        "innovation": "Methodological contribution: explicitly modeling mixture ratio effects on scaling exponents.",
+        "metrics": "With 250B text tokens fixed, adding up to 75B multimodal tokens keeps average accuracy on 16 text benchmarks within <1 percentage point; A3B multimodal 3-shot yields +1.80 average gain over 0-shot."
+      },
+      "code_status": {"upstream_available": false, "verified_non_empty": false, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.16859",
+      "title": "Dataset Distillation by Influence Matching",
+      "submitted_on": "2026-07-18",
+      "authors": "Haoru Tan; Wang Wang; Sitong Wu; Xiuzhe Wu; Yangtian Sun; Chirui Chang; Shaofeng Zhang; Xiaojuan Qi",
+      "affiliations": "HKU; CUHK; Stanford",
+      "arxiv_abs": "https://arxiv.org/abs/2607.16859",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.16859",
+      "code_urls": ["https://github.com/hrtan/infmatch"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Dataset Distillation", "Influence Estimation", "Synthetic Data", "Data Efficiency"],
+      "score": 78,
+      "score_breakdown": {"innovation": 25, "metrics": 14, "quality": 12, "efficiency": 7, "generalization": 4, "relevance": 16},
+      "summary_zh": {
+        "method": "Inf-Match 直接对齐训练结果（收敛参数变化）而非梯度/轨迹代理信号：通过展开优化动态并做一阶近似，构造可微 sample-level influence estimator，避免逆 Hessian；再优化合成数据使其 influence 与真实数据匹配。",
+        "story": "过程对齐不保证 outcome → 需要高效 influence 估计把目标拉回 outcome → 用线性时间可微 influence 估计来驱动 distillation。",
+        "innovation": "将 influence estimation 变成可扩展、可微、可直接优化 synthetic set 的核心组件。",
+        "metrics": "Tiny-ImageNet IPC=10：31.5%（+4.7% over NCFM）；Flickr30K 图文检索蒸馏：200–1000 合成样本平均 +2.5% over NCFM。"
+      },
+      "summary_en": {
+        "method": "Inf-Match aligns outcomes (converged parameter shifts) rather than process proxies. It builds a differentiable sample-level influence estimator by unrolling optimization dynamics with a first-order approximation, avoiding inverse-Hessian products, then optimizes synthetic data to match the real data's influence.",
+        "story": "Process matching does not guarantee outcomes → need efficient influence estimation to align outcomes → use a linear-time differentiable estimator to drive distillation.",
+        "innovation": "A scalable, differentiable influence estimator used as the main objective for optimizing synthetic sets.",
+        "metrics": "Tiny-ImageNet IPC=10: 31.5% (+4.7% over NCFM); Flickr30K retrieval distillation: +2.5% average gain over NCFM with 200–1000 synthetic samples."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": true, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.21556",
+      "title": "Visual Contrastive Self-Distillation",
+      "submitted_on": "2026-07-23",
+      "authors": "Yijun Liang; Yunjie Tian; Yijiang Li; Yuqi Jia; Furong Huang; Tianyi Zhou; Di Fu",
+      "affiliations": "",
+      "arxiv_abs": "https://arxiv.org/abs/2607.21556",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.21556",
+      "code_urls": ["https://github.com/joliang17/VCSD"],
+      "source": "arXiv",
+      "tags": ["VLM", "Self-Distillation", "Contrastive Conditioning", "Efficiency"],
+      "score": 80,
+      "score_breakdown": {"innovation": 24, "metrics": 14, "quality": 12, "efficiency": 9, "generalization": 4, "relevance": 17},
+      "summary_zh": {
+        "method": "VCSD 用“原图 vs 内容抹除图”的条件对比来构造 on-policy self-distillation 信号：EMA teacher 在同一 prefix 下输出两套 next-token 分布，logprob 差异刻画哪些 token 真由视觉内容支撑；据此锐化 teacher 分布并蒸馏给 student。",
+        "story": "OPSD 仍需 privileged answer/证据来制造 teacher-student 不对称 → 用输入条件对比替代外部信息 → 无额外推理成本获得稳定蒸馏监督。",
+        "innovation": "把输入对比提升为蒸馏信号，避免外部 teacher/答案/证据，同时保持全分布蒸馏目标。",
+        "metrics": "ViRL39K：Qwen3-VL 7-benchmark aggregate，2B 62.27%→67.04%，4B 71.30%→73.16%，8B 72.51%→76.26%，且无额外推理开销。"
+      },
+      "summary_en": {
+        "method": "VCSD uses contrastive conditioning (original vs content-erased image) to build an on-policy self-distillation signal: an EMA teacher produces two next-token distributions under the same prefix, whose logprob difference identifies visually grounded candidates; it then sharpens the teacher distribution and distills it into the student.",
+        "story": "OPSD still needs privileged answers/evidence to create teacher-student asymmetry → replace external information with input contrast → obtain stable distillation without extra inference cost.",
+        "innovation": "Turning input contrast into a distillation signal while keeping full-distribution targets and avoiding external teachers/evidence.",
+        "metrics": "ViRL39K: Qwen3-VL seven-benchmark aggregate improves 62.27%→67.04% (2B), 71.30%→73.16% (4B), 72.51%→76.26% (8B), with no added inference-time cost."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": true, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.12756",
+      "title": "VisCo: Leveraging Large Language Models as Intrinsic Encoders for Visual Token Compression",
+      "submitted_on": "2026-07-14",
+      "authors": "Yupeng Zheng; Kai Zou; Bin Liu; Nenghai Yu",
+      "affiliations": "",
+      "arxiv_abs": "https://arxiv.org/abs/2607.12756",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.12756",
+      "code_urls": ["https://github.com/Zyvpeng/VisCo"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["VLM Efficiency", "Visual Token Compression", "Memory Tokens"],
+      "score": 68,
+      "score_breakdown": {"innovation": 22, "metrics": 9, "quality": 10, "efficiency": 9, "generalization": 3, "relevance": 15},
+      "summary_zh": {
+        "method": "VisCo 让预训练 VLM 自身承担压缩器角色：用少量 memory tokens 编码视觉信息，并以参数共享 autoencoder 形式把层级信息从编码端传到解码端，在高压缩率下尽量保持效果。",
+        "story": "训练 free 压缩启发式强、掉点大；外置模块压缩要重训且破坏先验 → 复用 VLM 自身强表征作为内置压缩器。",
+        "innovation": "intrinsic compressor + 参数共享自编码框架，工程上对推理降本友好；但摘要缺少关键数值与消融。",
+        "metrics": "摘要无具体 benchmark 数值，仅宣称在所有压缩率上优于 prior，并在 single-token 极端压缩下仍稳定。"
+      },
+      "summary_en": {
+        "method": "VisCo reuses the pretrained VLM itself as an intrinsic compressor: it encodes visual information into a small set of memory tokens via a parameter-sharing autoencoder and transfers hierarchical information from encoding to decoding, aiming to preserve performance under high compression.",
+        "story": "Training-free compression is heuristic and degrades at high ratios; external modules require costly retraining and may harm priors → reuse the VLM's own representational power as the compressor.",
+        "innovation": "Intrinsic compression with a parameter-sharing autoencoder is promising for inference cost reduction, but the abstract lacks detailed quantitative ablations.",
+        "metrics": "No concrete numbers in the abstract; it claims improvements across compression ratios and stability in the single-token extreme."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": false, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.21461",
+      "title": "AREX: Towards a Recursively Self-Improving Agent for Deep Research",
+      "submitted_on": "2026-07-23",
+      "authors": "Shuqi Lu; Chaofan Li; Kun Luo; Zhang Zhang; Hui Wang; Hongwang Xiao; Lei Xiong; Jiahao Wang; Sen Wang; Xiyan Jiang; Wanli Li; Yuyang Hu; Hongjin Qian; Bingyu Yan; Jianlyu Chen; Ziyi Xia; Yingxia Shao; Kang Liu; Zhicheng Dou; Di He; Chaozhuo Li; Qiwei Ye; Zhongyuan Wang; Zheng Liu",
+      "affiliations": "",
+      "arxiv_abs": "https://arxiv.org/abs/2607.21461",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.21461",
+      "code_urls": ["https://github.com/VectorSpaceLab/arex-model"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Deep Research Agent", "Recursive Self-Improvement", "Context Compression"],
+      "score": 75,
+      "score_breakdown": {"innovation": 26, "metrics": 10, "quality": 11, "efficiency": 6, "generalization": 4, "relevance": 18},
+      "summary_zh": {
+        "method": "AREX 利用 discovery–verification 不对称，设计“内层研究 + 外层约束审计”的递归自改进循环：外层把答案拆成可检查约束，定位未证实 claim 并触发定向 follow-up research；同时学习 context-update 工具把长历史压缩为 improvement state。",
+        "story": "deep research 难点在于长程纠错与多约束闭环 → 用 constraint-wise audit 驱动递归 refinement，并用 learned context 压缩解决上下文膨胀。",
+        "innovation": "递归自改进的双层 loop + 可学习 context-update 工具，契合长程研究；训练上强调关键证据步骤缓解稀疏奖励。",
+        "metrics": "摘要称在 BrowseComp、WideSearch、DeepSearchQA、HLE 等 benchmark 上超过同量级 baseline，但未给出具体数值。"
+      },
+      "summary_en": {
+        "method": "AREX leverages discovery–verification asymmetry via a recursive self-improvement design: an outer loop audits the answer constraint-wise, identifies unresolved claims, and launches targeted follow-up research, while an inner loop gathers evidence and drafts answers. It also learns a context-update tool to compress long interaction history into an improvement state.",
+        "story": "Deep research needs long-horizon correction under multiple constraints → use constraint-wise auditing to drive recursive refinement and learned context compression to avoid context explosion.",
+        "innovation": "Two-loop recursive self-improvement plus a learnable context-update tool; training emphasizes decisive evidence acquisition and course correction to mitigate sparse rewards.",
+        "metrics": "The abstract claims gains on BrowseComp, WideSearch, DeepSearchQA, and HLE over comparable-scale baselines but provides no numbers."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": false, "reproduced": false}
+    },
+    {
+      "arxiv_id": "2607.20734",
+      "title": "LLMs Get Lost in Evolving User Intent",
+      "submitted_on": "2026-07-22",
+      "authors": "Jihoon Tack; Philippe Laban; Jennifer Neville",
+      "affiliations": "",
+      "arxiv_abs": "https://arxiv.org/abs/2607.20734",
+      "arxiv_pdf": "https://arxiv.org/pdf/2607.20734",
+      "code_urls": ["https://github.com/microsoft/evolving-intent"],
+      "source": "HuggingFace Daily Papers",
+      "tags": ["Evaluation", "Multi-turn", "User Intent Tracking", "Agent Reliability"],
+      "score": 69,
+      "score_breakdown": {"innovation": 22, "metrics": 8, "quality": 11, "efficiency": 7, "generalization": 4, "relevance": 17},
+      "summary_zh": {
+        "method": "该文提出把静态单轮任务“变形”为多轮对话，使用户意图在多轮中逐步披露、修订甚至转向，同时保持原任务的评测协议，以复用现有 benchmark 测 LLM 的意图跟踪能力。",
+        "story": "LLM 真实协作场景意图动态变化，但评测多为单轮静态 → 需要一种保留原评测协议的动态对话构造 → 用可控的 intent evolution 暴露模型在多轮跟踪上的能力缺口。",
+        "innovation": "将 intent evolution 作为评测维度，并提供可复用现有 benchmark 的转换框架。",
+        "metrics": "作者报告：静态 setting 的强性能无法迁移到 evolving-intent setting，多模型家族出现显著下降（摘要未给出具体数值）。"
+      },
+      "summary_en": {
+        "method": "The paper introduces a framework that transforms static single-turn tasks into multi-turn conversations where user intent evolves across turns (incrementally revealed, revised, or redirected) while preserving the original evaluation protocol, enabling controlled reuse of existing benchmarks.",
+        "story": "Real collaboration has evolving intent but evaluations are mostly static → need a way to simulate intent evolution without changing evaluation protocols → controlled multi-turn transformations reveal failures in intent tracking.",
+        "innovation": "Evaluating intent evolution explicitly and providing a conversion framework to reuse existing benchmarks.",
+        "metrics": "Reports substantial drops from static to evolving-intent settings across model families (no concrete numbers in the abstract)."
+      },
+      "code_status": {"upstream_available": true, "verified_non_empty": false, "reproduced": false}
+    }
+  ]
+}
