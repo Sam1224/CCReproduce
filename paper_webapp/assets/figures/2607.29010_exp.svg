@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#fffdf8"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#7c2d12">EvoReason key results</text>
+  <rect x="70" y="116" width="120" height="168" rx="12" fill="#93c5fd"/>
+  <rect x="226" y="96" width="120" height="188" rx="12" fill="#60a5fa"/>
+  <rect x="382" y="68" width="120" height="216" rx="12" fill="#34d399"/>
+  <rect x="538" y="88" width="120" height="196" rx="12" fill="#fbbf24"/>
+  <text x="96" y="310" font-size="18" font-family="Arial">R@5 0.0724</text>
+  <text x="248" y="310" font-size="18" font-family="Arial">R@10 0.0919</text>
+  <text x="394" y="310" font-size="18" font-family="Arial">ADVV +8.11%</text>
+  <text x="546" y="310" font-size="18" font-family="Arial">Revenue +6.23%</text>
+  <text x="70" y="354" font-size="20" font-family="Arial" fill="#92400e">Avg Watch Time +5.39% with latent reasoning deployment</text>
+</svg>

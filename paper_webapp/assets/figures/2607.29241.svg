@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#f8fbff"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#1d3557">RecHarness methodology</text>
+  <rect x="36" y="92" width="154" height="72" rx="18" fill="#dbeafe"/>
+  <text x="62" y="128" font-size="20" font-family="Arial" fill="#1d4ed8">Validation signals</text>
+  <rect x="216" y="92" width="150" height="72" rx="18" fill="#e0f2fe"/>
+  <text x="250" y="128" font-size="20" font-family="Arial" fill="#0369a1">Bandit router</text>
+  <rect x="392" y="92" width="150" height="72" rx="18" fill="#ede9fe"/>
+  <text x="438" y="128" font-size="20" font-family="Arial" fill="#6d28d9">LLM agent</text>
+  <rect x="216" y="216" width="150" height="72" rx="18" fill="#dcfce7"/>
+  <text x="238" y="252" font-size="20" font-family="Arial" fill="#15803d">Code changes</text>
+  <rect x="392" y="216" width="150" height="72" rx="18" fill="#fee2e2"/>
+  <text x="416" y="252" font-size="20" font-family="Arial" fill="#b91c1c">Jump-basin</text>
+  <rect x="576" y="150" width="146" height="72" rx="18" fill="#fef3c7"/>
+  <text x="604" y="186" font-size="20" font-family="Arial" fill="#b45309">Online uplift</text>
+  <path d="M190 128 L216 128" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M366 128 L392 128" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M291 164 L291 216" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M366 252 L392 252" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M542 186 L576 186" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <text x="36" y="352" font-size="18" font-family="Arial" fill="#334155">Route the right optimization direction before asking the agent to modify the recommender</text>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#64748b"/></marker></defs>
+</svg>

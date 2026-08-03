@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#fffdf8"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#7c2d12">Text conditioning scaling results</text>
+  <rect x="62" y="110" width="260" height="26" rx="10" fill="#60a5fa"/>
+  <text x="62" y="96" font-size="18" font-family="Arial">GenEval2 GM</text>
+  <text x="340" y="130" font-size="18" font-family="Arial">52.8 → 72.5</text>
+  <rect x="62" y="198" width="230" height="26" rx="10" fill="#34d399"/>
+  <text x="62" y="184" font-size="18" font-family="Arial">CoReBench</text>
+  <text x="310" y="218" font-size="18" font-family="Arial">74.7 → 85.2</text>
+  <rect x="62" y="286" width="314" height="26" rx="10" fill="#fbbf24"/>
+  <text x="62" y="272" font-size="18" font-family="Arial">GPG-loss correlation</text>
+  <text x="394" y="306" font-size="18" font-family="Arial">-0.984</text>
+  <text x="62" y="360" font-size="20" font-family="Arial" fill="#92400e">Prompt information metrics strongly predict controllable generation quality</text>
+</svg>

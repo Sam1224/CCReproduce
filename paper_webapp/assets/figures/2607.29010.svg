@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#f8fbff"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#1d3557">EvoReason methodology</text>
+  <rect x="36" y="90" width="150" height="72" rx="18" fill="#dbeafe"/>
+  <text x="60" y="126" font-size="20" font-family="Arial" fill="#1d4ed8">User history</text>
+  <rect x="210" y="90" width="164" height="72" rx="18" fill="#e0f2fe"/>
+  <text x="226" y="126" font-size="20" font-family="Arial" fill="#0369a1">Reasoning primitives</text>
+  <rect x="400" y="90" width="150" height="72" rx="18" fill="#ede9fe"/>
+  <text x="420" y="126" font-size="20" font-family="Arial" fill="#6d28d9">Teacher traces</text>
+  <rect x="210" y="212" width="164" height="72" rx="18" fill="#dcfce7"/>
+  <text x="220" y="248" font-size="20" font-family="Arial" fill="#15803d">Latent reasoning</text>
+  <rect x="400" y="212" width="150" height="72" rx="18" fill="#fee2e2"/>
+  <text x="422" y="248" font-size="20" font-family="Arial" fill="#b91c1c">On-policy distill</text>
+  <rect x="580" y="150" width="140" height="72" rx="18" fill="#fef3c7"/>
+  <text x="610" y="186" font-size="20" font-family="Arial" fill="#b45309">Recommend</text>
+  <path d="M186 126 L210 126" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M374 126 L400 126" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M292 162 L292 212" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M374 248 L400 248" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M550 186 L580 186" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <text x="36" y="352" font-size="18" font-family="Arial" fill="#334155">Primitive extraction → teacher supervision → latent reasoning tokens → cheaper deployment</text>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#64748b"/></marker></defs>
+</svg>

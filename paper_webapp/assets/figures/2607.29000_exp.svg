@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#fffdf8"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#7c2d12">PaletteID key results</text>
+  <text x="60" y="102" font-size="18" font-family="Arial" fill="#475569">TAOBAO-MM AUC / GAUC</text>
+  <rect x="60" y="120" width="300" height="26" rx="10" fill="#60a5fa"/>
+  <rect x="60" y="158" width="298" height="26" rx="10" fill="#34d399"/>
+  <text x="376" y="140" font-size="18" font-family="Arial">0.6318 / 0.6292</text>
+  <text x="60" y="228" font-size="18" font-family="Arial" fill="#475569">KuaiRec AUC / GAUC</text>
+  <rect x="60" y="246" width="388" height="26" rx="10" fill="#93c5fd"/>
+  <rect x="60" y="284" width="356" height="26" rx="10" fill="#86efac"/>
+  <text x="466" y="266" font-size="18" font-family="Arial">0.8201 / 0.7514</text>
+  <text x="60" y="350" font-size="20" font-family="Arial" fill="#92400e">Tail AUC 0.5947 vs 0.5819 baseline</text>
+</svg>
