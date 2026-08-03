@@ -1,0 +1,220 @@
+[
+  {
+    "id": "2607.29213",
+    "title": "GALA: Generative Aligned Learning for Adaptive Multimodal Representation in the Taobao Shangou Recommender System",
+    "authors": ["Jiping Liu", "Zhongmin Zhang", "Zisen Sang", "Zhijia Fang", "Tao Ouyang", "et al."],
+    "affiliations": ["Alibaba Taobao Shangou"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["电商推荐", "多模态", "内容理解", "CTR/CVR", "LLM弱相关"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29213"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-08-03/GALA",
+      "note": "AIME 实现 toy PyTorch reproduction；原文未提供公开代码。"
+    },
+    "summary": {
+      "method_overview_zh": "GALA 面向淘宝闪购场景，把 query、商品图像和文本三元组先做对齐预训练，再用行为奖励驱动的对齐阶段把多模态表征拉向真实点击/下单偏好，最后通过自适应门控融合 ID 表征和多模态表征做排序。方法的亮点在于同时兼顾了冷启动内容理解和工业系统的低延迟要求。",
+      "method_overview_en": "GALA first aligns query, image, and text via triplet pretraining, then optimizes multimodal representations with reward-guided behavioral alignment, and finally fuses ID and multimodal signals through an adaptive gate for ranking. Its highlight is a practical balance between cold-start understanding and serving-time efficiency in instant-commerce recommendation.",
+      "story_zh": "传统 ID 推荐对新商品和跨模态语义理解不足，纯多模态方法又难以稳定对齐真实业务奖励；因此论文先做 query-image-text 对齐，再用奖励驱动的生成式对齐把表示拉向成交目标，最后用自适应门控融合 ID 与多模态信息解决精度与效率的平衡。",
+      "innovation_zh": "创新点主要有三处：一是把检索式三元组对齐和行为奖励对齐串成三阶段训练；二是用类似 GRPO 的奖励信号把表示学习直接连接到电商转化目标；三是通过自适应 gate 在成熟 ID 信号和多模态信号之间动态取舍。整体设计合理且可落地，尤其适合商品图文丰富但冷启动频繁的内容电商环境。",
+      "innovation_en": "The paper combines triplet alignment, reward-guided representation optimization, and adaptive ID-MM fusion in a single industrial pipeline. The innovation is practical rather than purely architectural: it directly binds multimodal learning to conversion-oriented rewards while keeping a fallback to strong ID features.",
+      "key_metrics_zh": "论文报告 Overall Recall@K 由 GME 的 0.843 提升到 0.877；离线 CTR-AUC / CVR-AUC 达到 0.7263 / 0.8193；线上 A/B 中订单量提升 0.55%，且 P99 时延仅由 15.9ms 增至 17.6ms。",
+      "key_metrics_en": "GALA improves Overall Recall@K from 0.843 to 0.877 over GME, reaches 0.7263 CTR-AUC and 0.8193 CVR-AUC offline, and delivers +0.55% orders online with only a small P99 latency increase from 15.9 ms to 17.6 ms."
+    },
+    "score": {
+      "innovation": 27,
+      "results": 13,
+      "exp_quality": 14,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 25,
+      "total": 91,
+      "rationale_zh": "强工业电商相关性 + 线上增益明确 + 冷启动/多模态问题切中内容生态场景，因此给出最高档优先级。"
+    }
+  },
+  {
+    "id": "2607.29010",
+    "title": "EvoReason: Self-Evolving Reasoning Primitive-Guided On-Policy Distillation for Latent Reasoning in Generative Recommendation",
+    "authors": ["Zhuang Zhuang", "Zhipeng Wei", "Rongfeng Guo", "Shijie Li", "Peng Zhao", "et al."],
+    "affiliations": ["Kuaishou Technology"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["生成式推荐", "推理蒸馏", "达人分发", "Agent", "推荐系统"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29010"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-08-03/EvoReason",
+      "note": "AIME 实现 toy PyTorch reproduction；原文未提供公开代码。"
+    },
+    "summary": {
+      "method_overview_zh": "EvoReason 从 agentic recommendation 轨迹中归纳 reasoning primitives，先训练 primitive-aware teacher，再把显式推理蒸馏到 latent reasoning token 中，让生成式推荐模型在推理成本可控的前提下保留更强的决策能力。高光点是把长链路显式推理压缩成可部署的隐式推理表示。",
+      "method_overview_en": "EvoReason extracts reasoning primitives from agentic recommendation trajectories, trains a primitive-aware teacher, and distills explicit chains of thought into latent reasoning tokens. The key highlight is preserving reasoning quality while making inference cheaper and more deployment-friendly.",
+      "story_zh": "显式 CoT 推荐虽然强，但线上时延和成本太高；如果直接丢掉推理链，又会损伤复杂用户意图建模能力。因此论文先抽取稳定的 reasoning primitive 作为知识骨架，再通过 on-policy distillation 把显式推理迁移到 latent token，兼顾效果与效率。",
+      "innovation_zh": "这篇论文的创新在于不是简单做 CoT 蒸馏，而是先把推荐决策拆成可复用 primitive，再做 self-evolving on-policy distillation。这样 teacher 的监督更结构化，也更适合内容/达人推荐里的复杂多目标排序。可行性较高，但工程复杂度比常规推荐模型更高。",
+      "innovation_en": "Instead of distilling raw CoT traces directly, EvoReason builds a reusable primitive library and performs self-evolving on-policy distillation. This structured reasoning abstraction is particularly suitable for complex recommendation decisions with multiple objectives.",
+      "key_metrics_zh": "在 Beauty 数据集上，R@5 / R@10 分别达到 0.0724 / 0.0919，N@5 / N@10 达到 0.0557 / 0.0601；线上实验中 ADVV 提升 8.11%，Revenue 提升 6.23%，Avg Watch Time 提升 5.39%。",
+      "key_metrics_en": "On Beauty, EvoReason reaches 0.0724/0.0919 for R@5/R@10 and 0.0557/0.0601 for N@5/N@10. In online deployment, it reports +8.11% ADVV, +6.23% revenue, and +5.39% average watch time."
+    },
+    "score": {
+      "innovation": 25,
+      "results": 13,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 84,
+      "rationale_zh": "适合达人内容分发和复杂推荐决策，创新性强，线上收益可观，但部署复杂度较高。"
+    }
+  },
+  {
+    "id": "2607.29000",
+    "title": "PaletteID: Prototype-Composed Semantic Identifiers for Multimodal CTR Prediction",
+    "authors": ["Huanyu Liu", "Baining Chen", "Hui Liu", "Zengyang Li", "Ziyi Huang"],
+    "affiliations": ["Huazhong University of Science and Technology", "Central China Normal University"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["CTR", "语义ID", "多模态", "长尾商品", "电商广告"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29000"
+    },
+    "reproduce": {
+      "status": "paper-only",
+      "note": "原文未给出公开代码；本轮未单独复现。"
+    },
+    "summary": {
+      "method_overview_zh": "PaletteID 用真实商品 prototype 组合形成语义 ID，而不是用抽象 codebook 量化商品，从而把多模态商品内容压缩成更可解释、对长尾更友好的表示。方法通过 prototype 检索和 similarity gate 聚合出最终 PID，再接入 CTR 模型。",
+      "method_overview_en": "PaletteID builds semantic identifiers from retrieved real-item prototypes instead of abstract codebooks. It composes a prototype-based semantic representation with a similarity gate and plugs it into CTR models for more interpretable and tail-friendly prediction.",
+      "story_zh": "传统 semantic ID 往往不可解释且容易损伤长尾商品表征；因此论文用真实 prototype 作为离散语义基元，再通过 top-K prototype 组合方式构造 PID，既保留可解释性，也提升多模态 CTR 建模效果。",
+      "innovation_zh": "最大的创新是把语义 ID 从“抽象码字”改成“真实样本 prototype 组合”，并辅以 SQ-DPP 做 prototype 选择。这一设计很适合电商商品与达人内容的多模态表征，尤其在长尾和冷启动场景更有价值。",
+      "innovation_en": "The key novelty is replacing abstract codebooks with real prototype composition, making semantic IDs more interpretable and more effective on tail items. The prototype selection and gating design is lightweight and deployment-friendly.",
+      "key_metrics_zh": "在 TAOBAO-MM / RankMixer 上，PID 将 AUC / GAUC 提升到 0.6318 / 0.6292；在 KuaiRec / RankMixer 上达到 0.8201 / 0.7514；Tail AUC 达到 0.5947，高于不使用 PID 的 0.5819。",
+      "key_metrics_en": "On TAOBAO-MM with RankMixer, PaletteID reaches 0.6318 AUC and 0.6292 GAUC; on KuaiRec it obtains 0.8201 AUC and 0.7514 GAUC. Tail AUC improves to 0.5947 from the 0.5819 baseline."
+    },
+    "score": {
+      "innovation": 24,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 24,
+      "total": 85,
+      "rationale_zh": "与电商 CTR 和商品内容表征高度相关，设计轻量可迁移，对长尾和冷启动价值很高。"
+    }
+  },
+  {
+    "id": "2607.29241",
+    "title": "RecHarness: A Bandit-Routed Agentic Harness for Self-Evolving Recommender Systems",
+    "authors": ["Haoran Ling", "Yuecheng Li", "Zeyu Song", "Jing Yao", "Shuwen Kang", "Chi Lu", "et al."],
+    "affiliations": ["Kuaishou Technology", "Georgia Institute of Technology"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["Agent", "AutoML", "推荐系统", "在线实验", "达人分发"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29241",
+      "code": "https://github.com/6lyc/RecHarness"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://github.com/6lyc/RecHarness",
+      "note": "已验证远程仓库存在，原文提供公开代码。"
+    },
+    "summary": {
+      "method_overview_zh": "RecHarness 设计了一个 bandit-routed agentic harness：先根据验证反馈选择最值得优化的方向，再让 LLM 生成假设与代码修改，必要时通过 jump-basin 机制跳出局部最优。高光点在于把推荐迭代从“人工调参”升级为“自动路由+自动改模”。",
+      "method_overview_en": "RecHarness introduces a bandit-routed agentic harness that selects the most promising optimization direction, lets an LLM propose executable changes, and uses jump-basin transitions to escape local minima. Its highlight is turning recommender iteration into an automated closed loop.",
+      "story_zh": "推荐系统往往依赖大量人工实验，搜索空间大且改动方向容易陷入局部最优；因此论文用 bandit 做方向路由，再借助 agent 自动生成代码改动，并用 jump-basin 机制在停滞时做结构跳转。",
+      "innovation_zh": "创新性体现在把 bandit routing、agentic code modification 和 jump-basin 搜索三者结合成工程闭环。它更像推荐研发提效框架而非单一模型，但对内容生态和达人治理的实验迭代效率很有启发。",
+      "innovation_en": "The contribution is a systems-level innovation: bandit-based routing, agentic code generation, and structural search are combined into a practical recommender optimization loop. It is especially valuable for accelerating recommender experimentation.",
+      "key_metrics_zh": "7 天线上 A/B 中，RecHarness 带来 ADVV +2.084%、Revenue +0.534%、Exposure +0.559%。这类线上收益对于成熟推荐系统已经相当亮眼。",
+      "key_metrics_en": "In a 7-day online A/B test, RecHarness reports +2.084% ADVV, +0.534% revenue, and +0.559% exposure, which are strong gains for a mature production recommender."
+    },
+    "score": {
+      "innovation": 26,
+      "results": 12,
+      "exp_quality": 12,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 23,
+      "total": 84,
+      "rationale_zh": "更偏推荐研发提效框架，但对内容生态策略优化和达人流量分发实验效率很有参考价值。"
+    }
+  },
+  {
+    "id": "2607.29250",
+    "title": "Data Turnstile: A Scalable Open Framework for Function-Calling Data Generation",
+    "authors": ["Goutham Ramakrishnan", "Megha Sharma"],
+    "affiliations": ["Amazon AGI"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["工具调用", "数据生成", "Agent", "数据治理", "标注"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29250",
+      "code": "https://github.com/amazon-science/data-turnstile"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://github.com/amazon-science/data-turnstile",
+      "note": "原文提供开源框架与数据集。"
+    },
+    "summary": {
+      "method_overview_zh": "Data Turnstile 把 function-calling 数据生成拆成可组合的 DAG 节点，包括用户请求、思考、API 调用、API 观察和最终回答，并引入结构校验、LLM judge 和错误反馈重试。它的亮点是把高质量工具调用数据生产标准化、流水线化。",
+      "method_overview_en": "Data Turnstile formulates function-calling data generation as a composable DAG of user requests, reasoning, API calls, observations, and final answers, with structural validation, LLM judging, and feedback-based retries. Its highlight is a scalable and standardized pipeline for tool-use data generation.",
+      "story_zh": "现有函数调用数据往往规模小、模板化严重、错误难控，难以支撑复杂 Agent 场景；因此论文把数据生产拆成 DAG，并在每一步加入约束与回退机制，得到可扩展、可审计的数据合成框架。对于电商治理 Copilot、审核助手、申诉处理 Agent 都很有借鉴价值。",
+      "innovation_zh": "创新点在于把工具调用数据从“prompt 一次性生成”升级为“流程化合成系统”，同时支持自定义 API、规则和场景模板。方法可行性高，且与电商内容治理中的自动审核/运营辅助场景契合。",
+      "innovation_en": "The innovation is a systemized data-generation framework rather than a single prompting trick. By turning tool-use data creation into a controlled workflow, it becomes easier to scale, debug, and adapt to domain-specific APIs and policies.",
+      "key_metrics_zh": "在 BFCL 单轮设定中，Qwen3-0.6B no-think SFT 达到 75.9%，明显高于 base 0.6B think 的 67.4%；在 τ2-bench Telecom 上，Qwen3-1.7B 获得 31.1% pass@1，而 0.6B 模型从 3.5% 提升到 24.6%。",
+      "key_metrics_en": "On BFCL single-turn evaluation, Turnstile-trained Qwen3-0.6B no-think SFT reaches 75.9%, beating the 67.4% base 0.6B think model. On τ2-bench Telecom, Qwen3-1.7B achieves 31.1% pass@1, and the 0.6B model improves from 3.5% to 24.6%."
+    },
+    "score": {
+      "innovation": 27,
+      "results": 14,
+      "exp_quality": 13,
+      "efficiency": 8,
+      "generalization": 5,
+      "relevance": 22,
+      "total": 89,
+      "rationale_zh": "虽非直接推荐论文，但对治理 Agent、自动审核和数据生产非常关键，且开源完整度高。"
+    }
+  },
+  {
+    "id": "2607.29679",
+    "title": "Scaling Properties of Text Conditioning in Visual Generation",
+    "authors": ["Zilong Chen", "Chaorui Deng", "Kunchang Li", "Hongyi Yuan", "Haoqi Fan"],
+    "affiliations": ["ByteDance Seed"],
+    "source": "arXiv",
+    "published": "2026-08-03",
+    "tags": ["视觉生成", "VLM/MLLM", "Prompt", "内容生产", "弱相关高热"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.29679",
+      "code": "https://github.com/heheyas/context-scaling"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://github.com/heheyas/context-scaling",
+      "note": "原文提供公开代码与模型。"
+    },
+    "summary": {
+      "method_overview_zh": "论文系统研究了视觉生成中文本条件的 scaling property，提出 GPG 和 ED 作为信息量/复杂度指标，并设计结构化 prompt schema 与 verifier-gated 优化流程提升复杂文本控制能力。它的亮点是把“提示词写得好不好”转化成可量化、可训练的问题。",
+      "method_overview_en": "This work studies the scaling properties of text conditioning in visual generation, proposes GPG and ED as prompt-information metrics, and introduces structured prompt schemas with verifier-gated optimization. Its highlight is turning prompt quality into a measurable and trainable problem.",
+      "story_zh": "复杂电商内容生成常常受限于文本条件表达能力不足，导致商品图、达人物料、营销创意难以稳定受控；因此论文先分析文本条件的 scaling law，再设计更强的结构化条件与验证式优化来提升复杂指令遵循。",
+      "innovation_zh": "这篇论文把 prompt engineering 上升到 scaling law 和训练策略层面，既有理论分析又有大规模实证。虽然与治理不是强相关，但对商品图生成、封面图、营销素材等内容生产链路价值很高。",
+      "innovation_en": "The novelty lies in combining scaling-law analysis with practical prompt/schema optimization for image generation. While not a governance paper directly, it is highly relevant to controllable content creation in commerce and creator ecosystems.",
+      "key_metrics_zh": "论文给出 GPG-loss 相关系数 -0.984、ED-loss 相关系数 -0.971；在 GenEval2 GM 上从 52.8 提升到 72.5，在 CoReBench 上从 74.7 提升到 85.2。",
+      "key_metrics_en": "The paper reports a -0.984 correlation between GPG and loss and -0.971 for ED and loss. It improves GenEval2 GM from 52.8 to 72.5 and CoReBench from 74.7 to 85.2."
+    },
+    "score": {
+      "innovation": 28,
+      "results": 14,
+      "exp_quality": 14,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 89,
+      "rationale_zh": "弱相关但热度与方法价值都很高，对电商内容生产和达人视觉物料生成很有迁移意义。"
+    }
+  }
+]
