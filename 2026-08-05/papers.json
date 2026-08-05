@@ -1,0 +1,185 @@
+[
+  {
+    "id": "2607.17499",
+    "title": "Pailitao-MMSearch: Building Native E-Commerce Multimodal Search Foundation",
+    "authors": ["Xiaohan Ye", "Xu Chen", "Zihan Gong", "Jian Ding", "et al."],
+    "affiliations": ["Alibaba Taobao & Tmall Group"],
+    "source": "arXiv",
+    "published": "2026-08-05",
+    "tags": ["电商搜索", "多模态", "基座模型", "内容理解", "强相关"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.17499"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-08-05/PailitaoMMSearch",
+      "note": "AIME 实现 toy PyTorch reproduction；原文未提供公开实质代码。"
+    },
+    "summary": {
+      "method_overview_zh": "Pailitao-MMSearch 面向电商原生多模态搜索，把文本、图片与混合意图统一到一个搜索基座模型中。它用 HybSID 同时保留离散语义ID与连续多模态表示，再通过两阶段持续预训练把电商域知识与通用能力接起来，最后用混合推理后训练提升复杂搜索意图下的检索质量。高光点在于把理解、推理和检索合并到同一个电商原生系统里。",
+      "method_overview_en": "Pailitao-MMSearch unifies text, image, and mixed-intent product search in a native e-commerce multimodal foundation model. It combines discrete semantic IDs with continuous embeddings through HybSID, performs two-stage continual pretraining for domain adaptation, and uses hybrid post-training to improve complex intent reasoning. The highlight is a single industrial pipeline that couples understanding, reasoning, and retrieval.",
+      "story_zh": "传统电商搜索依赖多个单模态专家模型，跨模态和复杂意图处理成本高；而通用VLM又缺少电商细粒度商品知识。因此论文设计 HybSID 和持续预训练机制，把商品语义编码、搜索推理和多模态检索放到统一模型中，解决理解碎片化与域迁移问题。",
+      "innovation_zh": "创新点主要有三处：一是 HybSID 用离散语义ID与连续向量共同表达商品，兼顾泛化和细粒度区分；二是两阶段持续预训练结合域内知识注入与防遗忘蒸馏；三是混合推理后训练把复杂意图解析和检索目标联动起来。整体设计很像真正的工业电商搜索底座，创新合理且可落地。",
+      "innovation_en": "Its main innovations are HybSID for hybrid discrete-continuous product semantics, two-stage continual pretraining with anti-forgetting distillation, and hybrid post-training that couples complex intent reasoning with retrieval optimization. The design is practical rather than purely academic, but it is well aligned with industrial e-commerce needs.",
+      "key_metrics_zh": "论文报告在线 A/B 中 GMV 提升 13.61%，成交笔数提升 8.21%；离线评测在电商理解和检索任务上显著优于通用基线。",
+      "key_metrics_en": "The paper reports +13.61% GMV and +8.21% transaction volume in online A/B testing, with strong offline gains on e-commerce understanding and retrieval benchmarks."
+    },
+    "score": {
+      "innovation": 27,
+      "results": 15,
+      "exp_quality": 14,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 24,
+      "total": 92,
+      "rationale_zh": "电商搜索主链路强相关，方法完整覆盖表示、持续训练与复杂意图推理，并给出很强的线上业务增益，因此列为今日最高优先级论文。"
+    }
+  },
+  {
+    "id": "2607.11030",
+    "title": "MMRM: A Multiplex Multimodal Representation Model for Product Ranking in E-commerce Search",
+    "authors": ["Zhen-Lin Chen", "Maosen Sheng", "Peng Lin", "Jianmin Chen", "et al."],
+    "affiliations": ["JD.com"],
+    "source": "arXiv",
+    "published": "2026-08-05",
+    "tags": ["电商排序", "多模态表示", "搜索", "用户建模", "强相关"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2607.11030"
+    },
+    "reproduce": {
+      "status": "implemented",
+      "path": "2026-08-05/MMRM",
+      "note": "AIME 实现 toy PyTorch reproduction；原文未提供公开实质代码。"
+    },
+    "summary": {
+      "method_overview_zh": "MMRM 关注电商搜索排序中的多行为协同信号，把点击、加购、下单等任务统一到共享多模态骨干上。模型通过任务 token 产生多路 multiplex item representations，再结合用户行为序列得到对应的 multiplex user representations，最后做多任务排序。亮点在于一次前向推理同时生成多语义商品表征，提高了多目标排序的一致性。",
+      "method_overview_en": "MMRM targets product ranking in e-commerce search by jointly modeling click, cart, and order signals on a shared multimodal backbone. It produces multiple multiplex item representations with task tokens, builds matching multiplex user representations from behavior sequences, and performs multi-task ranking. Its key highlight is generating several behavior-aware item semantics in one forward pass.",
+      "story_zh": "现有多模态排序模型通常只看单一协同信号，难以同时刻画曝光点击与深度转化的差异语义；如果为每个任务单独建模，又会造成训练割裂和线上不一致。因此论文用共享骨干+任务token统一学习多种行为语义，并在排序阶段用 multiplex user/item 表征显式对齐不同目标。",
+      "innovation_zh": "创新主要体现在三点：共享 MLLM 骨干下的任务 token 机制、多路 multiplex item representation 的一次性生成、以及和用户行为序列耦合的 multiplex ranking。它不是基础模型级大创新，但在电商排序里非常实用，工程价值高。",
+      "innovation_en": "The paper innovates through task-token conditioning on a shared multimodal backbone, one-pass generation of multiplex item representations, and behavior-sequence-aware multiplex ranking. It is an engineering-heavy contribution, but highly practical for industrial ranking systems.",
+      "key_metrics_zh": "论文报告在京东线上 A/B 中 UCTR 提升 0.42%，UACR 提升 0.37%，UCVR 提升 0.35%；离线检索与排序指标也整体优于对照方法。",
+      "key_metrics_en": "The paper reports online gains of +0.42% UCTR, +0.37% UACR, and +0.35% UCVR at JD.com, together with consistent improvements on offline retrieval and ranking metrics."
+    },
+    "score": {
+      "innovation": 25,
+      "results": 13,
+      "exp_quality": 13,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 22,
+      "total": 85,
+      "rationale_zh": "与电商搜索排序和内容分发直接相关，线上指标扎实，方法对多行为目标建模有较强参考价值，因此进入高分与复现名单。"
+    }
+  },
+  {
+    "id": "2605.07760",
+    "title": "RuleSafe-VL: Evaluating Rule-Conditioned Decision Reasoning in Vision-Language Content Moderation",
+    "authors": ["Zhifeng Lu", "Dianyuan Wang", "Yuhu Shang", "Zhenbo Xu"],
+    "affiliations": ["Beijing University of Posts and Telecommunications"],
+    "source": "arXiv",
+    "published": "2026-08-05",
+    "tags": ["内容治理", "规则推理", "VLM", "多模态审核", "强相关"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2605.07760",
+      "code": "https://anonymous.4open.science/r/RuleRuleSafe-VL-2527"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://anonymous.4open.science/r/RuleRuleSafe-VL-2527",
+      "note": "已验证存在实质评测代码与数据接口，因此本轮不重复复现。"
+    },
+    "summary": {
+      "method_overview_zh": "RuleSafe-VL 不是单纯提出一个审核模型，而是构建了一个面向规则条件推理的内容审核基准。它把平台审核政策形式化成原子规则和规则关系，并拆成激活规则识别、规则关系恢复、证据充分性判断和上下文补全决策四类任务。高光点是把“最终标签是否正确”提升为“规则推理过程是否正确”。",
+      "method_overview_en": "RuleSafe-VL is a benchmark for rule-conditioned reasoning in multimodal content moderation rather than a single moderation model. It formalizes platform policies into atomic rules and relations, then evaluates rule activation, rule interaction recovery, evidence sufficiency, and context-aware final decisions. Its highlight is shifting moderation evaluation from labels to decision reasoning.",
+      "story_zh": "现有审核基准大多只看最后的 harmful / safe 标签，无法区分模型是真的理解规则还是只是抓住表面模式；而实际治理更需要判断规则激活、证据是否充足以及是否该人工介入。因此论文把审核政策抽象成结构化推理链，重新设计内容治理评测范式。",
+      "innovation_zh": "创新点在于把审核政策从自然语言文本提升成可计算的规则图结构，并显式考察模型的规则关系推理和决策充分性判断。这对于电商达人治理尤其重要，因为复杂违规场景往往需要‘先判断证据够不够，再决定是否处罚’。",
+      "innovation_en": "The main innovation is converting moderation policies into a structured rule graph and explicitly evaluating relation reasoning and decision sufficiency. This is especially valuable for real governance systems where the core question is often whether evidence is sufficient for action.",
+      "key_metrics_zh": "论文在 2,166 个图文审核案例上评估 10 个前沿 VLM，发现最佳模型在规则关系恢复上 Macro-F1 仅 64.8，在决策状态预测上也只有 64.5，说明现有模型距离真实规则审核仍有明显差距。",
+      "key_metrics_en": "On 2,166 moderation cases, the paper shows that even the best VLM reaches only 64.8 Macro-F1 on rule-relation recovery and 64.5 Macro-F1 on decision-state prediction, revealing a large gap to real rule-based moderation."
+    },
+    "score": {
+      "innovation": 26,
+      "results": 11,
+      "exp_quality": 13,
+      "efficiency": 6,
+      "generalization": 3,
+      "relevance": 22,
+      "total": 81,
+      "rationale_zh": "直接命中达人治理和多模态违规审核的核心痛点，虽然更偏 benchmark 与评测，但规则链条视角非常有价值，因此给出 80+。"
+    }
+  },
+  {
+    "id": "2608.04010",
+    "title": "ParVL: Parallel Scaling and Expandable Compute Allocation for Multimodal LLMs",
+    "authors": ["Yang Yang", "Qinyu Zhao", "Mouxiang Chen", "Xiaohui Li", "et al."],
+    "affiliations": ["Australian National University", "Shanghai AI Lab", "Zhejiang University", "SJTU", "Nanjing University"],
+    "source": "arXiv",
+    "published": "2026-08-05",
+    "tags": ["今日热点", "MLLM", "并行扩展", "弱相关高热", "效率"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2608.04010",
+      "code": "https://github.com/YangYangGirl/ParVL"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://github.com/YangYangGirl/ParVL",
+      "note": "已验证仓库包含模型与训练代码，因此本轮不重复复现。"
+    },
+    "summary": {
+      "method_overview_zh": "ParVL 研究多模态大模型的并行扩展，不再只扩大参数或延长推理链，而是把视觉与语言分支并行复制并共享骨干参数。模型允许在固定参数预算下灵活分配视觉和语言计算量，再通过轻量聚合器融合分支状态。亮点是找到“计算怎么分给视觉、怎么分给语言”这个过去较少系统研究的问题。",
+      "method_overview_en": "ParVL studies parallel scaling for multimodal LLMs instead of only increasing parameters or inference length. It reuses a shared backbone across multiple parallel vision and language branches, allocates compute between modalities, and merges branch states with a lightweight aggregator. The highlight is exposing compute allocation as a first-class design variable for MLLMs.",
+      "story_zh": "现有 MLLM 扩展往往要么堆参数，要么堆推理 token，但视觉和语言之间的计算配比几乎是固定的；这限制了模型适配不同任务。ParVL 因而提出并行分支共享骨干的方案，在保持参数增长很小的同时探索视觉/语言计算分配的新自由度。",
+      "innovation_zh": "它的创新更多体现在 scaling 策略：共享参数的并行视觉/语言分支、可调计算分配、以及低额外参数开销下的性能增益。对电商的价值在于能为 OCR 密集图文理解、商品图检索和长文本解释分别调节最优算力配比。",
+      "innovation_en": "Its novelty lies in the scaling strategy itself: shared-backbone parallel branches, adjustable vision-language compute allocation, and measurable gains under a small parameter overhead. For commerce, this is attractive when image-heavy and language-heavy tasks need different compute budgets.",
+      "key_metrics_zh": "论文报告 1B 规模下 9 项基准平均分从 49.6 提升到 50.5，数学推理得分从 26.0 提升到 28.0；在 batch size=1 时推理延迟仅约 1.04 倍于单分支基线。",
+      "key_metrics_en": "At 1B scale, ParVL improves the average score across nine benchmarks from 49.6 to 50.5, raises math reasoning from 26.0 to 28.0, and keeps batch-1 latency around only 1.04× the single-branch baseline."
+    },
+    "score": {
+      "innovation": 25,
+      "results": 12,
+      "exp_quality": 13,
+      "efficiency": 9,
+      "generalization": 4,
+      "relevance": 15,
+      "total": 78,
+      "rationale_zh": "是 2026-08-05 当天的高热多模态论文，方法对视觉/语言算力配比很有启发，但与电商内容治理仅弱相关，因此不进入复现名单。"
+    }
+  },
+  {
+    "id": "2608.03979",
+    "title": "Video-DeepResearch: Towards the Next-Generation Multimodal Deepresearch Agent",
+    "authors": ["Zhen Fang", "Yu Zeng", "Wenxuan Huang", "Yiming Zhao", "et al."],
+    "affiliations": ["USTC", "Xiaohongshu", "CUHK", "Zhejiang University", "UCLA"],
+    "source": "arXiv",
+    "published": "2026-08-05",
+    "tags": ["今日热点", "视频Agent", "多模态检索", "达人治理弱相关", "高热"],
+    "links": {
+      "paper": "https://arxiv.org/abs/2608.03979",
+      "code": "https://github.com/Osilly/Vision-DeepResearch"
+    },
+    "reproduce": {
+      "status": "code_available",
+      "url": "https://github.com/Osilly/Vision-DeepResearch",
+      "note": "已验证仓库存在实质代码，因此本轮不重复复现。"
+    },
+    "summary": {
+      "method_overview_zh": "Video-DeepResearch 把 Deep Research agent 从静态图像扩展到连续视频流，重点解决模态偏见和参数知识泄漏问题。系统先强制做跨帧视觉锚定与关键帧分析，再解锁网页检索和外部知识使用，训练上结合 SFT 和 GRPO。亮点在于把视频理解、工具调用和开放式检索真正连成一个闭环 agent。",
+      "method_overview_en": "Video-DeepResearch extends deep-research agents from static images to continuous videos, focusing on modality bias and parametric knowledge leakage. It forces cross-frame visual grounding before web exploration, then combines supervised tuning with GRPO for tool-using reasoning. Its highlight is a true end-to-end loop over video perception, tool use, and open-web search.",
+      "story_zh": "当前 deep research agent 更擅长文本和图片，但达人直播、短视频治理往往要理解跨帧动作、字幕、口播和外部事实。若模型直接跳过视觉工具，会出现‘看似会推理、其实没看视频’的问题。因此论文设计了解耦感知-探索流水线，先看清视频再去查网。",
+      "innovation_zh": "创新体现在视频版 deep research agent 的流程设计、阶段式工具解锁，以及用强化学习提升多步工具调用质量。它对直播巡检、跨帧违规识别、口播与商品图不一致审计都有明显迁移潜力。",
+      "innovation_en": "The innovations include a video-native deep-research workflow, stage-wise tool unlocking, and reinforcement learning for multi-step tool usage. This has clear transfer potential for livestream auditing and cross-frame compliance inspection.",
+      "key_metrics_zh": "论文报告 35B 版本在 VideoDR-Bench 上平均准确率达到 64.0%，超过 Claude-4.5-Sonnet 的 59.0% 和 GPT-5 的 52.5%；30B 版本也达到 59.3%。",
+      "key_metrics_en": "The 35B model reaches 64.0% average accuracy on VideoDR-Bench, beating Claude-4.5-Sonnet at 59.0% and GPT-5 at 52.5%, while the 30B version still achieves 59.3%."
+    },
+    "score": {
+      "innovation": 27,
+      "results": 14,
+      "exp_quality": 13,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 19,
+      "total": 84,
+      "rationale_zh": "虽然不是纯电商论文，但与达人短视频/直播治理的迁移价值很高，且是 2026-08-05 当天最值得关注的视频 Agent 热点之一。"
+    }
+  }
+]

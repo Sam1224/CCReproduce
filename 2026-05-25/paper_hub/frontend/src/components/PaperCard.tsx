@@ -74,6 +74,44 @@ export function PaperCard({ paper, lang, className }: { paper: Paper; lang: Lang
   const scoreReason = tPaper(paper, "score_reason", lang);
 
   const score = paper.score ?? 0;
+  const scoreBreakdown = [
+    {
+      zh: "创新",
+      en: "Innovation",
+      value: paper.score_breakdown?.innovation,
+      max: 30,
+    },
+    {
+      zh: "结果",
+      en: "Results",
+      value: paper.score_breakdown?.results,
+      max: 15,
+    },
+    {
+      zh: "实验",
+      en: "Exp",
+      value: paper.score_breakdown?.exp_quality,
+      max: 15,
+    },
+    {
+      zh: "效率",
+      en: "Efficiency",
+      value: paper.score_breakdown?.efficiency,
+      max: 10,
+    },
+    {
+      zh: "泛化",
+      en: "Generalization",
+      value: paper.score_breakdown?.generalization,
+      max: 5,
+    },
+    {
+      zh: "相关性",
+      en: "Relevance",
+      value: paper.score_breakdown?.relevance,
+      max: 25,
+    },
+  ].filter((item) => typeof item.value === "number");
 
   return (
     <Card className={cn("h-full", className)}>
@@ -134,6 +172,24 @@ export function PaperCard({ paper, lang, className }: { paper: Paper; lang: Lang
                 {sectionTitle("创新点", "Innovation", lang)}
               </div>
               <div className="mt-1 line-clamp-6 whitespace-pre-wrap text-zinc-700">{innovation}</div>
+            </div>
+          ) : null}
+
+          {scoreBreakdown.length ? (
+            <div>
+              <div className="font-semibold text-zinc-900">
+                {sectionTitle("分项得分", "Score breakdown", lang)}
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {scoreBreakdown.map((item) => (
+                  <div key={item.en} className="rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-2">
+                    <div className="text-[11px] text-zinc-500">{sectionTitle(item.zh, item.en, lang)}</div>
+                    <div className="mt-1 text-sm font-semibold text-zinc-900">
+                      {item.value}/{item.max}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : null}
 
@@ -219,7 +275,7 @@ export function PaperCard({ paper, lang, className }: { paper: Paper; lang: Lang
         {paper.project_url ? (
           <Button asChild variant="outline" size="sm" className="h-8 text-xs">
             <a href={paper.project_url} target="_blank" rel="noreferrer">
-              {sectionTitle("复现", "Reproduce", lang)}
+              {sectionTitle("复现代码", "Reproduction", lang)}
             </a>
           </Button>
         ) : null}

@@ -14,6 +14,14 @@ export interface Paper {
   project_url?: string;
   tags?: string[];
   score?: number;
+  score_breakdown?: {
+    innovation?: number;
+    results?: number;
+    exp_quality?: number;
+    efficiency?: number;
+    generalization?: number;
+    relevance?: number;
+  };
   score_reason_zh?: string;
   score_reason_en?: string;
   method_zh?: string;
