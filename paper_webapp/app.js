@@ -152,7 +152,9 @@ function renderPapers(papers) {
     if (links.code) linkItems.push({ name: "Code", url: links.code });
     if (links.project) linkItems.push({ name: "Project", url: links.project });
     if (links.dataset) linkItems.push({ name: "Dataset", url: links.dataset });
-    if (p.reproduce_url) linkItems.push({ name: "Reproduce", url: p.reproduce_url });
+    if (p.reproduce_url) {
+      linkItems.push({ name: links.code ? "Reproduce" : "Code", url: p.reproduce_url });
+    }
 
     for (const it of linkItems) {
       const a = document.createElement("a");
