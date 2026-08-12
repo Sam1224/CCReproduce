@@ -1,0 +1,321 @@
+{
+  "inspection_date": "2026-08-12",
+  "window": {
+    "start": "2026-08-11T00:00:00+08:00",
+    "end": "2026-08-12T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检以北京时间 2026-08-11 至 2026-08-12 的最新窗口为准；强相关论文主要来自推荐系统与多模态内容理解，企业 blog / 社交媒体仅作为热点补充。",
+  "papers": [
+    {
+      "id": "2608.10983",
+      "title": "TimeRoute: Time-Aware Modality Routing and Diffusion for Multi-Modal Recommendation",
+      "authors": ["Pengyu Zhang", "Yangqin Jiang", "Klim Zaporojets", "Congfeng Cao", "Paul Groth"],
+      "affiliations": ["University of Amsterdam", "Sun Yat-sen University"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["多模态推荐", "时间建模", "内容分发", "推荐系统", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.10983",
+        "pdf": "https://arxiv.org/pdf/2608.10983",
+        "code": "https://anonymous.4open.science/r/TimeRoute"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://anonymous.4open.science/r/TimeRoute",
+        "note": "论文提供匿名代码仓库，已检索到核心实现线索，因此本轮不重复复现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TimeRoute 针对多模态推荐里不同模态价值随时间漂移的问题，提出时间感知模态路由器与扩散式图重构器的统一框架。它先把用户行为上下文映射成个性化的模态分布，再通过 FiLM 调制的双流扩散去噪头抑制过时或误导性的模态边。相比固定融合权重，它能在节日、热点或短期风格变化时动态调整文本、图片和音频等信号的重要性。高光点是把“模态配比”和“图结构去噪”在同一模型里闭环建模。",
+          "innovation": "现有多模态推荐大多使用全局共享的融合权重，难以捕捉同一用户在不同时段对不同模态的依赖变化。TimeRoute 的创新在于把时间感知路由与扩散重构结合起来：前者解决模态使用比例的动态化，后者解决过时模态边对传播过程的污染。该设计兼顾个体性、时序性和图推荐建模，创新点合理且容易迁移到内容生态推荐。",
+          "key_metrics": "论文在 TikTok、Amazon-Baby 和 Amazon-Sports 上报告 Recall@K、Precision@K 与 NDCG@K 相比强基线最高提升 9.8%，说明时序模态路由对短期兴趣漂移和图传播噪声都有明显帮助。",
+          "story": "固定模态融合无法处理用户兴趣随时间漂移、以及过时模态边污染图传播的问题，因此论文先学习个性化时间感知模态配比，再用扩散式去噪重建更可靠的多模态关系图。"
+        },
+        "en": {
+          "method_overview": "TimeRoute tackles modality time-scale mismatch in multimodal recommendation with a temporal-aware modal router and a diffusion-based graph reconstructor. It first maps user behavior context to a personalized modality distribution, then uses FiLM-conditioned dual denoising heads to suppress outdated or misleading modality edges before propagation. Instead of fixed fusion weights, the model adapts text, image, and audio contributions to shifting temporal contexts. The key highlight is closing the loop between modality allocation and graph denoising in one recommender.",
+          "innovation": "The main novelty is combining time-aware routing with diffusion-based reconstruction for recommendation. The router makes modality usage dynamic at the user-time level, while the diffusion module explicitly removes stale cross-modal relations from the graph. This is a meaningful departure from globally shared fusion weights and is highly transferable to content feeds with short-term trend shifts.",
+          "key_metrics": "On TikTok, Amazon-Baby, and Amazon-Sports, the paper reports up to 9.8% relative gains on Recall@K, Precision@K, and NDCG@K over strong baselines."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 87,
+        "rationale_zh": "对内容分发与多模态推荐高度相关，实验覆盖多个公开数据集，且时间感知建模对热点/季节性流量分配很有现实价值。"
+      },
+      "figure_steps": [
+        "User behavior timeline + modality traces",
+        "Temporal-aware modal router predicts per-user weights",
+        "FiLM-conditioned diffusion removes stale modal edges",
+        "Denoised graph powers final ranking"
+      ],
+      "exp_cards": [
+        ["Benchmarks", "TikTok / Amazon-Baby / Amazon-Sports"],
+        ["Offline gain", "up to +9.8% ranking metrics"],
+        ["Business value", "better response to short-term interest drift"]
+      ]
+    },
+    {
+      "id": "2608.11015",
+      "title": "Sona Technical Report",
+      "authors": ["Sona Team", "Alexandr Udeneev", "Aleksei Krasilnikov", "Alexey Nadtochiy", "et al."],
+      "affiliations": ["Yandex Music"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["生成式推荐", "工业推荐", "内容生态", "单模型架构", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11015",
+        "pdf": "https://arxiv.org/pdf/2608.11015"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-12/Sona",
+        "note": "论文未公开生产代码，本轮补齐了 toy PyTorch reproduction，覆盖数据、模型、训练与评测脚本。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Sona 是一个用单模型统一召回与排序的生成式推荐系统。它用共享编码器把用户事件序列变成隐藏状态，同时服务自回归解码头和 Ranking Module，并通过 next-token 目标与教师排序蒸馏共同训练。与传统 15+ 召回器和多级精排级联不同，Sona 直接在统一用户状态上完成候选生成和排序决策。高光点在于它不仅是学术上的端到端推荐尝试，还在线上真实流量中替代了整条成熟级联。",
+          "innovation": "传统工业推荐链路往往由多召回、多预排和多精排模型拼接而成，难以全局最优，也会引入状态不一致与维护成本。Sona 的创新是用单一的共享状态承载召回与排序，并让更强教师模型只出现在训练期做蒸馏，不进入 serving。该设计在工程上非常实用：统一架构、减少级联冗余，同时保留强监督。对达人分发、视频/直播内容分发链路尤其有借鉴价值。",
+          "key_metrics": "论文报告在 Yandex Music 的线上 A/B 中，Active Users 提升 4.53%，Total Listening Time 提升 6.30%，Likes 提升 11.42%，并且整体替换了 15+ 候选生成器和后续排序级联。",
+          "story": "多级级联系统难以全局优化、链路长且状态不一致，因此论文把用户序列编码成统一状态，并让一个模型同时承担生成式召回和排序，再通过训练期教师蒸馏补足性能。"
+        },
+        "en": {
+          "method_overview": "Sona is a single-model generative recommender that unifies candidate generation and ranking. A shared encoder turns chronological user events into hidden states that feed both an autoregressive decoder and a ranking module, while next-token learning and teacher distillation are optimized jointly. Instead of a large production cascade with many retrieval stages, Sona makes both retrieval and ranking decisions from one consistent user state. The standout point is that the architecture replaced a mature industrial stack on live traffic.",
+          "innovation": "The innovation lies in collapsing a complex industrial recommendation cascade into one shared-state model, while keeping a stronger teacher only during training. This removes cascade inconsistency, reduces serving complexity, and still preserves strong ranking supervision. It is especially relevant to creator and content distribution systems that currently rely on many loosely coupled stages.",
+          "key_metrics": "In live A/B testing on Yandex Music, Sona reports +4.53% Active Users, +6.30% Total Listening Time, and +11.42% Likes while replacing a 15+ stage production cascade."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 14,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 84,
+        "rationale_zh": "虽然场景是音乐而非电商，但它展示了单模型统一内容分发链路的工业可行性，线上收益明确，值得为内容生态与达人分发重点跟进。"
+      },
+      "figure_steps": [
+        "Chronological user event sequence",
+        "Shared encoder builds one user state",
+        "Autoregressive decoder + ranking head co-train",
+        "Teacher-only distillation boosts serving-free ranking"
+      ],
+      "exp_cards": [
+        ["Live traffic", "+4.53% Active Users"],
+        ["Engagement", "+6.30% listening time / +11.42% likes"],
+        ["Architecture", "replaced a 15+ stage production cascade"]
+      ]
+    },
+    {
+      "id": "2608.11167",
+      "title": "MultiModal Code-Switching: Interleaving Visual Objects into Language for Explicit Object-Level Alignment",
+      "authors": ["Changhao Xiang", "Shangyu Xing", "Zhen Wu", "Jianbing Zhang", "Xinyu Dai"],
+      "affiliations": ["Nanjing University"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["MLLM", "视觉 grounding", "内容理解", "图文对齐", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11167",
+        "pdf": "https://arxiv.org/pdf/2608.11167"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "论文未公开代码；本轮保留为高价值跟踪对象。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "MMCS 受语码转换启发，把文本实体直接替换成对应视觉对象，从而让模型在句子结构中学习对象级对齐。作者还构造了 773K 的对象-实体对应合成样本，使模型能够在局部监督下高效建立视觉 token 与文本语义的显式映射。与传统整图-整句对齐相比，这种做法更直接地解决了“图里哪个物体对应文里哪个词”的问题。其高光点是用很少的数据就能达到甚至超过大规模全局配对训练的效果。",
+          "innovation": "它不是继续扩大图文对的规模，而是改变预训练监督粒度，把全局匹配改成对象级显式对齐。这种设计对商品图属性抽取、短视频多物体理解、直播间卖点 grounding 都很有迁移价值。创新合理且有明显的数据效率优势，但与电商内容生态的相关性仍属于弱相关高热。",
+          "key_metrics": "论文报告仅用 50K 样本训练时，就能匹配或超过使用 600K 传统图文对训练的基线模型，体现出显著的数据效率优势。",
+          "story": "传统图文预训练只能学到模糊的全局对应关系，难以定位细粒度实体，因此论文把文本中的实体替换成视觉对象，强制模型在句级结构里完成对象级语义对齐。"
+        },
+        "en": {
+          "method_overview": "MMCS introduces a code-switching style pretraining paradigm that replaces textual entities with the corresponding visual objects. With a 773K synthetic object-entity dataset, it forces explicit local alignment between visual tokens and sentence context, rather than relying on global image-text matching. This directly tackles referential ambiguity in multimodal pretraining. Its highlight is achieving strong grounding efficiency with much less data.",
+          "innovation": "Instead of scaling up coarse global image-text pairs, MMCS changes the supervision granularity to explicit object-level alignment. This is especially useful for product-attribute grounding, short-video item understanding, and live-commerce scene parsing, although the business relation is still weak-to-medium rather than directly domain-specific.",
+          "key_metrics": "The paper reports that training with only 50K MMCS samples can match or exceed models trained on 600K conventional image-text pairs."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 79,
+        "rationale_zh": "方法价值与热度很高，尤其利于商品图和直播画面的细粒度理解，但与达人治理的直接业务距离略远，因此未进入复现阈值。"
+      },
+      "figure_steps": [
+        "Image with multiple visual objects",
+        "Replace text entities with object patches",
+        "Object-level local alignment supervision",
+        "Improved grounding for downstream MLLMs"
+      ],
+      "exp_cards": [
+        ["Training data", "50K vs 600K baseline pairs"],
+        ["Effect", "match or exceed standard pretraining"],
+        ["Transfer", "better grounding and perception"]
+      ]
+    },
+    {
+      "id": "2608.11191",
+      "title": "Test-Time Self-Evolving GUI Visual Grounding via Reflection-Guided On-Policy Self-Distillation",
+      "authors": ["Shiyu Xuan", "Zechao Li"],
+      "affiliations": ["Nanjing University of Science and Technology"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["Agent", "GUI grounding", "测试时学习", "流程自动化", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11191",
+        "pdf": "https://arxiv.org/pdf/2608.11191"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "论文写明代码将会发布，但当前未见稳定公开仓库。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文让 GUI Agent 在部署后仍能边探索边自我更新。框架包含探索、评估、反思和内化四个环节：先在新界面上尝试 grounding，再由 MLLM Reflector 给出失败原因与反思，随后通过 on-policy self-distillation 把高阶反思转成 token 级监督。作者还用对比校准减少错误前缀对自蒸馏监督的污染。高光点是把测试时适配真正做成了闭环学习。",
+          "innovation": "相较于只做测试时强化学习的 GUI agent，这篇工作把“反思”与“在线自蒸馏”结合起来，让模型能在无标注场景下逐步变强。对电商运营后台、达人治理工作台这类界面频繁变化的流程自动化任务很有迁移价值，但与内容生态核心模型链路仍是中等相关。",
+          "key_metrics": "论文在 6 个 GUI benchmark 上平均提升 7.4% 准确率，证明测试时自演化能有效提升未见界面的 grounding 质量。",
+          "story": "固定参数的 GUI agent 遇到新界面时很容易失效，因此论文引入反思器分析失败，再用在线自蒸馏把反思结果写回模型参数，实现部署后的持续适配。"
+        },
+        "en": {
+          "method_overview": "The paper equips GUI agents with a test-time self-evolving loop: exploration, evaluation, reflection, and internalization. A reflector MLLM diagnoses failures on unseen interfaces, then on-policy self-distillation turns those reflections into dense token-level supervision. Contrastive calibration further reduces the risk of corrupt supervision from bad autoregressive prefixes. The highlight is making post-deployment GUI adaptation a true closed loop.",
+          "innovation": "Compared with plain test-time RL for GUI grounding, this work explicitly adds reflection and online self-distillation so the model can keep improving without human labels. It is highly relevant to workflow automation for changing business consoles, though it is only moderately connected to core content-ecosystem modeling.",
+          "key_metrics": "Across six GUI benchmarks, the framework reports a 7.4% average accuracy gain over the base model."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 15,
+        "total": 74,
+        "rationale_zh": "对流程自动化与治理后台工具有启发，但并非内容生态核心推荐/理解模型，因此放在高热弱相关跟踪层。"
+      },
+      "figure_steps": [
+        "Instruction + unseen GUI screenshot",
+        "Agent explores and predicts grounding",
+        "Reflector explains failure and success cues",
+        "On-policy self-distillation updates the model"
+      ],
+      "exp_cards": [
+        ["Benchmarks", "6 GUI grounding benchmarks"],
+        ["Average gain", "+7.4% accuracy"],
+        ["Use case", "post-deployment adaptation without labels"]
+      ]
+    },
+    {
+      "id": "2608.11079",
+      "title": "SkillZip: Evaluation-Free Skill Compression for Self-Evolving Agents by Discovering Reusable Structure",
+      "authors": ["Xiaofan Bai", "Hongqiang Lin", "Chao Liu", "Yantao Zhang", "Xuan Jin", "Xipeng Cao", "Yuhong Li"],
+      "affiliations": ["ByteDance"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["Agent", "技能压缩", "规则治理", "长期演化", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11079",
+        "pdf": "https://arxiv.org/pdf/2608.11079"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "未发现公开代码仓库；论文更适合作为规则系统与 Agent 流程治理的设计参考。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SkillZip 关注自进化 Agent 的技能库越积越大、越用越臃肿的问题。它不依赖任务回放评测，而是通过发现技能合约中的重复规则、重复动作序列和可共享 motif，以最小描述长度目标对技能进行结构化压缩。论文还提供单次压缩和 Zip-on-Write 持续压缩两种模式。高光点是既压缩上下文体积，又保留罕见但关键的异常规则。",
+          "innovation": "创新点在于它压缩的不是普通文本，而是 Agent skill contract 这种具有触发条件、工具约束和流程语义的结构对象。对达人治理规则、审核 SOP 和复杂策略库来说，这类“结构化去冗余”很有现实意义。直接业务相关性不及推荐与内容理解论文，但对治理 Agent 基座长期可维护性价值很高。",
+          "key_metrics": "论文强调在压缩率、推理成本和泛化保持上优于传统 prompt compression 方法，并支持持续写时压缩；其核心卖点是无需额外 rollout 评测即可完成压缩。",
+          "story": "自进化 Agent 会不断追加成功经验与失败补丁，导致技能和规则库快速膨胀，因此论文尝试从结构上抽取可复用 motif，把重复规则与动作序列合并成更短但仍忠实的 skill 表达。"
+        },
+        "en": {
+          "method_overview": "SkillZip addresses the skill explosion problem in self-evolving agents. Instead of replay-based evaluation, it compresses a skill contract by discovering repeated rules, repeated action motifs, and reusable structural explanations under a minimum-description-length objective. It supports both one-shot compression and continual Zip-on-Write updates. The highlight is shrinking context cost while preserving rare but important exceptions.",
+          "innovation": "The novelty is compressing agent skill contracts as structured execution objects rather than plain text prompts. This makes it relevant to moderation rules, audit SOPs, and large policy libraries where trigger conditions and tool obligations matter as much as wording itself.",
+          "key_metrics": "The paper reports better compression and retained generalization than conventional prompt-compression approaches, while avoiding extra rollout-time evaluation during compression."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 78,
+        "rationale_zh": "更偏 Agent 基础设施，但对复杂治理规则库的长期演进与推理成本控制非常有启发。"
+      },
+      "figure_steps": [
+        "Accumulated skill branches and exception patches",
+        "Discover repeated rules and action motifs",
+        "Compress into shortest faithful skill contract",
+        "Zip-on-Write keeps future growth controlled"
+      ],
+      "exp_cards": [
+        ["Objective", "evaluation-free structural compression"],
+        ["Benefit", "lower context cost with rule fidelity"],
+        ["Scenario", "long-lived self-evolving agents"]
+      ]
+    },
+    {
+      "id": "2608.11061",
+      "title": "Batch Size or Negatives? A Selection Rule for Memory-Constrained Recommender Training",
+      "authors": ["Artyom Sabitov", "Daniil Volkov", "Alexey Zaytsev"],
+      "affiliations": ["Skoltech"],
+      "source": "arXiv",
+      "published": "2026-08-11",
+      "tags": ["推荐训练", "效率优化", "负采样", "系统工程", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11061",
+        "pdf": "https://arxiv.org/pdf/2608.11061",
+        "code": "https://anonymous.4open.science/r/LimitedMemoryRule-BBFB"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://anonymous.4open.science/r/LimitedMemoryRule-BBFB",
+        "note": "论文提供匿名公开代码与复现脚本，本轮不再重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文研究在固定显存预算 B=n×k 下，训练推荐模型时究竟应该优先增大 batch size，还是优先保留更多负样本。作者从 sampled softmax 的收敛分析出发，结合真实推荐 benchmark，给出了 n≈B、k≈1 更优的理论与实证结论。也就是说，在很多场景下更大的 batch 带来的梯度稳定性，比更多负样本更划算。高光点是把常见工程经验做成了清晰可执行的选择规则。",
+          "innovation": "它的核心不是新模型，而是对推荐训练资源分配给出更坚实的理论解释。对于海量商品池与内容候选集训练来说，这样的结论很有用，但与内容生态/达人治理的直接业务相关性弱于前述模型类论文，因此总分不进入复现阈值。",
+          "key_metrics": "作者在 MovieLens-20M 等 benchmark 上展示了在相同内存约束下，更偏向大 batch 的配置具有更快收敛和更优最终推荐质量。",
+          "story": "内存受限训练时，工程上一直在更大 batch 与更多负样本之间摇摆，因此论文从 sampled softmax 收敛行为出发，系统回答该如何分配这部分预算。"
+        },
+        "en": {
+          "method_overview": "The paper studies how to spend a fixed memory budget B=n×k in recommender training: larger batches or more negatives. Through sampled-softmax analysis and real benchmarks, it argues that an n≈B and k≈1 allocation often converges fastest and achieves better final quality. In other words, gradient stability from larger batches can be more valuable than packing in extra negatives. The highlight is turning common engineering intuition into an actionable rule.",
+          "innovation": "This is less about a new model and more about principled systems guidance for recommender training. It matters for large item pools and content candidate sets, but its direct relevance to creator governance is weaker than the modeling papers above.",
+          "key_metrics": "On benchmarks such as MovieLens-20M, the paper reports faster convergence and better final recommendation quality under the larger-batch allocation at the same memory budget."
+        }
+      },
+      "score": {
+        "innovation": 19,
+        "results": 10,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 5,
+        "relevance": 12,
+        "total": 69,
+        "rationale_zh": "推荐训练工程价值明确，但更偏底层系统优化，业务相关性低于内容理解与分发策略论文。"
+      },
+      "figure_steps": [
+        "Fixed memory budget B = batch × negatives",
+        "Compare larger batch vs more sampled negatives",
+        "Theory favors n≈B and k≈1 allocation",
+        "Faster convergence for recommender training"
+      ],
+      "exp_cards": [
+        ["Constraint", "same memory budget across settings"],
+        ["Finding", "larger batch wins over more negatives"],
+        ["Validation", "MovieLens-20M + sequential benchmarks"]
+      ]
+    }
+  ]
+}

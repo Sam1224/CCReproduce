@@ -141,8 +141,13 @@ function renderPapers(papers) {
     const links = parseJsonMaybe(p.links) || {};
     const linksWrap = card.querySelector(".links");
     const linkItems = [];
-    const arxivUrl = links.abs || links.arxiv; // support both schemas
-    if (arxivUrl) linkItems.push({ name: "arXiv", url: arxivUrl });
+    const paperUrl = links.abs || links.arxiv || links.paper;
+    if (paperUrl) {
+      linkItems.push({
+        name: paperUrl.includes("arxiv.org") ? "arXiv" : "Paper",
+        url: paperUrl,
+      });
+    }
     if (links.pdf) linkItems.push({ name: "PDF", url: links.pdf });
     if (links.code) linkItems.push({ name: "Code", url: links.code });
     if (links.project) linkItems.push({ name: "Project", url: links.project });

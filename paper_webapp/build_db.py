@@ -13,6 +13,15 @@ def iter_papers_json():
         yield p
 
 
+def summary_value(summary: dict, lang: str, key: str):
+    if not isinstance(summary, dict):
+        return None
+    nested = summary.get(lang)
+    if isinstance(nested, dict) and nested.get(key) is not None:
+        return nested.get(key)
+    return summary.get(f"{key}_{lang}")
+
+
 def ensure_schema(conn: sqlite3.Connection) -> None:
     conn.execute(
         """
@@ -133,12 +142,12 @@ def main() -> None:
                     int(score.get("total", 0)),
                     json.dumps(score, ensure_ascii=False),
                     score.get("rationale_zh"),
-                    summary.get("zh", {}).get("method_overview"),
-                    summary.get("en", {}).get("method_overview"),
-                    summary.get("zh", {}).get("innovation"),
-                    summary.get("en", {}).get("innovation"),
-                    summary.get("zh", {}).get("key_metrics"),
-                    summary.get("en", {}).get("key_metrics"),
+                    summary_value(summary, "zh", "method_overview"),
+                    summary_value(summary, "en", "method_overview"),
+                    summary_value(summary, "zh", "innovation"),
+                    summary_value(summary, "en", "innovation"),
+                    summary_value(summary, "zh", "key_metrics"),
+                    summary_value(summary, "en", "key_metrics"),
                     reproduce_url,
                     figure_path,
                     exp_figure_path,
