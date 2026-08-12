@@ -20,9 +20,9 @@
         "code": "https://anonymous.4open.science/r/TimeRoute"
       },
       "reproduce": {
-        "status": "code_available",
-        "url": "https://anonymous.4open.science/r/TimeRoute",
-        "note": "论文提供匿名代码仓库，已检索到核心实现线索，因此本轮不重复复现。"
+        "status": "implemented",
+        "path": "2026-08-12/TimeRoute",
+        "note": "论文提供的匿名代码链接当前不可访问，本轮补齐了 toy PyTorch reproduction，覆盖数据、模型、训练与评测脚本。"
       },
       "summary": {
         "zh": {
