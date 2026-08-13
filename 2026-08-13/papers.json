@@ -1,0 +1,268 @@
+{
+  "inspection_date": "2026-08-13",
+  "window": {
+    "start": "2026-08-13T00:00:00+08:00",
+    "end": "2026-08-13T23:59:59+08:00"
+  },
+  "notes_zh": "本次巡检优先覆盖 arXiv 当日新发、Hugging Face Daily Papers 当日热榜，以及可检索到的官方研究博客/社区热点。今日与电商内容生态&达人治理直接强相关的新论文较少，因此结果同时纳入了治理、多模态视频表征、长程一致性与多 Agent 生态模拟等弱相关但高热、可迁移价值高的论文。安全/后门导向论文已显式排除。",
+  "papers": [
+    {
+      "id": "2608.11207",
+      "title": "Dynamic Governance of Multi-LLM Agent Systems for Collaborative Conversational Outcomes",
+      "authors": ["Alexander Liss", "Nicholas Desmond", "Santiago Gil Gallego"],
+      "affiliations": ["Georgia Institute of Technology", "Huge Inc."],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["达人治理", "多 Agent 治理", "LLM", "对话转化", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11207",
+        "pdf": "https://arxiv.org/pdf/2608.11207"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-13/EO",
+        "note": "检索未发现作者提供的稳定公开代码仓库；已补齐 toy PyTorch reproduction，覆盖数据、模型、训练与测试脚本。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文关注目标不一致的两个 LLM agent 在多轮对话中为何会快速塌缩为低效平庸状态。作者提出 Experience Orchestrator（EO），把 contextual bandit、POMDP belief tracker 与 PID controller 组合成治理层：bandit 决定当前内容臂，belief tracker 维护访客意图分布，PID 则根据阻力偏差动态收紧或放松对话轨迹。它不是重训底层 LLM，而是在模型上层加一个可解释的 control layer 来驱动转化型对话。高光点是用经典控制/决策模块，替代了多 Agent 场景里缺失的 shared goal function。",
+          "innovation": "现有多 Agent LLM 工作大多强调协作或角色设计，但很少从“系统失稳”角度处理目标不一致问题。EO 的创新在于把对话治理显式拆成内容选择、隐变量意图跟踪和反馈控制三个部件，再让三者形成闭环。对于电商导购、达人运营助手、商家工作台 Agent 来说，这种 governor 思路非常可迁移，创新合理且落地性较强。",
+          "key_metrics": "论文在 60,000 次仿真中报告：high-intent advisor contact rate 从 naive LLM control 的 46.1% 提升到 78.1%，绝对提升 32 个百分点；同时 contextual bandit 的 variant selection 解释了 97% 的结果方差，显著高于 friction model 的 3%。",
+          "story": "没有共享目标函数的多 Agent 对话会自然滑向局部稳定却业务无效的吸引子，因此作者引入治理层：先估计访客处于什么意图状态，再选最合适的内容策略，并持续用反馈控制抑制阻力反弹，最终把会话导向真实转化。"
+        },
+        "en": {
+          "method_overview": "The paper studies why multi-turn conversations between LLM agents with structurally different goals collapse into locally stable but low-value trajectories. It proposes Experience Orchestrator (EO), a governance layer that combines a contextual bandit, a POMDP-style belief tracker, and a PID controller: the bandit selects the current content arm, the belief tracker maintains the visitor-intent posterior, and the PID loop dynamically constrains resistance evolution. Instead of retraining the underlying LLMs, EO adds an interpretable control layer on top. The main highlight is replacing the missing shared goal function with a practical governance stack.",
+          "innovation": "Most multi-agent LLM work focuses on collaboration patterns or role design, while EO reframes the problem as system stabilization under goal mismatch. Its novelty lies in decomposing governance into arm selection, latent-intent tracking, and feedback control, then closing the loop among them. This governor-style design is highly transferable to commerce assistants, creator-operation copilots, and conversion-oriented dialogue systems.",
+          "key_metrics": "Across 60,000 simulations, EO improves the high-intent advisor contact rate from 46.1% to 78.1%, a +32 point lift over the naive LLM control baseline. The paper also reports that contextual-bandit variant selection explains 97% of the between-factor outcome variance, versus 3% for the friction model."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 22,
+        "total": 85,
+        "rationale_zh": "多 Agent 治理与转化型对话强相关，方法组合新颖但不炫技，且对达人治理、导购助手与运营 Agent 都具备直接迁移价值。"
+      },
+      "figure_steps": [
+        "Visitor context, persona and page trajectory enter the governor",
+        "Belief tracker updates latent intent posterior from observed turns",
+        "Contextual bandit selects one of four content arms",
+        "PID controller constrains resistance and steers toward genuine conversion"
+      ],
+      "exp_cards": [
+        ["Simulation scale", "60,000 conversation simulations"],
+        ["Main gain", "46.1% → 78.1% high-intent contact rate"],
+        ["System insight", "97% of outcome variance explained by policy selection"]
+      ]
+    },
+    {
+      "id": "2608.11616",
+      "title": "MBA: Multimodal Benchmark and Agents for Real-World Business Ideation",
+      "authors": ["Hojun Choi", "Jaeyo Shin", "Suin Lee", "Hyunjung Shim"],
+      "affiliations": ["KAIST AI"],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-08-13",
+      "tags": ["MLLM", "内容创意", "商业理解", "多模态", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11616",
+        "pdf": "https://arxiv.org/pdf/2608.11616",
+        "code": "https://github.com/hchoi256/MBA"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/hchoi256/MBA",
+        "note": "已核验公开仓库非空，包含 src/、demo/、2_sft.py、3_grpo.py、4_eval.py 等完整训练与评测脚本，因此本轮不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇工作把真实世界业务创意生成从纯文本任务升级成多模态任务。作者提出 MBA-Bench，构造了 30K 条 image-caption-question-idea 样本，覆盖 6 类业务场景，并进一步训练 MBA-b 与 MBA-k 两个 business ideation agent，分别适配 blind/known criteria setting。方法上采用 LoRA SFT + GRPO 的两阶段训练，并引入 creativity 与 feasibility 奖励。高光点是：它不仅给出 benchmark，还把“从图片、描述和市场证据中生成可执行业务创意”做成了完整 agent pipeline。",
+          "innovation": "与传统只看 patent 或纯文本 prompt 的 business ideation 不同，这篇论文显式利用图片、caption、业务问题和市场证据四类信号共同生成创意，且提出了更贴近商业落地的六维评估标准。对电商内容生态而言，它为商品图、达人素材、场景化营销创意生成提供了很强的上游参考。虽然不是直接做治理，但对内容创意质量与场景理解价值很高。",
+          "key_metrics": "论文报告 MBA-Bench 含 30K 样本、6 个 domain；在该 benchmark 上，MBA-b 相比 caption baseline / multimodal baseline 分别提升 63.9% / 25.6%，MBA-k 分别提升 77.1% / 35.8%，并在多项指标上逼近 GPT-5 等闭源模型。",
+          "story": "纯文本 business ideation 无法充分利用真实场景图片里的视觉细节，因此作者先构造一个多模态商业创意 benchmark，再训练能综合图像、caption、问题与市场证据的 agent，让模型不仅会“想点子”，还能更像真实业务分析师那样产出有依据的创意。"
+        },
+        "en": {
+          "method_overview": "The paper upgrades business ideation from a text-only problem to a multimodal one. It introduces MBA-Bench, a 30K-sample dataset of image-caption-question-idea tuples across six business domains, and then trains two business-ideation agents, MBA-b and MBA-k, for blind and known evaluation settings. The training recipe combines LoRA-based SFT with GRPO and adds creativity and feasibility rewards. The standout point is that the work delivers both a benchmark and a full agent pipeline for generating executable business ideas from multimodal context and market evidence.",
+          "innovation": "Instead of relying on patents or text-only prompting, the paper jointly uses images, captions, business questions, and retrieved market evidence, along with a six-axis business-oriented evaluation protocol. For commerce content systems, it is highly relevant as an upstream reference for product-image reasoning, creator-material ideation, and scenario-aware campaign generation, even though it is only weakly related to governance itself.",
+          "key_metrics": "MBA-Bench contains 30K samples across six domains. On this benchmark, MBA-b outperforms the caption-only and multimodal baselines by 63.9% and 25.6%, while MBA-k improves over them by 77.1% and 35.8%, respectively, and remains competitive with strong closed-source models such as GPT-5 on several metrics."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 81,
+        "rationale_zh": "与电商内容创意、素材理解和场景化营销关系紧密，方法与基准都完整，且公开代码齐全；虽然不是直接治理论文，但综合价值很高。"
+      },
+      "figure_steps": [
+        "Image + caption + business question + market evidence enter the pipeline",
+        "MBA-Bench defines six business domains and six core metrics",
+        "LoRA SFT initializes the agent and GRPO optimizes creativity/feasibility",
+        "MBA-b / MBA-k output grounded business ideas and are judged by an MLLM"
+      ],
+      "exp_cards": [
+        ["Dataset", "30K multimodal samples across 6 domains"],
+        ["MBA-b gain", "+63.9% vs caption baseline / +25.6% vs multimodal baseline"],
+        ["MBA-k gain", "+77.1% vs caption baseline / +35.8% vs multimodal baseline"]
+      ]
+    },
+    {
+      "id": "2608.08160",
+      "title": "Can LLM Agents Stick to the Script? A Benchmark for Long-Horizon Consistency in Interactive Narratives",
+      "authors": ["Yingpeng Ma", "Jianhao Yan", "Bei Shi", "Ka Hou Kam", "Runnan Wang", "Xuebo Liu", "Yulong Chen", "Yue Zhang", "Derek F. Wong"],
+      "affiliations": ["University of Macau", "Westlake University", "Harbin Institute of Technology, Shenzhen", "University of Cambridge", "University of Aberdeen"],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-08-13",
+      "tags": ["Agent 一致性", "长程治理", "Narrative", "Benchmark", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.08160",
+        "pdf": "https://arxiv.org/pdf/2608.08160"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "当前检索未定位到稳定公开代码仓库；保留为高价值跟踪对象。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把 LLM narrator agent 在长程交互里保持设定一致性的能力正式定义为 Narrative Commitment Preservation（NCP），并提出 NCP-Bench。每个环境由电影 synopsis 构造成 narrative specification，包含初始事实、轨迹节点和 commitment 约束，再通过自动审计器在每一轮检查 fact conflict、commitment conflict 和 player-input conflict。高光点是把“会不会胡说和改剧本”转成了可自动验证、可长回合压测的 benchmark。",
+          "innovation": "很多 Agent 工作只看任务成功率，不审查长期一致性；但在达人治理、数字人直播、脚本化互动内容里，设定漂移本身就是核心风险。NCP-Bench 的创新在于把 long-horizon consistency 拆成结构化约束和冲突审计，并用对抗式用户干预持续施压。它对虚拟达人脚本遵从、话术治理和长期 persona control 很有启发。",
+          "key_metrics": "论文在 100 个 narrative environment 上评测多个 SOTA 模型，最佳 GPT-5.2 在 20 turn 后的 survival rate 也只有 42%；不同模型的 fact conflict rate 落在 40%–68% 区间，而且只有极少数 run 能在 100-turn 上限内同时满足全部 achievement commitments。",
+          "story": "开放式互动让 LLM 更像“会讲故事的人”，却也更容易随用户一句话就改掉先前设定。作者因此先把剧情约束显式结构化，再用自动审计器逐轮抓冲突，证明 fluent narration 远不等于可靠的长期一致性。"
+        },
+        "en": {
+          "method_overview": "The paper formalizes long-horizon consistency for narrator agents as Narrative Commitment Preservation (NCP) and introduces NCP-Bench. Each environment is constructed from a movie synopsis into a narrative specification containing an initial fact ledger, trajectory nodes, and commitment constraints, while an automatic auditor checks fact, commitment, and player-input conflicts at every turn. The key highlight is turning 'script drift' into a long-horizon benchmark with automatic verification.",
+          "innovation": "Many agent benchmarks focus on task completion and ignore long-range consistency, but creator governance, digital-human livestreaming, and scripted interactive content all depend on maintaining stable commitments over time. NCP-Bench contributes a structured conflict-auditing framework under adversarial user intervention, making it highly relevant to persona governance and script-following control.",
+          "key_metrics": "Across 100 narrative environments, even the best model, GPT-5.2, achieves only a 42% survival rate after 20 turns. Fact-conflict rates range from 40% to 68% across models, and only isolated runs satisfy all achievement commitments within the 100-turn limit."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 18,
+        "total": 74,
+        "rationale_zh": "对长期脚本遵从、数字人话术治理和多轮互动内容风控非常有启发，但更偏 benchmark，不是直接面向电商业务模型。"
+      },
+      "figure_steps": [
+        "Movie synopsis is converted into initial facts, trajectory nodes, and commitments",
+        "A narrator agent interacts with an adversarial player over long horizons",
+        "An automatic auditor checks fact, commitment, and player-input conflicts at every turn",
+        "Episodes survive only if the story remains consistent and achievement commitments are preserved"
+      ],
+      "exp_cards": [
+        ["Benchmark", "100 narrative environments"],
+        ["Best survival", "42% survival rate after 20 turns"],
+        ["Failure mode", "fact conflicts dominate at 40%–68% across models"]
+      ]
+    },
+    {
+      "id": "2608.11215",
+      "title": "Poor Man's Agentic Modeling: Simulating Large LLM-Agent Societies on a Laptop",
+      "authors": ["Igor Itkin"],
+      "affiliations": ["Independent Researcher, Tel Aviv"],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-08-13",
+      "tags": ["Agent 社会模拟", "生态建模", "低成本仿真", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11215",
+        "pdf": "https://arxiv.org/pdf/2608.11215"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "论文摘要声明附带 code and data URL，但本轮检索未定位到稳定、可直接核验的公开仓库入口，因此暂不按代码可用处理。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇工作尝试解决“大规模 LLM agent 社会仿真太贵”的问题。作者的核心思想是：如果研究目标是宏观统计规律，而不是每个 agent 的细粒度 cognition，那么可以用少量真实 LLM 查询拟合一个低参数 surrogate，再把昂贵的 agent society 替换成 cheap simulator，在 laptop 上扩展到任意 N。高光点是提出了一套 interaction order × memory taxonomy，用来提前判断 surrogate 是否会随 N 扩展而失真。",
+          "innovation": "其创新不在于更强的 agent，而在于把统计物理里的 coarse-graining 思想迁移到 LLM society simulation，并给出什么时候这种替换有效的判据。对电商内容生态、达人网络扩散、平台治理策略仿真来说，这类低成本群体模拟非常有价值，因为它能把原本昂贵的政策试验变成可批量运行的 sandbox。",
+          "key_metrics": "论文在 EconAgent 及另外 7 个命名 LLM simulation 上验证该方法，指出 surrogate 只需基于几百到几千次廉价查询即可拟合；摘要强调 taxonomy 预测的 error trend 在不同 cell 上都被验证，且两项被推翻的预测也能被理论定量解释。",
+          "story": "如果我们关心的是整个内容生态或 Agent 社会的宏观演化，就没必要每个个体都持续调用昂贵大模型。因此作者先判断 agent 真正感知了哪些全局/局部信号，再用更便宜的 surrogate 替代单体 agent，从而把大规模生态模拟降到笔记本也能跑的成本。"
+        },
+        "en": {
+          "method_overview": "The paper tackles the high cost of simulating large LLM-agent societies. Its core idea is that if the target is macroscopic behavior rather than detailed cognition, each expensive LLM agent can be replaced by a low-parameter surrogate fitted from a small number of genuine LLM queries, allowing large-scale society simulations to run on a laptop. The key highlight is an interaction-order × memory taxonomy that predicts when such coarse-graining will or will not preserve scaling behavior.",
+          "innovation": "Instead of proposing a stronger agent, the work imports coarse-graining ideas from statistical physics into LLM society simulation and provides a criterion for when surrogate substitution remains valid. This is highly valuable for content-ecosystem and creator-network governance, where platform-policy experiments are otherwise too costly to run at scale.",
+          "key_metrics": "The paper validates the framework on EconAgent and seven additional named LLM simulations. The abstract states that each surrogate can be fitted from only a few hundred to a few thousand cheap queries, and that the taxonomy-predicted error trends are empirically confirmed cell by cell."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 8,
+        "exp_quality": 11,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 15,
+        "total": 71,
+        "rationale_zh": "对内容生态与达人网络的群体层面仿真非常有启发，但与内容理解或单篇治理模型的直接业务距离略远。"
+      },
+      "figure_steps": [
+        "Query a real LLM a few hundred to a few thousand times",
+        "Fit a low-parameter surrogate for each agent archetype",
+        "Replace the expensive society with a cheap simulator at larger N",
+        "Analyze macroscopic dynamics and scaling trends for the whole ecosystem"
+      ],
+      "exp_cards": [
+        ["Validation suite", "EconAgent + 7 named LLM simulations"],
+        ["Cost profile", "few hundred to few thousand queries per surrogate"],
+        ["Practical value", "macroscopic agent-society studies on a laptop"]
+      ]
+    },
+    {
+      "id": "2608.12313",
+      "title": "AVA-Encoder: Towards Agent-Native Video Representation Learning",
+      "authors": ["Chuyue Li", "Jinpeng Yu", "Haozhe Wang", "Tian Xueyun", "Zhijing Zhang", "Bingnan Li", "Shuqi Gu", "Kan Ren", "Jiaming Liu", "Ruihua Huang"],
+      "affiliations": ["Qwen Business Unit of Alibaba", "ShanghaiTech University", "Hong Kong University of Science and Technology", "Institute of Computing Technology", "Southeast University"],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-08-13",
+      "tags": ["视频理解", "Agent 视频表征", "短视频", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.12313",
+        "pdf": "https://arxiv.org/pdf/2608.12313"
+      },
+      "reproduce": {
+        "status": "paper_only",
+        "note": "本轮检索未定位到稳定公开代码仓库；保留为视频内容理解方向的重点跟踪论文。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 AVA-Encoder，把原始视频编码为 agent-native 的知识图谱，再从图谱重建回视频，从而用 reconstruction quality 反推中间表征是否真正保留了可供 agent 推理与编辑的关键信息。该知识图谱由 Story-Event-Shot 层级、角色/场景/镜头/音频等状态节点以及 linked asset layer 组成。训练上，作者引入 textual-gradient optimization、pseudo-training 与 test-time KG refinement，让编码策略能够持续自进化。高光点是首次把“视频 → 可被 agent 操作的图结构 → 视频”做成一个完整的 auto-encoding 闭环。",
+          "innovation": "多数视频表征要么太底层，不利于 agent 操作；要么只有 caption，不足以承载镜头语言和跨模态关系。AVA-Encoder 的创新在于用文本主导的知识图谱作为 agent-native 中介层，再以重建 fidelity 直接监督表征质量。对于短视频、直播切片、达人内容质检与视频素材理解，这种表示学习方向非常值得跟踪。",
+          "key_metrics": "论文摘要报告：AVA-Encoder 相比 strongest external baseline 提升 20.7 个百分点；在仅 policy-only 的受控设定下，其 shot-level encoder policy 仍优于 carefully human-tuned policy，同时系统 prompt token 使用量降低 74.3%。",
+          "story": "现有视频表征要么难以让 agent 读懂和修改，要么会在压缩过程中丢掉关键镜头/叙事信息。因此作者把视频先转成可搜索、可编辑、可推理的图谱，再用重建误差逼着系统学会保留真正对创作与理解有价值的结构化内容。"
+        },
+        "en": {
+          "method_overview": "The paper proposes AVA-Encoder, which turns a raw video into an agent-native knowledge graph and then reconstructs the video from that graph, using reconstruction quality as the main signal for whether the intermediate representation truly preserves information useful for reasoning and editing. The graph contains a Story-Event-Shot hierarchy, typed state nodes for characters, scenes, style, camera, and audio, plus a linked asset layer. Training combines textual-gradient optimization, pseudo-training, and optional test-time KG refinement. The standout point is a full video → agent-graph → video auto-encoding loop.",
+          "innovation": "Most video representations are either too low-level for agents to manipulate or too compressed to preserve cinematic relations. AVA-Encoder introduces a text-centered knowledge graph as the agent-native bottleneck and supervises representation quality directly through reconstruction fidelity. This is especially interesting for short-video understanding, livestream clip parsing, and creator-content inspection.",
+          "key_metrics": "According to the abstract, AVA-Encoder improves by 20.7 percentage points over the strongest external baseline. In the controlled policy-only setting, its shot-level encoder policy also beats a carefully human-tuned policy while using 74.3% fewer system-prompt tokens."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 12,
+        "total": 68,
+        "rationale_zh": "视频内容理解和可操作表征很新，但离电商内容治理的直接业务闭环还有一段距离，更适合作为短视频/直播理解的底层跟踪技术。"
+      },
+      "figure_steps": [
+        "Input film is decomposed into story, event, shot, and keyframe context",
+        "A text-centered knowledge graph stores characters, scenes, camera, and audio states",
+        "Linked assets preserve images, audio, and video evidence for agent access",
+        "Video reconstruction feeds textual-gradient refinement back into the encoder policy"
+      ],
+      "exp_cards": [
+        ["Main gain", "+20.7 points over the strongest external baseline"],
+        ["Efficiency", "74.3% fewer system-prompt tokens in policy-only setting"],
+        ["Release", "framework + benchmark + film KG dataset announced"]
+      ]
+    }
+  ]
+}
