@@ -6,6 +6,7 @@ const I18N = {
     date: "日期",
     minScore: "最低分",
     method: "方法概览",
+    story: "故事线",
     innovation: "创新点",
     breakdown: "评分明细",
     rationale: "评分依据",
@@ -23,6 +24,7 @@ const I18N = {
     date: "Date",
     minScore: "Min score",
     method: "Method overview",
+    story: "Problem → solution",
     innovation: "Key innovations",
     breakdown: "Score breakdown",
     rationale: "Score rationale",
@@ -167,9 +169,11 @@ function renderPapers(papers) {
     }
 
     const methodText = lang === "zh" ? p.method_overview_zh : p.method_overview_en;
+    const storyText = lang === "zh" ? p.story_zh : p.story_en;
     const innovationText = lang === "zh" ? p.innovation_zh : p.innovation_en;
 
     card.querySelector(".method").textContent = methodText || "";
+    card.querySelector(".story").textContent = storyText || "";
     card.querySelector(".innovation").textContent = innovationText || "";
     card.querySelector(".rationale").textContent = p.rationale_zh || "";
 
@@ -265,6 +269,7 @@ function refresh() {
       inspection_date, paper_id, title, authors, affiliations, source, published, links, tags,
       score_total, score_breakdown, rationale_zh,
       method_overview_zh, method_overview_en,
+      story_zh, story_en,
       innovation_zh, innovation_en,
       key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
     FROM papers

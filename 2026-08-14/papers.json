@@ -1,0 +1,221 @@
+{
+  "inspection_date": "2026-08-14",
+  "window": {
+    "start": "2026-08-13T00:00:00+08:00",
+    "end": "2026-08-14T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检严格使用北京时间 2026-08-13 00:00:00 至 2026-08-14 00:00:00 的窗口。主检索来源为 arXiv 当日提交；Hugging Face Daily Papers、官方实验室博客、OpenReview/会议页与社交媒体被作为补充热点源扫描，但未发现比入选论文更高置信、更强业务相关的当日新论文。关键词在原始需求基础上补充了 retail taxonomy、ranking robustness、multimodal retrieval、reasoning retrieval、caption grounding 等语义近邻，并显式跳过安全/后门攻击类论文。",
+  "papers": [
+    {
+      "id": "2608.12778",
+      "title": "DrEM: Dual-Side Robust Ensemble Ranking from Noisy User Preference Predictions in Video Recommendation",
+      "authors": ["Canwei Huang", "Tiantian He", "Xiaoxiao Xu", "Jun Zhang", "Ziran Deng", "Weike Pan", "Chunjie Chen", "Kaiqiao Zhan"],
+      "affiliations": ["Shenzhen University", "Kuaishou Technology"],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["视频推荐", "排序鲁棒性", "噪声建模", "内容分发", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.12778",
+        "pdf": "https://arxiv.org/pdf/2608.12778",
+        "project": "https://arxiv.org/abs/2608.12778"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-14/DrEM",
+        "note": "未检索到可验证的公开训练代码，本轮补齐了 toy PyTorch reproduction，覆盖噪声 pxtr 生成、双侧鲁棒损失、训练与评测脚本。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DrEM 面向短视频推荐的 ensemble ranking 场景，抓住 upstream 多任务模型输出的 pxtr 既被当作监督代理、又被当作排序特征这两个角色。它在监督侧构造基于 preference flip probability 的 risk-denoising robust loss，纠正由于 noisy pxtr 导致的 pairwise 偏好翻转；在特征侧按噪声分布采样扰动，并用 preference-preserving consistency regularizer 稳住排序输出。整个方法的高光点是把噪声建模同步到 supervision side 与 feature side，两侧共享一套噪声估计而不是各自打补丁。",
+          "innovation": "现有 ensemble ranking 往往默认 pxtr 足够可靠，最多只做单侧鲁棒化。DrEM 的创新在于把‘监督翻转风险’与‘特征扰动不稳’视作同源问题：前者做 pair-level 风险校正，后者做 item-level 预测扰动一致性约束，并由统一噪声方差估计对齐两侧修正目标。对内容生态分发、达人/视频多目标排序都非常契合，方法合理且具备直接工程落地价值。",
+          "key_metrics": "离线实验中，DrEM 在两个工业 backbone 上均提升 7 个任务的 GAUC，例如 EMER backbone 的 pltr 从 0.6622 提升到 0.6725、pftr 从 0.6853 提升到 0.6965；线上 A/B 中，Follow 提升 1.197%，Comment 提升 1.388%，Video View 提升 0.691%，Long View 提升 0.401%。",
+          "story": "上游多任务模型输出的 pxtr 带噪，却同时承担监督代理与排序特征两种职责，导致偏好翻转和输出不稳定。因此论文先估计 pair/item 级别的噪声分布，在监督侧修正错误梯度，在特征侧注入符合噪声结构的扰动并保持排序一致性。"
+        },
+        "en": {
+          "method_overview": "DrEM targets ensemble ranking in short-video recommendation, where upstream pxtr predictions are used both as proxy supervision and as ranking features. It introduces a risk-denoising robust loss on the supervision side to correct pairwise preference flips caused by noisy pxtrs, and a preference-preserving consistency regularizer on the feature side by sampling perturbations from the estimated prediction-noise distribution. Its main highlight is a synchronized two-sided noise treatment rather than isolated fixes.",
+          "innovation": "The key novelty is treating supervision-side label flips and feature-side instability as two manifestations of the same upstream pxtr noise. DrEM performs pair-level risk correction and item-level perturbation consistency under shared noise statistics, which is highly relevant to multi-objective content ranking and creator-feed distribution.",
+          "key_metrics": "Offline, DrEM improves GAUC across seven tasks on two industrial backbones, e.g. pltr from 0.6622 to 0.6725 and pftr from 0.6853 to 0.6965 on the EMER backbone. In online A/B testing, it reports +1.197% Follow, +1.388% Comment, and +0.691% Video View."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 86,
+        "rationale_zh": "对内容分发生态强相关，线上 A/B 结果扎实，两侧噪声建模思路也有很强可迁移性，因此进入今日最高优先级复现。"
+      },
+      "figure_steps": [
+        "Upstream multi-task model outputs noisy pxtrs",
+        "Estimate pair/item-level flip and variance statistics",
+        "Robust pairwise loss corrects supervision-side preference flips",
+        "Noise perturbation + consistency stabilizes feature-side ranking"
+      ],
+      "exp_cards": [
+        ["Offline", "7 ranking tasks improve across two backbones"],
+        ["A/B", "+1.197% Follow / +1.388% Comment"],
+        ["Takeaway", "robust gains on sparse high-value interactions"]
+      ]
+    },
+    {
+      "id": "2608.12674",
+      "title": "Lines and Ladders: A Context-Aware Multi-Agent Framework for Large-Scale Retail Price Taxonomy",
+      "authors": ["Ravi Teja Chunduri", "Srikaran Reddy Boya", "Deep Narayan Mishra", "Ajay Kumar B", "Karthik Kumaran", "Pranay Kona"],
+      "affiliations": ["Walmart Global Tech"],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["电商", "价格治理", "商品聚类", "多智能体", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.12674",
+        "pdf": "https://arxiv.org/pdf/2608.12674"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-14/LinesAndLadders",
+        "note": "未发现稳定公开仓库，本轮实现了 toy PyTorch reproduction，覆盖商品属性编码、line/ladder 判别、训练与 F1 评测管线。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文解决大型零售目录中的‘line & ladder’价格治理：line 表示功能等价但仅颜色/口味等变体不同的商品簇，ladder 表示按容量/质量形成的价格阶梯。作者把任务拆成 3-agent 流程：先发现 variance attributes，再抽取多模态属性值，最后做层级分组与综合判定。高光点是把原本依赖资深类目经理的价格治理知识，转换成可扩展、可审计、可分阶段路由的 agentic taxonomy pipeline。",
+          "innovation": "与普通 embedding 聚类不同，该工作强调‘价格语义’而不是泛语义相似度：哪些属性应当保持同价、哪些属性应当解释价差，是由上下文和类目规则决定的。论文的创新在于引入 context-aware multi-agent 分工，降低单个 prompt 的认知负担，并把结构化 line/ladder 构造显式建模成企业级治理任务。这对电商内容生态中的商品治理、类目规范化、达人带货价格一致性巡检都很有启发。",
+          "key_metrics": "在真实企业数据与生产部署中，3-agent 系统的 Lines F1 达到 0.83、Ladders F1 达到 0.82；Food & Consumables 业务上 precision 超过 90%、recall 超过 75%；在非结构化 General Merchandise 上达到 80.0% 加权准确率，且对 merchant reference 的平均 precision/recall 分别达到 0.98/0.75（Lines）与 0.92/0.81（Ladders）。",
+          "story": "人工价格治理依赖专家经验，但面对百万级商品和脏乱属性数据时既慢又不稳，因此论文把任务拆成‘发现应该解释价差的属性 → 提取多模态属性值 → 按业务规则形成 line/ladder 结构’，用多智能体逐步逼近专家判断。"
+        },
+        "en": {
+          "method_overview": "The paper automates retail 'lines and ladders' price taxonomy construction at enterprise scale. A line groups functionally equivalent product variants that should share price parity, while a ladder organizes lines into value-based price tiers. The framework uses a three-agent workflow for variance-attribute discovery, multimodal value extraction, and hierarchical grouping/synthesis. Its highlight is turning expert retail price-governance logic into a scalable and auditable agent pipeline.",
+          "innovation": "Unlike generic semantic clustering, this work models price-governance semantics explicitly: which attributes should preserve parity and which should explain price gaps. The context-aware multi-agent decomposition reduces prompt overload and operationalizes taxonomy construction as a governance workflow, making it highly relevant to commerce catalog normalization and creator-commerce pricing consistency.",
+          "key_metrics": "In production-like enterprise evaluation, the 3-agent system reaches 0.83 F1 for Lines and 0.82 F1 for Ladders, with >90% precision and >75% recall in Food & Consumables, plus 80.0% weighted accuracy on unstructured General Merchandise."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 84,
+        "rationale_zh": "和电商治理业务高度贴合，实验既有结构化 F1，也有真实部署指标；虽然以价格治理为核心，但可迁移到商品治理与达人带货规则体系。"
+      },
+      "figure_steps": [
+        "Retail catalog with noisy text/image attributes",
+        "Agent 1 discovers parity-vs-difference attributes",
+        "Agent 2 extracts multimodal product values",
+        "Agent 3 synthesizes product lines and ladders for governance"
+      ],
+      "exp_cards": [
+        ["Taxonomy quality", "Lines F1 0.83 / Ladders F1 0.82"],
+        ["Food catalog", ">90% precision and >75% recall"],
+        ["General merchandise", "80.0% weighted assignment accuracy"]
+      ]
+    },
+    {
+      "id": "2608.12987",
+      "title": "Generative Universal Multimodal Retrieval with Dual-role Identifiers",
+      "authors": ["Kaipeng Li", "Haitao Yu", "Xuanchen Zhou"],
+      "affiliations": ["Independent Researcher", "University of Tsukuba"],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["多模态检索", "向量化表征", "生成式检索", "图文检索", "中相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.12987",
+        "pdf": "https://arxiv.org/pdf/2608.12987",
+        "code": "https://github.com/KaipengLi/DrIG"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/KaipengLi/DrIG",
+        "note": "已核验仓库包含 src、训练脚本与 checkpoint 说明，不属于空仓库，因此不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 DrIG，把 generative retrieval 扩展到 universal multimodal retrieval。它为每个候选项学习 residual-quantized identifier，并让同一套 identifier 同时承担 sequential role 与 set-based role：前者用于 autoregressive decoding，后者提供 prefix-independent global relevance prior，缓解 beam search 的早期前缀误杀。为了补偿离散 ID 的信息损失，作者又加入 top-k dense reranking。高光点是把‘生成式检索的高效性’和‘dense 检索的精细判别’做成统一推理链路。",
+          "innovation": "过去的生成式检索大多局限于单模态或双模态场景，而且非常依赖 left-to-right 前缀路径。DrIG 的创新在于 dual-role identifiers：同一 ID 序列既服务于顺序解码，又被重解释为无序 token set 来提供全局先验；再叠加 hybrid reranking，显著缩小与 dense baseline 的效果差距。对商品图文检索、内容相似召回、跨模态证据检索都很有借鉴意义。",
+          "key_metrics": "在 M-BEIR 上，DrIG 在 local-pool 设置下把平均分从 29.5 提升到 38.0（相对提升 28.8%），在 global-pool 设置下从 28.6 提升到 36.4（相对提升 27.3%）；在 Flickr30K text-to-image 上，DrIG-LT 的 R@1/R@5/R@10 达到 76.9/92.5/94.8，在 MSCOCO 上达到 56.3/80.1/86.7。",
+          "story": "生成式检索虽然快，但容易被前缀错误拖垮，而且离散 ID 会损失细粒度相似信息，因此论文先用可同时表达顺序与集合语义的 dual-role identifier 稳住 beam search，再用 dense reranking 补回细粒度区分能力。"
+        },
+        "en": {
+          "method_overview": "DrIG extends generative retrieval to universal multimodal retrieval. It assigns each candidate a residual-quantized identifier that plays both a sequential role for autoregressive decoding and a set-based role for prefix-independent global relevance guidance. A dense top-k reranker is added to recover fine-grained distinctions lost in discretization. The main highlight is combining generative efficiency with dense discriminative strength in one inference pipeline.",
+          "innovation": "The key novelty is the dual-role identifier: the same discrete ID sequence is used both for left-to-right generation and for order-invariant global relevance estimation. Together with hybrid reranking, this significantly narrows the effectiveness gap between generative and dense multimodal retrieval.",
+          "key_metrics": "On M-BEIR, DrIG raises the average score from 29.5 to 38.0 under local-pool retrieval and from 28.6 to 36.4 under global-pool retrieval. On text-to-image retrieval, DrIG-LT reaches 76.9/92.5/94.8 R@1/R@5/R@10 on Flickr30K and 56.3/80.1/86.7 on MSCOCO."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 78,
+        "rationale_zh": "方法热度高、实验完整，和商品图文检索/相似召回关联较强；但距离电商内容生态核心治理任务仍稍远，因此未进入今日复现阈值。"
+      },
+      "figure_steps": [
+        "Instruction-aware multimodal query embedding",
+        "Residual quantization builds modality-aware identifiers",
+        "Sequential decoding + set-based global prior guide search",
+        "Dense top-k reranking restores fine-grained relevance"
+      ],
+      "exp_cards": [
+        ["M-BEIR", "29.5→38.0 local / 28.6→36.4 global"],
+        ["Flickr30K", "R@1/R@5/R@10 = 76.9/92.5/94.8"],
+        ["MSCOCO", "R@1/R@5/R@10 = 56.3/80.1/86.7"]
+      ]
+    },
+    {
+      "id": "2608.13200",
+      "title": "GEM: A Generative Embedding Model Bridging Reasoning and Retrieval",
+      "authors": ["Zhili Shen", "Craig Macdonald"],
+      "affiliations": ["University of Glasgow"],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["RAG", "检索增强", "推理检索", "向量化表征", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.13200",
+        "pdf": "https://arxiv.org/pdf/2608.13200",
+        "code": "https://anonymous.4open.science/r/GEM"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://anonymous.4open.science/r/GEM",
+        "note": "论文正文给出匿名 4open 代码地址，本轮作为高价值跟踪对象收录。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "GEM 把 reasoning 与 embedding 合进同一个生成式模型：先让模型对 query 做 intent / relevance criteria 级别的显式推理，再在生成后的上下文末尾追加 embedding token 作为检索表示。训练时联合 contrastive objective 与 causal LM objective，尽量保住 LLM 的生成能力，同时让 embedding 与 reasoning 对齐。高光点是‘generate-then-encode’这一范式，它不是把外部 LLM 的推理拼接到检索器前面，而是让检索模型自己先想再编码。",
+          "innovation": "不少 reasoning retrieval 工作其实只是把更长的文本塞给 retriever，收益未必来自真正的推理理解。GEM 的创新在于把生成式 reasoning 内生到 embedding 模型中，再通过 reasoning-conditioned positives / hard negatives 训练 embedding 对齐推理语义。对电商问答检索、达人知识库检索、复杂治理规则检索都有启发，但业务相关性偏中等。",
+          "key_metrics": "在 BRIGHT 的 theorem-based 任务上，GEM 把同 backbone 的 Qwen3-4B-Instruct 平均 nDCG@10 从 19.8 提升到 32.0；在 TREC-DL-2019/2020 上，GEM 分别达到 70.4 和 73.6 nDCG@10，高于 embedding-only variant 的 69.0 和 69.1。",
+          "story": "用户会用越来越复杂的自然语言表达检索意图，但传统 retriever 只看表层相似度，因此论文先显式生成‘我到底要找什么’的 reasoning，再把这段更丰富的语义压进 embedding 中，缩小查询表达与检索表示之间的鸿沟。"
+        },
+        "en": {
+          "method_overview": "GEM unifies reasoning and embedding in a single generative model. It first reasons about user intent and relevance criteria, then appends an embedding token after the generated rationale to encode the enriched context for retrieval. Joint contrastive and causal-LM training preserves generation while aligning embeddings with reasoning. The highlight is a true generate-then-encode retriever rather than a pipeline that prepends external reasoning.",
+          "innovation": "Many reasoning-augmented retrievers may benefit mostly from longer text rather than actual reasoning alignment. GEM makes reasoning endogenous to the embedding model and trains with reasoning-conditioned positives and hard negatives, which is a meaningful step for instruction-heavy retrieval and RAG.",
+          "key_metrics": "On theorem-based BRIGHT tasks, GEM improves average nDCG@10 from 19.8 to 32.0 over the same-backbone embedding-only variant. On TREC-DL-2019/2020, GEM reaches 70.4 and 73.6 nDCG@10 versus 69.0 and 69.1 for Qwen3-4B-Instruct."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 76,
+        "rationale_zh": "对复杂检索/RAG 的方法论价值很高，但业务侧更偏知识检索底座而非电商内容/达人治理主链路，因此作为热点跟踪而非今日复现对象。"
+      },
+      "figure_steps": [
+        "Query triggers explicit reasoning over user intent",
+        "Model appends embedding token after generated rationale",
+        "Joint contrastive + causal training aligns reasoning and retrieval",
+        "Prompt-scaled test-time compute further boosts retrieval"
+      ],
+      "exp_cards": [
+        ["BRIGHT", "theorem tasks nDCG@10 19.8→32.0"],
+        ["TREC-DL", "70.4 / 73.6 nDCG@10 on 2019 / 2020"],
+        ["Property", "generate-then-encode with test-time compute scaling"]
+      ]
+    }
+  ]
+}

@@ -130,7 +130,7 @@ input[type=range]{width:160px;}
 
 .section{display:flex;flex-direction:column;gap:6px;}
 .section-title{font-size:12px;color:var(--muted);font-weight:700;}
-.section-body{font-size:12px;line-height:1.45;color:#111827;}
+.section-body{font-size:12px;line-height:1.45;color:#111827;white-space:pre-wrap;}
 
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;}
 

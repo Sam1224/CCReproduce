@@ -40,6 +40,8 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
           rationale_zh TEXT,
           method_overview_zh TEXT,
           method_overview_en TEXT,
+          story_zh TEXT,
+          story_en TEXT,
           innovation_zh TEXT,
           innovation_en TEXT,
           key_metrics_zh TEXT,
@@ -125,9 +127,10 @@ def main() -> None:
                 INSERT OR REPLACE INTO papers (
                   inspection_date, paper_id, title, authors, affiliations, source, published,
                   links, tags, score_total, score_breakdown, rationale_zh,
-                  method_overview_zh, method_overview_en, innovation_zh, innovation_en,
-                  key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  method_overview_zh, method_overview_en, story_zh, story_en,
+                  innovation_zh, innovation_en, key_metrics_zh, key_metrics_en,
+                  reproduce_url, figure_path, exp_figure_path
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     inspection_date,
@@ -144,6 +147,8 @@ def main() -> None:
                     score.get("rationale_zh"),
                     summary_value(summary, "zh", "method_overview"),
                     summary_value(summary, "en", "method_overview"),
+                    summary_value(summary, "zh", "story"),
+                    summary_value(summary, "en", "story"),
                     summary_value(summary, "zh", "innovation"),
                     summary_value(summary, "en", "innovation"),
                     summary_value(summary, "zh", "key_metrics"),
