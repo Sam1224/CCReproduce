@@ -1,0 +1,436 @@
+{
+  "inspection_date": "2026-08-17",
+  "window": {
+    "start": "2026-08-14T00:00:00+08:00",
+    "end": "2026-08-17T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检以北京时间 2026-08-17 为归档日期，窗口按上次已有归档后的可用新源扫描：arXiv Monday new listings、Hugging Face Daily Papers、Google Scholar / Web 搜索、代表性 AI Lab blog 与会议信息页。考虑 arXiv 周末 listing 节奏，2026-08-17 的新 listing 中大量论文实际提交时间落在 2026-08-14（UTC），因此本轮将其视为 8 月 17 日巡检的最新可用论文快照。关键词在用户原始要求基础上补充了 conversational recommendation、ads agent、short-video recommendation、multimodal RAG、annotation quality、visual distillation、long-context distillation 等近邻；显式跳过安全、后门与攻防类论文。",
+  "papers": [
+    {
+      "id": "2608.13833",
+      "title": "AdsWorldEngine: A Self-Evolving Conversational Advertising Agent through Orchestrator and Tool Coevolution",
+      "authors": ["Simiao Zuo", "Chenhui Xu", "Yimeng Jia", "Qiang Lou", "Jian Jiao", "Denis Charles"],
+      "affiliations": ["Microsoft"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["广告生态", "对话式广告", "Agent", "电商商业化", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.13833",
+        "pdf": "https://arxiv.org/pdf/2608.13833"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-17/AdsWorldEngine",
+        "note": "论文未提供可核验的公开代码。本轮补齐 toy PyTorch reproduction，覆盖 opportunity gate、orchestrator、tool coevolution、训练与测试脚本。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "AdsWorldEngine 将对话广告系统建模成完整 agentic serving stack，而不是只优化单个召回或排序模块。在线侧由 Opportunity Gate 判断当前轮是否应触发广告，再由 Orchestrator 综合用户 query、对话历史与 assistant response 生成商业意图、调用检索/相关性/排序工具并选出 top-3 ad slate。离线侧引入 Evaluator 从 relevance、diversity 等维度打分，并把高低 reward rollout 变成工具训练偏好对，形成 actor-tool coevolution 闭环。针对广告触发误伤代价高的问题，论文又提出 label-grounded judgment modeling 和 cost-sensitive GRPO，显式压低 false positive。",
+          "innovation": "与传统广告系统相比，这篇论文的创新点不在单个模型结构，而在把广告触发、工具调用、广告 slate 生成、评审与工具进化串成可自我强化的 agent 闭环。其 label-grounded judgment modeling 先锚定人工规范再训练 judge，避免 purely synthetic rationale 带来的判断漂移；cost-sensitive GRPO 也更贴合广告触发中“误投比漏投更糟”的业务代价。整体方案合理、工程味很强，弱点是较依赖私有流量与闭源工具，学术复现实验透明度有限。",
+          "key_metrics": "Opportunity Gate 在 27K 过滤后标注对话上，相比 GPT-5 prompt baseline 保持 TPR 基本不变的同时将 FPR 进一步降低 39.07%，Balanced Accuracy 提升 2.51%。Conversation-to-ad relevance judge 相比 GPT-5 prompt 将 FPR 再降 12.71%，Balanced Accuracy 提升 7.51%。在线 20 天 A/B 中，系统带来 RPM +22%，Ads coverage +74%。",
+          "story": "已有对话广告系统往往只优化触发、召回或排序中的单一环节，且“该不该投”“投什么广告”存在明显主观性与高误伤成本，因此论文设计了 Gate + Orchestrator + Evaluator 的完整 agent 链路，并让 actor 与工具通过 reward-driven preference data 共进化，最终在保证相关性的同时显著提高商业化收益。"
+        },
+        "en": {
+          "method_overview": "AdsWorldEngine treats conversational advertising as a full agentic serving system instead of a single retrieval or ranking module. An Opportunity Gate first decides whether an ad opportunity exists in the current turn, and an Orchestrator then turns the query, dialogue history, and assistant response into a commercial intent, calls retrieval and ranking tools, and selects a top-3 ad slate. An Evaluator scores outputs on relevance and diversity, while high- and low-reward rollouts are converted into preference data for tool refinement, creating actor-tool coevolution. The paper also adds label-grounded judgment models and cost-sensitive GRPO to suppress costly false-positive triggers.",
+          "innovation": "The novelty lies in co-evolving the orchestrator and the tools, rather than tuning only the actor. Label-grounded judgment modeling ties the judge to human annotation policy before synthetic traces are used, which is more reliable than free-form self-judging. Cost-sensitive GRPO is also well aligned with ad serving, where false triggers are more harmful than misses. The approach is highly practical, though limited by private infrastructure and closed online experiments.",
+          "key_metrics": "On 27K filtered gate examples, the Opportunity Gate keeps TPR roughly unchanged while cutting FPR by 39.07% against a GPT-5 prompt baseline, lifting balanced accuracy by 2.51%. The conversation-to-ad judge further reduces FPR by 12.71% and improves balanced accuracy by 7.51%. In a 20-day online A/B test, the system reports +22% RPM and +74% ads coverage.",
+          "story": "Conversational ad systems usually optimize one stage at a time, but trigger decisions and ad relevance are subjective and have asymmetric business costs. AdsWorldEngine therefore builds a Gate + Orchestrator + Evaluator stack and lets the actor and tools improve each other through reward-derived preference data, which raises monetization without sacrificing relevance."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 24,
+        "total": 86,
+        "rationale_zh": "与电商商业化、广告治理和对话式智能体高度相关，且有真实线上收益；缺点是闭源工具较多、学术可复现性一般，但仍属于今日最值得跟进的高价值论文。"
+      },
+      "figure_steps": [
+        "Conversation turn enters an opportunity gate",
+        "Orchestrator infers commercial intent and calls tool stack",
+        "Slate ranking optimizes relevance with diversity constraints",
+        "Evaluator feedback creates preference data for tool coevolution"
+      ],
+      "exp_cards": [
+        ["Opportunity Gate", "FPR -39.07% with TPR preserved"],
+        ["Judge model", "Balanced Accuracy +7.51%"],
+        ["Online A/B", "RPM +22% / coverage +74%"]
+      ]
+    },
+    {
+      "id": "2608.14068",
+      "title": "MACS: A Hybrid Multi-Agent Framework for Reliable Conversational E-Commerce Recommendation",
+      "authors": ["Juli Huang", "Hannah Clay", "Thomas Sarda", "Sajjad Beygi", "Negin Golrezaei", "Amin Saberi"],
+      "affiliations": ["Stanford University", "University of Southern California", "Amazon", "MIT Sloan"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["电商", "对话式推荐", "多智能体", "约束治理", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.14068",
+        "pdf": "https://arxiv.org/pdf/2608.14068"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-17/MACS",
+        "note": "未检索到可验证的公开代码。本轮实现 toy PyTorch reproduction，覆盖 catalog grounding、session slot memory、hard-constraint retrieval、训练与评测脚本。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "MACS 面向固定商品目录、禁止 web search 的电商对话推荐场景，关注的是推荐可靠性而不是开放域闲聊能力。系统拆成 shopping agent 与 merchant agent：前者负责自然语言理解、偏好追问和回复生成，后者负责 SQL 检索、品牌过滤、硬约束执行、渐进式放宽与知识图谱查询。论文的关键设计是从架构层强制 catalog grounding，避免 LLM 直接凭语言先验幻觉商品属性。再配合 session-persistent slot dictionary，系统能稳定处理预算覆盖、品牌排除反转和跨轮引用。",
+          "innovation": "与常见 prompt-based conversational recommender 相比，MACS 的主要创新在于把 correctness-critical 的目录检索与硬约束执行从生成式模块中剥离出来，改用确定性工具链路承接。它并不是提出全新的学习算法，而是用双 agent、SQL grounding 和会话级 slot memory 形成更可靠的系统范式。方法合理、落地性很高，但实验主要集中在消费电子目录，多品类泛化仍有待验证。",
+          "key_metrics": "在 140 条单轮 benchmark 上，MACS 的 pass rate 达到 87.1%，显著高于 GPT+Catalog 的 72.1% 和 Gemini+Catalog 的 68.6%；brand compliance 达到 1.000，filter compliance 达到 0.970。多轮 benchmark 中，MACS 的 Macro Pass@5 为 72%，高于 GPT+Catalog 的 56% 和 Gemini+Catalog 的 52%；排除反转与约束累积场景均能做到 100% 正确处理。缓存命中时 SQL 搜索延迟可降到 36ms。",
+          "story": "纯 LLM 电商对话推荐容易忘记前文约束、幻觉商品属性、在多轮对话中逐渐偏航，因此论文先把自然语言交互和商家目录工具解耦，再用会话级 slot 记忆承接预算、品牌和属性偏好，最后用 SQL 与知识图谱工具保证每一步推荐都严格落在真实 catalog 内。"
+        },
+        "en": {
+          "method_overview": "MACS targets fixed-catalog conversational ecommerce recommendation where web search is disallowed and reliability matters more than open-domain fluency. The framework splits the system into a shopping agent for dialogue understanding and response generation, and a merchant agent for SQL retrieval, hard-constraint execution, brand filtering, and controlled relaxation. Its key contribution is architecture-level catalog grounding so the LLM never directly invents product facts. A session-persistent slot dictionary further stabilizes multi-turn preferences, reversals, and references.",
+          "innovation": "Instead of introducing a new learning objective, MACS isolates correctness-critical catalog reasoning from the generative module and routes it through deterministic tools. The combination of dual agents, SQL grounding, and session-level slot memory is a strong systems contribution for catalog recommendation. It is highly practical, though current validation is concentrated in a consumer-electronics domain.",
+          "key_metrics": "On a 140-query single-turn benchmark, MACS reaches an 87.1% pass rate versus 72.1% for GPT+Catalog and 68.6% for Gemini+Catalog, with brand compliance at 1.000 and filter compliance at 0.970. On the multi-turn benchmark, Macro Pass@5 is 72% versus 56% and 52% for the two baselines. Exclusion reversal and constraint accumulation are both handled correctly in 100% of the evaluated scenarios. Cached SQL latency drops to 36 ms.",
+          "story": "Prompt-only ecommerce recommenders tend to forget previous constraints, hallucinate catalog attributes, and drift across turns. MACS addresses this by separating language interaction from merchant tools, keeping persistent slots for budget and brand constraints, and grounding every recommendation in SQL and knowledge-graph operations over the real catalog."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 9,
+        "generalization": 2,
+        "relevance": 25,
+        "total": 84,
+        "rationale_zh": "和电商内容生态主链路最贴近，硬约束执行与多轮可靠性对达人带货、导购助手、合规推荐都很关键；创新更偏系统工程，但业务落地价值非常高。"
+      },
+      "figure_steps": [
+        "User dialogue updates slot-based shopping preferences",
+        "Shopping agent interprets intent and missing constraints",
+        "Merchant agent runs SQL and knowledge-graph grounded retrieval",
+        "Grounded candidates are ranked and returned with disclosure"
+      ],
+      "exp_cards": [
+        ["Single-turn", "Pass rate 87.1%"],
+        ["Multi-turn", "Macro Pass@5 72%"],
+        ["Reliability", "brand compliance 1.000"]
+      ]
+    },
+    {
+      "id": "2608.13990",
+      "title": "Content Depth Matters in Short-Video Recommendation: Rethinking the Attention Economy",
+      "authors": ["Liwei Deng", "Jing Jiang", "Zhiwei Li", "Yang Wang", "Guodong Long"],
+      "affiliations": ["Australian Artificial Intelligence Institute, University of Technology Sydney", "Department of Health, Disability and Ageing"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["短视频", "内容生态", "推荐评测", "内容理解", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.13990",
+        "pdf": "https://arxiv.org/pdf/2608.13990",
+        "code": "https://github.com/LiweiDengDavid/SCOPE-Bench",
+        "dataset": "https://github.com/LiweiDengDavid/SCOPE-Bench"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/LiweiDengDavid/SCOPE-Bench",
+        "note": "已核验仓库包含 benchmark、数据与模型实现，不属于空仓库，因此不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文重新审视短视频推荐的目标函数，指出现有系统只优化 engagement，却几乎没有刻画内容是否促进理解、分析与反思。作者提出 Content Depth Score（CDS）和列表级 LCDS，用基于认知心理学的 7 级 rubric 衡量短视频内容深度。基于公开 ShortVideo 数据集，论文构建了包含 150K 视频 CDS 标注、约 1M 交互和 10K 用户的 SCOPE-Bench。随后对 13 个代表性推荐系统做系统评测，发现它们在内容深度上普遍只比随机推荐略强。",
+          "innovation": "创新不在于提出新推荐器，而在于提出新的评价轴：内容深度。相比多样性、覆盖率、新颖性等经典 beyond-accuracy 指标，CDS 直接衡量内容是否带来更高层次的认知加工，对内容生态治理与优质达人扶持更有解释力。方法设计上先建立认知理论驱动的 rubric，再选择与人工标注最一致的 LLM 作为 evaluator，整体比泛化的 LLM-as-a-judge 更规范。",
+          "key_metrics": "SCOPE-Bench 覆盖 150K 视频 CDS 标注、约 1M 交互与 10K 用户。人工标注 exact agreement 为 80.53%，within-1 agreement 为 97.94%。在 6 个候选 LLM evaluator 中，Qwen3.7-Max 与人工最一致，Spearman 达到 0.7177。对 13 个推荐模型的评测显示，最佳内容深度表现仍只略高于随机基线，例如 ShortVideo-Full 上 FITMM 的 A-LCDS / E-LCDS 为 7.59 / 7.88，而随机基线已为 6.59 / 6.59。",
+          "story": "短视频平台长期围绕点击与停留时长竞争，导致系统偏好浅刺激内容，却缺少衡量内容深度与长期价值的工具。因此论文先定义内容深度指标，再构建 SCOPE-Bench 对主流推荐器进行统一测量，最终证明 engagement 与 content depth 显著脱钩。"
+        },
+        "en": {
+          "method_overview": "The paper argues that short-video recommendation is optimized almost entirely for engagement while ignoring whether content stimulates understanding, analysis, and reflection. It introduces Content Depth Score (CDS) and list-level LCDS, a seven-level rubric grounded in cognitive psychology, to measure content depth. The authors build SCOPE-Bench with CDS annotations for 150K videos and about 1M interactions from 10K users. Evaluations of 13 recommendation models show that most systems remain close to random selection on content depth.",
+          "innovation": "The contribution is a new evaluation axis rather than a new recommender. Compared with standard beyond-accuracy metrics such as diversity or novelty, CDS directly measures whether content offers deeper cognitive value, which is highly relevant to healthy content ecosystems and creator-quality incentives. The evaluation protocol is also more disciplined than generic LLM-as-a-judge setups because it starts from a theory-driven rubric and then selects the most human-aligned evaluator.",
+          "key_metrics": "SCOPE-Bench contains CDS annotations for 150K videos, roughly 1M interactions, and 10K users. Human annotation exact agreement is 80.53% and within-1 agreement is 97.94%. Among six evaluator candidates, Qwen3.7-Max best matches humans with a Spearman correlation of 0.7177. Across 13 recommenders, the best content-depth scores are still only slightly above random, for example FITMM reaches 7.59 / 7.88 A-LCDS / E-LCDS on ShortVideo-Full while the random baseline is already 6.59 / 6.59.",
+          "story": "Short-video platforms have spent years optimizing clicks and watch time, which favors shallow attention-grabbing content while offering no direct way to quantify cognitive depth. The paper therefore defines a content-depth metric, builds SCOPE-Bench, and shows that engagement-optimized recommenders are largely decoupled from content-depth quality."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 82,
+        "rationale_zh": "虽然不是直接提效模型，但它几乎正中内容生态健康度评估需求，对短视频与达人治理都很有启发；加上代码与数据完整公开，值得高优先级收录。"
+      },
+      "figure_steps": [
+        "Define a 7-level content depth rubric",
+        "Annotate 150K short videos into SCOPE-Bench",
+        "Select the most human-aligned evaluator model",
+        "Audit 13 recommenders on depth-aware list metrics"
+      ],
+      "exp_cards": [
+        ["Benchmark", "150K videos / 1M interactions"],
+        ["Annotation", "80.53% exact agreement"],
+        ["Finding", "depth scores stay near random"]
+      ]
+    },
+    {
+      "id": "2608.14032",
+      "title": "HAM-RAG: Hierarchy-Aware Multimodal RAG for Structure-Faithful Interleaved Generation",
+      "authors": ["Yin Li", "Ziyang Hu", "Zhiyu Guo", "Xiangyu Liu", "Wenbin Li", "Boo-Ho Yang", "Rav Lawana", "Ziyue Li", "Wei Zeng", "Fugee Tsung"],
+      "affiliations": ["HKUST (Guangzhou)", "HKUST", "ASCETEX International", "MOVENSYS", "Schneider Electric", "Technical University of Munich"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["多模态 RAG", "图文一致性", "内容理解", "结构化文档", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.14032",
+        "pdf": "https://arxiv.org/pdf/2608.14032",
+        "code": "https://github.com/MCCodeAI/HAM-RAG"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/MCCodeAI/HAM-RAG",
+        "note": "已核验仓库包含 benchmark 与框架代码，不属于空仓库，因此不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "HAM-RAG 针对科学论文、说明书、网页和攻略等结构化多模态文档，解决现有 multimodal RAG 把文档拍平后导致图文局部对齐变差的问题。方法先把文档解析成层级树，为文本和图片证据补上 heading path、ancestor context、local relation 与 source position 等结构信号。图片侧还加入 context-aware visual description，避免图片只按全局语义被召回。最后系统将排序后的文本和图片证据按结构拼装进 prompt，实现更忠于原文组织方式的 interleaved generation。",
+          "innovation": "与一般多模态 RAG 只强调召回相关内容不同，HAM-RAG 把文档层级与局部图文邻接关系提升为一等公民，核心贡献是“找对图”之外还要“把图放在对的句子旁边”。论文还构建 HAM-Bench，专门测局部图文对齐和结构忠实性，这对商品详情、达人图文笔记、SOP 合规核验等业务场景很有价值。局限在于方法更偏结构增强工程而非全新模型范式，benchmark 也主要由作者自建。",
+          "key_metrics": "在 HAM-Bench 上，跨多个 backbone 的主多模态平均分从 54.68 提升到 64.12，相对提升 17.3%。Wukong 子集上的 Img-CBS 从 50.82 提升到 63.10，相对提升 24.2%。检索侧的 TCR@15 也在四个子集都更高，例如 arXiv 子集从 0.62 提升到 0.77。",
+          "story": "结构化图文文档并不是平铺的文字块和图片块，现有 RAG 若忽略章节、步骤和局部图文关系，就会出现“图看起来相关但放错位置”的问题。因此 HAM-RAG 显式建模层级结构与局部图文上下文，再让生成阶段按原始结构组织证据，最终得到更可信的 interleaved answer。"
+        },
+        "en": {
+          "method_overview": "HAM-RAG targets structured multimodal documents such as papers, manuals, walkthroughs, and webpages, where flattening the document destroys local text-image alignment. The method parses each document into a hierarchy tree and augments every text or image evidence unit with heading paths, ancestor context, local relations, and source positions. Image retrieval is further improved with context-aware visual descriptions instead of global semantics alone. The ranked evidence is then assembled into a hierarchy-aware prompt for structure-faithful interleaved generation.",
+          "innovation": "Unlike standard multimodal RAG systems that mainly optimize for semantic retrieval, HAM-RAG makes document hierarchy and local text-image placement first-class grounding signals. Its benchmark contribution is also meaningful because HAM-Bench explicitly measures local alignment and structural faithfulness. The method is highly relevant to product pages, creator notes, and SOP-like content, although it is more of a strong structure-aware engineering design than a fundamentally new model family.",
+          "key_metrics": "On HAM-Bench, the main multimodal average improves from 54.68 to 64.12 across matched backbones, a relative gain of 17.3%. On the Wukong subset, Img-CBS improves from 50.82 to 63.10, a 24.2% relative gain. Retrieval TCR@15 also rises across all four subsets, for example from 0.62 to 0.77 on the arXiv subset.",
+          "story": "Structured multimodal documents are not flat bags of text and images. Once hierarchy and local adjacency are lost, RAG systems may retrieve plausible images but place them in the wrong local context. HAM-RAG models hierarchy and local image-text context explicitly so that generation preserves the original document structure more faithfully."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 80,
+        "rationale_zh": "对图文内容理解、详情页合规核验和结构化知识问答都很有迁移价值，实验提升明确；虽然偏结构工程，但业务相关性与可落地性都较强。"
+      },
+      "figure_steps": [
+        "Parse the structured document into a hierarchy tree",
+        "Augment text and image evidence with local structural context",
+        "Retrieve hierarchy-aware multimodal evidence",
+        "Generate interleaved answers with structure-faithful placement"
+      ],
+      "exp_cards": [
+        ["MM Avg", "54.68 → 64.12"],
+        ["Wukong", "Img-CBS +24.2%"],
+        ["Retrieval", "arXiv TCR@15 0.62→0.77"]
+      ]
+    },
+    {
+      "id": "2608.14011",
+      "title": "EchoRec: Multi-Item Prediction-Empowered Generative Recommendation via Cycle-Consistent Preference Alignment",
+      "authors": ["Haokai Ma", "Aoqi Hu", "Yueao Xing", "Ruobing Xie", "Yonghui Yang", "Teng Tu", "Lei Meng", "Tat-Seng Chua"],
+      "affiliations": ["National University of Singapore", "Beijing University of Posts and Telecommunications", "Tencent", "Shandong University"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["推荐系统", "生成式推荐", "偏好建模", "电商近相关", "高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.14011",
+        "pdf": "https://arxiv.org/pdf/2608.14011"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文声明代码将在录用后公开；本轮评分未达复现阈值，因此仅做重点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "EchoRec 关注生成式推荐里的 Multi-Token Prediction，不再只把 MTP 当作提速技巧，而是把未来行为视作稠密监督。论文先分析证明未来行为对当前行为存在 semantic echo，但会随 horizon 增大而衰减。基于此提出 HPG（Horizon-aware Preference Generation）顺序建模多 horizon 偏好，再用 VHA（Verifiable Holistic-Preference Alignment）把多 horizon 表征聚合成 holistic preference，并用 cycle consistency 约束抑制伪对齐。辅助分支仅在训练时存在，推理时基本不增加线上开销。",
+          "innovation": "与已有将 MTP 直接平移到推荐的工作相比，EchoRec 的关键点在于把未来行为建模为有序依赖监督，而不是并行附加预测头。VHA 又进一步解决“看起来对齐但其实信息没有被主干吸收”的问题，理论和工程闭环都比较完整。局限在于实验仍以离线推荐指标为主，缺少真实线上业务验证，因此对电商内容生态属于近相关而非直接强相关。",
+          "key_metrics": "在 Amazon Reviews'23 的 Game、Baby、Arts 三个数据集上，EchoRec 相比 RPG 在 HR@10 上分别提升 11.17%、17.68%、14.56%，NDCG@10 分别提升 11.35%、21.40%、18.29%。在 Baby 数据上，加入 20% 噪声交互后，相对 RPG 的 HR@10 提升可扩大到 54.89%。推理延迟和显存几乎不变。",
+          "story": "传统生成式推荐对未来行为监督利用不足，直接并行预测又容易把不同 horizon 的偏好做成同质化任务。因此论文设计顺序式多 horizon 偏好生成，并用可验证的 holistic preference 对齐让未来行为真正内化到主干表征中，最终在几乎不增加推理成本的前提下提高推荐质量。"
+        },
+        "en": {
+          "method_overview": "EchoRec revisits multi-token prediction in generative recommendation and treats future behaviors as dense supervision instead of mere decoding acceleration. The paper first shows that future actions carry a semantic echo of the current one, although the signal decays across horizons. It then introduces Horizon-aware Preference Generation (HPG) to model ordered multi-horizon supervision and Verifiable Holistic-Preference Alignment (VHA) to aggregate these signals into a holistic preference under cycle-consistent constraints. The auxiliary branches exist only during training, so inference cost stays almost unchanged.",
+          "innovation": "Compared with prior recommendation methods that simply transplant MTP, EchoRec turns future interactions into ordered supervision rather than parallel heads. VHA is particularly valuable because it targets spurious one-way alignment and asks the model to truly absorb holistic preference. The paper is methodologically strong, but it remains an offline recommendation study rather than a direct ecommerce-governance result.",
+          "key_metrics": "On the Game, Baby, and Arts subsets of Amazon Reviews'23, EchoRec improves HR@10 over RPG by 11.17%, 17.68%, and 14.56%, with NDCG@10 gains of 11.35%, 21.40%, and 18.29%. Under 20% injected interaction noise on Baby, the HR@10 gain over RPG expands to 54.89%. Inference latency and memory stay almost unchanged.",
+          "story": "Future-behavior supervision in generative recommendation is usually underused, while naive parallel prediction homogenizes distinct horizons. EchoRec therefore models multi-horizon preferences sequentially and aligns them into a verifiable holistic preference so that future information is absorbed by the backbone with almost no serving overhead."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 79,
+        "rationale_zh": "方法完成度很高，但更偏推荐算法前沿，而非直接指向电商内容治理或达人治理场景；因此保留为高热近相关论文，不进入今日复现阈值。"
+      },
+      "figure_steps": [
+        "Estimate semantic echo across future interaction horizons",
+        "Generate horizon-aware auxiliary preferences sequentially",
+        "Aggregate them into a holistic preference representation",
+        "Enforce cycle-consistent alignment while keeping serving cost flat"
+      ],
+      "exp_cards": [
+        ["Game", "HR@10 +11.17% vs RPG"],
+        ["Baby", "NDCG@10 +21.40%"],
+        ["Noise", "HR@10 gain expands to +54.89%"]
+      ]
+    },
+    {
+      "id": "2608.13783",
+      "title": "Doomed to Re-Annotate, Forever: The ImageNet Story",
+      "authors": ["Illia Volkov", "Nikita Kisel", "Tetiana Mishkina", "Klara Janouskova", "Jiri Matas"],
+      "affiliations": ["Czech Technical University in Prague"],
+      "source": "arXiv",
+      "published": "2026-08-13",
+      "tags": ["数据质量", "视觉标注", "评测治理", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.13783",
+        "pdf": "https://arxiv.org/pdf/2608.13783",
+        "code": "https://github.com/klarajanouskova/ImageNet"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/klarajanouskova/ImageNet",
+        "note": "已核验作者公开了 ReImageNet 数据与分析代码，因此不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文不是提出新识别模型，而是对 ImageNet-1k 验证集做了一次系统性重标注，产出 ReImageNet。相比以往局部纠错，作者同时做了多标签修正、目标框定位、类定义修订和属性标注，并采用持续迭代的标注—复核—修订流程。论文强调大规模 benchmark 的高质量标注不可能一轮完成，必须把发现问题与修订规则本身视作流程的一部分。它还进一步分析这些错误如何传染到多个 ImageNet 衍生 benchmark。",
+          "innovation": "创新点主要在数据与方法学层面，而非模型结构。作者把单标签 ImageNet 重新表述为多标签、定位与属性联合标注问题，并把 benchmark 可靠性本身变成研究对象。对于内容治理场景，这类工作提示我们：治理模型上限常常受制于底层标注质量，数据债务如果不清理，会在下游各类审核与分类任务中不断放大。",
+          "key_metrics": "论文发现原始 ImageNet-1k 验证集约有 12% 标签错误，33.3% 图像其实是多标签，3.8% 图像不含任何目标类别。用 ReImageNet 重新评测后，监督模型 top-1 最高可提升约 1.2%，MLLM 则可提升 5–6%。论文还估计多个衍生 benchmark 的错误率是原始 ImageNet-1k 的 1.7–5.8 倍。",
+          "story": "经典 benchmark 长期被默认视作客观真值，但随着模型能力上升，原始标签错误、漏标和类定义问题会不断被暴露并反向影响模型排名。因此论文通过大规模重标注和误差传播分析说明：数据集治理不是一次性清洗，而是需要反复迭代的长期工程。"
+        },
+        "en": {
+          "method_overview": "The paper does not propose a new classifier; instead, it systematically re-annotates the ImageNet-1k validation set into ReImageNet. Beyond local corrections, it adds multi-label fixes, bounding boxes, revised class definitions, and semantic attributes under an iterative annotate-review-revise loop. The authors argue that benchmark annotation at this scale cannot be completed in a single pass. They also trace how ImageNet errors propagate into multiple derivative benchmarks.",
+          "innovation": "The contribution is methodological rather than architectural. By reframing ImageNet as a multi-label, localized, and attribute-rich annotation problem, the paper turns benchmark reliability into a central research question. For governance tasks, the lesson is clear: model quality is often capped by annotation quality, and unresolved data debt propagates downstream.",
+          "key_metrics": "The paper finds that about 12% of original ImageNet-1k validation labels are wrong, 33.3% of images are actually multi-label, and 3.8% contain no valid target class. ReImageNet evaluation lifts top-1 accuracy by up to about 1.2% for supervised models and by 5–6% for MLLMs. The authors further estimate that derivative benchmarks have error rates 1.7–5.8 times higher than the original validation set.",
+          "story": "Classic benchmarks are often treated as objective ground truth, but as models improve, hidden label errors, omissions, and class-definition issues become increasingly visible and can even alter model rankings. The paper shows through large-scale re-annotation that dataset governance is not a one-time cleanup but a recurring process."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 18,
+        "total": 77,
+        "rationale_zh": "与电商内容治理不是直接业务同题，但对视觉审核、数据清洗和标注体系建设有很强启发，属于值得跟踪的数据质量基石类论文。"
+      },
+      "figure_steps": [
+        "Re-annotate ImageNet with multi-label and localized targets",
+        "Revise class definitions and semantic attributes",
+        "Iterate annotation guidelines with human-MLLM collaboration",
+        "Audit how label debt propagates to derivative benchmarks"
+      ],
+      "exp_cards": [
+        ["Label debt", "12% wrong / 33.3% multi-label"],
+        ["MLLM eval", "+5% to +6% top-1 after relabeling"],
+        ["Propagation", "derivative errors 1.7×–5.8×"]
+      ]
+    },
+    {
+      "id": "2608.14144",
+      "title": "Self-Supervised Visual On-Policy Distillation",
+      "authors": ["Yijiang Li", "Yijun Liang", "Yunjie Tian", "Bingyang Wang", "Ke Zhang", "Zhenfei Yin", "Di Fu", "Philip Torr", "Nuno Vasconcelos"],
+      "affiliations": ["UC San Diego", "University of Maryland", "Georgia Tech", "Johns Hopkins University", "University of Oxford"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["VLM", "蒸馏", "视觉理解", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.14144",
+        "pdf": "https://arxiv.org/pdf/2608.14144",
+        "project": "https://williamium3000.github.io/s2vopd"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "官方主页已上线但代码尚未完全开放；由于业务相关性偏弱，本轮仅做热点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文重新定义视觉 on-policy distillation 中 teacher 优势的来源：不是给教师更多特权信息，而是给学生更少信息。训练时教师看原图，学生看同图的强增强视图，teacher 使用 EMA 更新，并在 student 的 on-policy 轨迹上做 top-k generalized JSD 蒸馏。作者系统搜索增强类型与强度，发现最优并不是越强越好，而是适度削弱、但不破坏关键视觉证据。这样，自监督视角差异本身就变成了有效监督信号。",
+          "innovation": "相比依赖 GT ROI 或更强教师的视觉蒸馏方法，S2VOPD 用“student-side information withholding”构造 informative asymmetry，概念非常干净。它把多视图自监督思想嫁接到 token-level visual OPD，并通过大量消融证明增强设计本身决定蒸馏效果。与电商内容生态关系偏弱，但作为 VLM 蒸馏范式值得关注。",
+          "key_metrics": "在 FineVision 12K 训练设置下，Qwen3.5-4B 的平均准确率从 70.68 提升到 77.44，超过若干更大开源模型，并高于 GPT-5.4 的 72.77。公平比较的 Vision-OPD-6K 设置下，S2VOPD 在 4B 模型上达到 75.33，高于带特权 ROI 的 Vision-OPD 的 74.77。论文汇总称 4B 模型在细粒度感知上提升 5.7%，数学视觉推理提升 3.7%。",
+          "story": "既有视觉蒸馏通常依赖更强教师或额外标注，但这些条件在现实里不一定可得，因此论文改为主动削弱学生输入，让教师天然拥有更完整视角，再通过 on-policy distillation 把这种视角差异转化为学习信号，从而在无特权监督下仍显著提升性能。"
+        },
+        "en": {
+          "method_overview": "The paper rethinks where teacher advantage in visual on-policy distillation should come from: not from giving the teacher privileged labels, but from withholding information from the student. The teacher sees the original image while the student sees a strongly augmented view, and the teacher distribution is distilled onto on-policy student trajectories with a top-k generalized JSD loss. The authors systematically study augmentation types and strengths, showing that moderate information weakening is better than overly destructive corruption. In this way, self-supervised view asymmetry becomes the supervision signal.",
+          "innovation": "S2VOPD is conceptually elegant because it creates informative asymmetry by reducing student information rather than by adding privileged supervision to the teacher. It merges multi-view self-supervision with token-level visual OPD and backs the idea with strong ablations on augmentation design. The paper is only weakly related to ecommerce governance, but it is a notable frontier result in VLM distillation.",
+          "key_metrics": "Under FineVision 12K training, Qwen3.5-4B improves average accuracy from 70.68 to 77.44, surpassing several much larger open models and also GPT-5.4 at 72.77. In the fair Vision-OPD-6K setup, S2VOPD reaches 75.33 on a 4B model versus 74.77 for privileged Vision-OPD. The paper also reports +5.7% on fine-grained perception and +3.7% on visual math reasoning for the 4B model.",
+          "story": "Most prior visual distillation methods depend on stronger teachers or extra labels that are expensive or unavailable in practice. This paper instead reduces the student's visual information so the teacher naturally has a better view, then transfers that advantage through on-policy distillation, achieving strong gains without privileged supervision."
+        }
+      },
+      "score": {
+        "innovation": 28,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 5,
+        "total": 74,
+        "rationale_zh": "论文很强、热度也高，但和电商内容生态&达人治理仅属弱相关技术储备，因此作为今日热点补充收录，不进入复现范围。"
+      },
+      "figure_steps": [
+        "Teacher reads the original image while student sees an augmented view",
+        "Run on-policy visual decoding on the student trajectory",
+        "Distill teacher distributions with generalized JSD",
+        "Search augmentation regimes that preserve task-critical evidence"
+      ],
+      "exp_cards": [
+        ["FineVision 12K", "70.68 → 77.44"],
+        ["Fair OPD", "75.33 vs 74.77 privileged OPD"],
+        ["Summary", "+5.7% perception / +3.7% math"]
+      ]
+    },
+    {
+      "id": "2608.14277",
+      "title": "SimpleOPD: Simple Tokenizer-Agnostic On-Policy Distillation for Long-Context Reasoning",
+      "authors": ["Haonan He", "Haodi Lei", "Yun Luo", "Haoran Zhang", "Shunkai Zhang", "Yizhuo Li", "Shengji Tang", "Zhilin Wang", "Runzhe Zhan", "Lei Bai", "Ganqu Cui", "Fangchen Yu", "Yafu Li", "Peng Ye", "Ning Ding", "Yu Cheng"],
+      "affiliations": ["Shanghai AI Laboratory"],
+      "source": "arXiv",
+      "published": "2026-08-14",
+      "tags": ["LLM", "蒸馏", "长上下文推理", "弱相关高热"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.14277",
+        "pdf": "https://arxiv.org/pdf/2608.14277"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文提及公开项目与模型，但当前可核验公开实现尚不完整；由于业务相关性较弱，本轮仅做热点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SimpleOPD 解决长上下文强推理教师蒸馏到短上下文学生时最棘手的实际问题：师生 tokenizer 不同、输出长度容易失控、训练容易不稳定。作者把 OPD 搬到 shared text space，学生先生成文本，教师再用自己的 tokenizer 在相同 surface string 上做部分对齐监督。为抑制超长输出，又加入 termination-token masking 和 student-reference KL，让学生不至于被教师拖向不稳定的长回答分布。整体方法很简洁，但直击真实蒸馏痛点。",
+          "innovation": "与默认共享词表的 OPD 不同，SimpleOPD 承认 token-level 完全对齐并不现实，转而采用 tokenizer-agnostic 的 partial alignment。再配合 Ref-KL 与终止 token 处理，它在不增加太多复杂度的前提下解决了跨模型族蒸馏的稳定性问题。与电商治理的直接关系较弱，但对长链路 reasoning 蒸馏属于高热储备方向。",
+          "key_metrics": "Intern-S2-Preview 在 ProofBench@4 上从 21.70 提升到 44.50，在 AnswerBench@8 上从 76.03 提升到 80.10，在 AIME25@8 上从 88.33 提升到 95.00。Gemini-2.5-Pro 评审设置下，Intern-S2 从 34.0 提升到 55.2，并超过 Gemini-2.5-Pro 的 52.9。方法在 Qwen、GLM 等不同学生模型上也有较稳定增益。",
+          "story": "长上下文教师蒸馏给短上下文学生时，传统 OPD 往往假设词表兼容且输出长度可控，但现实里 tokenizer 差异与长链回答会让训练变得极不稳定。因此论文把监督对齐搬到共享文本表面，再用简洁的正则与终止 token 机制稳定训练过程，最终显著提升长链推理能力。"
+        },
+        "en": {
+          "method_overview": "SimpleOPD tackles a practical distillation problem: transferring a long-context reasoning teacher to a shorter-context student when the two models use different tokenizers. The method moves on-policy distillation into a shared text space, where the student generates surface text and the teacher evaluates the same string under its own tokenizer with partial alignment. To prevent output-length explosion, the paper adds termination-token masking and a student-reference KL term. The overall recipe is simple but directly addresses real training pain points.",
+          "innovation": "Instead of assuming a shared vocabulary, SimpleOPD explicitly embraces tokenizer mismatch and uses tokenizer-agnostic partial alignment. Combined with Ref-KL and termination-token handling, it stabilizes cross-family distillation with minimal extra machinery. The paper is only weakly related to ecommerce governance, but it is an important frontier result for reasoning distillation.",
+          "key_metrics": "Intern-S2-Preview improves ProofBench@4 from 21.70 to 44.50, AnswerBench@8 from 76.03 to 80.10, and AIME25@8 from 88.33 to 95.00. Under Gemini-2.5-Pro evaluation, Intern-S2 rises from 34.0 to 55.2 and surpasses Gemini-2.5-Pro at 52.9. The approach also transfers well to Qwen and GLM student families.",
+          "story": "Classical OPD often assumes compatible vocabularies and manageable output lengths, but real teacher-student pairs violate both assumptions. SimpleOPD therefore aligns supervision in shared surface text and adds lightweight regularization to stabilize training, leading to strong gains in long-form reasoning."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 3,
+        "total": 70,
+        "rationale_zh": "蒸馏方法本身很强，但与电商内容生态&达人治理只有较弱技术相关，因此作为今日高热 LLM 储备项收录，不进入复现与优先落地方向。"
+      },
+      "figure_steps": [
+        "Generate student text in a shared surface space",
+        "Retokenize the same text under the teacher tokenizer",
+        "Apply partial on-policy alignment plus reference KL",
+        "Mask termination advantages to prevent runaway outputs"
+      ],
+      "exp_cards": [
+        ["ProofBench", "21.70 → 44.50"],
+        ["AIME25", "88.33 → 95.00"],
+        ["Gemini judge", "34.0 → 55.2"]
+      ]
+    }
+  ]
+}
