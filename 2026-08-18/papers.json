@@ -1,0 +1,327 @@
+{
+  "inspection_date": "2026-08-18",
+  "window": {
+    "start": "2026-08-17T00:00:00+08:00",
+    "end": "2026-08-18T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检以北京时间 2026-08-18 为归档日期，优先扫描 arXiv 2026-08-17 UTC 新提交论文，并补充 OpenReview / arXiv shopping benchmark 结果页与 Hugging Face Daily Papers 线索。关键词在用户原始要求基础上补充了 live-commerce agent、poster generation/editing、cross-border localization、media ranking、shopping feedback learning、shopping reasoning benchmark；显式跳过安全/后门/攻防类论文，仅保留对电商内容生态、达人直播、内容治理和导购体验有业务价值的结果。",
+  "papers": [
+    {
+      "id": "2608.15763",
+      "title": "TaoLive Digital Avatar Agent Technical Report: Training Agents to Evolve with Their Harness",
+      "authors": ["TaoLive AIGC LLM Team", "Yuhan Sun", "Wenhao Lin", "Yongdong Luo", "Yibo Hu", "Meiguang Jin", "Junfeng Ma", "Weihang Pan", "Jiaxin Zhao", "Zulong Chen"],
+      "affiliations": ["Taobao / TaoLive"],
+      "source": "arXiv",
+      "published": "2026-08-16",
+      "tags": ["直播电商", "数字人", "Agent", "合规治理", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.15763",
+        "pdf": "https://arxiv.org/pdf/2608.15763",
+        "project": "https://github.com/taolive-aigc"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-18/TaoLiveHAT",
+        "note": "论文公开了技术报告与项目页，但当前未检索到可直接运行的完整训练代码；本轮补齐 toy PyTorch reproduction，聚焦 Harness-aware data augmentation、策略分类训练与 variant robustness 测试。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TaoLive 关注直播电商数字人 agent 在低时延下如何持续适配不断变化的脚本、工具与合规规则。论文提出 Harness-Aware Training，将 Skill 文本、Tool schema、Prompt 结构与 Hook 约束都视为会演化的执行环境，并在训练中显式采样这些 Harness 状态。核心训练分为 HSA-SFT、General OPD 与 HSA-RL 三段：先让模型在扰动后的 Harness 上学习语义稳健性，再用通用 on-policy distillation 拉回泛化能力，最后在 live-room simulator 中做 agentic RL。整体目标不是让模型记住某个固定 prompt，而是读懂当前 Harness 所表达的业务规则。",
+          "innovation": "真正有价值的创新点是把“业务规则演化”提升为训练分布的一等公民。很多直播数字人系统只会在 prompt / tool 改名后退化，而 TaoLive 通过 Harness-State Augmentation 让模型对 skill identifier、schema 字段名与 prompt 组织方式不敏感，更像在学协议语义而非字符串模板。它同时兼顾了 compact model 的低延迟要求与 evolving runtime 的稳定性，这点对达人直播脚本治理非常现实。局限在于实验高度依赖内部评测与私有 simulator，公开可复现度一般。",
+          "key_metrics": "在四套评测上，HAT 训练后的 35B 模型 Live-Stream QA 平均分 94.8，高于 base 80.3 和文中 strongest general LLM 的 93.0；Harness-Variant QA 达到 94.6；IFEval 维持在 83.5，避免了 Fixed-Harness SFT 常见的 7.7 分泛化下降。线上部署侧，单张 H20 GPU 条件下完整 agent P50 延迟 3.407 秒，P95 8.114 秒。",
+          "story": "直播电商数字人既要低延迟答疑，又要不断追随新的营销策略与合规规则，但传统 SFT 容易把工具名和 prompt 模板记死。于是论文把执行环境本身做成可扰动训练对象，让模型在多种 Harness 变体中学习“读懂规则”，从而在业务策略持续更新时仍能稳定工作。"
+        },
+        "en": {
+          "method_overview": "TaoLive studies how a live-commerce digital-avatar agent can stay low-latency while adapting to constantly changing scripts, tools, and compliance rules. The paper introduces Harness-Aware Training, which treats Skill text, tool schemas, prompt structure, and hook constraints as an evolving execution environment and explicitly samples those harness states during training. Training is split into HSA-SFT, General OPD, and HSA-RL: first learn robustness under perturbed harness variants, then recover broad instruction-following with on-policy distillation, and finally optimize the full agent inside a live-room simulator. The goal is to understand the current harness semantics rather than memorize one fixed prompt layout.",
+          "innovation": "The key contribution is turning business-rule evolution into a first-class training distribution. Instead of overfitting to a single prompt or tool schema, the model is exposed to renamed skills, schema changes, and prompt restructurings, so it learns protocol semantics rather than string templates. This is particularly meaningful for live-commerce agents, where compact models are required for latency but brittle prompt dependence is unacceptable. The main weakness is limited public reproducibility because the simulator and much of the evaluation remain internal.",
+          "key_metrics": "Across four evaluation sets, the HAT-trained 35B model reaches 94.8 on Live-Stream QA versus 80.3 for the base model and 93.0 for the strongest general LLM reported in the paper. Harness-Variant QA reaches 94.6, while IFEval remains at 83.5, avoiding the 7.7-point generalization drop seen after fixed-harness SFT. In deployment, the complete agent achieves 3.407 s P50 and 8.114 s P95 latency on a single H20 GPU.",
+          "story": "Live-commerce avatars must answer quickly while continuously following new campaign and compliance rules, but standard SFT tends to memorize tool names and prompt templates. The paper therefore trains on many harness variants so the model learns to interpret the active rule system itself and stays robust as the business runtime evolves."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 86,
+        "rationale_zh": "与达人直播、数字人话术和合规脚本治理直接相关，方法新意与工程价值都很强；扣分主要因为公开实验透明度和可复现性不足。"
+      },
+      "figure_steps": [
+        "Live-commerce query enters an evolvable harness",
+        "Harness-state augmentation perturbs skills, tools, and prompts",
+        "Compact policy model is trained with SFT, OPD, and agentic RL",
+        "Robust agent answers under changing compliance and campaign rules"
+      ],
+      "exp_cards": [
+        ["Live-Stream QA", "94.8 vs 80.3 base"],
+        ["Harness Variant", "94.6 robustness score"],
+        ["Latency", "3.407s P50 on H20"]
+      ]
+    },
+    {
+      "id": "2608.15662",
+      "title": "Sequential Multimodal Evidence Optimization for Product Media Ranking in E-Commerce",
+      "authors": ["Prasenjit Dey", "Frank McIntyre", "Arnab Sinha"],
+      "affiliations": ["Amazon"],
+      "source": "arXiv",
+      "published": "2026-08-16",
+      "tags": ["商品内容", "媒体排序", "多模态", "转化优化", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.15662",
+        "pdf": "https://arxiv.org/pdf/2608.15662"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-18/SMEO",
+        "note": "未检索到公开代码。本轮实现 toy PyTorch reproduction，覆盖 prefix utility 学习、survival-weighted ranking policy、训练脚本与 swipe-efficiency 评测。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SMEO 把商品图片、视频和 3D 视图看成一个协同提供证据的序列，而不是互相独立的点击位。第一阶段用 trajectory utility model 从用户已浏览的媒体前缀估计“离购买决策还有多远”，并显式修正 position bias 与 variable-depth imbalance。第二阶段训练一个自回归排序策略，用 survival-weighted reward-to-go 优先把最有决策价值的信息排在前面，让用户用更少的滑动成本看到关键证据。整个框架把效用学习和策略优化解耦，因此适合离线日志训练与后验归因分析。",
+          "innovation": "它最值得关注的点是把详情页媒体排序从 engagement proxy 改成 purchase-evidence sequencing。论文不只优化 CTR，而是显式建模“前缀已经给了用户多少决策信息”，这比单个媒体质量打分更贴近内容生态里的真实购买链路。survival-weighted reward-to-go 也很合理，因为它考虑了用户可能提前流失这一现实约束。局限在于实验主要基于内部日志和离线 OPE，公开 benchmark 不足。",
+          "key_metrics": "在大规模电商会话的 doubly robust off-policy evaluation 下，SMEO 相比现有基线将估计转化率提升 5.5%，并让用户达到购买决策所需的滑动次数减少 15%。论文同时报告其两阶段设计在稳定性和 attribution 解释性上优于直接端到端排序。",
+          "story": "现有商品媒体排序往往把图片和视频当作独立曝光单元，只优化短期点击或停留，结果是关键证据可能被排得太靠后。论文因此改为学习“证据序列对购买决策的累积效用”，并让排序策略优先呈现更能推动决策的信息，以更低浏览成本完成转化。"
+        },
+        "en": {
+          "method_overview": "SMEO treats product images, videos, and 3D assets as a cooperative evidence sequence rather than independent engagement slots. The first stage learns a trajectory utility model that estimates how much decision-relevant evidence has already been delivered by a consumed media prefix while correcting for position bias and variable browse depth. The second stage trains an autoregressive ranking policy with a survival-weighted reward-to-go so that the most decision-relevant media is surfaced earlier. Because utility learning is decoupled from policy optimization, the framework is well suited to offline logs and post-hoc attribution.",
+          "innovation": "The main novelty is reframing product-media ranking from engagement optimization into purchase-evidence sequencing. Instead of scoring media items independently, the paper models how much cumulative decision support a prefix provides, which is much closer to the real ecommerce purchase funnel. The survival-weighted reward design is also compelling because it explicitly accounts for user drop-off. The main drawback is that most evidence comes from internal logs and offline policy evaluation rather than public benchmarks.",
+          "key_metrics": "Under doubly robust off-policy evaluation on large-scale ecommerce sessions, SMEO improves estimated conversion by 5.5% over existing baselines and reduces the number of swipes needed to reach a purchase decision by 15%. The paper also reports better training stability and more interpretable media attribution than direct end-to-end ranking alternatives.",
+          "story": "Product-media rankers usually treat images and videos as independent slots and optimize shallow proxies such as clicks or dwell. SMEO instead learns the cumulative utility of media prefixes and ranks assets so that the user sees the most decision-relevant evidence earlier, reducing browse effort while improving conversion."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 84,
+        "rationale_zh": "直接作用于商品图文/视频分发质量与转化链路，业务相关性很高；扣分在于公开实验与代码透明度不足。"
+      },
+      "figure_steps": [
+        "User browses a prefix of product media assets",
+        "Utility model estimates how much purchase evidence the prefix already provides",
+        "Ranking policy optimizes survival-weighted reward-to-go over remaining assets",
+        "Decision-critical media is surfaced earlier with fewer swipes"
+      ],
+      "exp_cards": [
+        ["OPE CVR", "+5.5% estimated conversion"],
+        ["Swipe efficiency", "15% fewer swipes"],
+        ["Design", "2-stage utility + ranking"]
+      ]
+    },
+    {
+      "id": "2608.16284",
+      "title": "TransAnyText: Translating Arbitrary Text in E-commerce Images via Structured Visual Generation",
+      "authors": ["Xiaoan Liu", "Lichen Ma", "Zipeng Guo", "Yu He", "Xiaoyan Su", "Shaojie Guo", "Hao Yang", "Jingling Fu", "Xiaolong Fu", "Zhen Chen", "Yu Guo", "Fei Wang", "Xinyi Liu", "Yongjun Zhang", "Ke Zhang", "Junshi Huang"],
+      "affiliations": ["JD.com", "Wuhan University", "Xi'an Jiaotong University", "HKUST (Guangzhou)"],
+      "source": "arXiv",
+      "published": "2026-08-17",
+      "tags": ["跨境电商", "图像翻译", "海报本地化", "多模态生成", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.16284",
+        "pdf": "https://arxiv.org/pdf/2608.16284"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "方法依赖 VLM、diffusion renderer 与多语言数据闭环，当前未发现完整可运行公开实现；本轮先做重点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TransAnyText 面向跨境电商图片本地化，把“图内文字翻译”重写成“从源图像和目标语言生成可渲染 HTML patch”。系统把语义生成和像素渲染解耦：VLM 负责视觉理解、跨语种翻译与结构化视觉代码生成，diffusion 模型负责背景补全与像素级修饰，最终用确定性 renderer 合成目标图。训练分为 SFT、PWSD 与 RLVR 三阶段，分别学习 image-to-code 映射、强化布局/风格 token，以及用可验证奖励对齐空间与翻译质量。论文同时构建了多语言的 TransAnyDataset / TransAnyBench。",
+          "innovation": "中间视觉代码的设计非常适合电商设计生产链，因为它兼顾可控性、可编辑性与多语言扩展。相比 OCR-翻译-贴字的级联路线，它减少误差传播；相比端到端像素编辑，它更容易约束版式与品牌视觉一致性。问题在于整套系统依赖高质量 renderer、diffusion 和多语言数据协同，工程复杂度较高。",
+          "key_metrics": "论文报告其在翻译保真、视觉一致性与可编辑性上均优于多种 cascaded pipeline、开源端到端模型和若干 closed-source image editing baselines；但公开摘要未给出足够完整的统一数值表，且复现实验主要依托作者自建 benchmark。",
+          "story": "跨境电商要频繁把商品图、banner 和详情页本地化，但级联式图文翻译会积累 OCR / inpaint / render 误差，端到端像素编辑又容易文字幻觉且难编辑。因此论文引入结构化视觉代码，把翻译和渲染拆开，既保证文本准确又保留后续编辑能力。"
+        },
+        "en": {
+          "method_overview": "TransAnyText targets cross-border ecommerce image localization by reformulating in-image translation as generating renderable HTML patches from a source image and a target language. The system decouples semantic generation from pixel rendering: a VLM handles visual understanding, cross-lingual translation, and structured visual-code generation, while a diffusion model performs background inpainting and pixel refinement before deterministic rendering synthesizes the final image. Training proceeds through SFT, PWSD, and RLVR to learn image-to-code mapping, improve layout/style token learning, and align task-level translation quality with verifiable rewards. The paper also introduces multilingual TransAnyDataset and TransAnyBench.",
+          "innovation": "The structured visual-code intermediate is especially attractive for ecommerce content pipelines because it balances controllability, editability, and multilingual scalability. Compared with OCR-translate-render cascades, it reduces error accumulation; compared with end-to-end pixel editing, it offers tighter control over layout and brand-faithful typography. The main trade-off is substantial system complexity because the method depends on a strong renderer, a diffusion module, and large multilingual training data.",
+          "key_metrics": "The paper reports stronger translation fidelity, visual consistency, and editability than cascaded pipelines, open end-to-end alternatives, and several closed-source image-editing baselines. However, the public abstract does not expose a fully unified numeric table, and the evaluation relies heavily on the authors' own benchmark.",
+          "story": "Cross-border ecommerce repeatedly needs localized product images and banners, but cascaded in-image translation accumulates OCR, inpainting, and rendering errors, while end-to-end pixel editing often hallucinates text and is hard to edit later. TransAnyText therefore inserts a structured visual-code layer between translation and rendering so that localization remains both accurate and editable."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 11,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 79,
+        "rationale_zh": "业务相关性极强，但方法链路很重、公开可验证结果有限，暂不进入今日复现阈值。"
+      },
+      "figure_steps": [
+        "Read source ecommerce image and target language",
+        "Generate structured visual code for translated text patches",
+        "Inpaint and refine background with diffusion rendering",
+        "Render editable localized output image"
+      ],
+      "exp_cards": [
+        ["Paradigm", "visual code over pixel-only editing"],
+        ["Training", "SFT + PWSD + RLVR"],
+        ["Benchmark", "multilingual TransAnyBench"]
+      ]
+    },
+    {
+      "id": "2608.16289",
+      "title": "PosterText: Towards Unified Visual Text Generation and Editing for E-commerce Poster",
+      "authors": ["Xiaoan Liu", "Lichen Ma", "Zipeng Guo", "Yu He", "Xiaoyan Su", "Shaojie Guo", "Jingling Fu", "Xiaolong Fu", "Hao Yang", "Tongxuan Liu", "Yu Guo", "Fei Wang", "Xinyi Liu", "Yongjun Zhang", "Junshi Huang"],
+      "affiliations": ["JD.com", "Wuhan University", "Xi'an Jiaotong University", "HKUST (Guangzhou)"],
+      "source": "arXiv",
+      "published": "2026-08-17",
+      "tags": ["电商素材", "海报编辑", "视觉文本生成", "达人营销", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.16289",
+        "pdf": "https://arxiv.org/pdf/2608.16289"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "当前未检索到完整公开训练代码，且原方法依赖大规模 patch-level 数据与生成模型，本轮先做重点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "PosterText 把电商海报自动化从“整图生成”推进到“文字 patch 级生成与编辑”。论文定义了四类统一操作：海报生成、patch 增加、patch 删除和 patch 修改，并允许参考 patch 做风格控制。模型采用四阶段课程学习：文字渲染预训练、指令跟随训练、基于偏好的 RL 对齐，以及空间引导自蒸馏，用来提升 mask-free 执行稳定性。论文还构建了 PosterText-320K 数据集和配套 benchmark。",
+          "innovation": "最大亮点是把实用设计流程抽象成 patch-level 原子编辑，而不是单纯做文生图。这个抽象更贴近商家与达人真实需求：替换价格、活动语、利益点，而不是整张重画。方法在电商内容治理里也很有意义，因为违规词替换、视觉风格统一与快速素材修订都能落到同一接口。局限在于缺少公开轻量实现，训练成本偏高。",
+          "key_metrics": "论文摘要强调其在文本渲染准确率、视觉质量和编辑灵活性上相对既有开闭源基线具有竞争力，并构建 320K 级 patch 标注数据；但公开摘要没有完整披露统一的核心数值表，因此外部量化对比仍需以原文图表为准。",
+          "story": "电商海报生产并不只是从零生成，更常见的是在现有海报上替换价格、标题和卖点。既有方法要么流程割裂、局部编辑困难，要么只能做整图生成，于是论文把文字块视为原子单元，统一支持生成与局部改写，提升电商设计自动化的实用性。"
+        },
+        "en": {
+          "method_overview": "PosterText pushes ecommerce poster automation from whole-image generation toward patch-level visual text generation and editing. The paper unifies four operations—poster generation, patch addition, patch deletion, and patch modification—and optionally supports style control through reference patches. Training follows a four-stage curriculum: text-rendering pretraining, instruction-following, preference-aligned RL, and spatial-guidance self-distillation to improve mask-free execution reliability. The work is supported by the large PosterText-320K dataset and a dedicated benchmark.",
+          "innovation": "Its most valuable idea is abstracting practical design workflows into patch-level atomic editing instead of treating the task as pure text-to-image generation. That is much closer to what merchants and creators actually need: change a price tag, rewrite a slogan, or replace a promotional highlight without redrawing the entire poster. This abstraction is also meaningful for governance because risky or outdated copy can be replaced through the same unified interface. The main drawback is high training complexity and the lack of a lightweight public implementation.",
+          "key_metrics": "The abstract states that PosterText is competitive against existing open and closed baselines in text-rendering accuracy, visual quality, and editing flexibility, and that it is trained with a 320K-scale patch-annotated dataset. However, the public summary does not expose a unified numeric table, so external quantitative comparison still depends on the full paper figures.",
+          "story": "Ecommerce poster production is rarely about creating everything from scratch; more often it is about replacing prices, campaign copy, or selling points on an existing design. Prior methods either split the workflow into brittle stages or focus on full-image generation only, so PosterText treats text patches as atomic visual units and unifies generation with localized editing."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 11,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 78,
+        "rationale_zh": "对营销素材生产和违规文案替换都很有价值，但公开数值不够完整、训练成本较高，因此暂列在复现阈值以下。"
+      },
+      "figure_steps": [
+        "Represent poster text as atomic visual patches",
+        "Support generate, add, delete, and modify operations",
+        "Train with rendering pretraining, instruction tuning, RL, and self-distillation",
+        "Produce editable ecommerce poster outputs"
+      ],
+      "exp_cards": [
+        ["Task", "4 unified patch operations"],
+        ["Data", "PosterText-320K"],
+        ["Pipeline", "pretrain + RL + SGSD"]
+      ]
+    },
+    {
+      "id": "2608.11604",
+      "title": "Learning from Online User Feedback for Shopping Agents",
+      "authors": ["Haobo Zhang", "Kelong Mao", "Sulong Xu", "Simiu Gu", "Zhicheng Dou"],
+      "affiliations": ["Renmin University of China", "JD.com"],
+      "source": "arXiv",
+      "published": "2026-08-12",
+      "tags": ["购物Agent", "在线反馈", "偏好学习", "导购治理", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.11604",
+        "pdf": "https://arxiv.org/pdf/2608.11604"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "未发现公开训练代码，且方法依赖真实在线对话日志；本轮先记录为重点跟踪项。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "LOFA 研究购物 agent 如何直接从真实在线交互日志中学习，而不是只依赖人工标注或离线点击。框架把可验证购买结果用于强化学习，同时引入 feedback-aware on-policy distillation，从用户在对话中的自然反馈里提取稠密 token 级监督。这样一来，显式购买信号负责长期目标，诸如“太贵了”“我要今天送达”这类用户指令则负责即时纠偏。论文强调在线反馈既异构又稀疏，因此需要自动识别哪些反馈能转成稳定监督。",
+          "innovation": "它的价值在于把真实导购会话中的纠偏语句变成可学习信号，而不是只看最终是否购买。对于电商内容生态和导购治理，这意味着模型能更快识别不合需求、误导或低质量推荐并自我修正。缺点是方法高度依赖平台内部真实日志，且公开实验细节有限。",
+          "key_metrics": "论文摘要称在真实电商日志上，LOFA 相比强基线稳定提升推荐质量、response helpfulness 和 user-satisfaction alignment；但公开摘要未披露完整 benchmark 数值表与误差区间。",
+          "story": "购物 agent 产生海量真实对话，但最终购买信号稀疏且有延迟，导致系统难以及时从‘这不是我想要的’类反馈中学习。LOFA 因此把用户在线纠偏语句抽成密集监督，并与可验证购买结果结合，让 agent 从真实交互中持续改善导购质量。"
+        },
+        "en": {
+          "method_overview": "LOFA studies how shopping agents can learn directly from real online interaction logs instead of relying only on manual labels or offline clicks. The framework uses verifiable purchase outcomes for reinforcement learning and adds feedback-aware on-policy distillation to convert natural user feedback inside conversations into dense token-level supervision. Purchase outcomes provide long-horizon signals, while utterances such as 'too expensive' or 'need delivery today' act as immediate corrective guidance. The paper stresses that online feedback is heterogeneous and sparse, so the main challenge is automatically identifying which feedback should become reliable supervision.",
+          "innovation": "Its main value is turning real conversational corrections into learnable supervision rather than waiting for a final purchase label. For ecommerce content ecosystems and shopping-assistant governance, this means the model can more quickly identify unsuitable or misleading recommendations and self-correct. The downside is that the method depends heavily on proprietary platform logs and the public experimental evidence is limited.",
+          "key_metrics": "The abstract reports consistent gains over strong baselines on recommendation quality, response helpfulness, and user-satisfaction alignment using real ecommerce logs, but it does not expose a full public benchmark table or uncertainty intervals.",
+          "story": "Shopping agents generate massive real conversations, but final purchase signals are sparse and delayed, so systems learn too slowly from statements like 'this is not what I want'. LOFA therefore converts online corrective feedback into dense supervision and combines it with verifiable outcomes so the agent can improve from real user interactions."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 10,
+        "exp_quality": 10,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 76,
+        "rationale_zh": "方向非常重要，但公开量化与可复现实验信息不足，因此先作为重点跟踪论文保留。"
+      },
+      "figure_steps": [
+        "Collect real shopping conversations and user corrections",
+        "Extract dense token-level supervision from online feedback",
+        "Combine feedback distillation with verifiable purchase rewards",
+        "Continuously improve shopping-agent helpfulness"
+      ],
+      "exp_cards": [
+        ["Signal", "online feedback + purchase outcome"],
+        ["Objective", "helpfulness and preference alignment"],
+        ["Setting", "real ecommerce logs"]
+      ]
+    },
+    {
+      "id": "2606.12608",
+      "title": "Shopping Reasoning Bench: An Expert-Authored Benchmark for Multi-Turn Conversational Shopping Assistants",
+      "authors": ["Shuxian Fan", "Danwen Han", "Stephen Yang", "Anu Nagarajan", "Nikhil Kandpal", "Amit Singh", "Nikita Bhutani", "Aakanksha Chowdhery"],
+      "affiliations": ["Amazon"],
+      "source": "arXiv / OpenReview",
+      "published": "2026-06-10",
+      "tags": ["评测基准", "购物推理", "多轮对话", "导购质量", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2606.12608",
+        "pdf": "https://arxiv.org/pdf/2606.12608",
+        "dataset": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://huggingface.co/datasets/amazon/ShoppingReasoningBench",
+        "note": "已核验公开数据集页面存在，不属于空链接，因此不重复实现 benchmark 本体。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Shopping Reasoning Bench 不是再造一个导购 agent，而是建立多轮购物推理的系统性评测基准。数据包含 525 个专家撰写任务，其中单轮 232 个、多轮 293 个，并配有 10,863 条 importance-weighted rubrics，从必要条件、加分条件到偏好权衡都可细粒度打分。论文的关键洞见是：购物对话不是传统 QA，也不是单一对错判断，而是带有强主观偏好、预算和 trade-off 的实践推理。作者因此把评测设计成 criterion-level review，而不是只看最终命中某个商品。",
+          "innovation": "它最大的贡献是给电商导购质量建立了可操作的‘专家评审标尺’。和 WebShop 这类环境相比，Shopping Reasoning Bench 更关注解释质量、约束遵循与多轮推理稳定性，对平台侧治理导购回答质量非常有帮助。它不是新模型，因此模型创新分不会太高，但作为 benchmark 的方法学价值很强。",
+          "key_metrics": "基准包含 525 个 mission 与 10,863 条专家 rubric。论文指出，在 multi-turn mission 上，各主流模型在 optional above-and-beyond criteria 上通常比 required criteria 低 13–29 分，且随着对话推进整体表现还会再下降 4–18 分，说明当前系统离专家级导购仍有明显差距。",
+          "story": "现有购物 assistant 已服务海量用户，但行业缺乏衡量‘是否像一个懂商品又懂需求的导购’的统一标准。于是作者邀请零售专家把真实购物任务拆成细粒度判断标准，用 rubric 体系评估模型在多轮约束、偏好和解释上的真实推理质量。"
+        },
+        "en": {
+          "method_overview": "Shopping Reasoning Bench does not propose another shopping agent; instead, it builds a systematic benchmark for multi-turn shopping reasoning. The dataset contains 525 expert-authored missions—232 single-turn and 293 multi-turn—paired with 10,863 importance-weighted rubrics that score required criteria, nice-to-have behavior, and nuanced preference trade-offs. The paper's core insight is that shopping dialogue is not standard factual QA and cannot be reduced to a single correct item, because subjective preferences, budget constraints, and trade-offs matter throughout the conversation. Evaluation is therefore done at the criterion level rather than only by final-item hits.",
+          "innovation": "Its main contribution is giving ecommerce shopping assistants an operational expert-review yardstick. Compared with environments such as WebShop, the benchmark focuses more on explanation quality, constraint following, and stability over multi-turn reasoning, which is very useful for governing assistant quality on real platforms. It is not a new model, so architectural novelty is limited, but its methodological value as an evaluation framework is strong.",
+          "key_metrics": "The benchmark contains 525 missions and 10,863 expert rubrics. The paper reports that on multi-turn missions, leading models score 13–29 points lower on optional above-and-beyond criteria than on required criteria, and overall performance further degrades by 4–18 points as conversations progress, showing a substantial gap from expert-level shopping assistance.",
+          "story": "Shopping assistants already serve huge user bases, yet the field lacks a standard way to judge whether a system behaves like a knowledgeable human shopping advisor. The authors therefore work with retail experts to decompose real shopping tasks into fine-grained rubrics and use them to measure the true reasoning quality of multi-turn assistant responses."
+        }
+      },
+      "score": {
+        "innovation": 20,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 74,
+        "rationale_zh": "benchmark 方法学价值高，但它更偏评测基础设施而非直接提升内容理解/治理模型，因此相关性和创新性得分略低。"
+      },
+      "figure_steps": [
+        "Experts author realistic shopping missions",
+        "Each mission is decomposed into importance-weighted rubrics",
+        "Models are judged on required and optional criteria over turns",
+        "Benchmark reveals reasoning degradation in multi-turn shopping"
+      ],
+      "exp_cards": [
+        ["Scale", "525 missions / 10,863 rubrics"],
+        ["Gap", "optional criteria trail by 13–29 pts"],
+        ["Drift", "4–18 pt drop over turns"]
+      ]
+    }
+  ]
+}

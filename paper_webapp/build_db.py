@@ -38,6 +38,7 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
           score_total INTEGER,
           score_breakdown TEXT,
           rationale_zh TEXT,
+          rationale_en TEXT,
           method_overview_zh TEXT,
           method_overview_en TEXT,
           story_zh TEXT,
@@ -126,11 +127,11 @@ def main() -> None:
                 """
                 INSERT OR REPLACE INTO papers (
                   inspection_date, paper_id, title, authors, affiliations, source, published,
-                  links, tags, score_total, score_breakdown, rationale_zh,
+                  links, tags, score_total, score_breakdown, rationale_zh, rationale_en,
                   method_overview_zh, method_overview_en, story_zh, story_en,
                   innovation_zh, innovation_en, key_metrics_zh, key_metrics_en,
                   reproduce_url, figure_path, exp_figure_path
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     inspection_date,
@@ -145,6 +146,7 @@ def main() -> None:
                     int(score.get("total", 0)),
                     json.dumps(score, ensure_ascii=False),
                     score.get("rationale_zh"),
+                    score.get("rationale_en") or score.get("rationale_zh"),
                     summary_value(summary, "zh", "method_overview"),
                     summary_value(summary, "en", "method_overview"),
                     summary_value(summary, "zh", "story"),

@@ -90,7 +90,7 @@ function query(sql, params = []) {
 }
 
 function parseJsonMaybe(v) {
-  if (v == null) return null;
+  if (v === null || v === undefined) return null;
   if (typeof v !== "string") return v;
   try {
     return JSON.parse(v);
@@ -175,7 +175,7 @@ function renderPapers(papers) {
     card.querySelector(".method").textContent = methodText || "";
     card.querySelector(".story").textContent = storyText || "";
     card.querySelector(".innovation").textContent = innovationText || "";
-    card.querySelector(".rationale").textContent = p.rationale_zh || "";
+    card.querySelector(".rationale").textContent = (lang === "zh" ? p.rationale_zh : p.rationale_en) || p.rationale_zh || "";
 
     // score breakdown (per-dimension bars)
     const breakdown = parseJsonMaybe(p.score_breakdown) || {};
@@ -267,7 +267,7 @@ function refresh() {
   const rows = query(
     `SELECT 
       inspection_date, paper_id, title, authors, affiliations, source, published, links, tags,
-      score_total, score_breakdown, rationale_zh,
+      score_total, score_breakdown, rationale_zh, rationale_en,
       method_overview_zh, method_overview_en,
       story_zh, story_en,
       innovation_zh, innovation_en,
@@ -285,7 +285,7 @@ async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const SQL = await initSqlJs({
+  const SQL = await window.initSqlJs({
     locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
   });
 
