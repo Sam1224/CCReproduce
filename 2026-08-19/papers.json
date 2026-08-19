@@ -1,0 +1,388 @@
+{
+  "inspection_date": "2026-08-19",
+  "window": {
+    "start": "2026-08-19T00:00:00+08:00",
+    "end": "2026-08-20T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检归档日期为北京时间 2026-08-19。数据源以 arXiv (cs.IR/cs.AI/cs.LG/cs.CL recent/new)、Hugging Face Daily Papers 为主，并补充关注 OpenReview/会议 accepted list/企业研究博客的更新入口（如 OpenReview API、OpenAlex/SemanticScholar API、arXiv RSS）。关键词在原始需求基础上进一步明确为：recommendation agent、shopping agent、preference optimization、data selection、memory agent、long-horizon agent evaluation、workflow benchmark、content understanding & governance。已显式跳过安全/后门/攻防相关论文（包括 backdoor/jailbreak/attack/prompt injection 等）。",
+  "papers": [
+    {
+      "id": "2608.16919",
+      "title": "CARA: Cognitive Adaptive Recommendation Agent",
+      "authors": ["Weijun Gao", "Jinyang Dong", "Chuanru Ren", "Hengxiao Li"],
+      "affiliations": ["The Chinese University of Hong Kong", "Tongji University"],
+      "source": "arXiv",
+      "published": "2026-08-02",
+      "tags": ["推荐", "Agent", "偏好建模", "电商", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.16919",
+        "pdf": "https://arxiv.org/pdf/2608.16919"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-19/CARA",
+        "note": "arXiv 页面未提供可用代码链接；本轮实现 toy PyTorch reproduction，覆盖 candidate filtering + affective/rational 双视角决策 + boundary-aware KTO 样本加权。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "CARA 将推荐建模成一个更接近人类决策的结构化过程：先做候选过滤（candidate filtering）缩小搜索空间，再用“双视角决策”对候选做最终判断。双视角包含直觉性的情绪/偏好（affective preference）与更审慎的理性评估（rational evaluation），并通过融合机制得到最终排序。训练阶段引入 boundary-aware KTO：优先采样模型“偶尔能做对但不稳定”的边界样本，让偏好信号更密集、学习更聚焦。整体目标是在推荐场景中让 agent 既能快速抓住用户偏好，又能通过理性判断避免局部最优。",
+          "innovation": "1) 把推荐 agent 的“决策流程”结构化为“过滤→双通路决策”，相比仅做语义匹配/端到端生成更可解释；2) 用 affective/rational 分解显式刻画“冲动喜欢 vs 理性权衡”的差异，这与电商内容生态中“种草-拔草-比价”链路更贴近；3) boundary-aware KTO 的价值在于把训练预算集中在不稳定区域，而不是把大量 easy 样本重复喂给模型。局限是论文对真实线上链路（召回、多目标约束、延迟/成本）的讨论较少，需要结合业务系统落地。",
+          "key_metrics": "论文在 Amazon Reviews 三个域（CDs / Office / Beauty）上报告 HR@1/5 与 NDCG@5/10 等指标，CARA 在大多数指标上优于基线，最高相对提升达到 10.15%。",
+          "story": "现有 LLM/agent 推荐方法要么偏“语义匹配”，要么偏“生成式端到端”，但缺少对用户偏好如何被处理成最终决策的显式建模。CARA 认为用户决策由直觉偏好与理性评估共同塑造，于是把流程拆成候选过滤与双视角决策，并用 boundary-aware KTO 强化不稳定边界样本，从而提升推荐的稳定性与效果。"
+        },
+        "en": {
+          "method_overview": "CARA frames recommendation as a structured, cognitively inspired decision process: it first performs candidate filtering to narrow the search space, then applies a dual-perspective decision module to rank the remaining items. The dual perspective models intuitive affective preference and deliberate rational evaluation, and fuses them into the final ranking. During training, CARA introduces boundary-aware KTO that emphasizes borderline instructions/samples the model can solve occasionally but not consistently, increasing the density of informative preference signals. The overall goal is to make an agent both preference-sensitive and decision-stable for recommendation.",
+          "innovation": "(1) A structured filter→dual-decision workflow improves interpretability over pure semantic matching or end-to-end generation. (2) Explicit affective vs rational decomposition matches real ecommerce behavior such as impulse attraction vs careful trade-offs. (3) Boundary-aware KTO reallocates training budget toward unstable regions rather than repeatedly fitting easy samples. A limitation is that production constraints (multi-objective serving, latency, and retrieval stack) still need additional engineering for deployment.",
+          "key_metrics": "On three Amazon Reviews domains (CDs/Office/Beauty), CARA reports improvements on HR@1/5 and NDCG@5/10, with up to 10.15% relative gain over baselines.",
+          "story": "Existing LLM/agent recommenders often rely on semantic matching or end-to-end generation without explicitly modeling how preferences become decisions. CARA argues decisions are shaped jointly by affective intuition and rational deliberation, implements a filter + dual-route decision pipeline, and uses boundary-aware KTO to focus learning on unstable borderline samples for better stability and quality."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 88,
+        "rationale_zh": "与电商推荐/达人内容分发强相关，方法结构清晰、可解释性强且有较明显的指标提升；扣分主要在公开实验范围与生产级约束尚不充分。",
+        "rationale_en": "Highly relevant to ecommerce recommendation and creator-content distribution; clear structured method with strong gains. Points deducted due to limited publicly verifiable production constraints and broader evaluations."
+      },
+      "figure_steps": [
+        "User context + content signals",
+        "Candidate filtering (coarse constraints)",
+        "Affective vs rational decision modules",
+        "Fused ranking + boundary-aware KTO"
+      ],
+      "exp_cards": [
+        ["Amazon Reviews", "CDs / Office / Beauty"],
+        ["Metrics", "HR@K, NDCG@K"],
+        ["Best gain", "+10.15% relative"]
+      ]
+    },
+    {
+      "id": "2608.16926",
+      "title": "Data-DPO: Direct Preference Optimization for Target Model Data Selection in LLM Post-Training",
+      "authors": ["Peng Sun", "Yi Yang", "Antong Zhang", "Chunxiao Li", "Yanbo Wang", "Dianbo Liu", "Xin Chen", "Kai Yu", "Lu Chen", "Tianfan Fu"],
+      "affiliations": ["Nanjing University", "Brown University", "Fudan University", "National University of Singapore", "Shanghai Jiao Tong University"],
+      "source": "arXiv",
+      "published": "2026-08-05",
+      "tags": ["数据选择", "DPO", "LLM 后训练", "数据质量", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.16926",
+        "pdf": "https://arxiv.org/pdf/2608.16926"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-19/DataDPO",
+        "note": "arXiv 页面未提供可用代码链接；本轮实现 toy PyTorch reproduction，覆盖 one-step probing 产生 data preference、DPO-style reward 学习、reward+quality+diversity 选子集，并对比 random/full 训练。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Data-DPO 关注“数据价值并不是静态属性”，而是与目标模型当前能力分布强相关。方法先对目标模型做 one-step probing：对不同样本做一步局部训练，观察激活/训练反馈差异，把样本之间的差异转成 pairwise data preference。然后用轻量 reward model 通过 DPO 思路学习“目标模型视角的数据偏好”。最后在选择阶段把 reward、外部质量分（如去重/过滤器）以及边际多样性一起组合，得到更稳定有效的 SFT 子集，从而在更小数据预算下维持甚至超过全量训练表现。",
+          "innovation": "亮点在于把“数据筛选”从通用的静态打分（困惑度/长度/去重等）推进到“面向目标模型”的动态偏好学习。one-step probing 给出了可操作的局部反馈信号，比纯启发式更贴近 target model 的短板分布；DPO-style 的 pairwise 学习避免了显式回归绝对分数的不稳定。风险点是：真实大模型下 probing 的开销与方差可能较大，因此需要工程上做近似与缓存，并且 reward/quality/diversity 的组合权重需要业务数据调参。",
+          "key_metrics": "论文在 Vision-Flan 与 LLaVA-CoT 设置下报告：在多种 budget 下 Data-DPO 均优于数据筛选基线，并且在部分设置下稳定超过 full-data 训练。作者报告 Vision-Flan 的 ARP 达到约 100.76%–102.70%，LLaVA-CoT 最高约 103.93%。",
+          "story": "传统 SFT 数据选择往往把样本价值当作静态属性，忽视不同目标模型的能力差异，导致“选出来的数据”不一定补齐 target model 的短板。Data-DPO 因此用 one-step probing 直接观察目标模型对样本的局部反馈，把这种差异变成偏好对，并用 DPO 训练 reward model 学到 target-aware 的数据偏好，最终结合质量与多样性稳定筛选出更有效的数据子集。"
+        },
+        "en": {
+          "method_overview": "Data-DPO argues that data value is not static; it depends on the capability distribution of the target model. It performs one-step probing on the target model to obtain local training feedback signals, converts activation/feedback differences into pairwise data preferences, and trains a lightweight reward model via a DPO-style objective to learn target-model-aware preferences. In the final selection stage, it combines reward, external quality scores, and marginal diversity to produce a stable and effective fine-tuning subset, enabling smaller data budgets to match or exceed full-data training.",
+          "innovation": "The key contribution is shifting from heuristic, static data scoring to target-aware preference learning. One-step probing provides actionable local feedback aligned with the target model’s weaknesses, while pairwise DPO-style training avoids unstable absolute-value regression. Practical concerns include probing cost/variance at LLM scale and tuning the reward/quality/diversity mixture.",
+          "key_metrics": "On Vision-Flan and LLaVA-CoT, Data-DPO outperforms prior data selection baselines across multiple budgets and can stably surpass full-data training in some settings. Reported ARP is around 100.76%–102.70% on Vision-Flan and up to ~103.93% on LLaVA-CoT.",
+          "story": "Classic SFT data selection treats sample value as a static property and ignores target-model differences, so the selected subset may not address the target’s weaknesses. Data-DPO observes target-side local feedback via one-step probing, turns it into pairwise preferences, learns a target-aware reward model with DPO, and finally selects a high-quality, diverse subset for more effective post-training."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 85,
+        "rationale_zh": "对大规模数据筛选/清洗与后训练降本增效很有价值，尤其适合多业务、多模型并行的电商内容生态；扣分在于 probing 成本与组合权重的工程落地不确定性。",
+        "rationale_en": "Very useful for large-scale data selection/cleaning and post-training cost reduction; particularly relevant for multi-domain ecommerce content ecosystems. Points deducted due to probing cost and engineering uncertainty of the combined selection objective."
+      },
+      "figure_steps": [
+        "Candidate SFT data pool",
+        "One-step probing on target model",
+        "DPO-style reward learning",
+        "Reward + quality + diversity selection"
+      ],
+      "exp_cards": [
+        ["Setup", "Vision-Flan / LLaVA-CoT"],
+        ["Metric", "ARP"],
+        ["Best", "~103.93% vs full data"]
+      ]
+    },
+    {
+      "id": "2608.17050",
+      "title": "Cross-Model Memory Transfer via Target-Side Reader Adaptation",
+      "authors": ["Mingyuan Li", "Guangsheng Yu", "Xu Wang", "Shaoxiong Ji"],
+      "affiliations": ["(not specified on arXiv abstract page)"],
+      "source": "arXiv",
+      "published": "2026-08-17",
+      "tags": ["Agent 记忆", "外部记忆", "RAG", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.17050",
+        "pdf": "https://arxiv.org/pdf/2608.17050"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "偏方法学研究，且当前未发现可直接复用的标准化训练/评测代码；本轮先作为记忆复用方向重点跟踪。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文研究 Engram-style hashed external memory 在“跨模型迁移”时到底应该迁移什么：是外部 memory table，还是 reader 读出模块。作者构建 cross-model frozen-memory extraction：在 source model 上训练 memory table，然后冻结该表并挂到不同的 target model 上，只训练一个轻量 target-side reader。结果显示 memory 内容与正确寻址都重要，但外部表要真正可用必须依赖与 target interface 对齐的 reader；当 provider reader 与 target 兼容时，冻结 artifact 也能直接带来收益。论文提出 dual-layer four-branch reader 结构，能把 cross-model reuse 的差距进一步缩小。",
+          "innovation": "这篇更偏“把问题问清楚”：在 agent/检索增强系统里，我们常希望把知识作为可复用的外部 artifact 迁移给不同 backbone，但实际瓶颈可能在 reader 对齐而非存储本体。论文用受控实验拆分 memory content vs reader alignment，并给出了一个实用的 reader 设计思路。对电商内容治理的启发是：如果要把治理知识库或达人规则做成外部记忆，接口层（reader/schema）可能比存储层更决定可迁移性。",
+          "key_metrics": "作者报告在 QA 任务的受控协议下，dual-layer four-branch reader 的 cross-model reuse 平均得分约 38.8，并能显著缩小 same-model 与 cross-model reuse 的差距。",
+          "story": "参数内化（finetune）难更新、难审计，非参数检索（RAG）又有延迟与上下文开销，因此 Engram 式外部记忆成为折中方案。但当我们希望把这种外部记忆跨 backbone 复用时，效果并不稳定。论文因此固定 memory table、只调 reader，系统性验证 reader 对齐是跨模型复用的关键，并提出更强 reader 结构来弥合差距。"
+        },
+        "en": {
+          "method_overview": "The paper studies what really matters for cross-model reuse of Engram-style hashed external memories: the frozen memory table itself or the reader that consumes it. It proposes a controlled cross-model frozen-memory extraction setting: train a memory table on a source model, freeze it, attach it to a different target model, and train only a lightweight target-side reader. Results show the transferred table becomes useful only when the reader is aligned to the target interface; when provider readers are compatible, frozen artifacts can already provide utility. A dual-layer four-branch reader further closes the gap between same-model and cross-model reuse.",
+          "innovation": "This work clarifies an important bottleneck: for reusable external knowledge artifacts, reader/interface alignment can dominate over storage content. The controlled ablations disentangle memory content vs addressing vs reader alignment. For ecommerce governance knowledge bases, it suggests schema/reader compatibility may be the key to cross-backbone reuse.",
+          "key_metrics": "Under controlled QA evaluation, the dual-layer four-branch reader achieves an average score of ~38.8 and significantly narrows the same-model vs cross-model reuse gap.",
+          "story": "Fine-tuned parametric knowledge is hard to update and audit, while retrieval adds latency and context overhead. Engram-style external memory is a middle ground, but cross-backbone reuse is fragile. The paper freezes the memory table and adapts only the reader to show that reader alignment is the core for effective transfer, and proposes a stronger reader design to reduce the gap."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 70,
+        "rationale_zh": "对 agent 记忆与知识复用很有启发，但与电商内容理解/达人治理属于间接相关，且实验指标主要为受控 QA 协议。",
+        "rationale_en": "Insightful for agent memory reuse, but only indirectly relevant to ecommerce content/gov, and results are mainly under controlled QA protocols."
+      },
+      "figure_steps": [
+        "Source model trains hashed memory table",
+        "Freeze memory and attach to target model",
+        "Train target-side reader for alignment",
+        "Cross-model memory reuse on QA"
+      ],
+      "exp_cards": [
+        ["Setting", "frozen memory transfer"],
+        ["Reader", "dual-layer four-branch"],
+        ["Avg score", "~38.8"]
+      ]
+    },
+    {
+      "id": "2608.15008",
+      "title": "Harness the Memory: A Holistic Evaluation of Memory Substrates in Memory Agents",
+      "authors": [
+        "Wei-Chieh Huang",
+        "Weizhi Zhang",
+        "Yuchen Wu",
+        "Yankai Chen",
+        "Eric Hanchen Jiang",
+        "Wooseong Yang",
+        "Yiwei Yang",
+        "Henry Peng Zou",
+        "Hanrong Zhang",
+        "Ying Nian Wu",
+        "Haolun Wu",
+        "Kai-Wei Chang",
+        "Philip S. Yu",
+        "Xue Liu",
+        "Aylin Caliskan"
+      ],
+      "affiliations": ["(not specified on arXiv abstract page)"],
+      "source": "arXiv",
+      "published": "2026-08-15",
+      "tags": ["Agent 记忆", "评测", "治理/可靠性", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.15008",
+        "pdf": "https://arxiv.org/pdf/2608.15008"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文声明 acceptance 后开源；当前未检索到公开可用代码。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇工作不提出新记忆模块，而是对 memory agent 的“记忆基底（memory substrate）”做受控评测，覆盖 dense/sparse index、文本记录、结构化存储、分层存储、refinement-based memory、参数更新与 activation-compatible context 等路线。作者在统一 harness 下跨 3 个 backbone 与 4 套 benchmark，记录 26 个性能与效率指标，展示不同 substrate 在不同运行区间（长上下文 QA vs 顺序决策、短历史 vs 长历史）下的取舍。核心结论是：没有一种 substrate 能在所有场景压倒性胜出，需要做“substrate routing”。",
+          "innovation": "亮点在于把“记忆选择”从经验主义推进到可度量的系统评估：同一套 harness 下同时看效果、延迟、上下文开销、长历史稳定性等多维指标，并指出过度检索可能反而伤害 sequential decision-making（注意力被无关历史冲走）。对电商达人治理的启示是：当我们把规则、违规样例、达人历史行为写入记忆时，需要区分‘事实检索’与‘决策执行’两类任务，否则记忆过载会降低动作质量。",
+          "key_metrics": "作者报告在长历史下，层次化存储等方案可在保持任务效果的同时，将推理成本（如 context/检索开销）降低约 40%–60%（论文以多项指标呈现，具体以原文表格为准）。",
+          "story": "长时序 agent 越来越依赖外部记忆，但社区缺少“在什么运行区间该用哪种记忆介质”的统一指导。论文因此搭建统一 harness，把多种记忆 substrate 放在同一评测框架内进行全面对比，从而给出 substrate routing 的证据与设计建议。"
+        },
+        "en": {
+          "method_overview": "Rather than proposing a new memory module, this work performs a controlled harness evaluation of memory substrates for memory-augmented agents, covering dense/sparse indices, text records, structural stores, hierarchical stores, refinement-based memories, parametric updates, and activation-compatible context mechanisms. Under a unified harness across three backbones and four benchmark suites, it reports 26 performance and efficiency metrics and shows that no single substrate dominates across regimes, motivating substrate routing.",
+          "innovation": "The contribution is methodological: it turns memory-substrate choice into a measurable system trade-off across quality, latency, context overhead, and long-horizon robustness, and highlights that excessive retrieval can hurt sequential decision-making by distracting attention. For ecommerce governance agents, it suggests routing between factual retrieval and action-critical decision memory is necessary.",
+          "key_metrics": "The paper reports that hierarchical storage can reduce inference cost by ~40%–60% under long histories while maintaining task quality (exact numbers depend on the benchmark/metric tables in the paper).",
+          "story": "As long-horizon agents increasingly rely on external memory, the field lacks guidance on which memory substrate to use under which operating regime. The paper builds a unified harness and systematically compares multiple substrates, providing evidence for the need of substrate routing and regime-aware memory design."
+        }
+      },
+      "score": {
+        "innovation": 19,
+        "results": 11,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 13,
+        "total": 69,
+        "rationale_zh": "评测方法学扎实，但与电商内容理解/达人治理的相关性更偏间接（可作为 agent 记忆治理的参考）。",
+        "rationale_en": "Strong methodology as an evaluation study, but only indirectly relevant to ecommerce content/creator governance."
+      },
+      "figure_steps": [
+        "Choose a memory substrate family",
+        "Run under a unified harness",
+        "Measure 26 quality + efficiency metrics",
+        "Route substrate by regime"
+      ],
+      "exp_cards": [
+        ["Coverage", "multiple substrate families"],
+        ["Metrics", "26 performance/efficiency"],
+        ["Finding", "no universal winner"]
+      ]
+    },
+    {
+      "id": "2608.18066",
+      "title": "On the Fragility of Self-Improving Agents: Variance, Task Order, and Underspecification",
+      "authors": ["Qinyuan Ye", "Yu Li", "Yada Pruksachatkun", "Jiaxin Zhang", "Chien-Sheng Wu"],
+      "affiliations": ["Salesforce AI Research"],
+      "source": "arXiv",
+      "published": "2026-08-18",
+      "tags": ["Agent 可靠性", "自我改进", "评测协议", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.18066",
+        "pdf": "https://arxiv.org/pdf/2608.18066",
+        "code": "https://github.com/SalesforceAIResearch/self-improve-fragility",
+        "dataset": "https://huggingface.co/datasets/Salesforce/self-improve-fragility"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/SalesforceAIResearch/self-improve-fragility",
+        "note": "arXiv 明确提供 code 与 dataset 链接，本轮不重复实现；建议后续按业务场景补充“任务顺序/方差”压测协议。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文重新审视两类 memory-based self-improving agent（通过维护文本记忆库，在线任务流中持续改进），指出既有评测忽视了可靠性：只跑单次、固定任务顺序，导致结论脆弱。作者强调两点：一是复杂环境本身评测噪声大，自我改进循环会进一步放大方差；二是 agent 的提升高度依赖任务顺序，默认顺序隐含课程学习，成为“隐藏前提”。为理解原因，作者人工分析记忆内容，提出“任务/环境欠规格（underspecification）”是关键因素之一，并通过往记忆中加入更细的 rubric 与环境反馈做验证，虽能部分缓解但仍有差距。",
+          "innovation": "贡献不在新算法，而在“把坑挖出来”：如果要在电商内容生态里做持续学习/自改进的治理 agent（例如反复更新规则、纠错话术），评测必须显式报告多次运行的方差，并对 task order 做打乱压力测试，否则上线后容易出现不可预期退化。对治理来说，“欠规格”也很关键：没有明确 rubric/反馈，记忆库可能写入噪声或错误归因，导致越学越偏。",
+          "key_metrics": "论文的核心指标是：多次运行与不同任务顺序下性能差异显著，表明既有方法对顺序与噪声高度敏感；加入更细 rubric/反馈能部分提升鲁棒性但仍未完全解决（具体数值以原文表格为准）。",
+          "story": "自我改进 agent 看起来能“越做越好”，但现有评测往往只在固定顺序、单次运行下汇报结果。论文因此系统加上多次运行与任务顺序打乱，发现方法非常脆弱，并进一步追溯到任务与环境描述不充分导致记忆构造不稳定，从而呼吁更严格的评测与更可监督的接口设计。"
+        },
+        "en": {
+          "method_overview": "The paper re-evaluates memory-based self-improving agents that learn from an online stream of tasks by maintaining a textual memory bank, and argues that prior evaluations overlook reliability by using single runs and fixed task orders. It shows agent evaluation is noisy and self-improving loops amplify variance, and that improvements are highly dependent on task order where default orderings impose an implicit hidden curriculum. The authors hypothesize underspecification of tasks/environments contributes to the fragility, and partially validate it by adding detailed rubrics and environment feedback into memory construction.",
+          "innovation": "The contribution is an evaluation and reliability lens: for continuously improving governance agents, you must report variance across runs and stress-test task order, otherwise real deployments can degrade unpredictably. The underspecification finding also suggests governance systems need explicit rubrics/feedback interfaces to avoid noisy memory accumulation.",
+          "key_metrics": "Key finding: performance varies significantly across runs and task order shuffles; adding richer rubrics/feedback partially closes the gap but does not fully solve the fragility (see paper tables for exact numbers).",
+          "story": "Self-improving agents appear to get better over time, but prior evaluations often rely on a single run with a fixed task order. By running multiple seeds and shuffling task orders, the paper exposes substantial fragility and traces it to task/environment underspecification, motivating more rigorous protocols and oversight-friendly interfaces."
+        }
+      },
+      "score": {
+        "innovation": 18,
+        "results": 10,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 5,
+        "relevance": 18,
+        "total": 74,
+        "rationale_zh": "对 agent 可靠性与评测协议很有价值，能直接指导治理 agent 的压测与上线准入；但与电商内容理解本体模型属于间接相关，因此未到复现阈值。",
+        "rationale_en": "Highly useful for reliability protocol design of governance agents, but only indirectly tied to ecommerce content understanding models, so not in the reproduction threshold."
+      },
+      "figure_steps": [
+        "Run self-improving agents multiple seeds",
+        "Shuffle task orders for stress test",
+        "Inspect memory for underspecification",
+        "Add rubrics/feedback for mitigation"
+      ],
+      "exp_cards": [
+        ["Code", "public repo available"],
+        ["Protocol", "variance + order shuffle"],
+        ["Finding", "fragility exposed"]
+      ]
+    },
+    {
+      "id": "2608.17800",
+      "title": "StartupBench: Benchmarking General-Purpose Agents on Market-Validated End-to-End Workflows",
+      "authors": [
+        "Liya Zhu",
+        "Xin Ma",
+        "Tao Liu",
+        "Haodong Wang",
+        "Ge Zhang",
+        "Jingzhe Ding",
+        "Qingshui Gu",
+        "Yongjie Zhong",
+        "Jinxiang Meng",
+        "Yuan Gao",
+        "Yunqiu Zhou",
+        "Hao Zhu",
+        "Jifeng He",
+        "Yongzhi Liao",
+        "Xinyi Zhang",
+        "Chaoxin Li",
+        "Yi Zhu",
+        "Xi Lin",
+        "Duju Zeng",
+        "Xiang Gao",
+        "Wen Zhang",
+        "Yunyang Wang",
+        "Duo Wang",
+        "Huan Zhou",
+        "Zuo Wang",
+        "Jin Chen",
+        "Kaiyuan Zhang",
+        "Chuqian Yu",
+        "Tianhao Yu",
+        "Longxiang Liu",
+        "Jianbo Xue",
+        "Huimin Che",
+        "Jiahao Wang",
+        "Yujia Qin",
+        "Jiaheng Liu",
+        "Shen Yan",
+        "Xiaolong Chang",
+        "Wenhao Huang"
+      ],
+      "affiliations": ["(multiple organizations; not specified on arXiv abstract page)"],
+      "source": "arXiv",
+      "published": "2026-08-18",
+      "tags": ["Agent benchmark", "工作流", "评测", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.17800",
+        "pdf": "https://arxiv.org/pdf/2608.17800"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "当前未在 arXiv 页面看到明确代码/数据链接；若后续公开基准与 harness，可考虑纳入治理 agent 的上线评测。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "StartupBench 构建一个以“市场验证的 AI 产品工作流”为基础的端到端 agent benchmark。它不是研究者拍脑袋挑任务，而是系统性研究真实 AI startup 产品、产品 workflow 与用户需求，把这些 workflow 翻译成以 deliverable 为导向的完整任务，并用细粒度 rubric 来评估 agent 的复杂约束满足。作者在统一 agent harness 下评测多个代表性模型，发现即使最强模型也只完成约 30% 任务，失败主要来自复杂指令遵循与领域专精不足。",
+          "innovation": "对治理价值在于：它把“能否做完真实业务 workflow”量化成可评测任务，避免 benchmark 与真实需求脱节。对电商内容生态&达人治理来说，可以把类似的“达人审核/违规处置/内容质检/策略配置”做成 StartupBench 风格的可交付 workflow，作为治理 agent 的准入门槛。缺点是如果不开源 harness/数据，外部难复现。",
+          "key_metrics": "论文报告在统一 harness 下，最强模型仅能成功完成约 30% 的 StartupBench 端到端任务（其余任务多能部分推进但难闭环）。",
+          "story": "当前 agent benchmark 多由研究者主观挑选任务，难代表真实用户需求。StartupBench 反过来从市场已经验证的 AI 产品 workflow 出发，构造可交付的端到端任务与 rubric，并用它检验当前通用 agent 是否真的能完成真实工作流，从而揭示能力缺口。"
+        },
+        "en": {
+          "method_overview": "StartupBench is an end-to-end agent benchmark grounded in market-validated AI startup product workflows. Instead of researcher-selected tasks, it studies real products and users to identify workflows with practical demand, translates them into deliverable-oriented tasks, and evaluates agents with fine-grained rubrics under a unified harness. Even the strongest model completes only ~30% of tasks, with major failures attributed to complex instruction following and domain-specific expertise gaps.",
+          "innovation": "Its value for governance is aligning benchmarks with real-world deliverable workflows rather than synthetic tasks. For ecommerce content and creator governance, similar workflow-based benchmarks could be built for auditing, violation handling, and content quality loops. A limitation is that reproducibility depends on whether the harness and data are released.",
+          "key_metrics": "Under a unified harness, the strongest evaluated model successfully completes only ~30% of StartupBench end-to-end tasks.",
+          "story": "Many agent benchmarks are defined by researchers and may not reflect what real users demand. StartupBench instead derives tasks from market-proven product workflows, builds deliverable-level rubrics, and evaluates general-purpose agents to expose the remaining gap to reliable end-to-end completions."
+        }
+      },
+      "score": {
+        "innovation": 18,
+        "results": 9,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 10,
+        "total": 62,
+        "rationale_zh": "benchmark 价值明确，但对电商内容理解/达人治理属于启发式间接相关；且当前缺少明确可复现开源资源。",
+        "rationale_en": "Clear benchmark contribution, but only indirectly relevant to ecommerce content/creator governance, and public reproducibility is unclear."
+      },
+      "figure_steps": [
+        "Collect market-validated product workflows",
+        "Translate into deliverable E2E tasks",
+        "Evaluate agents with rubrics",
+        "Reveal only ~30% completion"
+      ],
+      "exp_cards": [
+        ["Tasks", "market-validated workflows"],
+        ["Harness", "unified evaluation"],
+        ["Completion", "~30% for best model"]
+      ]
+    }
+  ]
+}

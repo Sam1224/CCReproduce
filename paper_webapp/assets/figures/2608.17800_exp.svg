@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="240" viewBox="0 0 820 240">
+  <rect width="820" height="240" rx="24" fill="#ffffff"/>
+  <rect x="24" y="24" width="772" height="192" rx="20" fill="#f1f5f9"/>
+  <text x="44" y="58" font-size="21" font-weight="800" fill="#0f172a">StartupBench experiment highlight</text>
+  <rect x="50" y="92" width="180" height="82" rx="16" fill="#dbeafe"/>
+  <text x="140" y="126" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4ed8">Setup</text>
+  <text x="140" y="149" text-anchor="middle" font-size="12" fill="#334155">benchmark / protocol</text>
+
+  <rect x="320" y="78" width="180" height="110" rx="18" fill="#dcfce7"/>
+  <text x="410" y="120" text-anchor="middle" font-size="18" font-weight="800" fill="#166534">Result</text>
+  <text x="410" y="146" text-anchor="middle" font-size="12" fill="#334155">Best model completes only ~30% E2E</text>
+
+  <rect x="590" y="92" width="180" height="82" rx="16" fill="#fef3c7"/>
+  <text x="680" y="126" text-anchor="middle" font-size="16" font-weight="700" fill="#92400e">Value</text>
+  <text x="680" y="149" text-anchor="middle" font-size="12" fill="#334155">content / governance</text>
+
+  <path d="M235 133 C285 133 295 133 312 133" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M505 133 C545 133 555 133 582 133" stroke="#64748b" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#64748b"/></marker></defs>
+</svg>
