@@ -9,8 +9,8 @@ import torch.nn.functional as F
 class ReWEIGHConfig:
     alpha: float = 2.5
     topk_reference: int = 512
-    stability_max_std: float = 0.018
-    min_reference: float = 0.0005
+    stability_max_std: float = 0.2
+    min_reference: float = 0.0
     eps: float = 1e-8
 
 
