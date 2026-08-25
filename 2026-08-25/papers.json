@@ -1,0 +1,387 @@
+{
+  "inspection_date": "2026-08-25",
+  "window": {
+    "start": "2026-08-25T00:00:00+08:00",
+    "end": "2026-08-26T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检以北京时间 2026-08-25 为归档窗口。数据源以 arXiv 当日 new 列表、Hugging Face Daily Papers 当日热榜为主，并补充近期强相关的电商检索/推荐/内容理解论文。关键词在原始需求基础上明确为：e-commerce live streaming、user representation、shopping/recommendation agent、dense retrieval、LLM-annotated data、creator governance、data quality、agentic RAG。已显式跳过安全/后门/攻击类论文。",
+  "papers": [
+    {
+      "id": "2608.20958",
+      "title": "TLive-Omni: An Omni-Modal Understanding Model for E-Commerce Live Streaming",
+      "authors": ["TLive-Omni Team"],
+      "affiliations": ["Taobao & Tmall Group"],
+      "source": "Hugging Face Daily Papers / arXiv",
+      "published": "2026-08-21",
+      "tags": ["电商直播", "MLLM", "内容理解", "强相关", "今日热榜"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.20958",
+        "pdf": "https://arxiv.org/pdf/2608.20958",
+        "code": "https://github.com/TaoLiveAIGC/TLive-Omni"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/TaoLiveAIGC/TLive-Omni",
+        "note": "已验证代码仓非空，包含 tlive_omni、data、examples、环境配置与技术报告，具备实质实现内容。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TLive-Omni 面向电商直播场景，将视频帧、音频、商品信息与对话信号统一进一个直播理解模型。核心是用 Per-vGrid 结构显式对齐长时序音视频片段，再配合三阶段监督微调与 Faithful-RFT 强化学习，让模型既能实时感知商品/主播/观众交互，又尽量避免冗长推理链造成的延迟。它不是通用 MLLM 直接套直播，而是把直播场景中的时间对齐、商品中心感知和弱监督数据生产一起重做。",
+          "innovation": "创新点主要有三层：其一，Per-vGrid 把直播音视频按时间块对齐，解决长上下文直播场景中多模态证据分散的问题；其二，Faithful-RFT 直接围绕可验证反馈优化忠实感知与实时响应，而不是单纯强化长链推理；其三，作者为电商直播重新拆分了语音、商品定位、画面证据和评论理解等原子能力，更贴近内容生态巡检与达人讲解质检。",
+          "key_metrics": "论文报告其在内部电商直播基准上优于通用多模态基线，并在公开多模态评测上保持竞争力；从业务角度，最关键的亮点不是单一公开榜单，而是对直播场景的细粒度感知质量与实时性同时提升。",
+          "story": "通用多模态模型擅长看图问答，但直播电商里的有效信息分散在连续视频、主播语音、商品属性和弹幕评论里，普通模型很难在长时序下可靠聚焦商品证据。TLive-Omni 于是把问题拆成时间对齐、商品中心感知与忠实推理三部分，并用更贴近直播业务的训练范式来补齐这些短板。"
+        },
+        "en": {
+          "method_overview": "TLive-Omni is an omni-modal model built specifically for ecommerce live streaming. It aligns long-form video, audio, product signals, and conversational evidence with a Per-vGrid structure, then combines staged supervised tuning with Faithful-RFT to improve faithful perception and low-latency response. The design targets livestream-specific perception rather than simply applying a generic MLLM to a harder domain.",
+          "innovation": "Its main innovations are: explicit temporal alignment via Per-vGrid for livestream evidence, Faithful-RFT that optimizes verifiable faithful perception instead of longer reasoning traces, and a task decomposition tailored to ecommerce livestream operations such as speech grounding, product localization, and comment understanding.",
+          "key_metrics": "The paper reports stronger performance on internal ecommerce livestream benchmarks while remaining competitive on public multimodal evaluations. The most important gain is the joint improvement of livestream perception quality and real-time usability rather than a single public leaderboard metric.",
+          "story": "Generic multimodal models are strong at static VQA, but livestream commerce spreads useful evidence across long videos, speech, product metadata, and comments. TLive-Omni addresses this by redesigning temporal alignment, product-centric grounding, and faithful decision-making for the livestream setting."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 86,
+        "rationale_zh": "与电商内容理解/达人巡检强相关，场景创新明确且代码已公开；扣分主要在公开可验证指标细节不如纯 benchmark 论文充分。",
+        "rationale_en": "Highly relevant to ecommerce content understanding and creator inspection, with clear scenario-specific innovations and verified code. Points were deducted because publicly verifiable benchmark details are less exhaustive than in pure benchmark papers."
+      },
+      "figure_steps": [
+        "Livestream video + speech + product context",
+        "Per-vGrid temporal alignment",
+        "Scene-specific omni-modal understanding",
+        "Faithful response / inspection decision"
+      ],
+      "exp_cards": [
+        ["Domain", "ecommerce live streaming"],
+        ["Core gain", "better faithful perception with real-time constraints"],
+        ["Code", "verified non-empty GitHub repo"]
+      ]
+    },
+    {
+      "id": "2608.21381",
+      "title": "PersonaMem-v3: Toward Omni-Platform Personal Intelligence for Holistic User Understanding, Recommendation, and Agentic Tasks",
+      "authors": ["Bowen Jiang", "Hanchao Yu", "et al."],
+      "affiliations": ["Meta Recommendation Systems", "University of Pennsylvania", "MIT"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["用户理解", "推荐", "Agent", "中强相关", "今日新发"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.21381",
+        "pdf": "https://arxiv.org/pdf/2608.21381"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文声明开源资源，但本轮未对代码仓做独立克隆核验，先作为今日高价值跟踪项收录。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "PersonaMem-v3 试图回答“真正的用户理解是否必须跨平台”这个问题。它用百万级匿名化交互轨迹构造跨社媒、聊天、日历等多数字平面的统一记忆环境，评估 agent 能否从多平台信号中恢复 persona、做推荐重排，并识别何时不该过度个性化。论文更像一个高质量评测与任务构造框架，而不是单一模型结构创新。",
+          "innovation": "其亮点在于把多平台用户理解、推荐与 agent 任务统一进一个真实世界风格的数字环境，并显式提出 over-personalization tax 的概念。对电商内容生态而言，这种框架有助于衡量达人/粉丝关系建模是否过度迎合、是否把短期兴趣误当长期偏好。",
+          "key_metrics": "论文报告跨平台推荐与 agent 任务上建立了更难的统一基准，并显示更强的模型/更多测试时计算能稳定提升表现，但当前系统距离可靠的 omni-platform personal intelligence 仍有明显差距。",
+          "story": "现有推荐与内容系统大多只在单个 App 内做 personalization，因此经常忽视用户跨平台行为的一致性，也容易滑向过度个性化。PersonaMem-v3 把这些分散行为合并成统一环境，用更真实的方式测试‘用户理解’到底学到了多少。"
+        },
+        "en": {
+          "method_overview": "PersonaMem-v3 asks whether real user understanding must be cross-platform. It builds a unified environment from large-scale anonymized interaction traces across multiple digital surfaces and evaluates recommendation, persona inference, and agentic tasks under that shared memory setting. The main contribution is a realistic evaluation framework rather than a single new model block.",
+          "innovation": "Its key innovation is unifying cross-platform user understanding, recommendation, and agent tasks while explicitly measuring over-personalization tax. For ecommerce content ecosystems, this helps reason about whether creator/follower modeling overfits short-term signals or manipulative personalization.",
+          "key_metrics": "The paper introduces a harder omni-platform benchmark and shows that stronger models and more test-time computation improve performance, while still leaving a substantial gap to reliable personal intelligence.",
+          "story": "Most personalization systems operate inside one app, which misses cross-platform consistency and can encourage over-personalization. PersonaMem-v3 merges those fragmented traces into one evaluation environment to test how much genuine user understanding modern systems really have."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 11,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 78,
+        "rationale_zh": "跨平台用户建模视角很强，对达人生态与推荐约束很有启发，但与今日‘内容治理执行链路’仍偏间接。",
+        "rationale_en": "Strong cross-platform user modeling perspective with clear value for creator ecosystems and recommendation constraints, but still only indirectly connected to concrete content-governance execution."
+      },
+      "figure_steps": [
+        "Multi-platform user traces",
+        "Unified memory construction",
+        "Persona inference + reranking + agent tasks",
+        "Over-personalization evaluation"
+      ],
+      "exp_cards": [
+        ["Data", "million-scale anonymized interaction traces"],
+        ["Task", "persona / recommendation / agent"],
+        ["Theme", "cross-platform personal intelligence"]
+      ]
+    },
+    {
+      "id": "2608.23392",
+      "title": "Towards a Densing Law for User Representation Learning at Billion-Scale Capacity",
+      "authors": ["Bin Dou", "Baokun Wang", "Yu Cheng", "et al."],
+      "affiliations": ["Ant Group DeepFind Team", "Zhejiang University"],
+      "source": "Hugging Face Daily Papers / arXiv",
+      "published": "2026-08-24",
+      "tags": ["用户表征", "推荐", "大规模学习", "中相关", "今日热榜"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.23392",
+        "pdf": "https://arxiv.org/pdf/2608.23392"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文未见可直接复用的公开实现；方法依赖超大规模工业日志与离散行为 token 化过程。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文关注十亿级用户行为建模中一个很现实的问题：数据越来越多，但直接往模型里堆原始行为并不会无限提升效果。作者提出 behavioral densing 的视角，用离散 token 化与可变长度分词把高冗余行为压缩成更高信息密度的表示，再进行大规模用户表征学习。其核心价值是从‘继续扩规模’转向‘先提升表征密度’。",
+          "innovation": "它的重要创新不是单一网络结构，而是提出 raw scaling wall 与 densing law 这两个工业视角：当原始行为序列过长、过稀疏、过冗余时，模型容量未必用在真正有价值的行为上。对电商内容生态来说，这对达人受众分层、消费意图识别、长短期兴趣分离都有启发。",
+          "key_metrics": "论文报告在 Alipay PayBill 级别的大规模数据上，ALGN 方案突破了原始文本式行为建模的收益瓶颈，使 CTR/CVR/检索类任务继续增长，同时兼顾了表征效率。",
+          "story": "很多工业推荐系统默认‘更多日志 + 更大模型’就会更好，但十亿级用户行为里充满重复与噪声，导致规模扩展先撞到天花板。论文因此提出先做行为密度提升，再做表征学习，让模型把容量花在真正有用的信号上。"
+        },
+        "en": {
+          "method_overview": "This paper studies a practical issue in billion-scale user behavior modeling: simply feeding more raw events into larger models does not lead to unbounded gains. It proposes a behavioral densing view that compresses redundant behavior into higher-information discrete tokens and variable-length segments before large-scale representation learning.",
+          "innovation": "The main contribution is conceptual and industrial: it identifies a raw scaling wall and argues for a densing law, where model capacity should first be used on denser behavior signals rather than blindly expanding raw histories. This is relevant to ecommerce audience stratification and intent modeling.",
+          "key_metrics": "The paper reports that ALGN breaks the saturation point of raw-text behavior modeling on large Alipay-scale data, continuing to improve CTR/CVR/retrieval-style tasks while keeping representations more efficient.",
+          "story": "Industrial systems often assume more logs plus larger models must help, but billion-scale user streams are highly redundant. The paper argues that increasing behavior density before representation learning is a better scaling strategy."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 76,
+        "rationale_zh": "工业洞察很强，但更偏用户表征基础层，对达人治理/内容理解属于中等相关。",
+        "rationale_en": "Strong industrial insight, but it sits at the user-representation layer and is only moderately related to creator governance or direct content understanding."
+      },
+      "figure_steps": [
+        "Raw user behavior sequences",
+        "Discrete densification / adaptive tokenization",
+        "Billion-scale representation learning",
+        "Improved retrieval / CTR / CVR"
+      ],
+      "exp_cards": [
+        ["Scale", "billion-scale user behavior"],
+        ["Key idea", "behavior densification before scaling"],
+        ["Outcome", "breaks raw scaling saturation"]
+      ]
+    },
+    {
+      "id": "2606.23911",
+      "title": "Scaling Dense Retrieval with LLM-Annotated Training Data: Structured Mining and Progressive Curriculum for E-Commerce Sponsored Search",
+      "authors": ["Md Omar Faruk Rokon", "Shasvat Desai", "Jhalak Nilesh Acharya", "et al."],
+      "affiliations": ["Walmart Global Tech"],
+      "source": "arXiv",
+      "published": "2026-06-22",
+      "tags": ["电商检索", "LLM 标注", "数据质量", "强相关", "已实现"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2606.23911",
+        "pdf": "https://arxiv.org/pdf/2606.23911"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-25/ScalingDenseRetrieval",
+        "note": "论文未公开可运行代码；本轮补齐 toy PyTorch reproduction，覆盖多路召回分歧挖掘、三级 judge 级联打分、五级难度课程学习与双塔训练/评测。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文从电商赞助检索的真实痛点出发：点击日志受位置偏置和长尾稀疏影响，难以直接做 dense retrieval 监督。作者把多路召回系统之间的分歧当成结构化监督源，再用三级 LLM 标注级联生成 graded relevance，最后把样本按五级难度组织进 progressive curriculum 训练双塔检索器。我们本轮实现的 toy 版本保留了这四个关键机制。",
+          "innovation": "它的创新主要不在网络，而在数据流水线：一是把检索系统 disagreement 变成 easy positive / hard positive / hard negative；二是用成本受控的级联式 LLM 标注替代纯人工；三是用 progressive curriculum 把海量样本从易到难组织起来。对于电商内容生态/达人治理，这套思路也能迁移到内容召回、违规样本挖掘与低质内容过滤。",
+          "key_metrics": "论文在 Walmart 线上/离线实验中报告 NDCG@10 提升 5.1%，长尾 query 提升约 6.8%，rating=0 的 embarrassing retrieval 从 8.7% 降到 3.5%，两周线上 A/B 带来广告支出约 +2.8%。",
+          "story": "传统 dense retrieval 想要好数据，但电商搜索最容易得到的是有偏点击而非高质量相关性标签。论文于是退一步：先观察多路系统哪里意见不一致，再把这些分歧交给 LLM 级联打分，最后用课程学习把模型从容易样本带到真正影响业务的难样本。"
+        },
+        "en": {
+          "method_overview": "The paper targets a real ecommerce sponsored-search pain point: click logs are biased and sparse, especially for tail queries, which weakens dense retrieval supervision. It turns disagreement across multiple retrieval channels into structured training signals, uses a three-stage LLM cascade for graded relevance annotation, and organizes data into a five-level progressive curriculum for a two-tower retriever. Our toy reproduction keeps these four core mechanisms.",
+          "innovation": "The key innovation lies in the data pipeline rather than a more complex network: retrieval-system disagreement becomes easy/hard positives and hard negatives, cascade LLM labeling replaces fully manual supervision, and curriculum learning orders huge training data from easy to hard. The same pattern is transferable to content recall, moderation sampling, and low-quality content filtering.",
+          "key_metrics": "The paper reports +5.1% NDCG@10, around +6.8% on tail queries, embarrassing retrievals dropping from 8.7% to 3.5%, and an online ad-spend lift of roughly +2.8% at Walmart scale.",
+          "story": "Dense retrieval needs better labels, but ecommerce search mostly offers biased clicks instead of robust relevance judgments. The paper therefore mines disagreement across existing systems, labels those cases with an LLM cascade, and uses curriculum learning to move from easy examples to the truly business-critical hard cases."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 85,
+        "rationale_zh": "与电商搜索/内容检索强相关，业务指标扎实且公开代码缺失，值得优先复现。",
+        "rationale_en": "Highly relevant to ecommerce retrieval with strong business-facing gains, and worth reproducing because no runnable public code is available."
+      },
+      "figure_steps": [
+        "Multi-channel retrieval disagreement mining",
+        "Three-stage LLM-style grading cascade",
+        "Five-level difficulty curriculum",
+        "Two-tower dense retriever training"
+      ],
+      "exp_cards": [
+        ["Metric", "NDCG@10 +5.1%"],
+        ["Tail queries", "+6.8%"],
+        ["Embarrassing retrieval", "8.7% → 3.5%"]
+      ]
+    },
+    {
+      "id": "2608.23552",
+      "title": "Prime Agent: A Self-Improving RLM Harness",
+      "authors": ["Seth Karten", "Alex L. Zhang", "Kevin Thomas", "et al."],
+      "affiliations": ["Prime Intellect", "Princeton University", "MIT"],
+      "source": "Hugging Face Daily Papers / arXiv",
+      "published": "2026-08-25",
+      "tags": ["Agent", "自我改进", "长时程任务", "弱相关高热", "今日热榜"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.23552",
+        "pdf": "https://arxiv.org/pdf/2608.23552",
+        "code": "https://github.com/PrimeIntellect-ai/prime-agent"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+        "note": "已验证代码仓非空，包含 packages、runtime、安装脚本与测试文件，具备实质实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Prime Agent 关注的不是单一任务分数，而是 agent 在长时程复杂工作里能否持续保存状态、自我改进并避免被框架本身拖后腿。它通过持久化 REPL、跨轨迹记忆与多层状态缓存，让递归语言模型能够把中间成果真正沉淀为可复用能力。对今天的热榜来说，这是一篇典型的‘agent system design’论文。",
+          "innovation": "论文的价值在于把很多看似零散的 agent 工程问题，如状态丢失、资源统计、子 agent 通信等，整理成一个统一 harness。对电商内容生态与达人治理虽然不是直接模型，但非常适合作为自动巡检、申诉处理、策略配置等复杂工作流 agent 的底座参考。",
+          "key_metrics": "论文报告将 ARC-AGI-3 类指标从约 30% 拉到 95.5%，并在超长时程的 nanoGPT 工作流里持续运行 85.5 小时、产生 19 条有效验证记录，证明系统设计对长任务闭环影响巨大。",
+          "story": "很多 agent 失败并不是模型不会，而是工具链把记忆、执行环境和状态都打碎了。Prime Agent 于是从框架层重做 agent 的‘持续工作能力’，试图让模型真正把过去的工作沉淀成未来的能力。"
+        },
+        "en": {
+          "method_overview": "Prime Agent focuses on whether an agent can preserve state, improve itself, and keep working over long-horizon tasks without being bottlenecked by the framework itself. It combines a persistent REPL, cross-trajectory memory, and multi-layer state caching so recursive language models can turn intermediate work into reusable capability.",
+          "innovation": "Its contribution is system-level: it organizes fragmented agent-engineering issues such as state loss, resource accounting, and sub-agent communication into one unified harness. While only weakly related to ecommerce content governance, it is highly relevant as an execution substrate for complex inspection workflows.",
+          "key_metrics": "The paper reports a jump from roughly 30% to 95.5% on ARC-AGI-3 style evaluation and shows 85.5 hours of sustained execution with 19 verified runs on a long-horizon nanoGPT workflow.",
+          "story": "Many agents fail not because the model is weak, but because the framework loses memory, execution state, and intermediate artifacts. Prime Agent rebuilds the framework layer so past work can become future capability."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 15,
+        "total": 82,
+        "rationale_zh": "虽然与电商场景偏弱相关，但作为今日高热 agent 底座论文，方法与代码成熟度都很高。",
+        "rationale_en": "Only weakly related to ecommerce, but it is a high-heat agent-systems paper today with mature methodology and verified code."
+      },
+      "figure_steps": [
+        "Task decomposition into recursive agents",
+        "Persistent REPL + memory + cache layers",
+        "Self-improving execution harness",
+        "Long-horizon task completion"
+      ],
+      "exp_cards": [
+        ["ARC-AGI-3", "~30% → 95.5%"],
+        ["Long horizon", "85.5h sustained run"],
+        ["Code", "verified non-empty GitHub repo"]
+      ]
+    },
+    {
+      "id": "2608.21375",
+      "title": "SchemaRouter: Field-Aware Tool Routing for Efficient Heterogeneous Agentic RAG",
+      "authors": ["Yong-eun Cho"],
+      "affiliations": ["KailosLab"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["Agentic RAG", "工具路由", "数据协议", "中相关", "今日新发"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.21375",
+        "pdf": "https://arxiv.org/pdf/2608.21375"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "论文附带研究代码链接，但本轮未独立克隆核验；先作为高价值工具路由方向收录。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SchemaRouter 针对异构 agentic RAG 的一个核心工程问题：不是所有工具都该全量喂给 LLM，也不是只靠向量相似度就能选到正确字段。它把工具、端点、参数和响应字段建成 schema graph，再通过小模型抽取意图，用确定性图投影选出‘该调用什么工具、取什么字段’。它的价值在于让 RAG 从工具级路由进一步细化到字段级路由。",
+          "innovation": "字段级路由在电商内容生态中非常重要，因为同样是商品/达人/规则数据，不同问题只需要极少数字段，过度抓取会增加成本且带来协议/权限风险。SchemaRouter 还把 provenance 与 license 一起纳入计划生成，对合规场景尤其友好。",
+          "key_metrics": "论文报告在材料科学异构工具基准上，把平均检索上下文 token 从 2066 压到 227，端到端延迟降低约 2.7 倍，同时回答准确率 0.71 与 fetch-everything 基线相当，并优于 prompt-all 的 0.66。",
+          "story": "异构 RAG 系统一旦接很多 API，最常见的问题不是不会回答，而是抓多了浪费、抓少了答不出来。SchemaRouter 于是把‘工具选择’拆成更细粒度的 schema/field 选择，以结构化方式平衡准确率、延迟与可验证性。"
+        },
+        "en": {
+          "method_overview": "SchemaRouter addresses a core problem in heterogeneous agentic RAG: feeding every tool description to an LLM is expensive, while vector similarity alone cannot choose the right response fields. It represents tools, endpoints, parameters, and fields as a schema graph, then uses lightweight intent extraction plus deterministic projection to decide which tool and which fields to fetch.",
+          "innovation": "Field-aware routing matters in ecommerce ecosystems because many questions need only a tiny subset of product, creator, or policy fields. Over-fetching increases latency, cost, and compliance risk. SchemaRouter also grounds provenance and license information, which is valuable for governance use cases.",
+          "key_metrics": "The paper reports context tokens dropping from 2066 to 227, end-to-end latency improving by about 2.7x, and answer accuracy reaching 0.71, comparable to fetch-everything and better than a 0.66 prompt-all baseline.",
+          "story": "When RAG systems integrate many APIs, the common failure is not only wrong answers but also fetching too much or too little. SchemaRouter refines tool routing into schema and field routing to balance accuracy, latency, and verifiability."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 5,
+        "relevance": 14,
+        "total": 77,
+        "rationale_zh": "工程价值很高，尤其适合复杂数据问答/巡检系统，但与电商内容理解本体任务仍是中等相关。",
+        "rationale_en": "High engineering value for complex data QA and inspection systems, though still only moderately related to the core ecommerce content-understanding task itself."
+      },
+      "figure_steps": [
+        "User query over heterogeneous tools",
+        "Intent extraction + schema graph matching",
+        "Field-aware tool plan generation",
+        "Lean RAG execution with provenance"
+      ],
+      "exp_cards": [
+        ["Context tokens", "2066 → 227"],
+        ["Latency", "2.7x faster"],
+        ["Accuracy", "0.71 vs 0.66 prompt-all"]
+      ]
+    },
+    {
+      "id": "2605.18805",
+      "title": "RecoAtlas: From Semantic Plausibility to Set-Level Utility in LLM Recommendation Agents",
+      "authors": ["Imad Aouali", "Flavian Vasile", "Otmane Sakhi", "et al."],
+      "affiliations": ["Criteo AI Lab"],
+      "source": "arXiv",
+      "published": "2026-05-11",
+      "tags": ["推荐 Agent", "电商", "评测", "强相关", "近期高价值"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2605.18805",
+        "pdf": "https://arxiv.org/pdf/2605.18805",
+        "code": "https://github.com/imadaouali/reco-atlas"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "已验证 GitHub 仓库当前为空仓库，因此不视为可用开源实现；本轮先不复现该 benchmark 框架。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RecoAtlas 直指一个现实问题：LLM 推荐 agent 给出的结果‘看起来很像对的’，并不意味着用户行为层面的 utility 真高。它把推荐质量从语义 plausibility 扩展到 set-level utility，分别衡量 relevance、complementarity、diversity 和解释质量，并通过受控工具环境诊断到底是推理策略更强，还是工具本身更强。",
+          "innovation": "这篇论文的创新在评测范式：从单点 item 打分转向整组推荐报告的行为效用，并把语义层评价与行为层评价拆开。对达人带货、套装推荐、组合售卖场景很重要，因为真正影响转化的往往不是某个单品是否合理，而是整组搭配是否协调、是否互补。",
+          "key_metrics": "论文显示更强模型、更强工具和更多 test-time compute 会提升 set-level utility，但语义上‘说得通’与行为上‘真有效’并不总一致，从而暴露出现有 LLM-as-a-judge 评价的局限。",
+          "story": "许多推荐 agent 论文只看 rerank 准确率或语言解释是否自然，却忽略用户最终看到的是整组结果。RecoAtlas 于是把评测单位提升到 recommendation set，逼着系统同时回答‘推荐对不对’与‘推荐组合有没有用’。"
+        },
+        "en": {
+          "method_overview": "RecoAtlas addresses a practical problem: recommendation-agent outputs that sound semantically plausible may still have weak behavioral utility. It extends evaluation from single-item plausibility to set-level utility, separately measuring relevance, complementarity, diversity, and explanation quality under controlled tool environments.",
+          "innovation": "Its innovation is evaluative: it shifts from isolated item scoring to the behavioral utility of an entire recommendation set, and disentangles semantic plausibility from real utility. This is directly valuable for creator-led bundles, outfit sets, and shopping combinations.",
+          "key_metrics": "The paper shows that stronger models, stronger tools, and more test-time compute improve set-level utility, while semantic plausibility is not always a reliable proxy for behavioral effectiveness, exposing limitations of LLM-as-a-judge style evaluation.",
+          "story": "Many recommendation-agent papers evaluate ranking accuracy or explanation fluency, but users consume full recommendation sets rather than isolated items. RecoAtlas therefore elevates the evaluation target from single items to set-level usefulness."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 79,
+        "rationale_zh": "与电商推荐/达人带货组合评价强相关，但当前公开仓库为空，外部复现价值暂未超过本轮优先项。",
+        "rationale_en": "Strongly relevant to ecommerce recommendation and creator bundle evaluation, but the current public repository is empty, so it does not outrank this round's reproduction priority."
+      },
+      "figure_steps": [
+        "Agent produces recommendation set + explanation",
+        "Behavior-grounded utility modeling",
+        "Set-level relevance / complementarity / diversity",
+        "Semantic plausibility vs actual utility"
+      ],
+      "exp_cards": [
+        ["Unit of evaluation", "recommendation set instead of single item"],
+        ["Focus", "behavior-grounded utility"],
+        ["Repo check", "public GitHub currently empty"]
+      ]
+    }
+  ]
+}
