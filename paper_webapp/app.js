@@ -1,4 +1,5 @@
 let db = null;
+let jsonData = null;
 let lang = "zh";
 
 const I18N = {
@@ -17,6 +18,16 @@ const I18N = {
     source: "来源",
     authors: "作者",
     affiliations: "机构",
+    dayKicker: "每日论文巡检",
+    paperCount: "论文数",
+    filteredCount: "当前显示",
+    window: "巡检窗口",
+    linkPaper: "论文",
+    linkPdf: "PDF",
+    linkCode: "开源代码",
+    linkProject: "项目页",
+    linkDataset: "数据集",
+    linkReproduce: "复现代码",
     loading: "Loading…",
     empty: "当前筛选条件下没有论文。",
   },
@@ -35,6 +46,16 @@ const I18N = {
     source: "Source",
     authors: "Authors",
     affiliations: "Affiliations",
+    dayKicker: "Daily paper inspection",
+    paperCount: "Papers",
+    filteredCount: "Showing",
+    window: "Inspection window",
+    linkPaper: "Paper",
+    linkPdf: "PDF",
+    linkCode: "Code",
+    linkProject: "Project",
+    linkDataset: "Dataset",
+    linkReproduce: "Reproduce",
     loading: "Loading…",
     empty: "No papers match the current filter.",
   },
@@ -99,6 +120,108 @@ function parseJsonMaybe(v) {
   }
 }
 
+function getJsonDays() {
+  return Array.isArray(jsonData?.days) ? jsonData.days : [];
+}
+
+function getJsonPapers() {
+  return Array.isArray(jsonData?.papers) ? jsonData.papers : [];
+}
+
+function listDates() {
+  if (jsonData) {
+    const dayDates = getJsonDays()
+      .map((day) => day?.inspection_date)
+      .filter(Boolean);
+    const paperDates = getJsonPapers()
+      .map((paper) => paper?.inspection_date)
+      .filter(Boolean);
+    return [...new Set([...dayDates, ...paperDates])].sort((a, b) => b.localeCompare(a));
+  }
+
+  try {
+    return query("SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC").map((r) => r.d);
+  } catch {
+    return query("SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC").map((r) => r.d);
+  }
+}
+
+function getDayMeta(date) {
+  if (jsonData) {
+    return (
+      getJsonDays().find((day) => day && day.inspection_date === date) ||
+      {
+        inspection_date: date,
+        paper_count: getJsonPapers().filter((paper) => paper && paper.inspection_date === date).length,
+      }
+    );
+  }
+
+  try {
+    const rows = query(
+      `SELECT inspection_date, paper_count, notes_zh, notes_en, window_start, window_end, repo_branch
+       FROM days WHERE inspection_date = ?`,
+      [date]
+    );
+    if (rows.length) return rows[0];
+  } catch {
+    // Older generated databases only had the papers table; keep the static app usable.
+  }
+  return { inspection_date: date, paper_count: null };
+}
+
+function getPapersForDate(date, minScore) {
+  if (jsonData) {
+    return getJsonPapers()
+      .filter((paper) => paper && paper.inspection_date === date && Number(paper.score_total || 0) >= minScore)
+      .sort((a, b) => Number(b.score_total || 0) - Number(a.score_total || 0) || String(a.title || "").localeCompare(String(b.title || "")));
+  }
+
+  return query(
+    `SELECT 
+      inspection_date, paper_id, title, authors, affiliations, source, published, links, tags,
+      score_total, score_breakdown, rationale_zh, rationale_en,
+      method_overview_zh, method_overview_en,
+      story_zh, story_en,
+      innovation_zh, innovation_en,
+      key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
+    FROM papers
+    WHERE inspection_date = ? AND score_total >= ?
+    ORDER BY score_total DESC, title ASC`,
+    [date, minScore]
+  );
+}
+
+function formatWindow(day) {
+  if (!day || (!day.window_start && !day.window_end)) return "";
+  const start = day.window_start || "?";
+  const end = day.window_end || "?";
+  return `${I18N[lang].window}: ${start} → ${end}`;
+}
+
+function renderDayHeader(day, visibleCount) {
+  const header = $("dayHeader");
+  if (!header || !day || !day.inspection_date) return;
+  header.classList.remove("hidden");
+  $("dayKicker").textContent = I18N[lang].dayKicker;
+  $("dayTitle").textContent = day.inspection_date;
+
+  const total = Number.isFinite(Number(day.paper_count)) ? Number(day.paper_count) : visibleCount;
+  $("dayCount").textContent = `${I18N[lang].filteredCount} ${visibleCount} / ${I18N[lang].paperCount} ${total}`;
+  $("dayWindow").textContent = formatWindow(day);
+  $("dayWindow").style.display = $("dayWindow").textContent ? "" : "none";
+
+  const note = (lang === "zh" ? day.notes_zh : day.notes_en) || day.notes_zh || day.notes_en || "";
+  $("dayNote").textContent = note;
+  $("dayNote").style.display = note ? "" : "none";
+}
+
+function addLink(items, seen, name, url) {
+  if (!url || seen.has(url)) return;
+  seen.add(url);
+  items.push({ name, url });
+}
+
 function renderPapers(papers) {
   const grid = $("grid");
   grid.innerHTML = "";
@@ -143,20 +266,14 @@ function renderPapers(papers) {
     const links = parseJsonMaybe(p.links) || {};
     const linksWrap = card.querySelector(".links");
     const linkItems = [];
+    const seenLinks = new Set();
     const paperUrl = links.abs || links.arxiv || links.paper;
-    if (paperUrl) {
-      linkItems.push({
-        name: paperUrl.includes("arxiv.org") ? "arXiv" : "Paper",
-        url: paperUrl,
-      });
-    }
-    if (links.pdf) linkItems.push({ name: "PDF", url: links.pdf });
-    if (links.code) linkItems.push({ name: "Code", url: links.code });
-    if (links.project) linkItems.push({ name: "Project", url: links.project });
-    if (links.dataset) linkItems.push({ name: "Dataset", url: links.dataset });
-    if (p.reproduce_url) {
-      linkItems.push({ name: links.code ? "Reproduce" : "Code", url: p.reproduce_url });
-    }
+    addLink(linkItems, seenLinks, paperUrl && paperUrl.includes("arxiv.org") ? "arXiv" : t.linkPaper, paperUrl);
+    addLink(linkItems, seenLinks, t.linkPdf, links.pdf);
+    addLink(linkItems, seenLinks, t.linkCode, links.code || links.github || links.repo);
+    addLink(linkItems, seenLinks, t.linkProject, links.project || links.project_page);
+    addLink(linkItems, seenLinks, t.linkDataset, links.dataset || links.data);
+    addLink(linkItems, seenLinks, t.linkReproduce, p.reproduce_url);
 
     for (const it of linkItems) {
       const a = document.createElement("a");
@@ -264,45 +381,78 @@ function refresh() {
   const date = $("dateSelect").value;
   const minScore = Number($("scoreSlider").value);
 
-  const rows = query(
-    `SELECT 
-      inspection_date, paper_id, title, authors, affiliations, source, published, links, tags,
-      score_total, score_breakdown, rationale_zh, rationale_en,
-      method_overview_zh, method_overview_en,
-      story_zh, story_en,
-      innovation_zh, innovation_en,
-      key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
-    FROM papers
-    WHERE inspection_date = ? AND score_total >= ?
-    ORDER BY score_total DESC, title ASC`,
-    [date, minScore]
-  );
-
+  const rows = getPapersForDate(date, minScore);
+  const day = getDayMeta(date);
+  renderDayHeader(day, rows.length);
   renderPapers(rows);
+}
+
+function loadInlineData() {
+  const inlineData = window.__PAPER_DATA__;
+  if (
+    !inlineData ||
+    typeof inlineData !== "object" ||
+    (!Array.isArray(inlineData.days) && !Array.isArray(inlineData.papers))
+  ) {
+    throw new Error("Inline data bundle is unavailable");
+  }
+  jsonData = inlineData;
+}
+
+async function loadJsonFallback() {
+  const resp = await fetch("data/papers.json");
+  if (!resp.ok) {
+    throw new Error(`JSON fallback load failed: ${resp.status}`);
+  }
+  jsonData = await resp.json();
+}
+
+async function loadSqliteDatabase() {
+  if (typeof window.initSqlJs !== "function") {
+    throw new Error("sql.js is unavailable");
+  }
+
+  const SQL = await window.initSqlJs({
+    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
+  });
+
+  const resp = await fetch("data/papers.sqlite");
+  if (!resp.ok) {
+    throw new Error(`SQLite load failed: ${resp.status}`);
+  }
+
+  const buf = await resp.arrayBuffer();
+  db = new SQL.Database(new Uint8Array(buf));
 }
 
 async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const SQL = await window.initSqlJs({
-    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
-  });
+  const protocol = window.location.protocol;
+  const loaders = protocol === "file:"
+    ? [loadInlineData, loadJsonFallback, loadSqliteDatabase]
+    : [loadSqliteDatabase, loadJsonFallback, loadInlineData];
 
-  const buf = await fetch("data/papers.sqlite").then((r) => r.arrayBuffer());
-  db = new SQL.Database(new Uint8Array(buf));
-
-  let dates = [];
-  try {
-    dates = query(
-      "SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
-  } catch {
-    dates = query(
-      "SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
+  let lastError = null;
+  for (const load of loaders) {
+    try {
+      await load();
+      lastError = null;
+      break;
+    } catch (error) {
+      console.warn("Data load attempt failed.", error);
+      db = null;
+      jsonData = null;
+      lastError = error;
+    }
   }
 
+  if (lastError) {
+    throw lastError;
+  }
+
+  const dates = listDates();
   const dateSelect = $("dateSelect");
   dateSelect.innerHTML = "";
   for (const d of dates) {
@@ -310,6 +460,11 @@ async function init() {
     opt.value = d;
     opt.textContent = d;
     dateSelect.appendChild(opt);
+  }
+
+  if (!dates.length) {
+    renderPapers([]);
+    return;
   }
 
   $("scoreValue").textContent = $("scoreSlider").value;
@@ -329,4 +484,9 @@ async function init() {
   refresh();
 }
 
-window.addEventListener("DOMContentLoaded", init);
+window.addEventListener("DOMContentLoaded", () => {
+  init().catch((error) => {
+    console.error("Failed to initialize paper webapp.", error);
+    setStatus("加载失败，请检查 data/papers-inline.js / data/papers.sqlite / data/papers.json 是否可访问。");
+  });
+});

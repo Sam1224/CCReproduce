@@ -6,6 +6,7 @@
     <title>Daily Paper Radar</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js" defer></script>
+    <script src="data/papers-inline.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body>
@@ -35,6 +36,15 @@
     </header>
 
     <main class="container">
+      <section id="dayHeader" class="day-header hidden" aria-live="polite">
+        <div id="dayKicker" class="day-kicker"></div>
+        <div class="day-header-row">
+          <h1 id="dayTitle" class="day-title"></h1>
+          <span id="dayCount" class="day-count"></span>
+        </div>
+        <div id="dayWindow" class="day-window"></div>
+        <p id="dayNote" class="day-note"></p>
+      </section>
       <div id="status" class="status">Loading…</div>
       <section id="grid" class="grid" aria-live="polite"></section>
     </main>

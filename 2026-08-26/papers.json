@@ -1,0 +1,395 @@
+{
+  "inspection_date": "2026-08-26",
+  "window": {
+    "start": "2026-08-26T00:00:00+08:00",
+    "end": "2026-08-27T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检窗口为北京时间 2026-08-26 00:00:00 至 2026-08-27 00:00:00。检索策略以 arXiv 当日 recent/new 页面为主（重点覆盖 cs.IR / cs.AI / cs.CL / cs.CV / cs.LG），并补充 Hugging Face Daily Papers、OpenReview/会议 accepted list、Google Scholar/Semantic Scholar/OpenAlex、以及 Qwen/Google/Meta/OpenAI 等研究博客入口。原始关键词在用户给定范围上做了收敛与扩展：e-commerce, live-streaming advertising, creator/content ecology, multimodal CTR, LLM-enhanced collaborative filtering, representation learning, item similarity, long-horizon agent memory。显式跳过安全/攻击/后门方向。今日最强相关信号主要来自 arXiv 当日提交；企业研究博客与 OpenReview 当日未发现同等强相关的新条目。",
+  "notes_en": "Inspection window: 2026-08-26 00:00:00 to 2026-08-27 00:00:00 (GMT+8). Discovery focused on same-day arXiv recent/new pages across cs.IR / cs.AI / cs.CL / cs.CV / cs.LG, with supplementary checks on Hugging Face Daily Papers, OpenReview / accepted-paper lists, Google Scholar / Semantic Scholar / OpenAlex, and major lab blogs. Keywords were refined around ecommerce, creator/content ecology, multimodal CTR, LLM-enhanced collaborative filtering, item similarity, and long-horizon agent memory, while explicitly excluding security / backdoor / attack topics.",
+  "scoring_guide": {
+    "innovation": 30,
+    "results": 15,
+    "exp_quality": 15,
+    "efficiency": 10,
+    "generalization": 5,
+    "relevance": 25
+  },
+  "papers": [
+    {
+      "id": "2608.24034",
+      "title": "TAGR: Temporally Adaptive Generative Recommendation for Industrial Live-Streaming Advertising",
+      "authors": ["Wencai Ye", "Guangyi Liu", "Chaoyi Wang", "Wenbin Luo", "Shengyu Wang", "Mingjie Sun", "Peng Wang", "Quanming Yao", "Wenjin Wu", "Peng Jiang"],
+      "affiliations": ["Kuaishou Technology", "Tsinghua University"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["直播电商", "生成式推荐", "广告", "时序建模", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24034",
+        "pdf": "https://arxiv.org/pdf/2608.24034"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-26/TAGR",
+        "note": "未发现公开可用代码；本轮实现 toy PyTorch reproduction，覆盖动态 live-state token、意图感知序列编码与 online preference proxy。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TAGR 面向直播广告场景，把推荐目标建模成随时间快速漂移的生成式序列决策问题。方法核心包括：根据直播间阶段与在售商品动态生成 live-state token，显式编码用户进入直播后的意图变化，以及用间歇式在线偏好优化近似真实反馈回路。这样既能刻画“此刻这个直播间在卖什么、强调什么”，也能刻画用户刚刚表现出的点击/停留/加购倾向。整体上，它解决的是直播内容与商品语义持续变化时，固定 ID 表征失效的问题。",
+          "innovation": "亮点在于把直播间这个非平稳环境显式参数化成可学习的时变 token，而不是继续复用静态主播/直播间 ID。第二个亮点是把生成式推荐和在线偏好优化耦合起来，让模型既看离线监督，也看更贴近商业目标的反馈信号。对于电商内容生态，这种设计非常适合处理热点直播、临时活动、达人口播节奏变化带来的内容漂移。风险在于工业版在线更新链路复杂，真实部署仍需严格控制延迟、冷启动与策略稳定性。",
+          "key_metrics": "论文报告在线 A/B 中 revenue lift 约 +16.1%，直播进入率与后链路转化指标也同步提升，说明方法不仅提升点击，还改善了商业闭环。",
+          "story": "传统广告/推荐系统默认一个直播间 ID 在较长时间内语义稳定，但直播电商恰恰相反：货盘、口播、促销节奏会持续变化。TAGR 因此先把直播状态动态 token 化，再让用户意图表示与当前直播状态共同决定生成式推荐，最后通过在线偏好优化让策略持续贴近真实反馈。"
+        },
+        "en": {
+          "method_overview": "TAGR targets industrial live-stream advertising where the recommendation target shifts rapidly over time. It introduces dynamic live-state tokens derived from the current room stage and on-sale products, an intent-aware sequential encoder for user behavior after entering a room, and an intermittent online preference optimization routine that better matches commercial feedback loops. The method is designed to solve the failure of static room/creator IDs in a highly non-stationary commerce setting.",
+          "innovation": "The main novelty is turning a live room into a time-varying tokenized state rather than a fixed ID, and coupling generative recommendation with online preference optimization. This is especially suitable for commerce content ecosystems where creator scripts, inventory, and promotions drift minute by minute. The main caveat is production complexity around online updates, latency, and stability.",
+          "key_metrics": "The paper reports around +16.1% revenue lift in online A/B tests, together with gains on room-entry and downstream conversion metrics.",
+          "story": "Static identifiers assume recommendation targets are stable, but live commerce is not: products, promotions, and creator narratives keep changing. TAGR therefore tokenizes the live state dynamically, conditions recommendation on both current state and user intent, and refines the policy with online preference optimization."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 15,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 19,
+        "total": 84,
+        "rationale_zh": "业务相关性极高，工业 A/B 指标也很亮眼；扣分主要在于公开实验可复核性与泛化证据仍偏有限。",
+        "rationale_en": "Extremely relevant to live-commerce recommendation with strong industrial gains; points were deducted because public reproducibility and broader generalization evidence are still limited."
+      },
+      "figure_steps": [
+        "Dynamic live-room state tokenization",
+        "Intent-aware user sequence encoder",
+        "Generative ranking over ad candidates",
+        "Intermittent online preference optimization"
+      ],
+      "exp_cards": [
+        ["Scenario", "industrial live-stream ads"],
+        ["Online lift", "+16.1% revenue"],
+        ["Signal", "entry + conversion gains"]
+      ]
+    },
+    {
+      "id": "2608.24091",
+      "title": "Native Multimodal Representation Learning for Click-Through Rate Prediction in E-Commerce Scenarios",
+      "authors": ["Chao Yi", "Feifan Yang", "Jiawei Feng", "Sishuo Chen", "Zhangming Chan", "Xiang-Rong Sheng", "Han Zhu"],
+      "affiliations": ["Alibaba Taobao Tmall Group"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["多模态", "CTR", "电商", "内容理解", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24091",
+        "pdf": "https://arxiv.org/pdf/2608.24091"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-26/NativeMultimodalCTR",
+        "note": "未发现公开代码；本轮实现 toy PyTorch reproduction，覆盖 mine-then-train 两阶段流程、三元组挖掘与 CTR 预测头。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文聚焦电商 CTR 任务中“点击并不总等于语义喜欢”这一根本噪声问题。作者提出 mine-then-train：先借助多模态打标器从原始曝光/点击日志里筛出语义一致性更强的图文-行为三元组，再用这些高质量样本微调多模态编码器，最后把编码后的表示送入 CTR 头。这样做的核心价值是把价格、位置等非语义噪声尽量隔离出去，让模型学到更贴近商品内容理解的表征。",
+          "innovation": "创新点不在更深的结构，而在把“电商点击日志不等于语义监督”系统地形式化，并据此设计出先挖掘、后训练的稳健训练范式。对于内容生态/达人治理，这种思想可以迁移到封面、标题、讲解片段等内容要素的质量挖掘。局限是工业版三元组挖掘高度依赖内部打标器与日志特征，公开复现时只能做接口对齐的 toy 近似。",
+          "key_metrics": "论文报告在淘宝展示广告场景的在线实验中 CTR 约 +1.5%，RPM 约 +0.5%，说明内容理解增强最终传导到了业务收益。",
+          "story": "如果直接拿点击日志端到端训练多模态 CTR，模型很容易学到价格偏置、曝光位偏置等投机信号，而不是真的理解内容。作者先从日志里挖掘多模态可解释的监督，再训练原生多模态表示，最后用于 CTR 预测，从而把语义理解和业务目标更稳定地连接起来。"
+        },
+        "en": {
+          "method_overview": "The paper starts from a practical observation: clicks in ecommerce are not pure semantic labels because they are heavily entangled with position, price, and other exposure biases. It proposes a mine-then-train pipeline: first mine multimodally explainable triplets from raw impression/click logs, then fine-tune a multimodal encoder on these higher-quality samples, and finally attach a CTR head for ranking. The goal is to preserve the content semantics that actually drive user interest.",
+          "innovation": "The contribution is less about a deeper architecture and more about formalizing why naive end-to-end CTR training can fail for multimodal commerce data. By isolating semantically grounded supervision before training, the framework becomes much more robust for content understanding. Its main limitation is that the industrial mining stage depends on internal labelers and logging signals, so public reproductions can only approximate the interface.",
+          "key_metrics": "The paper reports about +1.5% CTR and +0.5% RPM in Taobao display-ad online experiments.",
+          "story": "Directly optimizing CTR on raw logs encourages models to exploit exposure bias rather than understand content. The paper therefore mines semantically interpretable supervision first, trains native multimodal representations second, and only then uses them for CTR prediction."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 82,
+        "rationale_zh": "与电商内容理解直接相关，在线效果扎实；扣分主要因为公开可复核的开源资源不足。",
+        "rationale_en": "Directly relevant to multimodal commerce understanding with solid online gains; points were deducted because public resources remain limited."
+      },
+      "figure_steps": [
+        "Mine explainable triplets from logs",
+        "Train native multimodal encoder",
+        "Fuse image-text-item signals",
+        "CTR prediction on debiased features"
+      ],
+      "exp_cards": [
+        ["Task", "e-commerce display CTR"],
+        ["Online CTR", "+1.5%"],
+        ["RPM", "+0.5%"]
+      ]
+    },
+    {
+      "id": "2608.24363",
+      "title": "Rethinking Semantic Alignment in LLM-Enhanced Collaborative Filtering: A Spectral Decoupling Approach",
+      "authors": ["Yedong Jin", "Shaowen Peng", "Tsunenori Mine", "Shoko Wakamiya", "Eiji Aramaki"],
+      "affiliations": ["NAIST", "Kyushu University"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["推荐", "协同过滤", "LLM", "语义表征", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24363",
+        "pdf": "https://arxiv.org/pdf/2608.24363"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-08-26/UniSpecRec",
+        "note": "未发现公开代码；本轮实现 toy PyTorch reproduction，覆盖频谱平滑、语义/协同解耦编码与融合打分。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "作者重新审视 LLM 语义嵌入与协同过滤信号的结合方式，指出“先对齐再融合”会压扁语义空间里原本有价值的非主成分。于是论文提出频谱解耦思路：对协同信号和语义信号分别做适配，保留各自频谱特征，再在预测阶段做轻量融合。其本质是承认二者统计结构不同，不强行把语义表征投影成协同空间。",
+          "innovation": "论文的高光点是从奇异值频谱分布解释了为什么很多 LLM-enhanced CF 方法虽然引入了大模型语义，却仍然学不到额外收益。与其花大量参数做对齐，不如先做参数无关的频谱过滤与解耦融合。对于电商内容生态，这一思路尤其适合把达人文案、商品标题、评论摘要等文本信号融入推荐而不过度破坏协同结构。",
+          "key_metrics": "论文在 Amazon Games/Toys/Books 等数据集上报告 Recall@10/20 与 NDCG@10/20 的一致提升，整体优于显式对齐基线。",
+          "story": "现有方法默认语义空间应该服从协同过滤的几何结构，于是不断做投影、蒸馏或对齐；但作者发现这样会损失语义细节。论文因此转向“先解耦、后融合”：保留各自擅长的频段，再在预测层协同决策。"
+        },
+        "en": {
+          "method_overview": "The paper revisits how LLM semantics should be combined with collaborative filtering and argues that explicit alignment can destroy useful non-principal semantic components. It therefore proposes a spectral-decoupling view: adapt collaborative and semantic signals separately, preserve their own spectral structure, and only fuse them lightly at prediction time. The key idea is to respect the mismatch between the two spaces instead of forcing one into the other.",
+          "innovation": "Its main insight is diagnostic: singular-value spectra explain why many alignment-heavy methods fail to unlock extra semantic gains from LLM embeddings. A simpler parameter-light filtering and decoupling strategy can work better. This is highly relevant when injecting creator text, titles, or reviews into ecommerce recommenders.",
+          "key_metrics": "The paper reports consistent gains on Recall@10/20 and NDCG@10/20 across Amazon Games/Toys/Books, outperforming alignment-based baselines.",
+          "story": "Many prior methods assume semantic features should imitate collaborative geometry, so they keep aligning or distilling them. The paper shows this hurts semantic detail and switches to a decouple-then-fuse paradigm instead."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 80,
+        "rationale_zh": "与内容语义融入推荐直接相关，方法轻量且可解释；扣分主要因为任务范围仍集中在推荐侧。",
+        "rationale_en": "Directly relevant to injecting content semantics into recommendation, with a lightweight and interpretable design; points were deducted because the scope remains recommendation-centric."
+      },
+      "figure_steps": [
+        "Collaborative signal decomposition",
+        "Semantic spectrum smoothing",
+        "Decoupled user-item encoding",
+        "Late fusion for ranking"
+      ],
+      "exp_cards": [
+        ["Datasets", "Amazon Games/Toys/Books"],
+        ["Metrics", "Recall@K, NDCG@K"],
+        ["Finding", "better than alignment baselines"]
+      ]
+    },
+    {
+      "id": "2608.24467",
+      "title": "HMGCLIP: Heterogeneous Multi-Granularity Contrastive Learning for E-commerce Representation Learning",
+      "authors": ["Qiuyu Zhu", "Yi Gao", "Zhichao Wan", "Mingyang Ma"],
+      "affiliations": ["Alibaba International Digital Commerce Group"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["电商", "表征学习", "多粒度", "对比学习", "高相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24467",
+        "pdf": "https://arxiv.org/pdf/2608.24467"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "方法依赖异构超图构建与大规模属性图谱；本轮先纳入重点跟踪，但分数未达到强制复现阈值。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "HMGCLIP 围绕电商商品理解构建异构超图，把商品、图像、属性和值放进统一的多粒度对比学习框架。模型不仅学图文对齐，还显式挖掘属性级、关系级和结构级的高难负样本，从而得到更适合商品分类与属性理解的嵌入。推理阶段再通过双粒度证据融合，增强对细粒度属性的辨别能力。",
+          "innovation": "其创新在于把传统图文对比学习扩展到了电商特有的属性-值超图结构，对“面料像不像、版型像不像、属性是否冲突”这类问题更敏感。问题在于工业属性图谱和负样本构建代价较高，公开复现难度不小，因此本轮降低了可执行性评分。",
+          "key_metrics": "论文在内部东南亚电商数据与公共基准上报告 Hit@1/3/5 与 MRR 的领先表现，细粒度属性分类也刷新了基线。",
+          "story": "通用 CLIP 能分出大类，但难区分电商里真正影响转化的细粒度属性。HMGCLIP 因此引入异构超图，把商品、属性和值共同放进多粒度对比学习，逼模型学到更‘懂货’的表示。"
+        },
+        "en": {
+          "method_overview": "HMGCLIP builds a heterogeneous hypergraph that connects products, images, attributes, and attribute values inside a unified multi-granularity contrastive-learning framework. It learns not only image-text alignment but also relation-level and structure-level hard negatives, and uses dual-granularity evidence fusion at inference time for fine-grained attribute understanding.",
+          "innovation": "The method extends generic contrastive learning into ecommerce-specific attribute-value hypergraphs, making it more sensitive to subtle product distinctions. The downside is that the industrial graph construction and hard-negative mining pipeline is expensive and hard to reproduce publicly.",
+          "key_metrics": "The paper reports leading Hit@1/3/5 and MRR on internal Southeast-Asia ecommerce data and public benchmarks, with strong gains on fine-grained attribute prediction.",
+          "story": "Generic CLIP distinguishes broad categories, but ecommerce often needs fine-grained product understanding. HMGCLIP injects product-attribute structure directly into representation learning to make the model more sensitive to commercially important distinctions."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 79,
+        "rationale_zh": "内容理解价值很高，但工程依赖重、公开复现成本高，因此暂不进入强制复现。",
+        "rationale_en": "Very valuable for commerce understanding, but the engineering stack is heavy and public reproducibility is expensive, so it stays just below the reproduction threshold."
+      },
+      "figure_steps": [
+        "Build product-attribute hypergraph",
+        "Mine multi-granularity hard negatives",
+        "Contrast image-text-attribute views",
+        "Fuse evidence for fine-grained prediction"
+      ],
+      "exp_cards": [
+        ["Core graph", "product-attribute hypergraph"],
+        ["Metrics", "Hit@K, MRR"],
+        ["Strength", "fine-grained attribute gains"]
+      ]
+    },
+    {
+      "id": "2608.24295",
+      "title": "RecGPT-Mobile-V2 Technical Report",
+      "authors": ["RecGPT-Mobile Team"],
+      "affiliations": ["Alibaba"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["端侧推荐", "移动搜索", "LLM", "效率", "中高相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24295",
+        "pdf": "https://arxiv.org/pdf/2608.24295"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "偏工业技术报告，包含端侧量化与蒸馏细节；本轮先收录到高关注列表。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RecGPT-Mobile-V2 面向移动端搜索/推荐入口，把用户短时行为压缩为更适合端上推理的意图表示，并通过质量门控策略决定是否触发更长的推理路径。为了满足移动端成本约束，模型同时结合了混合精度量化和知识蒸馏。整体目标是‘必要时多想一步，不必要时快速给出 query/推荐意图’。",
+          "innovation": "最大亮点是把推理长度控制纳入训练/策略设计，而不是单纯做模型压缩，体现了端侧智能体‘按需思考’的工程范式。局限在于它更像技术报告，开放实验和数据较少，因此研究可迁移性略弱。",
+          "key_metrics": "论文报告约 3.95x 推理加速，CoT 中位长度显著下降，同时 query 质量指标保持提升。",
+          "story": "移动端入口既需要更懂用户，又不能牺牲延迟和功耗。RecGPT-Mobile-V2 因此用质量门控决定何时值得展开长推理，再配合量化和蒸馏把能力压回端侧约束内。"
+        },
+        "en": {
+          "method_overview": "RecGPT-Mobile-V2 targets mobile-side search and recommendation entry points. It compresses short-term behavior into intent representations suitable for on-device inference, uses quality-gated reasoning to decide when a longer reasoning path is necessary, and combines quantization with distillation to satisfy latency and power limits.",
+          "innovation": "Its main contribution is operational: reasoning-length control is treated as part of the learning problem rather than as a post-hoc compression trick. The limitation is that it is still largely a technical report with limited open experimental detail.",
+          "key_metrics": "The report shows roughly 3.95x inference speed-up and a major reduction in median CoT length while improving query quality.",
+          "story": "Mobile entry points need better intent understanding without violating latency and power budgets. The report therefore learns when to think longer and when to answer fast, then compresses the model stack for device deployment."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 15,
+        "total": 77,
+        "rationale_zh": "端侧效率设计很亮眼，但论文更偏技术报告，研究开放度不足。",
+        "rationale_en": "The efficiency design is strong, but the work is closer to a technical report with limited openness."
+      },
+      "figure_steps": [
+        "Compress mobile behavior evidence",
+        "Gate long vs short reasoning",
+        "Distill and quantize the model",
+        "Predict query / recommendation intent"
+      ],
+      "exp_cards": [
+        ["Device focus", "mobile-side inference"],
+        ["Speed-up", "3.95x"],
+        ["CoT median", "62 -> 14 tokens"]
+      ]
+    },
+    {
+      "id": "2608.24876",
+      "title": "Recursive Experiential-Working Memory Evolution for Long-Horizon Agent Harnesses",
+      "authors": ["Zhaochen Yu", "Yingcheng Wu", "Zhenfei Yin", "Kaiyuan Chen", "Zhe Zhao", "Mengdi Wang", "Shuicheng Yan", "Ling Yang"],
+      "affiliations": ["National University of Singapore", "Stanford University", "University of Oxford", "Princeton University"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["Agent", "长程记忆", "工作流", "热点", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24876",
+        "pdf": "https://arxiv.org/pdf/2608.24876",
+        "code": "https://github.com/Gen-Verse/Recuris"
+      },
+      "reproduce": {
+        "status": "code_available",
+        "url": "https://github.com/Gen-Verse/Recuris",
+        "note": "论文提供代码仓库，且不是空仓；本轮不重复实现。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Recuris 将长程 agent 拆成工作记忆和经验记忆两层：工作记忆负责当前状态跟踪与计划推进，经验记忆负责技能调用与失败归因。系统还加入递归进化回路，由 meta-agent 根据轨迹错误定位到底是技能、触发条件还是状态定义出了问题，然后局部修补。这样模型不必反复读取超长历史，也能逐步提升长流程任务的稳定性。",
+          "innovation": "相比直接继续堆上下文，Recuris 把改进点放在外置记忆控制层，工程上更易落地。对电商侧的启发是：复杂达人治理、售后、质检工作流都可以用‘工作记忆 + 经验记忆’拆解。因为已有可用代码且偏 agent 基建，本轮不单独复现。",
+          "key_metrics": "论文在长任务基准上报告显著增益，在最长任务段的提升超过 30 个点，并给出 4 倍级别的故障定位改进。",
+          "story": "长程 agent 失败往往不是能力不够，而是状态丢了、经验没复用好。Recuris 先把当前状态显式写入工作记忆，再让经验记忆支撑技能调用，并通过递归修补不断改善记忆层设计。"
+        },
+        "en": {
+          "method_overview": "Recuris splits long-horizon agents into working memory for state tracking and experiential memory for skill use and failure attribution. A recursive evolution loop lets a meta-agent inspect failures and patch the right component—skill, trigger rule, or state definition—without forcing the base model to reread the full trajectory.",
+          "innovation": "Instead of throwing more context at the model, Recuris improves the external memory-control layer, which is easier to operationalize. The same abstraction is useful for commerce workflows such as creator governance or after-sales handling. Since usable code already exists, this run does not re-implement it.",
+          "key_metrics": "The paper reports substantial gains on long-horizon agent benchmarks, with over 30-point improvement on the longest tasks and around 4x better failure localization.",
+          "story": "Long-horizon agents often fail not because the base model is weak, but because state tracking and experience reuse break down. Recuris externalizes both layers and recursively improves them from failures."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 10,
+        "total": 76,
+        "rationale_zh": "是当日很热的 agent 论文，方法扎实且代码可用，但与电商内容理解/达人治理属于弱相关。",
+        "rationale_en": "A hot agent paper with strong methodology and available code, but only weakly related to ecommerce content / creator governance."
+      },
+      "figure_steps": [
+        "Track task state in working memory",
+        "Retrieve skills from experiential memory",
+        "Execute long-horizon agent actions",
+        "Recursively repair failures via meta-agent"
+      ],
+      "exp_cards": [
+        ["Core split", "working vs experiential memory"],
+        ["Longest tasks", ">30-point gain"],
+        ["Code", "public repo available"]
+      ]
+    },
+    {
+      "id": "2608.24825",
+      "title": "A Dual-Dimensional LLM Framework for Automated Item Incidental Content Similarity Analysis in Large-Scale Assessments",
+      "authors": ["Jing Huang", "Jihong Zhang", "Hua-Hua Chang"],
+      "affiliations": ["Purdue University", "University of Arkansas"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["相似度", "内容去重", "LLM", "中相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24825",
+        "pdf": "https://arxiv.org/pdf/2608.24825"
+      },
+      "reproduce": {
+        "status": "not_reproduced",
+        "note": "方法偏评估与结构化打分，本轮先收录为内容去重/相似度分析的思路参考。"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把内容相似性拆成两个维度：结构层面的显式相似（格式、句式、词汇重叠）和语义层面的隐式相似（主题、语境、倾向）。作者借助 LLM 分别在这两个维度上打分，并用这种双维度结果去分析大规模题目库里的潜在冗余。虽然应用场景是教育测评，但方法本质上是一种适合大规模内容去重和近似重复发现的通用框架。",
+          "innovation": "相比直接做 embedding 相似度或 BLEU/ROUGE，这篇论文更强调‘重复不只有字面重复，还有语义重复’，因此更适合治理场景里难发现的脚本洗稿、封面改写和标题改写。局限在于它偏分析/评估框架，真正的大规模线上部署仍需额外做召回与成本控制。",
+          "key_metrics": "论文报告 LLM 相似度与残差相关性的 Spearman 相关约 0.50，明显优于传统指标，并显著降低了自适应测试中的估计偏差。",
+          "story": "传统相似度方法对字面重复敏感，却容易漏掉‘换壳不换意’的内容。作者因此把结构相似和语义相似拆开建模，再用 LLM 做双维度分析，从而更稳地识别潜在冗余。"
+        },
+        "en": {
+          "method_overview": "The paper decomposes similarity into explicit structural overlap and implicit semantic overlap, then asks an LLM to score both dimensions separately. Although the application domain is educational assessment, the framework is effectively a scalable recipe for near-duplicate discovery and large-scale content de-duplication.",
+          "innovation": "Unlike plain embedding similarity or BLEU/ROUGE, it emphasizes that duplicates can be semantic rather than lexical. This is relevant to governance scenarios such as rewritten scripts, retitled content, or lightly modified covers. Its limitation is that it remains more of an analysis framework than a production retrieval system.",
+          "key_metrics": "The paper reports around 0.50 Spearman correlation between LLM similarity scores and residual correlation, clearly outperforming traditional metrics, while reducing estimation bias in adaptive testing.",
+          "story": "Literal overlap is easy to catch, but many duplicates are semantic rephrasings. The paper therefore models structural and semantic similarity separately and lets an LLM score both dimensions."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 13,
+        "total": 68,
+        "rationale_zh": "对内容去重很有启发，但原始场景并非电商，且更偏分析框架。",
+        "rationale_en": "Insightful for duplicate-content analysis, but the original task is not ecommerce and the work is more framework-oriented."
+      },
+      "figure_steps": [
+        "Split structural and semantic similarity",
+        "Score both dimensions with an LLM",
+        "Aggregate redundancy evidence",
+        "Flag near-duplicate content items"
+      ],
+      "exp_cards": [
+        ["Dimensions", "structure + semantics"],
+        ["Correlation", "~0.50 Spearman"],
+        ["Use case", "large-scale duplicate analysis"]
+      ]
+    }
+  ]
+}
