@@ -1,0 +1,109 @@
+{
+  "inspection_date": "2026-08-27",
+  "window": {
+    "start": "2026-08-27T00:00:00+08:00",
+    "end": "2026-08-28T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检按北京时间 2026-08-27 归档，等价 UTC 窗口为 2026-08-26T16:00:00Z 至 2026-08-27T16:00:00Z。检索优先使用 arXiv，并补充 Web 检索 Hugging Face Daily Papers、OpenReview、Google Scholar/Semantic Scholar/OpenAlex/DBLP 线索、AI 企业/研究实验室 blog、社交媒体与会议 accepted-paper 列表。关键词在原需求基础上扩展为：e-commerce/search/recommendation、content understanding、multimodal document understanding、VLM/MLLM、caption/embedding/vector retrieval/clustering、agentic RAG、knowledge graph RAG、distillation/data selection/data quality/data cleaning/large-scale annotation、compliance/moderation/governance。显式跳过安全、后门、越狱、攻防类论文。今日没有检索到直接聚焦电商达人治理的强相关新论文；以下为与内容理解、治理合规、RAG/MLLM 数据能力最相关的候选。",
+  "paper_sources_added": [
+    "arXiv cs.AI/cs.CL/cs.CV/cs.IR/cs.LG recent and pastweek",
+    "Hugging Face Daily Papers",
+    "OpenReview recent submissions and venue tabs",
+    "Semantic Scholar/OpenAlex/DBLP date-filtered discovery",
+    "Google/DeepMind/OpenAI/Meta/Qwen/DeepSeek/Hunyuan/Meituan/Kuaishou/Xiaohongshu research blogs",
+    "ICML/NeurIPS/ICLR/CVPR/ICCV/ECCV/ACL/EMNLP/NAACL/KDD/SIGIR/SIGMOD/VLDB accepted-paper pages",
+    "AI media and social channels such as 机器之心、量子位、CVer、新智元、知乎、X"
+  ],
+  "scoring_rubric": {
+    "innovation": 30,
+    "results": 15,
+    "experiment_quality": 15,
+    "efficiency": 10,
+    "generalization": 5,
+    "relevance": 25
+  },
+  "papers": [
+    {
+      "id": "2608.26091",
+      "title": "PlanSightRAG: A Visual-First Multimodal RAG for Automating Question Answering and Compliance Checking for Civil Standard Plans",
+      "authors": ["Nabaraj Subedi", "Shuvo Dip Datta", "Ahmed Abdelaty", "Shivanand Venkanna Sheshappanavar"],
+      "affiliations": ["University of Wyoming"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["Multimodal RAG", "Visual Retrieval", "Compliance Checking", "VLM", "中强相关"],
+      "links": {"paper": "https://arxiv.org/abs/2608.26091", "pdf": "https://arxiv.org/pdf/2608.26091"},
+      "reproduce": {"status": "implemented", "path": "2026-08-27/PlanSightRAG", "note": "未发现论文提供可用代码仓库；已实现 toy PyTorch reproduction，覆盖 patch-level visual indexing、MaxSim 检索、合规 auditor 与训练/测试脚本。"},
+      "summary": {
+        "zh": {
+          "method_overview": "PlanSightRAG 面向包含大量几何/版式信息的工程图纸，提出不依赖 OCR 的 visual-first multimodal RAG。系统将标准图纸渲染为页面/切片图像，用 ColNomic-3B 生成 patch-level multi-vector 表征，通过 MaxSim 做视觉检索，并用 Qwen2.5-VL 进行问答和合规判定。进一步设计 Planner–Retriever–Auditor–Synthesizer agent 流程，把复杂合规问题拆成多个检索和审计步骤，并用 heatmap 作为证据链。对电商内容治理的启发是：对海报、直播切片、商品图文等 OCR 失真严重的内容，视觉原生检索和证据热区比纯文本解析更稳。",
+          "innovation": "创新点在于把复杂视觉文档理解从 OCR→文本检索改为页面图像的 patch-level late-interaction 检索，并把合规判定做成可追踪的 agentic pipeline。相比传统 text-RAG 或 OCR-free document parser，它更关注视觉布局、尺寸、标注与跨页证据，适合处理内容治理中的图文混排、规则定位和证据留存问题。方法工程上可行，但主流程依赖大 VLM，agentic 审计延迟较高。",
+          "key_metrics": "在 1,898 页、4,056 对 five-DOT benchmark 上，ColNomic-3B 达到 92.69% Recall@5；强文本基线 BGE-M3+OCR 为 36.79%，混合基线 VisionRAG 为 23.11%。论文摘要还报告整体零样本检索 91.47% Recall@5，Michigan held-out 零样本迁移 91.40%，合成合规图纸在预解析阈值下达到 100% verdict accuracy。",
+          "story": "传统图纸/图文内容自动化治理通常先 OCR，再把文本丢给检索和 LLM；但尺寸、布局、箭头、局部图例等关键证据会在 OCR 中丢失。PlanSightRAG 因此把原始图像作为一等公民，先做视觉 patch 检索，再让 agent 分步定位规则、审计证据、输出结论，从而把视觉细节保留下来。"
+        },
+        "en": {
+          "method_overview": "PlanSightRAG proposes a visual-first multimodal RAG framework for visually dense standard plans without relying on OCR. It renders plans as page/tile images, indexes them with ColNomic-3B patch-level multi-vector embeddings, retrieves evidence through MaxSim, and uses Qwen2.5-VL for VQA and compliance decisions. An agentic Planner-Retriever-Auditor-Synthesizer loop decomposes complex compliance queries into evidence-grounded steps. For ecommerce governance, the same idea maps well to posters, livestream frames, product images, and mixed visual-text assets where OCR loses layout evidence.",
+          "innovation": "The main novelty is replacing OCR-to-text retrieval with visual late-interaction retrieval and wrapping compliance checking in a traceable agent pipeline. Compared with text RAG or OCR-free parsers, it preserves layout, fine dimensions, annotations, and cross-page evidence. The approach is feasible, although full deployment still depends on large VLMs and the agentic path is latency-heavy.",
+          "key_metrics": "On a 1,898-page, 4,056-pair five-DOT benchmark, ColNomic-3B reaches 92.69% Recall@5 versus 36.79% for BGE-M3+OCR and 23.11% for VisionRAG. The abstract reports 91.47% zero-shot Recall@5, 91.40% held-out Michigan transfer, and 100% verdict accuracy on synthetic compliance drawings when thresholds are pre-resolved.",
+          "story": "Conventional compliance automation converts drawings or mixed media to text first, but OCR discards dimensions, layouts, arrows, and local visual evidence. PlanSightRAG treats the image as the primary retrieval object, retrieves patch-level visual evidence, and lets an agent plan, retrieve, audit, and synthesize an evidence-backed verdict."
+        }
+      },
+      "score": {"innovation": 26, "results": 14, "exp_quality": 14, "efficiency": 7, "generalization": 4, "relevance": 22, "total": 87, "rationale_zh": "与内容理解、规则合规和治理证据链高度相关，实验指标强且 benchmark 构造完整；扣分主要来自 agentic 审计延迟较高和领域集中在工程图纸。", "rationale_en": "Highly relevant to content understanding, compliance, and evidence-grounded governance with strong metrics and a solid benchmark; points deducted for agentic latency and domain concentration."},
+      "figure_steps": ["Input plan or ecommerce visual asset", "Patch-level visual index with MaxSim", "Planner-Retriever-Auditor agent loop", "Evidence-grounded verdict and report"],
+      "exp_cards": [["Retrieval", "92.69% R@5"], ["Text baseline", "36.79% R@5"], ["Verdict", "100% ceiling"]]
+    },
+    {
+      "id": "2608.25986",
+      "title": "Multi-Granularity Context-Enhanced RAG over Multimodal Knowledge Graphs",
+      "authors": ["Zongyu Wu", "Yilong Wang", "Xiaochen Wang", "Minhua Lin", "Zhichao Xu", "Fenglong Ma", "Xiang Zhang", "Suhang Wang"],
+      "affiliations": ["The Pennsylvania State University", "University of Utah"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["GraphRAG", "Multimodal KG", "RAG", "Content Understanding", "中强相关"],
+      "links": {"paper": "https://arxiv.org/abs/2608.25986", "pdf": "https://arxiv.org/pdf/2608.25986"},
+      "reproduce": {"status": "implemented", "path": "2026-08-27/CEMMKG", "note": "未发现论文提供可用代码仓库；已实现 toy PyTorch reproduction，覆盖局部/全局上下文构造、上下文增强 image-to-graph、跨模态融合与训练/测试脚本。"},
+      "summary": {
+        "zh": {"method_overview": "CEMMKG 关注 multimodal GraphRAG 中图像节点与文本上下文割裂的问题。它为每个视觉元素构建局部上下文和全局上下文：局部上下文不仅取邻近文字，还检索语义相关句子/段落；全局上下文描述整个文档主题。随后在 image-to-graph 阶段注入完整上下文，在图像图和文本图融合阶段注入局部上下文，让视觉实体抽取与跨模态对齐更一致。", "innovation": "相比 RAG-Anything、MMGraphRAG 这类先独立处理多模态再融合的流程，CEMMKG 把上下文选择前置到视觉知识抽取与融合两个关键阶段。创新合理且工程改造成本较低，因为它不需要替换底层 MLLM 或图检索框架，而是替换/增强 context argument；在电商内容理解中可用于商品图、达人笔记、直播截图与文案之间的实体关系构建。", "key_metrics": "论文在 MMLongBench-Doc 中筛选 VisionHeavy 子集（106 问题，80.2% 需要视觉信息，43.2% 需要跨页证据），报告 strict/soft accuracy，并在 RAG-Anything 与 MMGraphRAG 两类 backbone 上验证上下文增强带来的提升。", "story": "现有 MMKG-RAG 往往把图片先单独 caption/抽实体，再与文本图拼接，导致图片语义和分散在文档其他位置的说明文字对不上。CEMMKG 认为问题关键不是“更多上下文”，而是按局部/全局粒度选择合适上下文，并在视觉抽图和跨模态融合两个阶段分别使用。"},
+        "en": {"method_overview": "CEMMKG addresses the separation between image nodes and textual context in multimodal GraphRAG. For each visual element, it builds local context from nearby and semantically related text and global context from the whole document. Full context is injected during image-to-graph construction, while local context guides image-text graph fusion, improving visual entity extraction and cross-modal alignment.", "innovation": "Compared with pipelines that process modalities independently and fuse them later, CEMMKG moves context design into both visual graph construction and multimodal graph fusion. The design is practical because it augments the context argument without replacing the backbone MLLM or graph-RAG framework. For ecommerce, it can support entity-relation construction across product images, creator notes, livestream screenshots, and captions.", "key_metrics": "The paper evaluates on a VisionHeavy subset selected from MMLongBench-Doc with 106 questions, where 80.2% require visual information and 43.2% require cross-page evidence. It reports strict/soft accuracy gains across RAG-Anything and MMGraphRAG backbones.", "story": "Existing MMKG-RAG often captions or extracts image entities in isolation and then fuses them with text graphs, so visual entities are weakly aligned to dispersed textual evidence. CEMMKG reframes the issue as context selection and stage-aware context injection: choose useful local/global context, then use it differently for visual graph construction and multimodal fusion."}
+      },
+      "score": {"innovation": 25, "results": 12, "exp_quality": 12, "efficiency": 8, "generalization": 4, "relevance": 22, "total": 83, "rationale_zh": "对多模态内容理解和 RAG 知识库建设直接有价值，方法轻量、可迁移；扣分在于公开摘要中缺少更强 SOTA 量化幅度和数据规模较小。", "rationale_en": "Directly useful for multimodal content understanding and RAG knowledge-base construction; lightweight and transferable, but quantitative SOTA margins and dataset scale appear limited."},
+      "figure_steps": ["Image-rich document or creator post", "Local and global context construction", "Context-augmented image-to-graph", "Context-guided MMKG fusion and RAG"],
+      "exp_cards": [["Dataset", "VisionHeavy 106 Q"], ["Visual need", "80.2%"], ["Cross-page", "43.2%"]]
+    },
+    {
+      "id": "2608.26095",
+      "title": "A Visual Dependence-Aware Framework for Multimodal Unsupervised Continual Post-Training",
+      "authors": ["Kaichen Li", "Zhilin Zhu", "Jianhao Huang", "Zhengqin Lai", "Baochen Xiong", "Zibo Shao", "Yaguang Song", "Linhui Xiao", "Xiaoshan Yang", "Changsheng Xu"],
+      "affiliations": ["Institute of Automation, Chinese Academy of Sciences", "Pengcheng Laboratory", "University of Chinese Academy of Sciences", "Harbin Institute of Technology, Shenzhen"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["MLLM", "Continual Learning", "Unlabeled Data", "Data Quality", "中强相关"],
+      "links": {"paper": "https://arxiv.org/abs/2608.26095", "pdf": "https://arxiv.org/pdf/2608.26095"},
+      "reproduce": {"status": "implemented", "path": "2026-08-27/VDA", "note": "未发现论文提供可用代码仓库；已实现 toy PyTorch reproduction，覆盖 token-level visual dependence、VMA 加权、VC-OT 保持旧任务视觉依赖和顺序任务训练。"},
+      "summary": {
+        "zh": {"method_overview": "VDA 提出 MU-CPT：MLLM 在无答案标签的连续多模态数据流上持续后训练。论文发现 token-level visual dependence 可作为视觉 grounding 的细粒度信号：视觉相关 token 应依赖图像区域，语言模板 token 则不应过度吸走注意力。方法由 VC-OT 和 VMA 构成，前者用带区域感知代价和依赖分层约束的最优传输保持旧任务视觉依赖结构，后者对新任务中视觉依赖高的 token 加权以增强可塑性。", "innovation": "与常规无监督后训练把目标 token 一视同仁不同，VDA 将 token 对视觉输入的依赖程度变成训练权重和遗忘约束。这个视角对电商内容生态有价值：达人/商品内容每天变化，标注成本高，模型需要在新内容上自适应，同时不能忘记既有违规/类目/语义规则。方法较复杂但逻辑闭环，LoRA+buffer 的形式具备工程落地可能。", "key_metrics": "以 Qwen2.5-VL-7B 为主干，在 TextVQA、SciVQA、StockQA、GQA、DriveLM、PMC-VQA 六任务顺序上，VDA AvgAcc 达 62.5%，超过最强无监督后训练基线 ScPO 3.7 点，超过最强 continual-learning 基线 SEEKR-MLLM 2.4 点；AvgF 降至 0.6。", "story": "多模态模型在线上会持续遇到新场景，但大规模人工答案不可持续；直接无监督后训练又会让模型逐渐从视觉证据漂移到语言模板，造成跨模态遗忘。VDA 因此显式追踪 token 的视觉依赖，用 VC-OT 守住旧任务依赖结构，用 VMA 强化新任务视觉 token 学习。"},
+        "en": {"method_overview": "VDA introduces MU-CPT, where an MLLM continually post-trains on answer-unlabeled multimodal streams. It uses token-level visual dependence as a fine-grained grounding signal: visually grounded tokens should rely on image regions, while template-like language tokens should not dominate attention. The framework combines VC-OT, which preserves old-task visual-dependence structure with region-aware transport and stratified constraints, and VMA, which upweights visually grounded tokens for new-task plasticity.", "innovation": "Unlike unsupervised post-training that treats all target tokens uniformly, VDA turns visual dependence into both an adaptation weight and a forgetting regularizer. This is useful for ecommerce content ecosystems where creator/product content evolves continuously, labels are costly, and models must adapt without forgetting category, violation, or semantic rules. The method is complex but feasible with LoRA and replay buffers.", "key_metrics": "With Qwen2.5-VL-7B on TextVQA, SciVQA, StockQA, GQA, DriveLM, and PMC-VQA, VDA reaches 62.5% AvgAcc, outperforming the strongest unsupervised post-training baseline ScPO by 3.7 points and the strongest continual-learning baseline SEEKR-MLLM by 2.4 points; AvgF drops to 0.6.", "story": "Multimodal models in production constantly face new visual domains, but large-scale answer annotation is costly. Naive unsupervised post-training can shift attention away from visual evidence toward language templates, causing cross-modal forgetting. VDA explicitly tracks visual dependence, protects old-task structure with VC-OT, and uses VMA to learn new visually grounded content."}
+      },
+      "score": {"innovation": 26, "results": 13, "exp_quality": 14, "efficiency": 6, "generalization": 5, "relevance": 17, "total": 81, "rationale_zh": "对无标注多模态数据持续学习、内容理解和数据质量有较高价值，实验覆盖多域；扣分在于与电商治理不是直接任务，且训练成本依赖 7B MLLM+LoRA。", "rationale_en": "Valuable for unlabeled multimodal continual learning, content understanding, and data quality with broad experiments; less directly tied to ecommerce governance and requires 7B MLLM LoRA training."},
+      "figure_steps": ["Streaming unlabeled multimodal tasks", "Estimate token-level visual dependence", "VC-OT preserves old visual grounding", "VMA adapts to new visual tokens"],
+      "exp_cards": [["AvgAcc", "62.5%"], ["Gain", "+3.7 pts"], ["Forgetting", "0.6 AvgF"]]
+    },
+    {
+      "id": "2608.26105",
+      "title": "VBVR-Pro: A Scalable and Verifiable Suite for Native Visual Reasoning",
+      "authors": ["Junxiang Xu", "Ruisi Wang", "Fanyi Pu", "Maijunxian Wang", "Ran Ji", "Tongxi Zhou", "Chenyang Gu", "Jing Zuo", "Hongcan Xiao", "Yimeng Geng", "Wanqi Yin", "Wei Chen", "Oscar Qian", "Zhengan Yan", "Ziqi Huang", "Haiwen Diao", "Liang Pan", "Bo Li", "Xiangyu Fan", "Dezhi Luo", "Fengyuan Yu", "Zehong Zhao", "Qingying Gao", "Tinghui Zhu", "Yilan Zhang", "Jingqi Tong", "Pinyuan Feng", "Zhengze Jiang", "Letian Wang", "Ziyu Guo", "Renrui Zhang", "Jieneng Chen", "Sonia Joseph", "Constantin Venhoff", "Saman Motamed", "Mengyue Yang", "Chandra Sripada", "Alan Yuille", "Philip Torr", "Lvmin Zhang", "Vikash Kumar", "Daniel Khashabi", "Nikolaus Kriegeskorte", "Raphaël Millière", "Vincent C. Müller", "Anyi Rao", "Quan Wang", "Ziwei Liu", "Dahua Lin", "Lei Yang", "Hokin Deng", "Zhongang Cai"],
+      "affiliations": ["Nanyang Technological University", "University of California, Berkeley", "University of California, San Diego", "VBVR Community Contributors", "The University of Tokyo", "The Chinese University of Hong Kong", "University of Michigan", "Johns Hopkins University", "Carnegie Mellon University", "Stanford University", "University of Oxford", "HKUST"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["Visual Reasoning", "MLLM", "Verifiable Reward", "Benchmark", "弱相关"],
+      "links": {"paper": "https://arxiv.org/abs/2608.26105", "pdf": "https://arxiv.org/pdf/2608.26105", "homepage": "https://video-reason.com/"},
+      "reproduce": {"status": "not_reproduced", "note": "评分低于 80，且论文声明会发布数据、模型、scorer 与代码，未触发本轮复现。"},
+      "summary": {
+        "zh": {"method_overview": "VBVR-Pro 将视觉生成本身视为推理载体，构建 300 个程序化视觉推理任务，能同时生成图像、视频和 interleaved 轨迹数据。它强调确定性可验证 scorer，避免纯 VLM-as-judge 在计数、空间关系、规则判断上的不稳定。论文还系统比较图像、视频、图文交错生成模型，并用强化学习验证可验证奖励能提升视觉推理能力。", "innovation": "亮点是把视觉推理从“看图答题”推进到“生成视觉状态并由可验证规则评分”，数据规模和评测协议都更适合训练闭环。与电商内容治理弱相关：可借鉴其可验证 scorer 和程序化任务生成，用于商品图/短视频内容理解的规则化评测。业务相关性不如 RAG/合规类论文直接。", "key_metrics": "在 VBVR-Pro-Bench 上，VBVR-Pro-Wan2.2-I2V-A14B overall 0.670，VBVR-Pro-SenseNova-U1 overall 0.638；verifiable scorer 与人类偏好 per-vote agreement 超过 0.60，高于 GPT-5.5 的 0.54 和 Gemini-3.1-Pro 的 0.52。", "story": "视觉推理训练缺少可扩展任务和稳定评价，导致模型容易学到表面 prompt 模式而非真正视觉状态转换。VBVR-Pro 用程序化生成器产生可验证任务，并用规则 scorer 提供训练奖励和评测信号，让模型在可控闭环中学习视觉轨迹。"},
+        "en": {"method_overview": "VBVR-Pro treats visual generation as the substrate of reasoning and builds 300 procedural visual reasoning tasks that generate aligned image, video, and interleaved trajectories. It introduces deterministic verifiable scorers to avoid instability in VLM-as-a-judge evaluation for counting, spatial relations, and rule satisfaction. The paper compares image, video, and interleaved generators and validates verifiable rewards through RL.", "innovation": "The key contribution is moving visual reasoning from image QA toward generated visual states evaluated by verifiable rules. It is weakly related to ecommerce governance but useful as a template for rule-based evaluation of product images and short-video content. Relevance is lower than RAG/compliance papers.", "key_metrics": "On VBVR-Pro-Bench, VBVR-Pro-Wan2.2-I2V-A14B reaches 0.670 overall and VBVR-Pro-SenseNova-U1 reaches 0.638. The verifiable scorer exceeds 0.60 per-vote agreement with humans, above GPT-5.5 at 0.54 and Gemini-3.1-Pro at 0.52.", "story": "Visual reasoning lacks scalable tasks and stable evaluators, so models may learn prompt patterns rather than visual state transitions. VBVR-Pro creates procedurally generated verifiable tasks and rule-based scorers, enabling a closed-loop training and evaluation process for visual trajectories."}
+      },
+      "score": {"innovation": 28, "results": 13, "exp_quality": 15, "efficiency": 6, "generalization": 5, "relevance": 10, "total": 77, "rationale_zh": "论文质量很高、热度潜力强，但与电商内容生态/达人治理主要是方法启发，非直接应用，因此不进入 >=80 复现集合。", "rationale_en": "High paper quality and strong momentum, but only indirectly relevant to ecommerce content and creator governance, so it is not reproduced under the >=80 rule."},
+      "figure_steps": ["Procedural visual reasoning tasks", "Aligned image/video/interleaved data", "Verifiable task-specific scorers", "SFT/RL and benchmark transfer"],
+      "exp_cards": [["Tasks", "300"], ["Best overall", "0.670"], ["Judge agree", ">0.60"]]
+    }
+  ]
+}

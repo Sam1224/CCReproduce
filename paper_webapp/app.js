@@ -1,4 +1,5 @@
 let db = null;
+let fallbackRows = null;
 let lang = "zh";
 
 const I18N = {
@@ -81,6 +82,15 @@ function setLang(nextLang) {
 }
 
 function query(sql, params = []) {
+  if (fallbackRows) {
+    if (sql.includes("FROM days")) {
+      return fallbackRows.days.map((d) => ({ d }));
+    }
+    const [date, minScore] = params;
+    return fallbackRows.papers
+      .filter((p) => p.inspection_date === date && p.score_total >= minScore)
+      .sort((a, b) => b.score_total - a.score_total || a.title.localeCompare(b.title));
+  }
   const stmt = db.prepare(sql);
   stmt.bind(params);
   const rows = [];
@@ -285,12 +295,20 @@ async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const SQL = await window.initSqlJs({
-    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
-  });
+  try {
+    if (!window.initSqlJs) throw new Error("sql.js unavailable");
+    const SQL = await window.initSqlJs({
+      locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
+    });
 
-  const buf = await fetch("data/papers.sqlite").then((r) => r.arrayBuffer());
-  db = new SQL.Database(new Uint8Array(buf));
+    const response = await fetch("data/papers.sqlite");
+    if (!response.ok) throw new Error(`papers.sqlite ${response.status}`);
+    const buf = await response.arrayBuffer();
+    db = new SQL.Database(new Uint8Array(buf));
+  } catch (err) {
+    console.warn("SQLite runtime unavailable; using JSON fallback", err);
+    fallbackRows = await fetch("data/papers_fallback.json").then((r) => r.json());
+  }
 
   let dates = [];
   try {
