@@ -1,0 +1,719 @@
+{
+  "inspection_date": "2026-08-28",
+  "window": {
+    "start": "2026-08-28T00:00:00+08:00",
+    "end": "2026-08-29T00:00:00+08:00"
+  },
+  "notes_zh": "本次巡检归档日期为北京时间 2026-08-28（按每日 00:00 GMT+8 执行）。受 arXiv 日更批次与时区影响，本轮实际覆盖到的最新论文发布时间集中在 2026-08-25~2026-08-27。数据源以 arXiv 为主，重点关注 cs.IR/cs.AI/cs.LG/cs.CL/cs.CV 方向；同时建议补充入口：arXiv RSS（分类 + 关键词）、HuggingFace Daily Papers、OpenReview（ICLR/NeurIPS/ACL 等）、Semantic Scholar / OpenAlex API、Papers with Code Trending、各大研究机构博客/新闻页（DeepMind/Meta/OpenAI/Qwen/腾讯混元等）、以及顶会 accepted list（KDD/SIGIR/SIGMOD/ACL/CVPR 等）。关键词在原始需求上做了更贴合“电商内容生态&达人治理”的扩展：e-commerce search/retrieval、catalog freshness、attribute completion/indexing、multimodal embedding、CTR/ads recommendation、live-stream commerce、data quality/data selection、agent workflow/skill evolution、RAG/SQL hybrid retrieval。已显式跳过安全/后门/攻防相关论文（如 backdoor/jailbreak/attack/prompt injection/red-teaming 等）。",
+  "papers": [
+    {
+      "id": "2608.27017",
+      "title": "ProRetrieval: Learning to Orchestrate Hybrid Search via Executable Program Synthesis",
+      "authors": [
+        "Chengsong You",
+        "Zhen Sun",
+        "Yunhai Hu",
+        "Junwei Zhou",
+        "Xiaoyu Cao",
+        "Binyu Li",
+        "Ziyan Zhao",
+        "Weiyao Wang",
+        "Liren Lu",
+        "Zhijie Ye",
+        "Yumo Cao",
+        "Yitao Long",
+        "Yiwei Xu",
+        "Qiyi Jiang",
+        "Xuanyi Fu",
+        "Yufan Chen",
+        "Yilun Li",
+        "Rongkang Xiong",
+        "Yiran Zou",
+        "Nan Du"
+      ],
+      "affiliations": [
+        "East China Normal University",
+        "New York University",
+        "Matter Innovation Inc.",
+        "ThinRedLine",
+        "Shandong University of Science and Technology",
+        "Jinan University",
+        "Independent Researcher",
+        "Fudan University"
+      ],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["检索", "Hybrid Retrieval", "Text-to-SQL", "RAG", "电商搜索", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27017",
+        "pdf": "https://arxiv.org/pdf/2608.27017",
+        "code": "https://anonymous.4open.science/r/ProRetrieval/",
+        "dataset": "https://huggingface.co/datasets/anonymous-7219/ProRetrieval"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "ProRetrieval 把“混合检索编排”建模为可执行程序合成：LLM 不再只是生成 query，而是生成一段混合 DSL 程序。DSL 以 SQL 的逻辑代数（AND/OR/NOT、嵌套子查询等）作为骨架，并引入向量检索原语（文本/图像）作为一等公民；执行引擎先调用向量后端拿候选集合，再把候选集合注入 SQL 占位符里完成最终逻辑融合与排序。训练上先用专家 DSL 例子做 SFT，再用 GRPO/DAPO 做 RL，并设计“格式/可执行/结果/长度”四项分层 reward 来保证可执行性与检索质量。",
+          "story": "现有混合检索往往依赖固定 pipeline（如 RRF）或只支持简单 conjunction 的 self-query retriever，表达不了真实电商检索中的复杂布尔逻辑；而 RL retriever 多是“对单一后端生成更好 query”，缺少跨结构化字段 + 向量检索的编排能力。于是 ProRetrieval 把动作空间升级为“可执行检索程序”，用 SQL 提供完备逻辑表达，用向量检索提供语义匹配能力，从而在一个统一框架里做 AND/OR/NOT 与多模态检索组合。",
+          "innovation": "1) 用“SQL 逻辑骨架 + 向量检索原语注入”的 DSL，把混合检索的逻辑组合问题转成程序合成问题，表达力明显强于固定融合或单后端 RL；2) reward 设计是可落地的：先保格式/可执行，再保结果，再压长度，适合工程化训练；3) 以 Amazon（电商）+ Enron（邮件）构造任务，覆盖结构化字段与语义检索混合。风险点：依赖 DSL 执行引擎与后端接口稳定；对真实线上索引字段/权限/时延约束仍需工程补齐。",
+          "key_metrics": "论文在 Amazon e-commerce 与 Enron email 两个新基准上报告 Hit@1：4B 模型在电商上 0.81（对比 GPT-5.5 的 0.69），在 email 上 0.91（对比 0.86），并超过 Claude Opus 4.7 与多类基线。"
+        },
+        "en": {
+          "method_overview": "ProRetrieval treats hybrid retrieval as executable program synthesis. Instead of emitting a single query, the LLM generates a hybrid DSL program whose backbone is SQL (AND/OR/NOT, nesting) and whose primitives include text/image vector retrieval. The runtime first executes vector primitives to obtain candidate sets, injects them into SQL placeholders, and lets SQL perform the final logical fusion. Training uses SFT on expert DSL traces followed by RL (GRPO/DAPO) with a hierarchical reward over format, executability, result quality, and program length.",
+          "story": "Real ecommerce queries mix structured constraints with semantic intents and complex Boolean logic. Fixed fusion pipelines and self-query retrievers lack expressiveness, while RL retrievers usually optimize query generation for a single backend. ProRetrieval expands the action space to an executable hybrid program: SQL provides logical completeness and vector retrieval provides semantic matching, enabling per-query orchestration across heterogeneous stores.",
+          "innovation": "(1) A hybrid DSL (SQL skeleton + vector primitives) turns orchestration into program synthesis, strictly more expressive than fixed fusion or single-backend RL. (2) The hierarchical reward is engineering-friendly for executable programs. (3) New benchmarks spanning Amazon products and Enron email validate cross-backend composition. Practical risks include dependency on a stable DSL executor and production constraints (schema, latency, access control).",
+          "key_metrics": "On two new hybrid-retrieval benchmarks, the 4B model reaches Hit@1 0.81 vs 0.69 (GPT-5.5) on e-commerce and 0.91 vs 0.86 on email, also surpassing Claude Opus 4.7 and strong baselines."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 14,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 79,
+        "rationale_zh": "与电商搜索/RAG/结构化+语义混合检索强相关，且给出明确指标；但代码链接为匿名仓库且本轮无法稳定验证内容完整性，且线上落地约束（字段/权限/延迟）需要额外工程，因此不进入 >=80 的“必须复现/验证代码”队列。",
+        "rationale_en": "Highly relevant to ecommerce search and hybrid retrieval with strong reported gains. Points deducted because the listed code link is an anonymous repo and cannot be robustly validated in this run, and production constraints (schema/access/latency) require extra engineering."
+      },
+      "figure_steps": [
+        "Natural-language query",
+        "RL policy emits hybrid DSL",
+        "Vector primitives (text/image)",
+        "SQL AND/OR/NOT fusion",
+        "Ranked results"
+      ],
+      "exp_cards": [
+        ["Amazon (e-commerce)", "Hit@1 0.81 vs 0.69"],
+        ["Enron (email)", "Hit@1 0.91 vs 0.86"],
+        ["Model", "Qwen3-4B + GRPO/DAPO"]
+      ]
+    },
+    {
+      "id": "2608.27006",
+      "title": "Conversational Recommendation over Live E-Commerce Catalogues with Self-Refreshing Retrieval",
+      "authors": ["Ante Kapetanović", "Tomislav Ðuričić", "Dionizije Fa", "Andro Merćep", "Emanuel Lacić"],
+      "affiliations": ["Infobip"],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["对话式推荐", "Catalog Freshness", "向量检索", "Agent", "电商", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27006",
+        "pdf": "https://arxiv.org/pdf/2608.27006",
+        "code": "https://github.com/infobip/infobip-agentic-crs"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文关注“电商商品库是活的”这一线上痛点：商品会新增/下架、变价、缺货，静态向量索引很快失真。作者给出一个 merchant-agnostic 的多轮对话购物助手，其核心是 self-refreshing retriever：每次同步时对每个商品计算 full/semantic hash，把商品分为新增/语义变更/仅元数据变更/删除/未变更，只对新增或语义变化的商品做 enrichment 与 embedding，避免全量重建。对话层采用 controller 方式：LLM 只做意图分类与偏好追问，检索、rerank、以及多样性选择走确定性函数，最终落地到 WhatsApp demo。",
+          "story": "大多数 LLM-CRS 论文在静态 benchmark 上评测，忽略线上最常见的“catalog drift”。如果全量重建索引成本高且延迟大；如果不更新，又会推荐缺货/下架商品。于是该工作把问题拆成“增量同步（hash diff）+ 只对需要的商品重嵌入 + 控制器式对话编排”，把 freshness 作为生产可用的关键约束。",
+          "innovation": "1) 把 catalogue synchronization 明确成可复现的增量算法（hash 分类 + 顺序写入 + deletion last），是对电商推荐落地非常实用的工程贡献；2) 对话层把 LLM 角色限制在 intent/elicitation，其他环节函数化，降低成本与不确定性，利于治理（可审计、可控）；3) 代码仓库提供 runnable synthetic sync demo，利于复现。局限：论文页数短，更多是系统/工程说明，对推荐效果提升的可量化实验较少。",
+          "key_metrics": "论文未主打传统离线指标提升，而强调同步机制：通过 per-item hash 做 delta 同步，只对新增/语义变更商品重嵌入；仓库提供 10k 规模 synthetic demo（本地毫秒级同步）与 WhatsApp 线上演示。"
+        },
+        "en": {
+          "method_overview": "The paper addresses a production reality: ecommerce catalogues are dynamic, so static vector indexes drift quickly. It presents a merchant-agnostic multi-turn shopping assistant whose core is a self-refreshing retriever. Each sync run hashes every product to classify records into new / semantic-changed / metadata-only / deleted / unchanged, re-embedding only the necessary subset instead of rebuilding the full index. A controller-style dialogue layer uses an LLM only for intent classification and preference elicitation, while retrieval, reranking, and diversity selection are implemented as deterministic functions. The system is demonstrated via a WhatsApp shopping assistant.",
+          "story": "Most LLM-based CRS work assumes a static corpus, but real catalogues change continuously. Full reindexing is expensive, while stale indexes cause out-of-stock or removed items to be recommended. The solution is to treat freshness as a first-class constraint: incremental sync via hashes + selective re-embedding + a controllable dialogue controller.",
+          "innovation": "(1) A clean, reproducible delta-sync algorithm (hash-based diff + ordered writes) directly targets catalogue drift in ecommerce. (2) Restricting the LLM to intent/elicitation and keeping retrieval/rerank deterministic improves controllability and auditability for governance. (3) The released repo includes a runnable synthetic sync MVP. Limitation: as a short system/demo paper, it reports fewer quantitative recommendation gains.",
+          "key_metrics": "The focus is robustness and freshness rather than offline SOTA metrics: per-item hashes enable delta syncing and selective re-embedding; the repo provides a runnable synthetic 10k-item demo and a WhatsApp walkthrough."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 9,
+        "exp_quality": 10,
+        "efficiency": 9,
+        "generalization": 3,
+        "relevance": 24,
+        "total": 77,
+        "rationale_zh": "强工程落地价值：直击电商 catalog freshness，且提供可运行 demo 与代码；扣分在于论文主要是系统说明，缺少更全面的离线/线上多维评测与 ablation。",
+        "rationale_en": "Strong practical value for ecommerce catalogue freshness with runnable code. Points deducted because the paper is mostly a system/demo description with limited comprehensive evaluations and ablations."
+      },
+      "figure_steps": [
+        "Merchant product feed",
+        "Hash-based diff (new/change/delete)",
+        "Selective embed + upsert",
+        "Controller dialogue (LLM for intent)",
+        "Recommendation + diversity"
+      ],
+      "exp_cards": [
+        ["Channel", "WhatsApp demo"],
+        ["Sync", "delta embedding only"],
+        ["Repo", "runnable synthetic MVP"]
+      ]
+    },
+    {
+      "id": "2608.25635",
+      "title": "DCEO: Direct Causal Effect Optimization for Long-Term User Value Modeling in E-commerce Search",
+      "authors": ["Junzhao Zhang", "Tao Zhang", "Liren Yu", "Feiyi Dong", "Zhixuan Zhang", "Dan Ou", "Haihong Tang"],
+      "affiliations": ["Taobao & Tmall Group of Alibaba"],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["电商搜索", "Learning-to-Rank", "多目标融合", "因果推断", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.25635",
+        "pdf": "https://arxiv.org/pdf/2608.25635"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "DCEO 面向电商搜索“长期用户价值”（n-day purchase / GMV per user）优化，但排序打分却在 item 级别的粒度不匹配。它把多目标（click/cart/purchase/value）融合的权重学习成一个 actor-critic：actor 根据上下文动态产出融合权重，生成 item-level proxy score；再把 proxy 聚合到 user-level proxy metric，并用“相对因果效应（relative causal effect）”度量 proxy 与终极目标的一致性；critic 估计该 user-level proxy 对终极目标的影响，驱动 actor 直接最大化因果一致性而不是相关性。",
+          "story": "传统做法靠人工调权把多个 item-level 目标拼成 ranking score，但权重少、个性化弱且需要频繁 A/B。DCEO 认为关键是：proxy 指标必须在“通过排序能提升终极目标”的因果意义上对齐，而不是仅相关；因此用因果效应作为优化目标，并让权重随请求/用户动态变化，从而更好地把 item 级信号对齐到 user 级长期价值。",
+          "innovation": "1) 用“相对因果效应”作为学习 proxy 的对齐目标，避免仅优化相关性导致的‘提升 proxy 但不提升 GMV’；2) 动态融合权重提升个性化，与电商内容生态中不同用户/场景的偏好权衡一致；3) 给出线上 A/B 证据。可行性上，actor-critic 可复用现有多目标体系；难点在于因果估计的稳定性与在线策略变更引入的分布漂移需要持续监控。",
+          "key_metrics": "论文报告在某大型工业电商搜索系统上线 41 天 A/B：相对传统 GMV proxy，GMV 提升 0.36%。"
+        },
+        "en": {
+          "method_overview": "DCEO targets long-term user value (e.g., n-day purchases / GMV per user) for ecommerce search, but ranking operates on item-level scores. It formulates a data-driven actor-critic: the actor outputs context-dependent fusion weights over multiple item-level objectives to form a proxy score; the proxy is aggregated to a user-level proxy metric; and alignment to the ultimate objective is measured via a relative causal effect. The critic estimates the ultimate objective given the proxy metric, training the actor to directly optimize causal alignment rather than correlation.",
+          "story": "Hand-tuned multi-objective fusion is coarse and weakly personalized, and requires costly A/B iterations. DCEO argues the proxy should be aligned in a causal sense—improving the proxy via ranking should improve the ultimate metric—so it optimizes relative causal effect and learns context-dependent fusion.",
+          "innovation": "(1) Uses relative causal effect as the alignment objective to avoid proxy-gaming under pure correlation. (2) Context-dependent fusion improves personalization in multi-objective ranking. (3) Provides online A/B evidence. Challenges include stable causal estimation and monitoring distribution shifts under policy updates.",
+          "key_metrics": "Reported 41-day online A/B: +0.36% GMV over the conventional GMV proxy in a large-scale ecommerce search system."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 22,
+        "total": 75,
+        "rationale_zh": "与电商搜索长期价值优化高度相关且有线上增益；扣分点在于公开复现难（工业数据/系统）、离线 ablation 细节不易验证，且方法偏系统/优化框架而非通用可复用代码。",
+        "rationale_en": "Highly relevant with an online gain, but hard to reproduce publicly (industrial data/system), and ablations/details are less verifiable; more of a framework than a reusable open implementation."
+      },
+      "figure_steps": [
+        "Item-level objectives",
+        "Actor: dynamic fusion weights",
+        "User-level proxy aggregation",
+        "Critic: ultimate value estimate",
+        "Optimize relative causal effect"
+      ],
+      "exp_cards": [
+        ["Online A/B", "+0.36% GMV"],
+        ["Duration", "41 days"],
+        ["Domain", "e-commerce search"]
+      ]
+    },
+    {
+      "id": "2608.25871",
+      "title": "CEDAR: Controlled and Event-Driven Demand Forecasting via Residual Decomposition",
+      "authors": ["Junjie Meng", "Ranxu Zhang", "Zi-an Zhang", "Shujun Liu", "Xiaoning Qi", "Xiaozhou Xu", "Yanyong Zhang", "Hui Xiong", "Chao Wang"],
+      "affiliations": [
+        "University of Science and Technology of China",
+        "Alibaba Group",
+        "The Hong Kong University of Science and Technology (Guangzhou)",
+        "The Hong Kong University of Science and Technology"
+      ],
+      "source": "arXiv",
+      "published": "2026-08-26",
+      "tags": ["需求预测", "决策条件模拟", "时间序列", "电商", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.25871",
+        "pdf": "https://arxiv.org/pdf/2608.25871"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "CEDAR 面向“可控预测/仿真”而不是被动外推：商家需要评估未来预算/投放动作序列下的销量走向。方法分两阶段：Stage I 的 Action-Interleaved Transformer 学习 action-conditioned state transition，用于在计划干预下 rollout；Stage II 的 Residual Correction Module 把外部事件信号引入，并用 LLM 辅助的文本表征将噪声事件描述与商品上下文对齐，对事件驱动的偏差做残差修正。论文使用阿里 1688 的超大规模真实数据（约 3200 万商品轨迹）并报告离线与线上受控实验收益。",
+          "story": "传统 TSF 即使加了动作 covariate，也仍在历史策略下做相关性外推，容易出现 autoregressive inertia，并把市场自演化与决策引起的变化混在一起，导致 counterfactual 不可靠。CEDAR 把“可控部分（动作驱动的状态转移）”与“外部事件扰动（事件描述噪声大）”拆开：先学可控动力学，再用事件残差修正把突然的节日/活动/热点冲击补回来。",
+          "innovation": "1) 明确提出决策条件的 demand simulation，并用两阶段把 action dynamics 与 event residual 分解，思路贴近实际经营分析；2) 引入 LLM 文本表征对齐事件描述与商品上下文，解决事件噪声；3) 超大规模工业数据 + 线上受控实验提升可信度。局限：实现依赖事件信号链路与文本质量；跨平台/跨类目的泛化需要更多证据。",
+          "key_metrics": "数据规模：Alibaba 1688 约 3200 万商品轨迹（state-action 序列 + 事件信号）。论文报告离线与线上受控实验均优于强 TSF 基线（但摘要未给出具体数值）。"
+        },
+        "en": {
+          "method_overview": "CEDAR targets decision-conditioned demand simulation instead of passive forecasting: merchants need to evaluate sales under planned action sequences such as budget schedules. It uses a two-stage design: an Action-Interleaved Transformer learns controllable action-conditioned transitions for rollout, and a Residual Correction Module incorporates external events, using LLM-assisted text representations to align noisy event descriptions with product context and correct event-driven deviations. The study is enabled by a 32M-trajectory real-world dataset from Alibaba 1688 and includes offline + online controlled experiments.",
+          "story": "Most TSF models remain policy-insensitive: even with action covariates they extrapolate correlations under historical policies, suffering autoregressive inertia and confounding endogenous evolution with decision-induced transitions. CEDAR separates controllable action dynamics from exogenous event shocks: learn the former, then correct the residual using event signals aligned by LLM text representations.",
+          "innovation": "(1) A clear decision-conditioned simulation framing with action-vs-event residual decomposition. (2) LLM-assisted event-text alignment to handle noisy descriptions. (3) Large-scale industrial data and online controlled experiments improve credibility. Limitations include dependency on event pipelines/text quality and the need for broader cross-domain generalization evidence.",
+          "key_metrics": "Dataset: ~32M product trajectories from Alibaba 1688 with state–action sequences and aligned events. The paper reports consistent gains over strong TSF baselines in offline and online controlled experiments (exact numbers not in the abstract)."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 10,
+        "exp_quality": 11,
+        "efficiency": 5,
+        "generalization": 3,
+        "relevance": 20,
+        "total": 70,
+        "rationale_zh": "电商经营侧强相关且数据规模大；但公开可复现性较弱、关键指标细节在摘要不可见，且更多偏供给/运营预测而非内容理解/达人治理主线。",
+        "rationale_en": "Relevant to ecommerce planning with large-scale data, but weaker public reproducibility and limited visible metrics in abstract; more operations/forecasting than core content understanding/governance."
+      },
+      "figure_steps": [
+        "State-action trajectories",
+        "Action-interleaved transformer",
+        "Planned intervention rollout",
+        "Event signals + LLM text",
+        "Residual correction"
+      ],
+      "exp_cards": [
+        ["Dataset", "Alibaba 1688 (32M trajectories)"],
+        ["Setting", "decision-conditioned simulation"],
+        ["Eval", "offline + online controlled"]
+      ]
+    },
+    {
+      "id": "2608.25023",
+      "title": "CVE-SAI: Counterfactual Visual Evidence-Guided Selective Attribute Indexing for Risk-Controlled E-commerce Search",
+      "authors": ["Xiaolong Sun", "Qichao Wang", "Hangyu Li", "Liang Chen"],
+      "affiliations": ["Sun Yat-Sen University", "Nanyang Technological University", "Tencent"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["属性补全", "风控", "电商搜索", "多模态", "治理", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.25023",
+        "pdf": "https://arxiv.org/pdf/2608.25023"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "CVE-SAI 关注“属性预测一旦写入索引就会形成长期污染”的治理问题：多模态模型能补全属性，但不一定有视觉证据支撑。方法把流程拆为“先推断（freeze candidate）再决定是否入索引（admission）”。它提出 Focus-Zone Distortion (FZD) 做受控反事实扰动，估计该属性对视觉区域的依赖；再用 Evidence-Guided Attention Redistribution (EGAR) 利用该依赖度重分配注意力，提升 evidence localization 与候选评分。随后在候选被冻结的前提下做多项 audit（证据必要性/证据保留/抗 nuisance 变换稳定性/与目录文本冲突等），并用 family-level calibration 在 5% unsafe-admission budget 下选择策略，给出有限样本的一侧界约束。",
+          "story": "现有属性补全往往只追求问答准确率，却忽视“是否真的由图片证据支撑”，更把一次性预测与持久化索引写入混为一谈，导致错误属性长期影响检索曝光与治理。CVE-SAI 将‘推断’与‘入库’分离：先从主图和属性问题得到一个不被文本修正的 canonical 候选，再用反事实证据检查与风险控制，决定是否允许该属性进入索引。",
+          "innovation": "1) 把 attribute completion 从生成/预测问题升级为“风险可控的索引准入”问题，非常贴合电商治理；2) 反事实扰动构造属性相关的视觉依赖 proxy，并用 EGAR 做证据导向的注意力重分配；3) 显式给出 unsafe-admission 预算与有限样本保证，更易与业务风控阈值对齐。局限：需要清晰的 ontology 与审核规则；在复杂多图/视频商品与更长尾属性上的扩展尚需验证。",
+          "key_metrics": "论文在 Amazon Berkeley Objects 派生的 5 个视觉属性上实验：提升属性推断与证据定位，并在 5% unsafe-admission 预算下取得最高的 certified admission coverage，同时降低 unsafe exposure（摘要未给出具体数值）。"
+        },
+        "en": {
+          "method_overview": "CVE-SAI tackles a governance issue: attribute predictions become persistent contamination once indexed. It decouples inference from index admission: first infer and freeze an ontology-constrained candidate from the primary image and attribute question (without catalog text), then decide whether to admit it. Focus-Zone Distortion (FZD) builds an attribute-specific visual-dependence proxy via controlled counterfactual interventions, and Evidence-Guided Attention Redistribution (EGAR) uses it to refine scoring and evidence localization. With the candidate frozen, the method audits evidence necessity/retention, nuisance stability, and catalog-text conflicts, and uses family-level calibration to select a policy under a 5% unsafe-admission budget with finite-sample bounds.",
+          "story": "Prior work optimizes attribute-answer accuracy but does not verify visual evidence, and conflates one-off prediction with persistent indexing. CVE-SAI separates these concerns: produce a canonical candidate from visual evidence, then run counterfactual evidence checks and risk-controlled admission before writing to the index.",
+          "innovation": "(1) Frames attribute completion as risk-controlled index admission, aligning with ecommerce governance. (2) Counterfactual perturbations provide an attribute-specific evidence proxy; EGAR redistributes attention accordingly. (3) Explicit unsafe-admission budgets with finite-sample guarantees make it policy-friendly. Limitations include reliance on ontology/audit rules and validation needed for multi-image/video and long-tail attributes.",
+          "key_metrics": "On five visual attributes derived from Amazon Berkeley Objects, CVE-SAI improves inference and evidence localization and achieves the highest certified admission coverage under a shared 5% unsafe-admission protocol (numbers not provided in abstract)."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 24,
+        "total": 79,
+        "rationale_zh": "非常贴合“治理”：把属性补全做成风险可控的索引准入决策，思路清晰且有可解释的证据审计；扣分主要在于关键数值未在摘要给出、公开复现细节不明，且更多是框架/策略而非标准模型代码。",
+        "rationale_en": "Highly aligned with governance via risk-controlled index admission and evidence auditing. Points deducted due to missing concrete numbers in abstract, unclear public reproducibility details, and being more of a policy/framework than a standard model release."
+      },
+      "figure_steps": [
+        "Image + attribute question",
+        "Freeze ontology candidate",
+        "Counterfactual distortion (FZD)",
+        "EGAR evidence reweighting",
+        "Risk-controlled admission"
+      ],
+      "exp_cards": [
+        ["Protocol", "5% unsafe-admission budget"],
+        ["Dataset", "ABO-derived attributes"],
+        ["Outcome", "certified coverage ↑"]
+      ]
+    },
+    {
+      "id": "2608.24467",
+      "title": "HMGCLIP: Heterogeneous Multi-Granularity Contrastive Learning for E-commerce Representation Learning",
+      "authors": ["Qiuyu Zhu", "Yi Gao", "Zhichao Wan", "Mingyang Ma"],
+      "affiliations": ["Alibaba International Digital Commerce Group"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["多模态表征", "对比学习", "电商", "相似/聚类", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24467",
+        "pdf": "https://arxiv.org/pdf/2608.24467"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "HMGCLIP 针对电商商品“细粒度属性可分辨性不足”的问题，提出一个统一的多模态 embedding 框架。它把电商数据的结构（类目层级、属性、商品组等）组织成 heterogeneous hypergraph，并利用超图拓扑挖掘结构感知的 hard negatives；训练时在 relation 与 hyperedge 两个粒度对齐多粒度语义。推理时采用 dual-granularity 机制，把 attribute evidence 动态融合到不同下游任务（细粒度属性判别、粗粒度检索/相似等）。同时发布一个新的细粒度电商数据集并在 MAVE 上评测。",
+          "story": "通用 MLLM/CLIP 往往倾向把商品压成全局 embedding，导致对材质/工艺/细小差异不敏感；而随机负采样很难持续提供‘看起来很像但属性不同’的 hard negatives。HMGCLIP 用电商知识结构构建超图，系统性地产生结构化 hard negatives，并让表示在不同粒度上对齐，从而把‘可分辨性’作为核心优化目标。",
+          "innovation": "1) 将电商结构信息以超图方式显式注入表示学习，用拓扑挖 hard negatives，更贴近业务（相似/去重/属性）；2) 多粒度对齐 + 双粒度推理，提高在属性与检索任务间的兼容性；3) 发布新数据集有利于后续 benchmarking。局限：细节依赖具体图构建策略与负样本挖掘成本；若无开源代码，复现门槛较高。",
+          "key_metrics": "论文在新发布的细粒度电商数据集以及公开 MAVE benchmark 上实验，报告优于强 multimodal encoder、MLLM 与电商基线（摘要未给出具体数值）。"
+        },
+        "en": {
+          "method_overview": "HMGCLIP targets fine-grained attribute discrimination in ecommerce representation learning. It constructs a heterogeneous hypergraph from ecommerce structures (categories, attributes, product groups) and uses hypergraph topology to mine structure-aware hard negatives. Training aligns multi-granular semantics at both relation and hyperedge levels, and inference uses a dual-granularity fusion mechanism to combine attribute evidence for fine- and coarse-grained downstream tasks. The authors also release a fine-grained ecommerce dataset and evaluate on MAVE.",
+          "story": "General-purpose CLIP/MLLM embeddings are often too global to capture subtle attribute differences, and random negatives rarely provide semantically confusable hard negatives. HMGCLIP leverages structured ecommerce graphs to systematically mine hard negatives and align representations across granularities.",
+          "innovation": "(1) Injects ecommerce structure via a heterogeneous hypergraph to mine hard negatives aligned with business needs (similarity/dedup/attributes). (2) Multi-granularity alignment with dual-granularity inference improves task coverage. (3) Releasing a dataset helps benchmarking. Limitations include graph construction cost and potentially high reproduction barrier without open code.",
+          "key_metrics": "Experiments on the released fine-grained ecommerce dataset and the public MAVE benchmark show improvements over strong multimodal encoders, MLLMs, and ecommerce baselines (numbers not provided in abstract)."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 9,
+        "exp_quality": 10,
+        "efficiency": 5,
+        "generalization": 3,
+        "relevance": 21,
+        "total": 69,
+        "rationale_zh": "电商表征学习强相关且方向正确，但摘要缺少量化结果细节、复现信息不明确；方法偏结构化建模，工程落地需额外成本。",
+        "rationale_en": "Strongly relevant direction, but limited quantitative details and unclear reproducibility; structured modeling may incur extra engineering cost in production."
+      },
+      "figure_steps": [
+        "Images + text + attributes",
+        "Build heterogeneous hypergraph",
+        "Mine hard negatives",
+        "Multi-granularity contrastive",
+        "Dual-granularity inference"
+      ],
+      "exp_cards": [
+        ["Bench", "MAVE"],
+        ["Focus", "fine-grained attributes"],
+        ["Claim", "beats strong baselines"]
+      ]
+    },
+    {
+      "id": "2608.24091",
+      "title": "Native Multimodal Representation Learning for Click-Through Rate Prediction in E-Commerce Scenarios",
+      "authors": ["Chao Yi", "Feifan Yang", "Jiawei Feng", "Sishuo Chen", "Zhangming Chan", "Xiang-Rong Sheng", "Han Zhu"],
+      "affiliations": ["Taobao & Tmall Group of Alibaba", "University of Science and Technology of China"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["CTR", "多模态", "推荐", "数据质量", "电商", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24091",
+        "pdf": "https://arxiv.org/pdf/2608.24091"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文研究电商 CTR 预估里的“多模态表示如何更贴近下游目标”。常见两阶段范式是先预训练多模态 encoder，再把 item embedding 作为特征喂给 CTR 模型，但预训练目标与 CTR 目标分布不一致。作者发现直接端到端联合训练 encoder+CTR 也不一定更好，原因在于 CTR 行为由多模态语义与非多模态因素共同驱动，监督信号混杂导致 encoder 更新不稳定。为此提出 Mine-Then-Train：先从原始 CTR 数据中挖掘更“可由多模态解释”的高质量样本，再用这些样本微调多模态 encoder，使其对齐点击偏好；再用于 CTR 模型，离线与线上均有效。",
+          "story": "两阶段预训练的语义表示未必对 CTR 最有效；而直接端到端会被非语义因素（促销、位置、用户短期噪声等）干扰。Mine-Then-Train 的思路是先把数据质量问题解决：从大规模行为里筛出‘点击主要由内容/多模态语义驱动’的样本，让 encoder 学到更稳定的下游相关表征，再回到 CTR 任务。",
+          "innovation": "1) 识别并验证 CTR 场景下端到端训练失败的根因：监督信号混杂；2) 用数据挖掘方式做‘可解释样本’筛选，把 representation learning 的瓶颈转成 data quality/selection 问题；3) 与电商内容生态相关：对内容理解更准意味着更好的分发/治理基础。局限：挖掘策略是否对不同业务域通用需要更多实验；采样偏置可能影响长尾泛化。",
+          "key_metrics": "论文报告离线与线上实验均验证 Mine-Then-Train 的有效性（摘要未披露具体指标数值）。"
+        },
+        "en": {
+          "method_overview": "The paper studies how to learn multimodal representations that better serve CTR prediction in ecommerce. The standard two-stage paradigm pretrains a multimodal encoder and feeds item embeddings into a CTR model, but objectives and data distributions differ. The authors also find end-to-end joint training does not necessarily help because CTR labels mix multimodal-semantic and non-semantic factors, making supervision ambiguous and encoder updates inconsistent. They propose Mine-Then-Train: mine high-quality, multimodally interpretable samples from raw CTR logs and use them to fine-tune the encoder for alignment with click preferences, leading to gains in offline and online experiments.",
+          "story": "Pretrained multimodal embeddings may not align with CTR, and end-to-end training can be corrupted by non-semantic drivers (position, promotions, noise). Mine-Then-Train reframes the bottleneck as data quality: filter behavior data to samples where multimodal content explains clicks, then train the encoder on cleaner supervision.",
+          "innovation": "(1) Diagnoses why naive end-to-end training fails under mixed supervision. (2) Converts representation learning into a data-selection problem via mining interpretable samples. (3) Strongly relevant to content ecology because better content-aligned embeddings support distribution and governance. Limitations include robustness of the mining heuristic across domains and potential sampling bias.",
+          "key_metrics": "The paper reports consistent improvements in offline and online experiments (exact numbers not in the abstract)."
+        }
+      },
+      "score": {
+        "innovation": 20,
+        "results": 9,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 23,
+        "total": 71,
+        "rationale_zh": "电商 CTR 强相关且从‘数据质量’角度切入很实用；扣分在于公开摘要缺少关键提升数值，复现需要线上日志与业务特征，外部可复用性受限。",
+        "rationale_en": "Highly relevant and practical via a data-quality lens, but key numbers are not visible in abstract and reproduction requires proprietary logs/features, limiting external reusability."
+      },
+      "figure_steps": [
+        "Raw CTR logs",
+        "Mine interpretable samples",
+        "Fine-tune multimodal encoder",
+        "Serve item embeddings",
+        "CTR prediction"
+      ],
+      "exp_cards": [
+        ["Finding", "E2E training not always better"],
+        ["Fix", "Mine-Then-Train"],
+        ["Eval", "offline + online"]
+      ]
+    },
+    {
+      "id": "2608.24034",
+      "title": "TAGR: Temporally Adaptive Generative Recommendation for Industrial Live-Streaming Advertising",
+      "authors": ["Wencai Ye", "Guangyi Liu", "Chaoyi Wang", "Wenbin Luo", "Shengyu Wang", "Mingjie Sun", "Peng Wang", "Quanming Yao", "Wenjin Wu", "Peng Jiang"],
+      "affiliations": ["Kuaishou Technology", "Tsinghua University"],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["直播电商", "广告推荐", "生成式推荐", "时序建模", "强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24034",
+        "pdf": "https://arxiv.org/pdf/2608.24034"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "TAGR 面向直播电商广告的“强时变”场景：直播画面、主推商品、价格库存、以及用户反馈都在分钟级变化，静态语义 ID 与单尺度行为建模容易失效。它提出三层 temporal adaptation：1) token 层的 LSID（Live Semantic-Collaborative ID）定期根据当前直播场景与主推商品刷新 live-ad 的 SID 分配；2) intent 层的 IAG（Intent-Aware Generation）用多时间粒度的进直播间序列作为主意图，保留其他行为为独立通道，并按业务价值/后验意图证据加权 NTP；3) alignment 层的 IOPO（Intermittent On-Policy Preference Optimization）周期性采样新鲜候选组做 on-policy 偏好更新，并与监督 NTP 交错以保持稳定。",
+          "story": "生成式推荐在静态 item 域表现好，但直播广告的 serving target 本身在变：同一个直播间随时切品，用户意图也随内容推进快速漂移。TAGR 认为需要同时让‘候选 token 表示’、‘意图序列建模’、‘偏好优化数据分布’都具备时间适配能力，于是分别在 token/intent/alignment 三个层面加入刷新与间歇 on-policy 机制，兼顾新鲜度与训练稳定。",
+          "innovation": "1) 三层时序适配把直播广告的核心痛点拆得很清楚（token 漂移、意图漂移、反馈滞后）；2) LSID 是对‘语义 ID’在动态场景的关键补丁；3) IOPO 在工程上可操作：定期采样 + 交错训练，降低 on-policy 不稳定。局限：如果无开源实现，复现难；对不同平台/不同业务目标的迁移需要更多证据。",
+          "key_metrics": "论文报告在大规模电商直播广告平台上线：live-room entry 提升 8.5%，shopping-cart click 提升 7.4%，收入提升 16.1%（相对线上 baseline）。"
+        },
+        "en": {
+          "method_overview": "TAGR targets live-streaming ads where scenes, promoted products, and feedback change rapidly. It introduces temporal adaptation at three levels: (1) token: LSID periodically refreshes live-ad semantic IDs based on current scene and products; (2) intent: IAG models multi-granular live-room entry histories as the primary intent sequence, keeps auxiliary behaviors as separate channels, and value-weights NTP using post-request evidence; (3) alignment: IOPO intermittently samples fresh on-policy candidate groups for preference optimization, interleaved with supervised NTP to maintain stability.",
+          "story": "Generative recommenders struggle in live commerce because the serving target and user intent drift at minute scale. TAGR decomposes the problem into token drift, intent drift, and delayed preference signals, and addresses each with refreshable IDs and intermittent on-policy optimization.",
+          "innovation": "(1) A clear three-layer temporal-adaptation decomposition for live ads. (2) LSID updates semantic IDs for dynamic content. (3) IOPO is a practical intermittent on-policy scheme to balance freshness and stability. Limitations include reproduction difficulty without open code and more evidence needed for cross-platform transfer.",
+          "key_metrics": "Deployed results: +8.5% live-room entry, +7.4% shopping-cart click, and +16.1% revenue lift over the production baseline."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 6,
+        "generalization": 3,
+        "relevance": 23,
+        "total": 79,
+        "rationale_zh": "与直播电商/广告推荐强相关且有清晰线上收益；扣分主要在于缺少公开代码与更细分 ablation，外部复现与可迁移性尚待验证。",
+        "rationale_en": "Highly relevant with strong online lifts; points deducted due to lack of open code and detailed ablations, with limited external reproducibility and transfer evidence."
+      },
+      "figure_steps": [
+        "Live scene + products",
+        "LSID refreshable tokens",
+        "Multi-scale intent (IAG)",
+        "IOPO intermittent on-policy",
+        "Generate ad IDs"
+      ],
+      "exp_cards": [
+        ["Online", "+16.1% revenue"],
+        ["Engagement", "+8.5% entry, +7.4% cart"],
+        ["Domain", "live-stream ads"]
+      ]
+    },
+    {
+      "id": "2608.24053",
+      "title": "WeMM-Embedding: WeChat Multi-Modal Embedding Technical Report",
+      "authors": ["Junjie Zhou", "Ke Mei", "Lei Li", "Tianyi Wang", "Fengyun Rao", "Jing Lyu"],
+      "affiliations": ["WeChat Vision, Tencent Inc."],
+      "source": "arXiv",
+      "published": "2026-08-25",
+      "tags": ["多模态基座", "Embedding", "检索/推荐", "内容理解", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.24053",
+        "pdf": "https://arxiv.org/pdf/2608.24053",
+        "code": "https://github.com/Tencent/WeMM-Embedding",
+        "project": "https://huggingface.co/collections/tencent/wemm-embedding"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "WeMM-Embedding 是一套通用多模态 embedding 基座（2B/4B/9B），支持文本、图像、视频、视觉文档及任意交织输入，并支持多输出维度（Matryoshka）。训练分两阶段：大规模多模态对齐预训练 + 以 curated 数据、细粒度相关性监督与跨尺度知识迁移为核心的精炼阶段。报告在 MMEB-v2/v3 等多任务评测上取得领先，并给出在微信多业务（含电商服务）的大规模线上 A/B 结果，同时开源权重与代码。",
+          "story": "电商内容生态与治理场景里，检索/相似/聚类/召回常常需要一个稳定、可泛化的多模态向量空间。现有模型要么规模过大成本高，要么在视频/文档等模态上不均衡。WeMM-Embedding 的思路是做‘全模态统一表示 + 可裁剪维度 + 两阶段训练’：先对齐，再用高质量监督把细粒度相关性与跨模态检索能力补齐，并通过跨尺度迁移让小模型也接近大模型效果。",
+          "innovation": "1) 在同一模型族内同时覆盖 text/image/video/document/interleaved，并提供 Matryoshka 维度裁剪，利于线上成本控制；2) 训练流程强调 curated 监督与跨尺度知识迁移，提升可用性；3) 评测覆盖面广且提供线上 A/B（含电商）证明。局限：作为技术报告，部分训练数据与线上评测细节不可完全公开，外部复现全流程仍有门槛。",
+          "key_metrics": "报告给出：9B 在 MMEB-v2 overall 达到 80.6（SOTA）；2B 已超过此前领先的 8B 开源基线；并在 26-task in-house benchmark 与 14 次线上 A/B 中取得持续收益。"
+        },
+        "en": {
+          "method_overview": "WeMM-Embedding is a family of universal multimodal embedding models (2B/4B/9B) supporting text, images, videos, visual documents, and interleaved multimodal inputs, with flexible Matryoshka output dimensions. Training has two stages: large-scale multimodal alignment followed by refinement with curated data, fine-grained relevance supervision, and cross-scale knowledge transfer. The report shows leading performance on MMEB benchmarks and large-scale online A/B gains in WeChat products (including ecommerce services), and releases model weights and code.",
+          "story": "Ecommerce content ecosystems and governance rely heavily on robust multimodal embeddings for retrieval, similarity, clustering, and recall. Existing models are either too costly or imbalanced across modalities. WeMM-Embedding aims for unified cross-modal representations with dimension truncation for efficiency, trained via alignment + high-quality refinement and cross-scale transfer.",
+          "innovation": "(1) Unified support for multiple modalities and interleaving, plus Matryoshka dimension control for serving efficiency. (2) Curated refinement + cross-scale transfer improves usability and small-model quality. (3) Broad evaluations and online A/B evidence. Limitation: full training data and online evaluation details are not fully reproducible externally.",
+          "key_metrics": "Reported MMEB-v2 overall: 9B reaches 80.6 (SOTA); 2B surpasses the prior leading 8B open baseline; plus consistent gains on a 26-task in-house benchmark and 14 online A/B tests."
+        }
+      },
+      "score": {
+        "innovation": 26,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 87,
+        "rationale_zh": "作为多模态 embedding 基座对电商内容理解/相似召回/治理都具备高杠杆价值；评测覆盖广且有线上 A/B，且已开源代码与权重，满足 >=80 的“高质量”标准。",
+        "rationale_en": "High-leverage multimodal embedding foundation for ecommerce retrieval/similarity/governance; broad evaluations plus online A/B, and open-sourced weights/code, meeting the >=80 high-quality bar."
+      },
+      "figure_steps": [
+        "Multi-modal inputs",
+        "Unified encoder",
+        "Matryoshka truncation",
+        "Benchmark evaluation",
+        "Retrieval / recommendation"
+      ],
+      "exp_cards": [
+        ["MMEB-v2", "9B overall 80.6"],
+        ["Online", "14 A/B tests"],
+        ["Open-source", "weights + code"]
+      ]
+    },
+    {
+      "id": "2608.27454",
+      "title": "WikiSkill: Compiling Agent Experience into Persistent Knowledge for Skill Evolution",
+      "authors": ["Liyan Tang", "Cyrus Rashtchian", "Chun-Sung Ferng", "Andrew Tomkins", "Da-Cheng Juan", "Tu Vu"],
+      "affiliations": ["(see paper for full affiliations)"],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["Agent", "技能演化", "知识库", "工作流", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27454",
+        "pdf": "https://arxiv.org/pdf/2608.27454"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "WikiSkill 提出把 agent 的执行经验沉淀为“可持续积累的 wiki 知识库”，并据此推动技能迭代。框架将 raw experience、accumulated knowledge（wiki）、以及 executable skills 三者解耦：每轮执行后把经验归纳进 wiki，下一轮技能更新读取 wiki 做更系统的演化。作者报告该策略在多种 benchmark 与模型上优于现有 skill-evolution 方法，并发现技能可跨模型迁移、且大模型往往更能从技能演化中获益。",
+          "story": "现有自动技能发现/演化往往把洞见散落在优化轨迹里，导致跨迭代复用差。WikiSkill 认为‘经验→知识→技能’需要显式分层，把经验结构化为可检索的 wiki，再用它指导下一轮技能更新，从而减少遗忘、提升可迁移性与可解释性。",
+          "innovation": "1) 把‘技能演化’与‘知识沉淀’绑定成一个闭环，对企业场景（治理策略、审核 SOP、达人治理工作流）很有启发；2) 强调跨模型迁移与外部技能复用；3) 通过 ablation 说明 wiki 累积是关键组件。局限：与电商内容治理的直接任务相关性偏弱，更偏方法论；需要结合具体业务工具链落地。",
+          "key_metrics": "论文报告在多 benchmark/多模型上稳定提升并优于 SOTA skill evolution；并展示技能跨模型迁移有效（摘要未给出具体数值）。"
+        },
+        "en": {
+          "method_overview": "WikiSkill co-evolves agent skills with a persistent knowledge base (wiki). It separates raw experience, accumulated knowledge, and executable skills: experience is continuously consolidated into the wiki, which subsequent skill updates build on. Across benchmarks and models, WikiSkill outperforms prior skill-evolution methods and shows transferable skills across model families.",
+          "story": "Insights for skill development are often scattered across optimization traces, limiting reuse. WikiSkill introduces an explicit experience→knowledge→skill layering by compiling experience into a persistent wiki that drives the next iteration.",
+          "innovation": "(1) Closing the loop between knowledge accumulation and skill evolution is useful for enterprise workflows (governance SOPs). (2) Emphasizes cross-model transfer. (3) Ablations highlight the importance of the persistent wiki. Limitation: weaker direct relevance to ecommerce content governance without domain integration.",
+          "key_metrics": "Reported consistent improvements over SOTA skill evolution across benchmarks/models and effective cross-model transfer (numbers not in abstract)."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 9,
+        "exp_quality": 10,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 12,
+        "total": 62,
+        "rationale_zh": "方法论上对治理工作流有启发，但与电商内容理解/达人治理的直接强相关度较低，因此相关性扣分较多。",
+        "rationale_en": "Methodologically useful for governance workflows, but less directly tied to ecommerce content understanding/creator governance, so relevance is lower."
+      },
+      "figure_steps": [
+        "Agent execution traces",
+        "Compile into wiki KB",
+        "Update skills",
+        "Transfer across models",
+        "Iterate"
+      ],
+      "exp_cards": [
+        ["Claim", "SOTA skill evolution"],
+        ["Key", "persistent wiki"],
+        ["Transfer", "cross-model"]
+      ]
+    },
+    {
+      "id": "2608.27456",
+      "title": "UrbanGround: From Local Perception to Spatial Agency in a Real-Scale City",
+      "authors": [
+        "Tianjie Ju",
+        "Zheng Wu",
+        "Yueqing Sun",
+        "Yuhan Cui",
+        "Bobo Li",
+        "Shengqiong Wu",
+        "Pengzhou Cheng",
+        "Haodong Zhao",
+        "Zongru Wu",
+        "Xinbei Ma",
+        "Doris Zhang",
+        "Kunling Li",
+        "Mong-Li Lee",
+        "Wynne Hsu",
+        "Hao Fei",
+        "Qi Gu",
+        "Gongshen Liu",
+        "Zhuosheng Zhang"
+      ],
+      "affiliations": ["(see paper for full affiliations)"],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["MLLM", "Agent", "长程任务", "评测", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27456",
+        "pdf": "https://arxiv.org/pdf/2608.27456"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "UrbanGround 构建了一个真实尺度城市（香港）3D 沙盒，用于评测 MLLM agent 能否把局部视觉感知可靠地转化为持续的空间行动。它提供第一人称闭环交互与可交互地图，围绕三类研究问题评测：主动观察后能否回答空间问题、目的地更远更隐式时能否导航、以及路网变化/行人运动扰动下行为是否稳定。结论指出现有 MLLM agent 在原子识别/短程推理上有用，但在长程探索中会累积误差，缺少有效纠错。",
+          "story": "很多 MLLM agent demo 停留在单步或短 horizon，难以判断其在复杂开放环境下是否可靠。UrbanGround 把问题拉长到真实城市尺度，并通过闭环交互把‘局部能力是否可组合成长期目标达成’作为核心挑战，暴露出 orientation、长程纠错与行人感知等短板。",
+          "innovation": "1) 提供真实尺度城市沙盒与系统化评测维度，适合研究 agent 在复杂环境下的可靠性；2) 对电商内容生态的间接价值：长程 agent 的稳定性/纠错能力与‘自动化治理/巡检’类任务类似。局限：与电商内容理解/达人治理直接相关较弱；数据与环境构建成本高。",
+          "key_metrics": "论文主要贡献为 benchmark/分析结论：现有 MLLM agent 在长程探索中的组合性不足、误差累积明显（摘要未给出具体数值）。"
+        },
+        "en": {
+          "method_overview": "UrbanGround introduces a real-scale 3D city sandbox (Hong Kong) to evaluate whether MLLM agents can turn local perception into sustained spatial agency. It supports first-person closed-loop interaction and map-based navigation, and evaluates active observation Q&A, long-range navigation with implicit destinations, and robustness under route and pedestrian changes. Findings show strong atomic recognition/short-range reasoning but unreliable long-horizon goal-directed behavior with accumulating errors.",
+          "story": "Short-horizon demos cannot reveal whether local abilities compose into reliable long-horizon agency. UrbanGround stresses agents in a real-scale city, highlighting failures in orientation, long-horizon correction, and pedestrian-aware movement.",
+          "innovation": "(1) A real-scale city sandbox with structured evaluation dimensions for long-horizon agents. (2) Indirect relevance to governance automation where long-horizon reliability matters. Limitation: weak direct ecommerce relevance and high environment construction cost.",
+          "key_metrics": "Main contribution is the benchmark and analysis: current MLLM agents show error accumulation and unreliable long-horizon behavior (no specific numbers in abstract)."
+        }
+      },
+      "score": {
+        "innovation": 20,
+        "results": 8,
+        "exp_quality": 10,
+        "efficiency": 5,
+        "generalization": 4,
+        "relevance": 10,
+        "total": 57,
+        "rationale_zh": "作为 MLLM agent 评测平台很有价值，但与电商内容理解/达人治理属于弱相关（主要是启发治理 agent 的长程可靠性），因此相关性得分较低。",
+        "rationale_en": "Valuable benchmark for MLLM agents, but only weakly tied to ecommerce content/governance, so relevance is low."
+      },
+      "figure_steps": [
+        "Street-view perception",
+        "Active observation",
+        "Navigation planning",
+        "Closed-loop exploration",
+        "Error accumulation analysis"
+      ],
+      "exp_cards": [
+        ["Sandbox", "real-scale Hong Kong"],
+        ["Focus", "long-horizon reliability"],
+        ["Finding", "errors accumulate"]
+      ]
+    },
+    {
+      "id": "2608.27449",
+      "title": "SWE-Prime: Fewer Trajectories, Better Performance",
+      "authors": ["Dewu Zheng", "Ruizhe Ye", "Yanlin Wang", "Yang Ye", "Hongyu Zhang", "Ensheng Shi", "Xilin Liu", "Yuchi Ma", "Jianxing Yu", "Zibin Zheng"],
+      "affiliations": ["(see paper for full affiliations)"],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["数据选择", "轨迹质量", "SFT", "数据清洗", "中强相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27449",
+        "pdf": "https://arxiv.org/pdf/2608.27449"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SWE-Prime 关注一个常被忽略的问题：成功轨迹不等于高质量监督，成功解题过程可能仍包含冗余/无效/有风险步骤，直接 SFT 会把坏习惯蒸馏进模型。它提出两阶段、多粒度的数据筛选：先做 trajectory-level 筛选（过程质量、结果质量、代表性），再做 segment-level 选择（把连续步骤聚成语义段，评估对最终解的贡献/可学习性/风险）。训练时保留整段上下文，但只对被选中的 segment 计算 loss，从而既保上下文又减噪。",
+          "story": "在大规模轨迹数据里，‘成功’只是最低门槛，噪声与坏动作同样会被模型学走。SWE-Prime 将问题拆成‘先选好轨迹，再选好片段’，并用 segment-level 的 loss masking 保留上下文依赖但降低噪声监督。该思路可迁移到电商内容治理/达人治理中的数据清洗：例如只对高质量审核步骤或关键决策片段做学习。",
+          "innovation": "1) 把监督质量从结果导向提升到过程导向，并细化到 segment 粒度；2) 训练方式（保上下文、mask loss）在工程上很实用；3) 数据选择常常对业务收益杠杆很高。局限：评测集中在 SWE 领域；迁移到内容治理需要重建质量/风险打分器。",
+          "key_metrics": "论文报告在 SWE-Bench Pro/Verified 上：仅用 10% 轨迹子集即可优于全量 resolved 数据训练，最高相对提升 12.2% 与 24.2%。"
+        },
+        "en": {
+          "method_overview": "SWE-Prime argues that successful trajectories can still be noisy supervision, containing redundant or risky steps. It proposes a two-stage SFT data selection: trajectory-level screening by process quality, result quality, and representativeness; then segment-level selection by grouping steps into semantic segments and scoring each segment by contribution, learnability, and risk. During SFT, all segments remain for context but only selected segments contribute to the loss.",
+          "story": "Success is not enough—noisy process steps can be distilled into undesirable behaviors. SWE-Prime decomposes selection into trajectory-then-segment and uses loss masking to keep context while reducing noise. This data-quality framing is relevant to governance training pipelines.",
+          "innovation": "(1) Process-quality supervision at segment granularity. (2) Practical training mechanism (keep context, mask loss). (3) Data selection often yields high leverage. Limitation: evaluations focus on SWE; governance transfer needs new quality/risk scorers.",
+          "key_metrics": "On SWE-Bench Pro and SWE-Bench Verified, training on the selected 10% trajectory subset outperforms training on the full resolved dataset, with up to 12.2% and 24.2% relative gains."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 74,
+        "rationale_zh": "与‘数据质量/数据清洗/大规模标注治理’中强相关，且有明确提升；但任务域偏 SWE，不是电商内容治理的直接任务，迁移需要额外设计。",
+        "rationale_en": "Moderately relevant to data quality/cleaning for governance with clear gains, but the task domain is SWE rather than direct ecommerce governance, so transfer requires additional work."
+      },
+      "figure_steps": [
+        "Trajectory pool",
+        "Trajectory-level screening",
+        "Segment grouping",
+        "Loss-masked SFT",
+        "Better behavior"
+      ],
+      "exp_cards": [
+        ["Data", "10% trajectories"],
+        ["Gain", "+12.2% / +24.2%"],
+        ["Bench", "SWE-Bench"]
+      ]
+    },
+    {
+      "id": "2608.27214",
+      "title": "CODE: Cross-Modal Calibration and Dynamic Suppression for Open World Object Detection",
+      "authors": ["Hao Xu", "Zhaoning Shi", "Hehe Jin", "Bo Ma"],
+      "affiliations": ["(see paper for full affiliations)"],
+      "source": "arXiv",
+      "published": "2026-08-27",
+      "tags": ["开放世界检测", "多模态", "OOD", "内容审核", "弱相关"],
+      "links": {
+        "paper": "https://arxiv.org/abs/2608.27214",
+        "pdf": "https://arxiv.org/pdf/2608.27214"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "CODE 提出一个推理期统一框架来改进基于多模态 foundation model 的开放世界目标检测（OWOD）。它包含三部分：Cross-Modal Joint Confidence Calibration 用全局视觉原型校准文本驱动的已知类预测；Uncertainty-Guided Universal Objectness Enhancement 用局部视觉响应的‘犹豫度’增强潜在未知目标；Dynamic Outlier Suppression via Confidence Margin 用 margin-aware 的方式替代刚性抑制，减少把边界附近未知目标过度压制。",
+          "story": "OWOD 场景下，文本→视觉的单向匹配会造成语义歧义，而对未知目标的固定 outlier penalty 又会把‘靠近已知类边界的未知’误杀。CODE 通过校准已知类置信度、增强通用 objectness、以及动态抑制策略，把已知/未知的决策更平滑、更鲁棒。",
+          "innovation": "1) 全部为 inference-time 组件，便于接入现有多模态检测 backbone；2) 兼顾已知类校准与未知类保留，思路清晰。与电商内容治理的关联主要在‘开放世界违规/新型商品/新型违规’的未知检测启发，属于弱相关。",
+          "key_metrics": "论文报告在 Real-World Detection benchmark 上：基于 OWL-ViT L/14，Task 1 达到 21.7 U-mAP 与 40.8 K-mAP，分别比先前 SOTA 提升 2.6 与 2.3。"
+        },
+        "en": {
+          "method_overview": "CODE is an inference-time framework for open-world object detection (OWOD) built on multimodal foundation models. It includes: cross-modal confidence calibration using global visual prototypes; uncertainty-guided universal objectness enhancement; and dynamic outlier suppression via confidence margins to preserve ambiguous OOD instances.",
+          "story": "Unidirectional text-to-vision matching causes semantic ambiguity, and rigid outlier penalties can over-suppress unknown objects near known-class boundaries. CODE calibrates known-class confidence, strengthens universal objectness for unknowns, and replaces rigid suppression with a margin-aware adjustment.",
+          "innovation": "All components are inference-time, making integration practical. Relevance to ecommerce governance is indirect (unknown/new-object detection for emerging content), hence weaker.",
+          "key_metrics": "On the Real-World Detection benchmark with OWL-ViT L/14, CODE reports 21.7 U-mAP and 40.8 K-mAP in Task 1, improving prior SOTA by 2.6 and 2.3 points."
+        }
+      },
+      "score": {
+        "innovation": 20,
+        "results": 12,
+        "exp_quality": 10,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 9,
+        "total": 62,
+        "rationale_zh": "方法本身不错且有 SOTA 提升，但与电商内容理解/达人治理属于弱相关（更多是通用 OWOD）。",
+        "rationale_en": "Solid method with SOTA gains, but only weakly tied to ecommerce content/governance (general OWOD)."
+      },
+      "figure_steps": [
+        "Multimodal detector",
+        "Confidence calibration",
+        "Uncertainty objectness",
+        "Dynamic suppression",
+        "Known/unknown outputs"
+      ],
+      "exp_cards": [
+        ["Task", "OWOD"],
+        ["Metric", "U-mAP / K-mAP"],
+        ["Gain", "+2.6 / +2.3"]
+      ]
+    }
+  ]
+}
