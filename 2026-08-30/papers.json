@@ -1,0 +1,28 @@
+{
+  "inspection_date": "2026-08-30",
+  "window": {
+    "start": "2026-08-30T00:00:00+08:00",
+    "end": "2026-08-31T00:00:00+08:00"
+  },
+  "notes_zh": "本轮按北京时间 2026-08-30 当日窗口检索。arXiv 与 HuggingFace Daily Papers 的最新可见批次集中在 2026-08-27/2026-08-28；OpenReview、Google Scholar、Semantic Scholar/OpenAlex/DBLP、AI 企业/研究实验室博客、社交/技术媒体入口均未检索到可确认为 2026-08-30 当日新增且与电商内容理解或达人治理相关的论文。已跳过安全/后门/攻防/越狱/prompt injection/red-teaming 等安全主题内容。",
+  "source_coverage": {
+    "arxiv_family": ["arXiv", "HuggingFace Daily Papers", "OpenReview", "Google Scholar", "Semantic Scholar", "OpenAlex", "DBLP", "Papers with Code Trending", "conference accepted-paper pages"],
+    "labs_and_companies": ["Google Blog", "Google DeepMind Blog", "Meta AI Blog", "Meta Research Blog", "OpenAI News", "DeepSeek", "Qwen Research", "Tencent Hunyuan", "Meituan Tech", "Kuaishou Tech", "Xiaohongshu Tech"],
+    "social_and_media": ["X", "机器之心", "量子位", "CVer", "新智元", "知乎", "小红书"],
+    "conferences_and_journals": ["ICML", "NeurIPS", "ICLR", "CVPR", "ICCV", "ECCV", "TPAMI", "ACL", "EMNLP", "NAACL", "KDD", "SIGIR", "SIGMOD", "VLDB"]
+  },
+  "keyword_strategy": {
+    "core": ["e-commerce", "content understanding", "creator governance", "LLM", "VLM", "MLLM", "caption", "embedding", "clustering", "similarity", "Agent", "RAG", "distillation", "policy enforcement", "violation detection", "data quality", "data cleaning", "large-scale labeling"],
+    "expanded": ["e-commerce search", "product understanding", "catalog freshness", "multimodal retrieval", "multi-vector retrieval", "content moderation", "AIGC misuse governance", "data selection", "data curation", "preference optimization", "agent workflow", "memory agent", "live commerce"],
+    "excluded": ["backdoor", "jailbreak", "attack", "prompt injection", "red-teaming", "cybersecurity"]
+  },
+  "scoring_rule": {
+    "innovation": 30,
+    "results": 15,
+    "exp_quality": 15,
+    "efficiency": 10,
+    "generalization": 5,
+    "relevance": 25
+  },
+  "papers": []
+}
