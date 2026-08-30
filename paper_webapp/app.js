@@ -220,7 +220,13 @@ function renderPapers(papers) {
     const expBtn = card.querySelector(".toggle-exp");
 
     if (p.figure_path) {
-      card.querySelector(".figure").src = p.figure_path;
+      const figure = card.querySelector(".figure");
+      figure.onerror = () => {
+        figure.remove();
+        figBtn.disabled = true;
+        figBtn.classList.remove("btn-secondary");
+      };
+      figure.src = p.figure_path;
     } else {
       figBtn.disabled = true;
       figBtn.classList.remove("btn-secondary");
@@ -229,6 +235,7 @@ function renderPapers(papers) {
     // experiment / results figure (optional, shown above the highlight text)
     const expFig = card.querySelector(".exp-figure");
     if (p.exp_figure_path) {
+      expFig.onerror = () => expFig.remove();
       expFig.src = p.exp_figure_path;
     } else {
       expFig.remove();
