@@ -1,4 +1,4 @@
-let db = null;
+let store = { days: [], papers: [] };
 let lang = "zh";
 
 const I18N = {
@@ -81,12 +81,21 @@ function setLang(nextLang) {
 }
 
 function query(sql, params = []) {
-  const stmt = db.prepare(sql);
-  stmt.bind(params);
-  const rows = [];
-  while (stmt.step()) rows.push(stmt.getAsObject());
-  stmt.free();
-  return rows;
+  if (sql.includes("FROM days")) {
+    return store.days
+      .slice()
+      .sort((a, b) => b.inspection_date.localeCompare(a.inspection_date))
+      .map((d) => ({ d: d.inspection_date }));
+  }
+
+  if (sql.includes("FROM papers")) {
+    const [date, minScore] = params;
+    return store.papers
+      .filter((p) => p.inspection_date === date && Number(p.score_total || 0) >= minScore)
+      .sort((a, b) => (Number(b.score_total || 0) - Number(a.score_total || 0)) || a.title.localeCompare(b.title));
+  }
+
+  return [];
 }
 
 function parseJsonMaybe(v) {
@@ -292,23 +301,13 @@ async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const SQL = await window.initSqlJs({
-    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
-  });
+  const response = await fetch("data/papers-data.json");
+  if (!response.ok) throw new Error(`Failed to load papers-data.json: ${response.status}`);
+  store = await response.json();
 
-  const buf = await fetch("data/papers.sqlite").then((r) => r.arrayBuffer());
-  db = new SQL.Database(new Uint8Array(buf));
-
-  let dates = [];
-  try {
-    dates = query(
-      "SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
-  } catch {
-    dates = query(
-      "SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
-  }
+  const dates = query(
+    "SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC"
+  ).map((r) => r.d);
 
   const dateSelect = $("dateSelect");
   dateSelect.innerHTML = "";
