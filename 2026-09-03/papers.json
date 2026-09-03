@@ -1,0 +1,607 @@
+{
+  "inspection_date": "2026-09-03",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": [
+      "2026-09-03 00:00:00",
+      "2026-09-03 23:59:59"
+    ],
+    "utc": [
+      "2026-09-02T16:00:00Z",
+      "2026-09-03T15:59:59Z"
+    ]
+  },
+  "keyword_notes": {
+    "kept": [
+      "电商",
+      "内容理解",
+      "达人/作者风格",
+      "LLM/VLM/MLLM",
+      "caption",
+      "向量化表征",
+      "聚类/相似",
+      "RAG",
+      "蒸馏",
+      "违规检测/治理",
+      "数据质量/清洗/打标",
+      "多模态检索",
+      "流式视频理解",
+      "Agent 评测/自动化"
+    ],
+    "added": [
+      "streaming video understanding",
+      "speaker-attributed ASR",
+      "style transfer for creators",
+      "multimodal retriever",
+      "agent evaluation efficiency"
+    ],
+    "excluded": [
+      "安全/后门/越狱/投毒/guardrail 对抗方向"
+    ]
+  },
+  "source_coverage": [
+    "arXiv recent / abs comments / pdf",
+    "Hugging Face Daily Papers",
+    "OpenReview accepted / decision pages",
+    "Google Scholar / Semantic Scholar / OpenAlex / DBLP metadata back-check",
+    "Google / DeepMind / Meta / OpenAI / Qwen / Hunyuan / Meituan 等研究博客",
+    "X / 知乎 / AI 公众号公开页 / GitHub 论文仓库日更",
+    "ICML / NeurIPS / ICLR / CVPR / ICCV / ECCV / ACL / EMNLP / KDD / SIGIR / SIGMOD / VLDB accepted pages"
+  ],
+  "papers": [
+    {
+      "id": "2609.02780",
+      "title": "ShallowStream: Memory-Efficient Streaming Video Understanding via Shallow Prefill and Deep Decoding",
+      "authors": [
+        "Jitai Hao",
+        "Jinpeng Wang",
+        "Zhenyu Wang",
+        "Zhenyu Wang",
+        "Xiu Li"
+      ],
+      "affiliations": [
+        "Harbin Institute of Technology, Shenzhen"
+      ],
+      "source": "arXiv",
+      "published": "2026-09-03",
+      "tags": [
+        "视频理解",
+        "MLLM",
+        "流式推理",
+        "内容生态"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02780",
+        "pdf": "https://arxiv.org/pdf/2609.02780.pdf",
+        "code": "https://github.com/CURRENTF/ShallowStream"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把流式视频理解拆成“浅层持续建索引 + 深层按需解码”两段：前向流里只保留低成本浅层表示和证据记忆，真正回答问题时再对被选中的上下文做深层重建。这样避免对每一帧做全量深层 prefill，在长视频和低延迟问答场景里明显降低显存与时延。方法同时支持 Qwen3-VL 和 LLaVA-OneVision 两类骨干，工程可迁移性不错。最亮点是把 streaming 场景下最贵的部分推迟到“必要时”再做。",
+          "story": "现有视频 MLLM 在流式场景里通常要对每帧做完整深层 prefill，长视频一来显存与延迟迅速爆炸，难以用于内容巡检、直播理解和达人视频审核。ShallowStream 先用浅层特征持续写入记忆，再通过任务门控与证据检索挑出真正相关的时间片，最后只对少量片段做深层重建和回答。也就是说，它把“全量重编码”改成“先粗召回、后精读”，更贴近电商内容治理的在线处理链路。",
+          "innovation": "创新点在于把视频 MLLM 的推理结构改造成分层流式架构，而不是只做 token 压缩或窗口裁剪；浅层记忆、任务门控、证据检索和 selected-context reconstruction 组合得比较完整。和传统 KV cache 增量更新相比，它显式建了一个可检索的视频证据层，因此对问答类内容理解任务更友好。创新合理且可行，因为仓库里已经公开了 src、configs 和 smoke inference。",
+          "key_metrics": "在 OVO-Bench 上，Qwen3-VL-8B 版本达到 69.5，超过 OASIS 的 67.7；在 StreamingBench 上达到 78.2，超过 HERMES 的 76.6。论文还报告 per-frame prefill 最高降低 52.1×，10 秒端到端延迟最高降低 11.9×，说明它不是只提点数，还明显改善了线上推理开销。"
+        },
+        "en": {
+          "method_overview": "The paper splits streaming video understanding into shallow always-on indexing and deep on-demand decoding. It stores low-cost shallow representations and evidence memory during the stream, then reconstructs only the selected context at deep layers when a query arrives. This avoids full-depth prefill on every frame and sharply reduces memory and latency for long videos. The design is implemented for both Qwen3-VL and LLaVA-OneVision backbones.",
+          "story": "Prior video MLLMs often run expensive deep prefill on every frame, which scales poorly for live moderation, creator-video understanding, and long-stream monitoring. ShallowStream replaces that with shallow memory accumulation, task-aware evidence retrieval, and deep reconstruction only for relevant segments. In effect, it turns full re-encoding into coarse retrieval followed by selective deep reading.",
+          "innovation": "The key novelty is a layered streaming architecture rather than simple token compression or window trimming. Shallow memory, task gating, evidence retrieval, and selected-context reconstruction are combined into a coherent inference pipeline. The idea is practical: the public repository already includes source code, configs, and smoke inference scripts.",
+          "key_metrics": "The Qwen3-VL-8B variant reaches 69.5 on OVO-Bench versus 67.7 for OASIS, and 78.2 on StreamingBench versus 76.6 for HERMES. The paper also reports up to 52.1× lower per-frame prefill cost and up to 11.9× lower 10-second end-to-end latency."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 82,
+        "rationale_zh": "质量和落地性都很强：既有明显的 streaming 架构创新，也有公开代码与清晰的效率收益。和电商内容生态并非直接面向推荐/治理标签，但对直播巡检、短视频理解、内容审核前置理解都很有价值，因此给到高相关分。",
+        "rationale_en": "Strong quality and strong deployability: the paper offers a real streaming-architecture shift, clear efficiency gains, and a public implementation. It is not a direct e-commerce governance paper, but it is highly useful for live moderation and creator-content understanding pipelines."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "2026-09-03 checked GitHub repo contains src/, configs/, examples/ and smoke inference scripts; no reimplementation needed today."
+      },
+      "figure_steps": [
+        "Ingest streaming frames and keep shallow visual states only",
+        "Write evidence memory with task-aware decay and routing",
+        "Retrieve the most relevant temporal evidence for the query",
+        "Reconstruct selected context deeply and decode the final answer"
+      ],
+      "exp_cards": [
+        [
+          "OVO-Bench",
+          "69.5"
+        ],
+        [
+          "Prefill cost",
+          "52.1x lower"
+        ],
+        [
+          "Latency",
+          "11.9x lower"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02772",
+      "title": "HyperStyler: Low-resource Authorship Style Transfer via Context-aware Style Navigation and Hypernetworks",
+      "authors": [
+        "Junsu Shin",
+        "Minjae Lee",
+        "Seonghan Kim",
+        "Taehwan Kim"
+      ],
+      "affiliations": [
+        "UNIST",
+        "POSTECH",
+        "POSCO Holdings"
+      ],
+      "source": "arXiv / EMNLP 2026 Main",
+      "published": "2026-09-03",
+      "tags": [
+        "作者风格",
+        "文本改写",
+        "达人治理",
+        "低资源"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02772",
+        "pdf": "https://arxiv.org/pdf/2609.02772.pdf",
+        "code": "https://github.com/JK-SHIN-PG/HyperStyler"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文关注低资源作者风格迁移：给定很少的目标作者样本，把原文改写成更接近目标作者风格的文本。核心设计把“选什么风格信号”与“怎么把风格注入生成器”拆开：前者由 Stylo-navigator 在上下文里找有用 style anchors，后者由 Stylo-hypernet 生成参数去调控主模型。亮点是不靠大量作者数据，也不只做简单 prompt 拼接。",
+          "story": "传统 authorship style transfer 要么依赖大量目标作者数据，要么把风格样例直接拼进上下文，遇到样本少、风格稀疏时很难稳定。HyperStyler 先导航出最有用的风格证据，再用超网络把这些风格线索转成对生成器有作用的控制参数，从而让小样本风格迁移变得可用。对达人生态来说，这一方向可迁移到主播/作者人设建模、文案风格一致性和内容 persona 维护。",
+          "innovation": "方法创新点主要在 style navigation 与 hypernetwork parameterization 的组合，比只做检索增强生成或 prefix/prompt tuning 更细。实验也证明简单 hidden-state injection 不够，必须同时解决‘风格证据选择’和‘风格参数化注入’两个问题。问题在于官方仓库目前只有 README 与 LICENSE，实际代码仍不充分，因此工程可复现性还未完全被证明。",
+          "key_metrics": "在 Reddit JOINT 上达到 0.418，超过 TinyStyler 的 0.399；在 Blog 上达到 0.489，超过 0.434；在 News 上达到 0.370，显著超过 0.278。消融中去掉导航或退化为简单注入都会明显掉点，说明模块设计不是装饰性组件。"
+        },
+        "en": {
+          "method_overview": "The paper tackles low-resource authorship style transfer: rewrite text to match a target author's style given only a few examples. It separates style evidence selection from style realization. A context-aware style navigator retrieves useful style anchors, while a hypernetwork converts them into parameters that steer the base generator.",
+          "story": "Conventional style-transfer setups either require many target-author examples or simply concatenate a few exemplars into the prompt, which is brittle in low-resource settings. HyperStyler first finds the most useful style evidence and then injects it through generated control parameters. This makes few-shot persona-consistent writing more realistic for creator ecosystems.",
+          "innovation": "The combination of style navigation and hypernetwork parameterization is more deliberate than plain retrieval-augmented prompting or prefix tuning. The ablation results show that simple hidden-state injection is not enough. However, the official repository currently looks incomplete, with only a README and LICENSE visible during code verification.",
+          "key_metrics": "It reaches 0.418 on Reddit JOINT versus 0.399 for TinyStyler, 0.489 on Blog versus 0.434, and 0.370 on News versus 0.278. Ablations show clear drops when navigation or proper style injection is removed."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 79,
+        "rationale_zh": "论文和达人侧的人设/风格一致性很贴近，实验也扎实；但代码链接当前仍是占位状态，且应用价值更多偏内容生成与风格治理而非直接违规检测，因此总分压在 80 以下。",
+        "rationale_en": "The topic maps well to creator persona and style consistency, and the experiments are convincing. But the linked repository is still effectively a placeholder, and the value is stronger for content-style governance than for direct moderation, so the score stays just below 80."
+      },
+      "reproduce": {
+        "status": "official_link_insufficient",
+        "code_checked": true,
+        "notes": "2026-09-03 checked GitHub repo: only README.md and LICENSE are publicly visible; code release is insufficient. Score < 80, so no reproduction was added today."
+      },
+      "figure_steps": [
+        "Collect a few target-author texts as sparse style evidence",
+        "Use Stylo-navigator to retrieve context-aware style anchors",
+        "Generate control parameters with Stylo-hypernet",
+        "Rewrite the source text with better persona-consistent style transfer"
+      ],
+      "exp_cards": [
+        [
+          "Reddit JOINT",
+          "0.418"
+        ],
+        [
+          "Blog",
+          "0.489"
+        ],
+        [
+          "News",
+          "0.370"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02749",
+      "title": "Repo-To-Skill: Distilling GitHub Repositories Into AI4AI Skills",
+      "authors": [
+        "Jianlyu Chen",
+        "Yuyang Hu",
+        "Hongjin Qian",
+        "Jiawei Liu",
+        "Wenqing Wei",
+        "Xiaolong Chen",
+        "Defu Lian",
+        "Zhicheng Dou",
+        "Chaozhuo Li",
+        "Qiwei Ye",
+        "Zheng Liu"
+      ],
+      "affiliations": [
+        "Beijing Academy of Artificial Intelligence",
+        "University of Science and Technology of China",
+        "Renmin University of China",
+        "The Hong Kong Polytechnic University"
+      ],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-09-03",
+      "tags": [
+        "Agent",
+        "自动化研究",
+        "知识蒸馏",
+        "工程效率"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02749",
+        "pdf": "https://arxiv.org/pdf/2609.02749.pdf",
+        "code": "https://github.com/VectorSpaceLab/AREX-Skill"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把 GitHub repo 与论文中的操作知识蒸馏成可执行 skill：skill 既包含适用范围，也包含要跑的命令、验证步骤和失败恢复建议。整体工作流是 scope-ground-construct-verify，并把 repo 内的多能力组织成 skill graph，再让 router 按任务逐层收缩上下文。亮点不在单个模型结构，而在把‘工程/研究操作知识’系统性结构化。",
+          "story": "很多研究或工程任务不是缺论文，而是缺‘怎么把论文/仓库真的跑起来’的操作知识。Repo-To-Skill 的思路是把 repo 中分散的 README、脚本、配置和经验提炼成 agent 能直接消费的 skill，减少盲搜和试错。对电商内容生态团队来说，这能直接用于快速固化审核、数据清洗、标注、训练和评测 pipeline 的知识资产。",
+          "innovation": "创新性体现在知识表示与 agent 工作流结合，而不是新的 backbone。它把 repo knowledge 变成带验证和恢复逻辑的执行单元，比普通 repo summary、RAG 片段检索或 notebook 式教程更强。方法合理、实现完整，且仓库是非空公开仓库；但和电商治理的关系更多是基础设施级间接相关。",
+          "key_metrics": "论文从 1000 个 ML repo 蒸馏出 5353 个 skills。在 MLE-bench 上 Any Medal rate 从 31.11% 提升到 72.89%；PaperBench replication score 从 29.45 提升到 39.59；FrontierCS 从 70.63 提升到 77.14；PassNet correctness 由 81.35% 提升到 90.76%。"
+        },
+        "en": {
+          "method_overview": "The paper distills repository and paper operating knowledge into executable skills that specify when to use a capability, what to run, how to validate it, and how to recover from failure. The workflow follows scope, ground, construct, and verify, and organizes multiple capabilities into a skill graph routed progressively by task.",
+          "story": "Many research and engineering tasks fail not because papers are missing, but because the operational know-how for using codebases is scattered across READMEs, scripts, and tacit tricks. Repo-To-Skill turns that procedural know-how into agent-readable skills, reducing blind search and trial-and-error. For content-governance teams, this is valuable infrastructure for codifying moderation, data-cleaning, labeling, and evaluation workflows.",
+          "innovation": "The novelty lies in the representation of operational knowledge and its integration into the agent loop rather than in a new backbone. Compared with simple repo summaries, RAG snippets, or tutorial-style notes, it packages executable procedures with validation and recovery logic. The method is well realized and the public repo is clearly substantive, but the relevance to e-commerce governance is indirect.",
+          "key_metrics": "The paper distills 5,353 skills from 1,000 ML repositories. It improves MLE-bench Any Medal rate from 31.11% to 72.89%, PaperBench replication score from 29.45 to 39.59, FrontierCS from 70.63 to 77.14, and PassNet correctness from 81.35% to 90.76%."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 13,
+        "total": 78,
+        "rationale_zh": "这是一篇高热高质量基础设施论文，公共代码完整，benchmark 提升也非常夸张。它对电商内容生态的直接业务相关性一般，但对沉淀审核/标注/训练知识资产非常有帮助，所以给高分但不进最强相关档。",
+        "rationale_en": "This is a high-heat, high-quality infrastructure paper with strong public code and large benchmark gains. Its direct business relevance is moderate, but it is highly useful for codifying moderation and data-operation know-how, so it scores high without entering the strongest relevance tier."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "2026-09-03 checked public repo: non-empty with cli/, docs/, scripts/, skills/ and 100+ commits; no reimplementation needed today."
+      },
+      "figure_steps": [
+        "Parse repository and paper evidence into capability candidates",
+        "Ground the capability with commands, configs, and provenance",
+        "Construct a skill graph with SKILL.md plus scripts and references",
+        "Route only the needed branch to the coding agent at runtime"
+      ],
+      "exp_cards": [
+        [
+          "MLE-bench",
+          "72.89"
+        ],
+        [
+          "PaperBench",
+          "+10.14"
+        ],
+        [
+          "PassNet",
+          "90.76%"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02783",
+      "title": "EarlyEval: Early Stopping of Agent Evaluation via Intermediate Trajectory Prediction",
+      "authors": [
+        "Zhengyang Wang",
+        "Yutao Chen",
+        "Zeqi Li",
+        "Jian Guan"
+      ],
+      "affiliations": [
+        "Shanghai Jiao Tong University",
+        "Singapore Management University",
+        "East China Normal University",
+        "Shanghai Innovation Institute"
+      ],
+      "source": "arXiv / Hugging Face Daily Papers",
+      "published": "2026-09-03",
+      "tags": [
+        "Agent 评测",
+        "效率",
+        "自动化",
+        "治理基础设施"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02783",
+        "pdf": "https://arxiv.org/pdf/2609.02783.pdf",
+        "code": "https://github.com/inphotoo/earlyeval"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "EarlyEval 不是优化 agent 本身，而是优化 agent 评测流程：它从中间轨迹中抽取特征，用双头 LightGBM 预测器判断当前样本是否大概率已经成功/失败，从而提前停止后续冗长 rollout。这个设计特别适合大规模实验、策略对比和线上巡检，因为大量评测成本往往浪费在已经可判定的轨迹上。亮点是几乎不损伤 Pass@1，却节省了显著 token 与 steps。",
+          "story": "随着 agent 被越来越多地用于内容理解、审核工具和数据生产，团队需要不断评测不同提示词、工具链和模型版本，但完整跑完每条任务轨迹非常贵。EarlyEval 的思路是学习‘中途就知道结果大概率如何’，把无意义的长尾评测提前截断。这样就能用同样预算做更多实验，对治理体系里的策略迭代非常实用。",
+          "innovation": "创新点在于把 early stopping 引入 agent evaluation，并把预测对象设计成轨迹级 outcome 而不是 token 级奖励。相比简单长度截断或固定步数评测，它是数据驱动的自适应预算分配。方法很务实，公共代码也可用，但它更偏基础设施效率优化，和电商内容理解本体的直接关联略弱。",
+          "key_metrics": "在 SWE-bench 上，平均 steps 降低 26.0%，input token 降低 32.7%，output token 降低 28.7%，Pass@1 只损失 1.1。TerminalBench 与 Toolathlon 上也带来 17.7%~25.4% 的 steps 降低和 29.2%~44.1% 的 input token 降低，Spearman 相关达到 0.959~0.994。"
+        },
+        "en": {
+          "method_overview": "EarlyEval improves the evaluation loop rather than the agent itself. It extracts intermediate trajectory features and uses a dual-head LightGBM predictor to estimate whether the current rollout is already likely to end in success or failure, enabling early stopping of expensive evaluation runs.",
+          "story": "As agents are used for content understanding, moderation tooling, and data operations, teams must repeatedly benchmark prompts, tools, and model versions. Fully executing every trajectory is expensive. EarlyEval learns when the outcome is already predictable and stops the long tail early, letting the same budget cover more experiments.",
+          "innovation": "The novelty is bringing trajectory-level early stopping into agent evaluation with a learned predictor instead of fixed truncation. It is a practical form of adaptive budget allocation. The method is solid and the code is public, but its relevance is more on governance infrastructure than on content understanding itself.",
+          "key_metrics": "On SWE-bench, it reduces average steps by 26.0%, input tokens by 32.7%, and output tokens by 28.7%, while losing only 1.1 Pass@1 points. It also cuts steps by 17.7% to 25.4% and input tokens by 29.2% to 44.1% on TerminalBench and Toolathlon, with Spearman correlations of 0.959 to 0.994."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 76,
+        "rationale_zh": "作为评测基础设施论文非常优秀，节省成本的收益很明确，也能直接服务团队内部 agent 策略迭代。但它不是内容理解/治理算法本身，因此相关性分数适中。",
+        "rationale_en": "This is an excellent evaluation-infrastructure paper with very clear cost savings and immediate usefulness for internal agent iteration. But it is not itself a content-understanding or moderation algorithm, so the relevance score is moderate."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "Official implementation is public; score < 80, so no additional reproduction was added today."
+      },
+      "figure_steps": [
+        "Collect intermediate signals from partial agent trajectories",
+        "Predict likely success and likely failure with a dual-head model",
+        "Stop rollouts early once confidence is sufficient",
+        "Reallocate saved budget to more evaluation tasks and model comparisons"
+      ],
+      "exp_cards": [
+        [
+          "SWE steps",
+          "-26.0%"
+        ],
+        [
+          "Input tokens",
+          "-32.7%"
+        ],
+        [
+          "Pass@1 loss",
+          "1.1"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02812",
+      "title": "VibeVoice-ASR-Streaming: Low-latency Multi-speaker Streaming ASR with Interleaved Audio-Text Context",
+      "authors": [
+        "Haotian Zhang",
+        "Tianqi Liu",
+        "Jingjing Xu",
+        "Yelong Shen"
+      ],
+      "affiliations": [
+        "Microsoft Research",
+        "University of Chinese Academy of Sciences",
+        "Shanghai Jiao Tong University"
+      ],
+      "source": "arXiv",
+      "published": "2026-09-03",
+      "tags": [
+        "ASR",
+        "多说话人",
+        "直播内容",
+        "内容生态"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02812",
+        "pdf": "https://arxiv.org/pdf/2609.02812.pdf",
+        "code": "https://github.com/microsoft/VibeVoice"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文解决的是低延迟多说话人流式 ASR：模型在流式输入时同时建模音频块与已转写文本块，并用 0.5 秒 lookahead 在延迟与稳定性之间取平衡。和单纯 diarization + ASR 串联不同，它把说话人归属与转写更紧地耦合到统一生成过程。对直播带货、多人连麦和达人语音内容理解很有现实意义。",
+          "story": "现有 streaming ASR 在多人对话、打断和串话场景里容易在‘谁说了什么’上出错，后续审核、话术分析和互动理解都会被污染。VibeVoice-ASR-Streaming 把 interleaved audio-text context 引入流式识别，让模型在实时解码时就维护跨 speaker 的上下文。这样就不必完全依赖后处理拼接，提高了低延迟场景下的可用性。",
+          "innovation": "方法创新主要在 speaker-attributed streaming ASR 的上下文建模形式：音频块和文本块交错输入，加上有限 lookahead 控制 latency。相较传统流水线式 diarization + ASR，它更统一，也更适合部署到多说话人实时场景。仓库和模型权重已公开，但完整训练复现成本仍偏高。",
+          "key_metrics": "论文报告平均 WER/CER 为 24.66，优于 Gemini 的 25.23；在 13 个 speaker-attributed streaming 设置中拿到 12 个 best 或 tied-best。Expected speaker-attribution latency 为 2.00 秒，而 Azure 约为 8.21 秒，说明它兼顾了正确率和响应速度。"
+        },
+        "en": {
+          "method_overview": "The paper targets low-latency multi-speaker streaming ASR. It interleaves audio chunks and already-produced text chunks, and uses a 0.5-second lookahead to balance stability and latency. Instead of a loose diarization-plus-ASR pipeline, speaker attribution is woven directly into the generation process.",
+          "story": "Streaming ASR often fails on who-said-what under overlap, interruptions, and fast turn taking, which hurts moderation, script mining, and conversational understanding. VibeVoice-ASR-Streaming keeps cross-speaker context during real-time decoding with interleaved audio-text inputs, reducing dependence on brittle post-hoc stitching.",
+          "innovation": "The novelty is the context design for speaker-attributed streaming ASR: interleaved audio and text chunks plus limited lookahead for latency control. It is more unified than classic diarization followed by ASR and looks deployable for real-time multi-speaker media. Public code and checkpoints exist, though full training reproduction is still heavy.",
+          "key_metrics": "The paper reports average WER/CER of 24.66 versus 25.23 for Gemini, wins or ties in 12 of 13 speaker-attributed settings, and reduces expected speaker-attribution latency to 2.00 seconds versus about 8.21 seconds for Azure."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 73,
+        "rationale_zh": "对直播、多人连麦和语音内容理解非常实用，延迟指标也足够亮眼。相对内容治理主线，它更偏语音基础能力，因此总分处于中高档。",
+        "rationale_en": "This is highly practical for live streaming, multi-speaker rooms, and spoken-content understanding, with strong latency gains. Relative to the main moderation agenda, it is more of an enabling speech capability, so it lands in the mid-to-high tier."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "Official repo and checkpoints are available; score < 80, so no additional reproduction was added today."
+      },
+      "figure_steps": [
+        "Stream incoming audio into short chunks with small future lookahead",
+        "Interleave audio chunks with already generated speaker-aware text context",
+        "Decode transcript tokens while maintaining speaker attribution",
+        "Emit low-latency who-said-what transcripts for downstream moderation"
+      ],
+      "exp_cards": [
+        [
+          "Avg WER/CER",
+          "24.66"
+        ],
+        [
+          "Best/tied-best",
+          "12/13"
+        ],
+        [
+          "Attribution latency",
+          "2.00s"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02760",
+      "title": "Measurement-Driven Sub-Network Selection for Efficient RAG-based Factory Agents on On-Premise Edge Platforms",
+      "authors": [
+        "Apostolos Pappas",
+        "Ioannis Tzavaras",
+        "Konstantinos Kolomvatsos"
+      ],
+      "affiliations": [
+        "enakronIC PC AI Lab",
+        "University of Patras"
+      ],
+      "source": "arXiv",
+      "published": "2026-09-03",
+      "tags": [
+        "RAG",
+        "边缘部署",
+        "Agent",
+        "效率"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02760",
+        "pdf": "https://arxiv.org/pdf/2609.02760.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文关注的是把 RAG agent 部署到受限边缘设备上：先对模型做压缩/适配，再结合真实设备上的吞吐、功耗和任务质量指标，选择最合适的子网络。关键不是离线 FLOPs 估计，而是 measurement-driven selection，也就是拿实测质量与系统指标共同做决策。对需要在端侧做内容理解或审核前置过滤的场景有参考价值。",
+          "story": "边缘侧 agent 往往既要回答得对，又受限于设备算力、功耗和时延，单靠离线模型大小很难选出真正最优方案。该文提出先生成一批可运行子网，再用设备实测数据去选择最合适的那一个，把‘模型压缩’与‘系统选型’合在一起做。思路比较工程化，适合资源约束明显的治理链路。",
+          "innovation": "创新点在于把子网选择的依据从静态代理指标，改成面向实际部署平台的质量-效率联合测量，这对工业系统更真实。和大多数只报参数量/延迟模拟值的论文相比，它更强调真实硬件上的 decision making。缺点是公开代码缺失，学术影响力和 benchmark 广度也相对一般。",
+          "key_metrics": "论文报告 3B + RAG 配置质量达到 0.848；抽取式 rank-6 子网达到 0.732；加入 retrieval-grounded knowledge distillation 后达到 0.809，距全量基线仅下降约 4.6%。同时在 Jetson、RevPi、Arduino 等不同设备上给出吞吐与功耗测量。"
+        },
+        "en": {
+          "method_overview": "The paper studies how to deploy RAG agents on constrained edge platforms. It first compresses or adapts the model, then selects the best sub-network using real device measurements that jointly consider task quality, throughput, and power. The emphasis is on measurement-driven selection rather than offline proxy metrics.",
+          "story": "Edge agents must remain accurate while satisfying tight compute, power, and latency budgets. Model size alone is a poor selector. The paper therefore generates candidate sub-networks and chooses among them using real hardware measurements, effectively coupling compression with deployment-time decision making.",
+          "innovation": "The main novelty is replacing static proxy-based subnet selection with a quality-efficiency decision grounded in real platform measurements. That is more realistic for industrial deployment than papers that report only parameter counts or simulated latency. The weakness is the lack of public code and narrower benchmark scope.",
+          "key_metrics": "The paper reports quality 0.848 for a 3B+RAG setup, 0.732 for an extractive rank-6 subnet, and 0.809 after retrieval-grounded knowledge distillation, only about 4.6% below the full baseline. It also measures throughput and power on Jetson, RevPi, and Arduino-class platforms."
+        }
+      },
+      "score": {
+        "innovation": 21,
+        "results": 10,
+        "exp_quality": 10,
+        "efficiency": 9,
+        "generalization": 3,
+        "relevance": 16,
+        "total": 69,
+        "rationale_zh": "对端侧审核、轻量内容理解和低成本部署有启发，但 benchmark 规模和公开实现都弱一些。更像一篇工程部署选型论文，因此总分中等偏上。",
+        "rationale_en": "The paper is useful for edge moderation and lightweight content understanding, but the benchmark breadth and public reproducibility are both limited. It reads more like a deployment-selection paper, so it lands in the upper-middle tier."
+      },
+      "reproduce": {
+        "status": "no_public_code",
+        "code_checked": true,
+        "notes": "No public implementation found during today's verification; score < 80, so no reproduction was added today."
+      },
+      "figure_steps": [
+        "Compress or adapt the base RAG agent into candidate subnetworks",
+        "Run each candidate on real edge hardware instead of proxy estimates",
+        "Measure task quality, throughput, latency, and power jointly",
+        "Choose the best quality-efficiency subnet for on-prem deployment"
+      ],
+      "exp_cards": [
+        [
+          "3B + RAG",
+          "0.848"
+        ],
+        [
+          "KD subnet",
+          "0.809"
+        ],
+        [
+          "Gap to full",
+          "-4.6%"
+        ]
+      ]
+    },
+    {
+      "id": "2609.02886",
+      "title": "SolarWM: Building Open and Practical Large Video World Models from Open Data",
+      "authors": [
+        "Junchao Liao",
+        "Jiacheng Wang",
+        "Yingcong Li",
+        "Xiangyu Zhang"
+      ],
+      "affiliations": [
+        "The Chinese University of Hong Kong, Shenzhen",
+        "Shenzhen Research Institute of Big Data",
+        "National University of Singapore",
+        "Hong Kong University of Science and Technology",
+        "NVIDIA",
+        "Microsoft Research Asia"
+      ],
+      "source": "arXiv",
+      "published": "2026-09-03",
+      "tags": [
+        "视频生成",
+        "世界模型",
+        "开放数据",
+        "内容生态"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.02886",
+        "pdf": "https://arxiv.org/pdf/2609.02886.pdf",
+        "code": "https://github.com/Junchao-cs/SolarWM"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SolarWM 试图把大型视频 world model 的训练栈开放化：它不仅给模型，还给开放数据构建流程、质量分层和训练 recipe。论文的重点是用大规模开放视频数据训练实用 world model，而不是只展示单一 architecture trick。对内容生态的价值主要在于开放视频预训练资产和长时视频表征能力。",
+          "story": "很多视频 world model 的核心门槛不在模型公式，而在数据获取、清洗、质量控制和训练流程封装，这导致社区难以追平闭源系统。SolarWM 通过构建 1.4M+ clips、约 25.85TB 的开放数据引擎，把训练数据、质量层次和模型 recipe 一起公开，希望降低进入门槛。对于电商视频内容理解，它提供的是更上游的数据与表征基础。",
+          "innovation": "论文的创新更多在开放体系搭建：数据引擎、质量层级保留、多 backbone recipe 和实操可复现性，而不是单点模型结构。这样的工作对工业界很重要，但纯算法指标上的‘惊艳感’弱一些。代码公开度不错，不过从零复现依然需要重算力和超大数据。",
+          "key_metrics": "论文构建了 1,425,694 个视频 clips，总量约 25.85TB，并显式保留 high/xhigh/rejected 多层质量标签，方便训练配方对比。主要亮点是开放训练栈和数据规模；主文没有像检索/问答论文那样给出单一 benchmark 上的统一大幅 SOTA 表。"
+        },
+        "en": {
+          "method_overview": "SolarWM aims to open up the training stack for large video world models. It contributes not only models but also an open-data construction pipeline, quality stratification, and training recipes. The value is in making practical large-scale video pretraining more reproducible.",
+          "story": "For video world models, the major barrier is often not the architecture itself but the data pipeline, cleaning policy, quality control, and training recipe. SolarWM lowers that barrier by releasing an open data engine with 1.4M+ clips and explicit quality tiers, making the upstream foundation more accessible.",
+          "innovation": "The novelty is ecosystem-level openness: dataset construction, quality tiers, multi-backbone recipes, and practical reproducibility rather than one isolated model trick. This matters for industry, though it is less flashy on classic benchmark scoreboards. Public code exists, but reproducing from scratch remains expensive due to scale.",
+          "key_metrics": "The work constructs 1,425,694 video clips totaling about 25.85TB and keeps high, xhigh, and rejected quality tiers for controlled recipe comparisons. The main strength is openness of data and training stack rather than a single unified SOTA table."
+        }
+      },
+      "score": {
+        "innovation": 20,
+        "results": 7,
+        "exp_quality": 9,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 64,
+        "rationale_zh": "这篇更像开放视频基础设施工作，对内容生态长期价值较高，但离达人治理和电商理解的直接任务还有距离，且主文缺统一大表，所以评分偏中档。",
+        "rationale_en": "This is more of an open video-foundation effort than a directly applied governance paper. It has long-term value for content ecosystems, but it is further from immediate creator-governance tasks and lacks a single compelling benchmark table, so it sits in the middle tier."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "Official code is public, but full reproduction would require very large-scale data and compute; score < 80, so no reproduction was added today."
+      },
+      "figure_steps": [
+        "Harvest open video data and keep multi-level quality labels",
+        "Train practical video world-model recipes on the open corpus",
+        "Compare recipe choices across backbones and quality tiers",
+        "Release an open stack for long-video pretraining and downstream reuse"
+      ],
+      "exp_cards": [
+        [
+          "Video clips",
+          "1.43M"
+        ],
+        [
+          "Open data",
+          "25.85TB"
+        ],
+        [
+          "Quality tiers",
+          "3 levels"
+        ]
+      ]
+    }
+  ]
+}

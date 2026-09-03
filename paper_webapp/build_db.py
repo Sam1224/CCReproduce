@@ -55,8 +55,6 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
         """
     )
 
-    # Also persist the inspection dates themselves so the UI can show days
-    # even when a given day has zero papers.
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS days (
@@ -69,6 +67,7 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
 
 def main() -> None:
     out_path = WEBAPP_DIR / "data" / "papers.sqlite"
+    json_out_path = WEBAPP_DIR / "data" / "papers.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     if out_path.exists():
@@ -76,6 +75,9 @@ def main() -> None:
 
     conn = sqlite3.connect(str(out_path))
     ensure_schema(conn)
+
+    web_days = []
+    web_papers = []
 
     for pj in iter_papers_json():
         inspection_date = pj.parent.name
@@ -113,7 +115,6 @@ def main() -> None:
             else:
                 figure_path = None
 
-            # experiment / results figure (optional, looked up as "{id}_exp.*")
             exp_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.svg"
             exp_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.png"
             if exp_path_svg.exists():
@@ -122,6 +123,34 @@ def main() -> None:
                 exp_figure_path = f"assets/figures/{p['id']}_exp.png"
             else:
                 exp_figure_path = None
+
+            row = {
+                "inspection_date": inspection_date,
+                "paper_id": p["id"],
+                "title": p.get("title"),
+                "authors": p.get("authors", []),
+                "affiliations": p.get("affiliations", []),
+                "source": p.get("source"),
+                "published": p.get("published"),
+                "links": links,
+                "tags": p.get("tags", []),
+                "score_total": int(score.get("total", 0)),
+                "score_breakdown": score,
+                "rationale_zh": score.get("rationale_zh"),
+                "rationale_en": score.get("rationale_en") or score.get("rationale_zh"),
+                "method_overview_zh": summary_value(summary, "zh", "method_overview"),
+                "method_overview_en": summary_value(summary, "en", "method_overview"),
+                "story_zh": summary_value(summary, "zh", "story"),
+                "story_en": summary_value(summary, "en", "story"),
+                "innovation_zh": summary_value(summary, "zh", "innovation"),
+                "innovation_en": summary_value(summary, "en", "innovation"),
+                "key_metrics_zh": summary_value(summary, "zh", "key_metrics"),
+                "key_metrics_en": summary_value(summary, "en", "key_metrics"),
+                "reproduce_url": reproduce_url,
+                "figure_path": figure_path,
+                "exp_figure_path": exp_figure_path,
+            }
+            web_papers.append(row)
 
             conn.execute(
                 """
@@ -134,33 +163,34 @@ def main() -> None:
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    inspection_date,
-                    p["id"],
-                    p.get("title"),
-                    json.dumps(p.get("authors", []), ensure_ascii=False),
-                    json.dumps(p.get("affiliations", []), ensure_ascii=False),
-                    p.get("source"),
-                    p.get("published"),
-                    json.dumps(links, ensure_ascii=False),
-                    json.dumps(p.get("tags", []), ensure_ascii=False),
-                    int(score.get("total", 0)),
-                    json.dumps(score, ensure_ascii=False),
-                    score.get("rationale_zh"),
-                    score.get("rationale_en") or score.get("rationale_zh"),
-                    summary_value(summary, "zh", "method_overview"),
-                    summary_value(summary, "en", "method_overview"),
-                    summary_value(summary, "zh", "story"),
-                    summary_value(summary, "en", "story"),
-                    summary_value(summary, "zh", "innovation"),
-                    summary_value(summary, "en", "innovation"),
-                    summary_value(summary, "zh", "key_metrics"),
-                    summary_value(summary, "en", "key_metrics"),
-                    reproduce_url,
-                    figure_path,
-                    exp_figure_path,
+                    row["inspection_date"],
+                    row["paper_id"],
+                    row["title"],
+                    json.dumps(row["authors"], ensure_ascii=False),
+                    json.dumps(row["affiliations"], ensure_ascii=False),
+                    row["source"],
+                    row["published"],
+                    json.dumps(row["links"], ensure_ascii=False),
+                    json.dumps(row["tags"], ensure_ascii=False),
+                    row["score_total"],
+                    json.dumps(row["score_breakdown"], ensure_ascii=False),
+                    row["rationale_zh"],
+                    row["rationale_en"],
+                    row["method_overview_zh"],
+                    row["method_overview_en"],
+                    row["story_zh"],
+                    row["story_en"],
+                    row["innovation_zh"],
+                    row["innovation_en"],
+                    row["key_metrics_zh"],
+                    row["key_metrics_en"],
+                    row["reproduce_url"],
+                    row["figure_path"],
+                    row["exp_figure_path"],
                 ),
             )
 
+        web_days.append({"inspection_date": inspection_date, "paper_count": paper_count})
         conn.execute(
             "INSERT OR REPLACE INTO days (inspection_date, paper_count) VALUES (?, ?)",
             (inspection_date, paper_count),
@@ -169,7 +199,14 @@ def main() -> None:
     conn.commit()
     conn.close()
 
+    web_payload = {
+        "days": sorted(web_days, key=lambda item: item["inspection_date"], reverse=True),
+        "papers": sorted(web_papers, key=lambda item: (item["inspection_date"], item["score_total"], item["title"]), reverse=True),
+    }
+    json_out_path.write_text(json.dumps(web_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
     print(f"wrote: {out_path}")
+    print(f"wrote: {json_out_path}")
 
 
 if __name__ == "__main__":

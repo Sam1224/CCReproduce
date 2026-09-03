@@ -1,4 +1,4 @@
-let db = null;
+let payload = { days: [], papers: [] };
 let lang = "zh";
 
 const I18N = {
@@ -40,9 +40,6 @@ const I18N = {
   },
 };
 
-// Score dimensions (key, max, labels) used to render the per-paper breakdown.
-// `alt` lists alternate JSON keys so both the legacy (results/exp_quality) and the
-// newer (metrics/quality) papers.json score schemas render correctly.
 const DIMS = [
   { key: "innovation", alt: [], max: 30, zh: "创新性", en: "Innovation" },
   { key: "results", alt: ["metrics"], max: 15, zh: "实验指标", en: "Results" },
@@ -53,9 +50,9 @@ const DIMS = [
 ];
 
 function dimValue(breakdown, d) {
-  if (typeof breakdown[d.key] === "number") return breakdown[d.key];
+  if (typeof breakdown?.[d.key] === "number") return breakdown[d.key];
   for (const k of d.alt || []) {
-    if (typeof breakdown[k] === "number") return breakdown[k];
+    if (typeof breakdown?.[k] === "number") return breakdown[k];
   }
   return undefined;
 }
@@ -78,15 +75,6 @@ function setLang(nextLang) {
     el.textContent = t[key] || el.textContent;
   });
   $("langToggle").textContent = lang === "zh" ? "EN" : "中文";
-}
-
-function query(sql, params = []) {
-  const stmt = db.prepare(sql);
-  stmt.bind(params);
-  const rows = [];
-  while (stmt.step()) rows.push(stmt.getAsObject());
-  stmt.free();
-  return rows;
 }
 
 function parseJsonMaybe(v) {
@@ -177,7 +165,6 @@ function renderPapers(papers) {
     card.querySelector(".innovation").textContent = innovationText || "";
     card.querySelector(".rationale").textContent = (lang === "zh" ? p.rationale_zh : p.rationale_en) || p.rationale_zh || "";
 
-    // score breakdown (per-dimension bars)
     const breakdown = parseJsonMaybe(p.score_breakdown) || {};
     const bWrap = card.querySelector(".breakdown");
     bWrap.innerHTML = "";
@@ -226,7 +213,6 @@ function renderPapers(papers) {
       figBtn.classList.remove("btn-secondary");
     }
 
-    // experiment / results figure (optional, shown above the highlight text)
     const expFig = card.querySelector(".exp-figure");
     if (p.exp_figure_path) {
       expFig.src = p.exp_figure_path;
@@ -250,7 +236,6 @@ function renderPapers(papers) {
       expWrap.classList.toggle("hidden");
     });
 
-    // localize the cloned card's static labels (titles / buttons) for current lang
     node.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
       if (I18N[lang][key]) el.textContent = I18N[lang][key];
@@ -264,19 +249,13 @@ function refresh() {
   const date = $("dateSelect").value;
   const minScore = Number($("scoreSlider").value);
 
-  const rows = query(
-    `SELECT 
-      inspection_date, paper_id, title, authors, affiliations, source, published, links, tags,
-      score_total, score_breakdown, rationale_zh, rationale_en,
-      method_overview_zh, method_overview_en,
-      story_zh, story_en,
-      innovation_zh, innovation_en,
-      key_metrics_zh, key_metrics_en, reproduce_url, figure_path, exp_figure_path
-    FROM papers
-    WHERE inspection_date = ? AND score_total >= ?
-    ORDER BY score_total DESC, title ASC`,
-    [date, minScore]
-  );
+  const rows = (payload.papers || [])
+    .filter((p) => p.inspection_date === date && Number(p.score_total) >= minScore)
+    .sort((left, right) => {
+      const scoreGap = Number(right.score_total) - Number(left.score_total);
+      if (scoreGap !== 0) return scoreGap;
+      return String(left.title).localeCompare(String(right.title));
+    });
 
   renderPapers(rows);
 }
@@ -285,22 +264,14 @@ async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const SQL = await window.initSqlJs({
-    locateFile: (file) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${file}`,
-  });
+  const res = await fetch("data/papers.json", { cache: "no-store" });
+  payload = await res.json();
 
-  const buf = await fetch("data/papers.sqlite").then((r) => r.arrayBuffer());
-  db = new SQL.Database(new Uint8Array(buf));
-
-  let dates = [];
-  try {
-    dates = query(
-      "SELECT inspection_date AS d FROM days ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
-  } catch {
-    dates = query(
-      "SELECT DISTINCT inspection_date AS d FROM papers ORDER BY inspection_date DESC"
-    ).map((r) => r.d);
+  let dates = (payload.days || []).map((item) =>
+    typeof item === "string" ? item : item.inspection_date
+  );
+  if (!dates.length) {
+    dates = [...new Set((payload.papers || []).map((p) => p.inspection_date))].sort().reverse();
   }
 
   const dateSelect = $("dateSelect");
@@ -329,4 +300,9 @@ async function init() {
   refresh();
 }
 
-window.addEventListener("DOMContentLoaded", init);
+window.addEventListener("DOMContentLoaded", () => {
+  init().catch((error) => {
+    console.error(error);
+    setStatus(`Load failed: ${error?.message || error}`);
+  });
+});
