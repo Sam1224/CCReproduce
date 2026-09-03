@@ -205,22 +205,35 @@ function renderPapers(papers) {
     const expWrap = card.querySelector(".exp-wrap");
     const figBtn = card.querySelector(".toggle-figure");
     const expBtn = card.querySelector(".toggle-exp");
+    const figureEl = card.querySelector(".figure");
 
     if (p.figure_path) {
-      card.querySelector(".figure").src = p.figure_path;
+      figureEl.addEventListener("error", () => {
+        figBtn.disabled = true;
+        figBtn.classList.remove("btn-secondary");
+        figWrap.classList.add("hidden");
+      });
+      figureEl.src = p.figure_path;
     } else {
       figBtn.disabled = true;
       figBtn.classList.remove("btn-secondary");
     }
 
+    const expText = lang === "zh" ? p.key_metrics_zh : p.key_metrics_en;
     const expFig = card.querySelector(".exp-figure");
     if (p.exp_figure_path) {
+      expFig.addEventListener("error", () => {
+        expFig.remove();
+        if (!expText) {
+          expBtn.disabled = true;
+          expBtn.classList.remove("btn-secondary");
+          expWrap.classList.add("hidden");
+        }
+      });
       expFig.src = p.exp_figure_path;
     } else {
       expFig.remove();
     }
-
-    const expText = lang === "zh" ? p.key_metrics_zh : p.key_metrics_en;
     card.querySelector(".exp").textContent = expText || "";
 
     if (!p.exp_figure_path && !expText) {
