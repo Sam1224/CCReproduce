@@ -1,0 +1,623 @@
+{
+  "inspection_date": "2026-09-04",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": [
+      "2026-09-04 00:00:00",
+      "2026-09-04 23:59:59"
+    ],
+    "utc": [
+      "2026-09-03T16:00:00Z",
+      "2026-09-04T15:59:59Z"
+    ]
+  },
+  "keyword_notes": {
+    "kept": [
+      "电商",
+      "内容理解",
+      "达人治理",
+      "LLM/VLM/MLLM",
+      "caption",
+      "向量化表征",
+      "聚类/相似",
+      "Agent",
+      "RAG",
+      "蒸馏",
+      "违规检测/治理",
+      "数据质量/清洗/打标"
+    ],
+    "added": [
+      "compositional multimodal retrieval",
+      "semantic ID recommendation",
+      "streaming video understanding",
+      "weakly-supervised dense video captioning",
+      "knowledge acquisition in pre-training",
+      "brand recommendation auditing"
+    ],
+    "excluded": [
+      "安全/后门/越狱/投毒/guardrail 对抗方向",
+      "以攻击、防御、深伪鉴伪为核心目标的安全类论文"
+    ]
+  },
+  "source_coverage": [
+    "arXiv recent / pastweek 列表（cs.CV / cs.CL / cs.AI / cs.LG / cs.IR / eess.AS）",
+    "Hugging Face Daily Papers / OpenReview accepted 信息回查",
+    "Google Scholar / Semantic Scholar / OpenAlex / DBLP 元数据交叉校验",
+    "Google / DeepMind / Meta / OpenAI / Qwen / Hunyuan / Meituan 等研究博客公开页补充",
+    "X / 知乎 / AI 公众号公开页 / GitHub 仓库检索补充",
+    "ICML / NeurIPS / ICLR / CVPR / ICCV / ECCV / ACL / EMNLP / KDD / SIGIR / SIGMOD / VLDB accepted pages back-check"
+  ],
+  "papers": [
+    {
+      "id": "2609.04083",
+      "title": "CORE: Improving Compositional Reasoning in MLLM Embedding via Reranker Distillation",
+      "authors": [
+        "Tingyu Song",
+        "Mingxin Li",
+        "Yanzhao Zhang",
+        "Dingkun Long",
+        "Chu Liu",
+        "Pengjun Xie",
+        "Yilun Zhao",
+        "Shu Wu"
+      ],
+      "affiliations": [
+        "CASIA",
+        "Alibaba Group",
+        "University of Chinese Academy of Sciences",
+        "Yale University"
+      ],
+      "source": "arXiv / cs.CV",
+      "published": "2026-09-04",
+      "tags": [
+        "多模态检索",
+        "MLLM",
+        "电商检索",
+        "内容理解"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04083",
+        "pdf": "https://arxiv.org/pdf/2609.04083.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文聚焦多模态 embedding 在组合检索上的短板：模型往往能识别概念，却分不清属性-对象绑定。CORE 先自动合成五级候选列表，从 fully match 到 total error 形成细粒度难负样本，再用 reranker 的排序判断蒸馏 embedding 模型。最关键的是作者没有停留在简单 contrastive，而是比较了 contrastive、CoSENT 和 listwise Rank-KL，最后证明 Rank-KL 对这种分级监督最有效。对电商场景来说，这个方法非常适合商品图文检索、属性错配识别和多条件搜索。",
+          "story": "现有 MLLM embedding 常把查询当成“概念袋子”，导致‘黑椅子+白盘子’和‘白椅子+黑盘子’这类绑定关系分不清。CORE 的思路是先用可控数据合成把错误分成不同等级，再利用 reranker 已经具备的细粒度判断去反向教 embedding。于是系统不再只学“像不像”，而是学“哪一种错、错得多离谱”。这对电商搜索里高价值的属性约束检索尤其关键。",
+          "innovation": "真正的创新点不是单纯做 hard negative，而是把 reranker 的组合推理能力蒸馏给 embedding，并把训练目标升级为 listwise Rank-KL。与很多只在模型结构上做改动的方法相比，CORE 的优势在于：不需要重造一个大型检索骨干，而是借助已有 backbone 的 cross-attention 判断能力，尽量低成本地把能力转移到 first-stage retrieval。这个思路合理、可行，也很贴近工业搜索系统两阶段架构。",
+          "key_metrics": "CORE-RERANKER-8B 在 COLA / SUGARCREPE++ / NEGBENCH 三个组合推理 benchmark 上总平均达到 82.7%，比 Jina-Reranker 高 10.7 个点；CORE-EMBED-8B 在 embedding 模型中总平均达到 0.666。迁移到独立的 MCMR benchmark 时，R@1 从 backbone 的 0.375 提升到 0.412，且 COCO、Flickr30K 常规检索性能基本保住。"
+        },
+        "en": {
+          "method_overview": "The paper targets a core weakness of multimodal embedding models: they recognize concepts but often fail on attribute-object binding. CORE synthesizes five-level candidate lists, from full match to total mismatch, and distills reranker judgments into the embedding space. It systematically compares contrastive learning, CoSENT, and listwise Rank-KL, showing that Rank-KL is the best fit for graded compositional supervision. This is highly relevant to e-commerce retrieval and multi-constraint product search.",
+          "story": "Current MLLM embeddings often behave like a bag-of-concepts matcher, so they confuse scenes with the same objects but different bindings. CORE first creates graded compositional negatives, then uses the reranker's finer reasoning ability to teach the embedding model. The system therefore learns not only whether a candidate is wrong, but how wrong it is. That matters for high-value e-commerce search where attribute correctness drives user trust.",
+          "innovation": "The real novelty is not just hard-negative mining, but transferring reranker compositional reasoning into the embedding stage through listwise rank distillation. Instead of redesigning the backbone, CORE leverages an ability already present in cross-attentive scoring and pushes it into first-stage retrieval. This fits industrial two-stage retrieval pipelines very naturally.",
+          "key_metrics": "CORE-RERANKER-8B reaches an 82.7% total average on COLA, SUGARCREPE++, and NEGBENCH, beating Jina-Reranker by 10.7 points. CORE-EMBED-8B achieves a 0.666 total average among embedding models. On the independent MCMR benchmark, R@1 improves from 0.375 to 0.412 while preserving COCO and Flickr30K retrieval quality."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 24,
+        "total": 88,
+        "rationale_zh": "这是今天最适合电商内容生态落地的一篇：既有强方法创新，也直指多模态检索和属性约束搜索的痛点。实验覆盖组合推理与常规检索迁移，说明它不是只会刷小众 benchmark，因此给到高分。",
+        "rationale_en": "This is the strongest fit for e-commerce deployment today: high methodological novelty, direct relevance to multimodal retrieval, and convincing transfer beyond niche compositional benchmarks."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-04/CORE",
+        "code_checked": true,
+        "notes": "2026-09-04 searched arXiv / web / GitHub leads and did not find a substantive official code release, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Generate five-level candidate lists from a composition-aware query",
+        "Score the candidate list with a stronger reranker teacher",
+        "Optimize the embedding model with listwise Rank-KL distillation",
+        "Use the distilled embedding for first-stage compositional retrieval"
+      ],
+      "exp_cards": [
+        [
+          "Reranker avg.",
+          "82.7%"
+        ],
+        [
+          "MCMR R@1",
+          "0.375 → 0.412"
+        ],
+        [
+          "vs Jina-Reranker",
+          "+10.7 pts"
+        ]
+      ]
+    },
+    {
+      "id": "2609.03522",
+      "title": "EPIC: Explicit Posterior Item Conditioning for Semantic ID Diffusion Recommendation",
+      "authors": [
+        "Tuan-Binh Tran",
+        "Thanh Tam Nguyen",
+        "Quoc Viet Hung Nguyen",
+        "Dung D. Le",
+        "Tung Kieu",
+        "Thanh Trung Huynh"
+      ],
+      "affiliations": [
+        "VinUniversity",
+        "Griffith University",
+        "Aalborg University"
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-04",
+      "tags": [
+        "推荐系统",
+        "Semantic ID",
+        "电商推荐",
+        "扩散推荐"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.03522",
+        "pdf": "https://arxiv.org/pdf/2609.03522.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "EPIC 关注 masked diffusion recommendation 的一个关键缺口：模型在逐 token 去噪 Semantic ID，但真正需要竞争的是完整 item。作者提出在每一步去噪时，根据当前 partial SID 得到 feasible candidate set，再结合用户 recent interactions 构造 item posterior，并把这个 item-level 证据重新投回未决 token 上。这样推荐过程就不再只是 token 级局部决策，而是在去噪中持续保留更有希望的 item 假设。",
+          "story": "现有 Semantic ID 扩散推荐虽然比自回归更灵活，但在每一步仍主要凭 token logits 做决策，容易把真正好的候选 item 过早排除。EPIC 把‘item 之间的竞争’提前到去噪过程中：只要某个候选 item 仍和当前 partial SID 相容，就让它根据用户历史继续参与竞争，并反过来影响剩余 token 的选择。换句话说，它不是生成完再 rerank，而是在生成过程中实时防止好 item 被错杀。",
+          "innovation": "创新点有两个层次：一是显式构建 feasible item posterior，把 token-level 生成和 item-level 竞争打通；二是把 personalized transition evidence 放进 denoising 过程，而不是后处理 rerank。论文还做了比较扎实的 matched ablation，证明增益主要来自 inline posterior feedback，而不是简单多加一个 scorer。这个思路对电商下一商品推荐、候选召回-排序协同都很有启发。",
+          "key_metrics": "在 4 个 Amazon 5-core benchmark 上，EPIC 在全部 16 个 Recall/NDCG 指标-数据集组合里都拿到最佳均值。比如 Beauty 上 R@5 / N@5 提升到 0.0610 / 0.0426，高于第二名 0.0553 / 0.0379；Toys and Games 上 N@5 达到 0.0465，相对第二名提升 16.8%；论文还报告 inline feedback 相比 post-hoc scoring 在 Beauty / Sports / Toys 上的 NDCG@5 额外提升 15.7% / 26.6% / 26.8%。"
+        },
+        "en": {
+          "method_overview": "EPIC addresses a key gap in masked diffusion recommendation: the model denoises Semantic ID tokens, but recommendation quality is determined by competition among complete items. At each denoising step, EPIC builds a feasible candidate set from the current partial SID, constructs an item posterior from recent user interactions, and projects item-level evidence back to unresolved SID positions. The decoder therefore preserves promising item hypotheses during generation rather than only reranking after the fact.",
+          "story": "Existing Semantic ID diffusion recommenders still make mostly token-local decisions and can eliminate the right item too early. EPIC pushes item competition into the denoising loop itself: as long as an item remains compatible with the partial SID, it keeps competing using user-history evidence and can still influence the remaining token decisions. It is therefore a preserve-good-hypotheses mechanism, not just a better final scorer.",
+          "innovation": "The two main innovations are explicit feasible-item posterior modeling and in-denoising personalized feedback. The paper also uses careful matched ablations to show that the gain comes from inline posterior conditioning rather than from appending a stronger post-hoc scorer. This is highly relevant to e-commerce recommendation stacks where recall-stage and ranking-stage signals should cooperate earlier.",
+          "key_metrics": "Across four Amazon 5-core benchmarks, EPIC achieves the best mean in all 16 dataset-metric combinations. On Beauty, it reaches 0.0610 / 0.0426 for R@5 / N@5 versus 0.0553 / 0.0379 for the runner-up. On Toys and Games, N@5 reaches 0.0465 with a 16.8% relative gain. Inline feedback further improves NDCG@5 over matched post-hoc scoring by 15.7%, 26.6%, and 26.8% on Beauty, Sports, and Toys."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 81,
+        "rationale_zh": "它和电商推荐链路的贴合度非常高，而且不是常见的‘再加个 rerank’式小修小补，而是把 item posterior 提前到生成阶段。实验面也较完整，因此进入复现队列。",
+        "rationale_en": "This paper is highly aligned with e-commerce recommendation and introduces a meaningful inference-time redesign rather than a small reranking tweak, with sufficiently strong experimental support to clear the implementation threshold."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-04/EPIC",
+        "code_checked": true,
+        "notes": "2026-09-04 searched arXiv / web / GitHub leads and did not find a substantive official code release, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Denoise a partial Semantic ID instead of scoring items directly",
+        "Build the feasible candidate item set from the current partial SID",
+        "Construct a personalized item posterior from recent user transitions",
+        "Project item evidence back to unresolved tokens and continue denoising"
+      ],
+      "exp_cards": [
+        [
+          "Beauty N@5",
+          "0.0426"
+        ],
+        [
+          "Toys N@5 gain",
+          "+16.8%"
+        ],
+        [
+          "Inline vs post-hoc",
+          "+15.7%~26.8%"
+        ]
+      ]
+    },
+    {
+      "id": "2609.04183",
+      "title": "Seeing Before Synthesizing: VLM-Guided Transition Event Discovery for Weakly-Supervised Dense Video Captioning",
+      "authors": [
+        "Ye-Chan Kim",
+        "Seunghee Choi",
+        "SeungJu Cha",
+        "Si-Woo Kim",
+        "Hwiseon Kim",
+        "Hyungee Kim",
+        "Dong-Jin Kim"
+      ],
+      "affiliations": [
+        "Hanyang University"
+      ],
+      "source": "arXiv / cs.CV / EMNLP 2026 Main",
+      "published": "2026-09-04",
+      "tags": [
+        "视频理解",
+        "Caption",
+        "弱监督",
+        "内容理解"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04183",
+        "pdf": "https://arxiv.org/pdf/2609.04183.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SBS 面向弱监督 dense video captioning，核心是解决 transition caption 既不 grounded、又被僵硬地塞进每个间隙的问题。方法先让 VLM 为 inter-event gap 生成 frame-level narratives，再根据语义变化判断到底有没有必要引入 transition，并用语义 change point + temporal midpoint 混合得到更合理的 transition mask。它不是盲目补 caption，而是先看内容，再决定是否补、补在哪里。对内容生态场景，这类低标注成本视频理解能力很有价值。",
+          "story": "过去的弱监督 DVC 常假设每个事件间隙都应该塞一个 transition caption，于是容易 hallucinate，也容易把 mask 放错地方。SBS 反过来先观察视频语义变化：如果 gap 里没有真正值得描述的过渡，就不强加 caption；如果有，就根据变化最明显的位置自适应地放置 transition 区域。这样就把‘固定桥接一切 gap’改成了‘只桥接真正发生过渡的 gap’。",
+          "innovation": "创新性主要在把 VLM 从单纯 caption 生成器改造成 transition-search tool，并把 gate + adaptive mask 串起来解决 whether / where 两个决策。它不像很多视频 caption 论文那样只是额外加一点 text augmentation，而是直接修正了弱监督监督信号的引入方式。这个思路对直播切片理解、带字幕视频事件解析都有借鉴价值。",
+          "key_metrics": "在 ActivityNet Captions validation 上，SBS 的 CIDEr / F1 达到 36.87 / 58.18，高于 SAIL 的 35.38 / 57.00；在 YouCook2 validation 上，CIDEr / F1 达到 16.28 / 22.17，高于 SAIL 的 14.61 / 20.94。消融显示完整方案相比去掉 adaptive gate 和 adaptive mask 的版本，CIDEr 与 F1 都继续上升。"
+        },
+        "en": {
+          "method_overview": "SBS addresses weakly supervised dense video captioning by fixing a specific problem: transition captions are often ungrounded and rigidly inserted into every inter-event gap. The method uses a VLM to generate frame-level narratives for gaps, detects whether a meaningful transition exists from semantic variation, and then places adaptive transition masks using both the semantic change point and the temporal midpoint. It first looks at the content, then decides whether and where to synthesize supervision.",
+          "story": "Prior weakly supervised DVC methods often assume every gap deserves a transition caption, which leads to hallucination and poor alignment. SBS instead checks whether a true semantic transition exists in the gap and only injects supervision when warranted. If so, it aligns the transition region around the most informative change point rather than a fixed midpoint. This turns rigid gap-bridging into selective, content-grounded transition discovery.",
+          "innovation": "The main novelty is repurposing the VLM as a transition-search tool rather than a plain caption generator, then coupling it with an adaptive gate and adaptive mask. The method directly repairs how weak supervision is introduced instead of merely adding more text augmentation. That is relevant to low-label video understanding for content ecosystems.",
+          "key_metrics": "On ActivityNet Captions validation, SBS reaches 36.87 CIDEr and 58.18 F1 versus 35.38 and 57.00 for SAIL. On YouCook2 validation, it reaches 16.28 CIDEr and 22.17 F1 versus 14.61 and 20.94 for SAIL. Ablations show further gains when the adaptive gate and adaptive mask are both enabled."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 79,
+        "rationale_zh": "论文质量很高，且对内容视频理解有直接价值，但与电商内容生态和达人治理相比仍偏通用视频 caption 基础能力，因此总分压在 80 以下。",
+        "rationale_en": "The paper is strong and directly useful for video understanding, but it remains a more general captioning capability than a directly targeted e-commerce governance method, so it stays just below 80."
+      },
+      "reproduce": {
+        "status": "official_link_insufficient",
+        "code_checked": true,
+        "notes": "2026-09-04 searched arXiv / web / GitHub leads and did not find a public official code release during today's window review."
+      },
+      "figure_steps": [
+        "Generate frame-level narratives inside each inter-event gap with a VLM",
+        "Measure semantic variation between neighboring narrative embeddings",
+        "Open the gate only when a meaningful transition is detected",
+        "Blend change-point and midpoint to place an adaptive transition mask"
+      ],
+      "exp_cards": [
+        [
+          "ActivityNet CIDEr",
+          "36.87"
+        ],
+        [
+          "ActivityNet F1",
+          "58.18"
+        ],
+        [
+          "YouCook2 CIDEr/F1",
+          "16.28 / 22.17"
+        ]
+      ]
+    },
+    {
+      "id": "2609.04131",
+      "title": "Beyond Retrieval: Progressive Latent Memory Evolution for Streaming Video Understanding",
+      "authors": [
+        "Hongyu Qu",
+        "Guangming Yao",
+        "Ling Xing",
+        "Xiaobin Hu",
+        "Rongxing Ding",
+        "Guibin Zhang",
+        "Fan Zhang",
+        "Yi Yuan",
+        "Xiangbo Shu",
+        "Shuicheng Yan"
+      ],
+      "affiliations": [
+        "Nanjing University of Science and Technology",
+        "Ant Group",
+        "National University of Singapore",
+        "The Chinese University of Hong Kong"
+      ],
+      "source": "arXiv / cs.CV",
+      "published": "2026-09-04",
+      "tags": [
+        "流式视频理解",
+        "直播巡检",
+        "MLLM",
+        "长视频"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04131",
+        "pdf": "https://arxiv.org/pdf/2609.04131.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "LatentStream 试图把 streaming video 理解从‘store-and-retrieve’推进到‘retrieve-and-internalize’。它先构建 query-agnostic hierarchical streaming memory，再让不同组的 latent memory tokens 以逐步扩大感受野的方式去吸收短、中、长期历史证据，并用 confidence-guided optimization 在测试时继续优化 latent memory。关键点是：历史不只是被取出来看一眼，而是逐渐内化成固定长度的 latent working memory。",
+          "story": "很多流式视频方法虽然会检索历史片段，但这些证据仍然只是外部 context，模型每次问答都要重新面对长而散的历史。LatentStream 的思路是让模型边检索边把有效证据压入一个不断演化的 latent state，这样后续推理能直接依赖这个工作记忆，而不是一次次重复检索和拼接。对直播巡检、长时段内容理解和在线监控都很有启发。",
+          "innovation": "它的创新在于把 query-agnostic memory、latent memory evolution 和 confidence-guided test-time optimization 三者做成闭环，而不是只做 memory pruning。相比只把相关帧拼回 prompt 的方案，LatentStream 更像是在 MLLM 里显式造了一个可进化的工作记忆层。这个范式改写比一般的 token 压缩更有研究价值。",
+          "key_metrics": "在 OVO-Bench 上，LatentStream(7B) 把整体分数从 54.0 提升到 64.2，Real-Time Visual Perception 从 63.3 提升到 68.5，Backward Tracing 从 44.7 提升到 60.0；在 StreamingBench 上达到 76.9。离线长视频 benchmark 上，VideoMME / MLVU / LongVideoBench 分别达到 66.6 / 74.0 / 62.1；同时 peak memory 从 30.80GB 降到 21.97GB，TPOT 从 6.45ms 降到 3.16ms。"
+        },
+        "en": {
+          "method_overview": "LatentStream pushes streaming video understanding from a store-and-retrieve paradigm to retrieve-and-internalize. It builds a query-agnostic hierarchical memory, then lets different groups of latent memory tokens progressively absorb short-, mid-, and long-term evidence, with confidence-guided test-time optimization refining the latent state. Historical evidence is not only retrieved, but gradually internalized into a compact latent working memory.",
+          "story": "Many streaming methods can retrieve historical evidence, but that evidence remains external context that must be re-exposed to the model repeatedly. LatentStream instead retrieves and compresses useful evidence into an evolving latent state that future reasoning can directly depend on. This is appealing for live moderation and long-horizon content understanding.",
+          "innovation": "The novelty lies in closing the loop among query-agnostic memory, latent memory evolution, and confidence-guided optimization rather than just doing memory pruning. Compared with methods that simply append retrieved frames back into the prompt, LatentStream effectively builds an explicit evolving working-memory layer inside the video MLLM.",
+          "key_metrics": "On OVO-Bench, LatentStream (7B) improves the overall score from 54.0 to 64.2, Real-Time Visual Perception from 63.3 to 68.5, and Backward Tracing from 44.7 to 60.0. It reaches 76.9 on StreamingBench. On VideoMME, MLVU, and LongVideoBench, it scores 66.6, 74.0, and 62.1, while peak memory drops from 30.80GB to 21.97GB and TPOT drops from 6.45ms to 3.16ms."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 78,
+        "rationale_zh": "它对直播巡检和长视频理解很有价值，也有明显效率收益，但仍偏通用 streaming video 能力，和电商内容治理不是任务级强耦合，因此未超过 80。",
+        "rationale_en": "It is highly useful for live and long-video understanding with clear efficiency gains, but it is still a general streaming-video capability rather than a tightly targeted e-commerce governance method."
+      },
+      "reproduce": {
+        "status": "official_link_insufficient",
+        "code_checked": true,
+        "notes": "2026-09-04 searched arXiv / web / GitHub leads and did not find a public official code release during today's review."
+      },
+      "figure_steps": [
+        "Maintain short-, mid-, and long-term streaming memories under a fixed budget",
+        "Assign latent memory token groups with progressively larger memory scopes",
+        "Retrieve relevant evidence and internalize it into evolving latent memory",
+        "Optimize latent memory with confidence progression before final answering"
+      ],
+      "exp_cards": [
+        [
+          "OVO-Bench",
+          "54.0 → 64.2"
+        ],
+        [
+          "StreamingBench",
+          "76.9"
+        ],
+        [
+          "Peak mem / TPOT",
+          "30.80GB→21.97GB / 6.45→3.16ms"
+        ]
+      ]
+    },
+    {
+      "id": "2609.04180",
+      "title": "Knowledge Acquisition During Pre-training? Large Language Models Learn Better With Auxiliary Views",
+      "authors": [
+        "Joseph Lee",
+        "Yidi Huang",
+        "Dokyoon Kim",
+        "Shu Yang",
+        "Li Shen"
+      ],
+      "affiliations": [
+        "University of Pennsylvania"
+      ],
+      "source": "arXiv / cs.CL / EMNLP 2026 Findings",
+      "published": "2026-09-04",
+      "tags": [
+        "预训练数据",
+        "LLM",
+        "数据质量",
+        "知识获取"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04180",
+        "pdf": "https://arxiv.org/pdf/2609.04180.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文讨论的是：预训练时模型到底如何更好地学到知识。作者发现，相比单纯重复原文或只做 paraphrase，给模型提供 auxiliary views——也就是围绕同一知识点的补充解释、重述和上下文支撑——在固定 token budget 下反而更有利于知识获取。它不只是提升 factual recall，还影响了不同层的知识写入方式。对于电商内容生态，这对数据构造、知识增强预训练和标注文本扩写都很有借鉴意义。",
+          "story": "很多团队都知道‘多样化数据有用’，但不知道有用在哪里。论文把这个问题缩小到单条知识：如果 token 预算固定，是重复原文更好，还是把预算拿去构造不同视角的辅助表达更好？结果是后者通常更优，说明模型不是靠死记硬背，而是靠多视角支架去形成更泛化的知识表示。对大规模内容数据清洗、增广和知识构造很有启发。",
+          "innovation": "创新点不在新 backbone，而在对知识获取过程做了比较系统的控制实验，并给出 auxiliary views 的机制解释：更少但更有结构的参数改动、层间写入分布变化、且对 teacher 强弱不太敏感。对于做电商内容和达人语料预训练的人来说，这类结论比单一 benchmark 提升更有长期价值。",
+          "key_metrics": "在 OLMo-2 7B 的 pre-training-faithful setting 中，Auxiliary Views 条件下 factual MCQA 从 Source 的 0.372 / Para. 9 的 0.375 提升到 0.403，Inference MCQA 从 0.421 / 0.417 提升到 0.492；论文还报告不同 teacher 配置下 factual accuracy 基本稳定在 0.405–0.422，高于 Para. 9 baseline 的 0.396。"
+        },
+        "en": {
+          "method_overview": "This paper studies how knowledge is acquired during pre-training. The main finding is that, under a fixed token budget, auxiliary views—additional explanations, reformulations, and contextual scaffolding around the same knowledge—help learning more than simply repeating the source text or only paraphrasing it. The benefit appears not only in factual recall but also in where and how knowledge is written into the model. That is relevant to data construction and pretraining-corpus design.",
+          "story": "Many teams know that diverse data helps, but not exactly why. The paper narrows the question to an individual piece of knowledge: under a fixed token budget, should we repeat the source or spend tokens on alternative supportive views? The answer is usually the latter, suggesting that models benefit from scaffolded multi-view representations rather than pure memorization. This is useful for large-scale data cleaning and augmentation pipelines.",
+          "innovation": "The novelty is not a new backbone, but a clean and fairly systematic set of controlled experiments together with a mechanism-oriented explanation. The paper argues that auxiliary views induce more structured and efficient parameter updates and do not depend strongly on the teacher's strength. For teams building domain pretraining corpora, this is a strategically valuable result.",
+          "key_metrics": "In the pre-training-faithful OLMo-2 7B setting, factual MCQA rises from 0.372 / 0.375 under Source / Para. 9 to 0.403 with Auxiliary Views, while inference MCQA rises from 0.421 / 0.417 to 0.492. Across teacher settings, factual accuracy stays in the 0.405–0.422 range, above the Para. 9 baseline of 0.396."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 10,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 17,
+        "total": 71,
+        "rationale_zh": "和电商内容生态的关系更偏数据构造与预训练方法论，不是业务任务 paper；但对数据质量、知识增强和标注扩写有持续价值，所以给到中高分。",
+        "rationale_en": "Its relevance is methodological rather than task-direct, but the implications for data quality and pretraining corpus design are durable enough to justify a solid score."
+      },
+      "reproduce": {
+        "status": "official_link_insufficient",
+        "code_checked": true,
+        "notes": "2026-09-04 searched public leads and did not find an official open-source release during today's review."
+      },
+      "figure_steps": [
+        "Select a knowledge document or fact cluster as the learning target",
+        "Allocate a fixed token budget across source repetitions and auxiliary views",
+        "Continue pre-train the model under different data formulations",
+        "Compare factual recall, inference probes, and layer-wise learning dynamics"
+      ],
+      "exp_cards": [
+        [
+          "Factual MCQA",
+          "0.372/0.375 → 0.403"
+        ],
+        [
+          "Inference MCQA",
+          "0.421/0.417 → 0.492"
+        ],
+        [
+          "Teacher sweep",
+          "0.405–0.422"
+        ]
+      ]
+    },
+    {
+      "id": "2609.04047",
+      "title": "The Dice Roll Method: A Standardized Protocol for Repeated-Query Auditing of Large Language Model Brand Recommendations",
+      "authors": [
+        "Ryan D. Ruder",
+        "Megan D. DiGiacomo",
+        "Cody Buntain",
+        "Yelena Mejova"
+      ],
+      "affiliations": [
+        "University of Washington",
+        "ISI Foundation"
+      ],
+      "source": "arXiv / cs.CL",
+      "published": "2026-09-04",
+      "tags": [
+        "品牌推荐",
+        "LLM 审计",
+        "治理评测",
+        "统计协议"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04047",
+        "pdf": "https://arxiv.org/pdf/2609.04047.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Dice Roll Method 不是在造一个新的推荐模型，而是在解决‘如何稳定审计 LLM 的品牌推荐输出’。论文给出一套 repeated-query auditing protocol：通过分层迭代次数、Generalizability Theory、bootstrap 和 drift diagnostics，去判断一个品牌推荐结论到底是随机波动还是稳定偏好。对电商平台来说，这种协议可以直接迁移到品牌露出、公平性和投放归因的 LLM 审计场景。",
+          "story": "现在很多人拿 LLM 做品牌或商品推荐，但一次问答结果很容易受采样波动和 prompt 微扰影响。若没有标准化审计协议，团队就很难分辨‘模型真的偏某品牌’还是‘只是今天抽样凑巧如此’。Dice Roll Method 的贡献就是把这种模糊判断变成有统计依据的可重复流程，让治理讨论从截图争论转向量化审计。",
+          "innovation": "创新性更多是 protocol 和 measurement design，而不是新网络结构。它把 repeated-query 场景下的可靠性问题讲清楚，并给出不同审计强度档位，对业务治理落地反而很实用。对于需要审品牌倾斜、推荐偏差和稳定性的团队，这类工作比单次 benchmark 更接近真实生产问题。",
+          "key_metrics": "论文复分析约 190,000 observations、覆盖 3–5 个 LLM、270+ brands、6 种语言；建议的审计强度下，exploratory / confirmatory / rigorous 档位分别对应约 5 / 10 / 15 次 repeated queries，可得到 G 系数 0.58 / 0.74 / 0.81，用于判断结论可靠性。"
+        },
+        "en": {
+          "method_overview": "The Dice Roll Method does not introduce a new recommender; it standardizes how to audit LLM brand recommendations under repeated querying. The paper combines iteration tiers, Generalizability Theory, bootstrap estimation, and drift diagnostics to determine whether a recommendation pattern reflects stable preference or mere sampling noise. This is directly relevant to governance of brand exposure and recommendation fairness.",
+          "story": "LLM-based brand recommendations are often volatile across repeated prompts. Without a disciplined auditing protocol, teams cannot tell whether a brand skew is genuine or just a sampling artifact. The Dice Roll Method turns screenshot-level debates into a repeatable statistical process.",
+          "innovation": "The novelty lies in measurement and protocol design rather than neural architecture. For real governance practice, that is often more useful than another single-run benchmark because it targets the reliability problem teams actually face.",
+          "key_metrics": "The paper reanalyzes roughly 190,000 observations across 3–5 LLMs, 270+ brands, and 6 languages. Its suggested exploratory / confirmatory / rigorous tiers correspond to about 5 / 10 / 15 repeated queries and yield G coefficients of 0.58 / 0.74 / 0.81."
+        }
+      },
+      "score": {
+        "innovation": 18,
+        "results": 9,
+        "exp_quality": 11,
+        "efficiency": 7,
+        "generalization": 3,
+        "relevance": 19,
+        "total": 67,
+        "rationale_zh": "不是内容理解模型，但它非常贴近治理和审计范式，尤其适合评估品牌推荐偏差与稳定性，因此保留在本日名单中。",
+        "rationale_en": "It is not a content-understanding model, but it maps well to governance and auditing of recommendation stability, which keeps it in today's shortlist."
+      },
+      "reproduce": {
+        "status": "not_required",
+        "code_checked": false,
+        "notes": "Score < 80, so no reproduction was required today."
+      },
+      "figure_steps": [
+        "Ask the same brand-recommendation question repeatedly under a fixed protocol",
+        "Measure response variability across runs, models, and languages",
+        "Estimate reliability with G-theory, bootstrap, and drift diagnostics",
+        "Choose the appropriate audit tier before drawing governance conclusions"
+      ],
+      "exp_cards": [
+        [
+          "Observations",
+          "~190k"
+        ],
+        [
+          "Brands / languages",
+          "270+ / 6"
+        ],
+        [
+          "G coefficient",
+          "0.58 / 0.74 / 0.81"
+        ]
+      ]
+    },
+    {
+      "id": "2609.04010",
+      "title": "Unlocking Lossless Speedups in LLMs via Discrete Diffusion",
+      "authors": [
+        "Subham Sekhar Sahoo",
+        "Lingjie Chen",
+        "Khiem Pham",
+        "Jonathan Geuter",
+        "Chaitanya Dwivedi",
+        "Varad Pimpalkhute",
+        "Yash Akhauri",
+        "Alexander Moreno",
+        "Mikhail Yurochkin",
+        "Zhenting Wang",
+        "Mostafa Elhoushi",
+        "Nolan Dey",
+        "Shane Bergsma",
+        "Joel Hestness",
+        "John Thickstun",
+        "Eric Xing",
+        "Zhengzhong Liu"
+      ],
+      "affiliations": [
+        "Institute of Foundation Models",
+        "University of Illinois Urbana-Champaign",
+        "Cornell Tech",
+        "Harvard University",
+        "Cerebras Systems"
+      ],
+      "source": "arXiv / cs.LG",
+      "published": "2026-09-04",
+      "tags": [
+        "LLM",
+        "推理加速",
+        "高热",
+        "基础模型"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04010",
+        "pdf": "https://arxiv.org/pdf/2609.04010.pdf",
+        "code": "https://github.com/ifm-ai/uno",
+        "project": "https://s-sahoo.com/uno"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Uno 想解决的是 AR LLM 单 token 串行生成太慢的问题。论文提出 diffusion-augmented LLM：保留原有 AR 分布和 next-token training，再额外训练一组轻量 diffusion weights，让模型一次并行生成多个 token，并通过 Ψ-Spec sampler 做 lossless verification。它不像 speculative decoding 那样依赖单独 drafter，也不像纯 diffusion LLM 那样牺牲底模质量。",
+          "story": "现在长链路 agent、代码和复杂推理越来越依赖长输出，纯 AR 生成的吞吐成了现实瓶颈。Uno 的想法是：不要重新发明一个新模型分布，而是在保持 AR 质量不变的前提下，让 diffusion 分支负责把多个 token 并行提议出来。于是系统既保留原模型能力，又能拿到更好的吞吐。对电商内容生态来说，它不是任务直连 paper，但对大规模内容理解系统的 serving 成本很重要。",
+          "innovation": "创新点在于把 AR 权重和 diffusion 权重显式解耦，训练上只需一个轻量 distillation phase，推理上则通过 Ψ-Spec 做无损加速。相比 speculative decoding，它不需要独立草稿模型；相比 d-LLM，它更强调在更真实 batch size 下仍保持 speedup。这个方向作为高热基础设施论文值得持续跟。",
+          "key_metrics": "Uno 在 Terminal-Bench v2.1 / SWE-bench Verified / AA-LCR 上分别达到 39.6 / 68.4 / 68.0，明显高于文中对比的开源 diffusion LLM；平均吞吐因子为 1.9x / 2.7x，系统最大 throughput 达到 5255，约为 Mercury 2 的 4.6 倍。论文还声称在 RL rollout 阶段可带来最高 40% 的端到端训练提速。"
+        },
+        "en": {
+          "method_overview": "Uno tackles the latency bottleneck of autoregressive LLM decoding. The paper proposes diffusion-augmented LLMs: keep the original AR distribution and next-token training, then add lightweight diffusion weights that can propose multiple tokens in parallel and verify them with the Psi-Spec sampler. It avoids both a separate draft model and the quality regressions associated with pure diffusion LLMs.",
+          "story": "Long-chain agentic workloads, coding tasks, and reasoning traces increasingly suffer from AR decoding latency. Uno keeps the strong AR model but adds a diffusion branch that proposes token blocks in parallel, so quality and throughput no longer have to trade off as sharply. It is not directly about e-commerce governance, but it matters for the serving cost of large content-understanding systems.",
+          "innovation": "The key innovation is an explicit decoupling of AR weights and diffusion weights, with only a lightweight distillation phase required to gain lossless acceleration. Compared with speculative decoding, it removes the need for a separate drafter; compared with d-LLMs, it emphasizes speedups that persist under realistic batch sizes.",
+          "key_metrics": "Uno reaches 39.6 on Terminal-Bench v2.1, 68.4 on SWE-bench Verified, and 68.0 on AA-LCR, clearly above the open diffusion baselines reported in the paper. Its average throughput factor is 1.9x / 2.7x, maximum system throughput reaches 5255, and the paper claims up to 40% end-to-end RL training speedup."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 10,
+        "generalization": 2,
+        "relevance": 2,
+        "total": 61,
+        "rationale_zh": "它是今天最热的一类基础模型效率论文之一，质量很强，但和电商内容生态/达人治理只有基础设施层面的弱相关，因此相关分极低。",
+        "rationale_en": "This is one of today's highest-heat foundation-model efficiency papers, but its linkage to e-commerce content ecology is infrastructural rather than task-direct, so the relevance score is intentionally low."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "code_checked": true,
+        "notes": "2026-09-04 verified that the paper points to a public project/repository (ifm-ai/uno); no reimplementation is required under today's scoring threshold."
+      },
+      "figure_steps": [
+        "Train the autoregressive backbone with standard next-token prediction",
+        "Freeze or retain AR quality while distilling lightweight diffusion weights",
+        "Propose multiple next tokens in parallel with the diffusion branch",
+        "Verify proposals losslessly with Psi-Spec to improve throughput"
+      ],
+      "exp_cards": [
+        [
+          "Terminal-Bench",
+          "39.6"
+        ],
+        [
+          "SWE-bench Verified",
+          "68.4"
+        ],
+        [
+          "System throughput",
+          "5255"
+        ]
+      ]
+    }
+  ]
+}
