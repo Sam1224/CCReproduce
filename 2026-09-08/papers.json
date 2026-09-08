@@ -1,0 +1,530 @@
+{
+  "inspection_date": "2026-09-08",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": [
+      "2026-09-08 00:00:00",
+      "2026-09-08 23:59:59"
+    ],
+    "utc": [
+      "2026-09-07T16:00:00Z",
+      "2026-09-08T15:59:59Z"
+    ]
+  },
+  "keyword_notes": {
+    "kept": [
+      "电商",
+      "内容理解",
+      "LLM/VLM/MLLM",
+      "Caption",
+      "向量化表征",
+      "聚类/相似",
+      "Agent",
+      "RAG",
+      "蒸馏",
+      "违规检测/治理",
+      "数据质量/数据清洗/大规模打标"
+    ],
+    "added": [
+      "multimodal Doc2Query",
+      "agentic recommendation memory",
+      "entity-level visual retrieval",
+      "partially relevant video retrieval",
+      "autonomous launch review",
+      "long-context agent memory"
+    ],
+    "excluded": [
+      "安全/后门/越狱/投毒/guardrail 对抗方向",
+      "以 exploit 或 red-team 为主要卖点的安全论文"
+    ]
+  },
+  "source_coverage": [
+    "arXiv recent / new（cs.IR / cs.LG / cs.CV / cs.AI / cs.CL）",
+    "Hugging Face Daily Papers / CatalyzeX / GitHub 开源线索补充核验",
+    "OpenReview / accepted paper comments（CIKM / EMNLP / RecSys workshop 等）",
+    "Google Scholar / Semantic Scholar / OpenAlex / DBLP 元数据核验",
+    "Google / DeepMind / Meta / OpenAI / Qwen / Hunyuan / 美团等研究博客公开页回查",
+    "X / GitHub / project page 公开信号补充高热论文与代码状态"
+  ],
+  "papers": [
+    {
+      "id": "2609.04961",
+      "title": "SAM-D2Q: Aligning Multimodal Doc2Query with Search Demand and Conversion for E-commerce",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.IR / CIKM 2026 Oral",
+      "tags": [
+        "电商搜索",
+        "多模态检索",
+        "Doc2Query",
+        "业务对齐"
+      ],
+      "authors": [
+        "Hui Zhou",
+        "Jian Hui Ji",
+        "Lei Ma",
+        "Rong Xiao",
+        "Xiaoyi Zeng"
+      ],
+      "affiliations": [
+        "Alibaba International Digital Commerce Group"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04961",
+        "pdf": "https://arxiv.org/pdf/2609.04961.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文把传统 Doc2Query 改造成面向电商搜索业务目标的多模态离线扩写框架。它先用 information-gain 约束过滤训练样本，避免模型只学到标题复述；再通过 counterfactual visual augmentation，让模型在文本侧遮掉属性词时必须从商品图恢复关键视觉属性。最后用 business-aligned preference alignment，把语义相关、商业价值和视觉 grounding 一起纳入奖励，生成更像真实搜索需求的 pseudo-query。高光点在于：它没有停留在‘能生成像 query 的文本’，而是直接对齐 Pay Count / GMV 这类搜索价值信号。",
+          "story": "现有文本 Doc2Query 在电商里容易生成语义上像、但商业上没价值的扩写，而且看不到商品图里的关键属性。SAM-D2Q 的思路是先只保留真正带来增量信息的 query，再通过视觉遮蔽迫使模型学习图像属性，最后把生成目标从‘像用户会搜’进一步推进到‘既相关又更可能带来转化’。",
+          "innovation": "创新主要体现在三点：一是把 Doc2Query 的监督样本改成 information-gain 驱动，而不是所有点击 query 都拿来训练；二是用 CPV-guided counterfactual visual augmentation 强化视觉属性补全；三是用业务奖励做 preference alignment，把搜索相关性与商业价值同时优化。它更像工业链路级创新，而不是单一网络结构的堆叠，因此合理且可落地。",
+          "key_metrics": "离线生成质量上，Relevance 从 43.11% 提升到 74.96%；离线检索里 Top-3000 相关 item 数从 454.5 提升到 594.1（+30.7%）。在线 A/B 中，AliExpress Search 的 GMV +3.38%，Pay Count +2.27%，CVR +0.53%，零结果 PV 比例从 2.07% 降到 1.72%。"
+        },
+        "en": {
+          "method_overview": "SAM-D2Q turns Doc2Query into a business-aligned multimodal expansion framework for e-commerce search. It filters supervision with an information-gain constraint, uses counterfactual visual masking so the model must recover missing visual attributes from images, and aligns generation with semantic relevance, conversion value, and visual grounding. The highlight is that the expansion target is not merely query-like text, but search demand with commercial payoff.",
+          "story": "Text-only Doc2Query often generates semantically plausible but commercially weak expansions and misses image-only attributes. SAM-D2Q first keeps only incremental supervision, then forces the model to read product images under masked-text conditions, and finally optimizes for both search relevance and business value.",
+          "innovation": "Its contribution is a workflow-level redesign of industrial Doc2Query: information-gain filtering, visually grounded counterfactual augmentation, and business-aware preference alignment. The novelty is practical and coherent rather than architectural for its own sake.",
+          "key_metrics": "Relevance rises from 43.11% to 74.96%, Top-3000 related items increase from 454.5 to 594.1 (+30.7%), and online AliExpress search shows GMV +3.38%, Pay Count +2.27%, and lower zero-result PV ratio."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 3,
+        "relevance": 22,
+        "total": 85,
+        "rationale_zh": "今天最适合直接迁移到电商内容理解与搜索分发的一篇。业务相关性极强，线上 A/B 证据也最扎实，因此给到全场最高分并进入复现名单。",
+        "rationale_en": "This is the strongest short-term business fit today: highly relevant to e-commerce search/content alignment and backed by convincing online gains, so it receives the top score and enters the reproduction set."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "code_checked": true,
+        "notes": "2026-09-08 核验 arXiv / GitHub / CatalyzeX 公开线索后，未发现可直接使用的官方代码，因此补充了 toy-but-runnable PyTorch reproduction。",
+        "path": "2026-09-08/SAM-D2Q",
+        "url": "https://github.com/Sam1224/CCReproduce/tree/aime/1788864992-daily-paper-patrol/2026-09-08/SAM-D2Q"
+      },
+      "figure_steps": [
+        "Filter supervision with information-gain constraints",
+        "Mask title-side attributes while keeping image evidence",
+        "Fuse title tokens and visual attributes into pseudo-query scores",
+        "Inject high-value expansions into the offline search index"
+      ],
+      "exp_cards": [
+        ["GMV lift", "+3.38%"],
+        ["Pay Count", "+2.27%"],
+        ["Related items", "+30.7%"]
+      ]
+    },
+    {
+      "id": "2609.04882",
+      "title": "AtomRec: Evolving Atomic Memory for Agentic Recommendation",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.IR",
+      "tags": [
+        "推荐系统",
+        "Agent",
+        "记忆机制",
+        "内容生态"
+      ],
+      "authors": [
+        "Peiyu Hu",
+        "Weihai Lu",
+        "Siying Gu",
+        "Zhuodong Liu",
+        "Zhaokai Luo",
+        "Yuean Niu",
+        "Zhiyong Wang",
+        "Jia Wang"
+      ],
+      "affiliations": [
+        "Xiaohongshu",
+        "Xi'an Jiaotong-Liverpool University",
+        "Peking University",
+        "East China Normal University",
+        "Beijing Jiaotong University"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04882",
+        "pdf": "https://arxiv.org/pdf/2609.04882.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "AtomRec 把推荐系统中的长期记忆从粗粒度 summary 升级为 atomic memory。每条记忆都包含内容、时间、关键词、标签、上下文和 embedding，并通过语义协同 link 串成可多跳检索的证据路径。新交互到来时，系统不仅追加新记忆，还会对相关旧记忆做 field-level 演化，让用户兴趣漂移被保留下来。高光点是：它把‘记忆可解释性’和‘兴趣演化建模’绑在了一起。",
+          "story": "现有 memory-based recommender 往往把用户历史压成一句摘要，导致阶段性兴趣被抹平。AtomRec 先把历史拆成原子记忆，再构造语义链接，最后在新反馈出现时让旧记忆动态更新，于是推荐时不再只靠一段 summary，而是能沿证据路径解释为什么推这个内容。",
+          "innovation": "这篇的真正新意不是再做更长的 memory，而是重构 memory substrate：原子化、可链接、可演化。相比只存相似度权重或静态摘要的方法，它更适合内容兴趣的阶段性迁移，也更利于推荐解释与治理审计。代价是系统复杂度和推理开销会更高。",
+          "key_metrics": "在 Amazon Books、Goodreads、MovieTV、Yelp 四个 benchmark 上，AtomRec 相对最强 baseline 平均带来约 8.5% 相对提升。Books 上 H@5 从 0.7764 提升到 0.8543，MovieTV 上 H@5 从 0.8654 提升到 0.9364；兴趣漂移越大，增益越明显。"
+        },
+        "en": {
+          "method_overview": "AtomRec replaces coarse recommendation summaries with atomic memory units linked by semantic collaboration edges. It updates related historical fields when new interactions arrive and retrieves multi-hop evidence paths instead of isolated memory snippets. The highlight is a joint treatment of interpretable memory and evolving user preference.",
+          "story": "Existing memory-augmented recommenders flatten multi-stage interests into one summary. AtomRec splits history into atomic notes, links them semantically, and evolves old memories when new feedback arrives, so recommendation can be grounded in explicit evidence paths.",
+          "innovation": "The novelty lies in redesigning the memory substrate itself: atomic, linkable, and evolvable memory rather than longer static summaries. This is a better fit for long-horizon content interests, though it increases system complexity.",
+          "key_metrics": "Across Books, Goodreads, MovieTV, and Yelp, AtomRec reports about 8.5% average relative gains over strong baselines, including Books H@5 from 0.7764 to 0.8543 and MovieTV H@5 from 0.8654 to 0.9364."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 79,
+        "rationale_zh": "对内容生态的中长期价值很高，尤其适合做兴趣演化和推荐证据链，但缺少线上生产证据，且成本不低，所以分数略低于 80。",
+        "rationale_en": "AtomRec looks strategically valuable for content feeds and interest evolution, but it lacks online production evidence and is more expensive to operate, so it stays just below the reproduction threshold."
+      },
+      "reproduce": {
+        "status": "not_implemented",
+        "code_checked": true,
+        "notes": "公开线索里未发现可直接使用的官方代码，但因本轮综合分未达到 80，不进入今日复现名单。"
+      },
+      "figure_steps": [
+        "Split user history into atomic memory notes",
+        "Build semantic collaborative links across related notes",
+        "Update old note fields when new interactions arrive",
+        "Retrieve multi-hop evidence paths for recommendation"
+      ],
+      "exp_cards": [
+        ["Avg. relative gain", "+8.5%"],
+        ["Books H@5", "0.8543"],
+        ["MovieTV H@5", "0.9364"]
+      ]
+    },
+    {
+      "id": "2609.05363",
+      "title": "Distill Globally, Adapt Locally: Reasoning Distillation and Product-Type Test-Time Training for Scalable Trade-Up Recommendation",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.LG / GenAIECommerce 2026",
+      "tags": [
+        "电商推荐",
+        "蒸馏",
+        "Test-Time Training",
+        "商品升级推荐"
+      ],
+      "authors": [
+        "Siliang Liu",
+        "Mohammad Ghasemi",
+        "Sapan Patel",
+        "Amin Banitalebi-Dehkordi"
+      ],
+      "affiliations": [
+        "Amazon Everyday Essentials Technologies"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.05363",
+        "pdf": "https://arxiv.org/pdf/2609.05363.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文针对 trade-up recommendation：在不偏离用户购买意图的前提下推荐更高价值商品。作者先用 few-shot LLM teacher 给商品对打四分类关系标签并生成 rationale，再把这些 reasoning 信号蒸馏给只吃双 embedding 的轻量判别 student。随后又提出 PT-TTT，让每个 product type 用少量示例训练自己的 LoRA adapter，按类目局部调整决策边界。亮点在于：它把‘推理能力’真正蒸馏成了工业可用的轻量模型。",
+          "story": "直接用 LLM 做 trade-up 判断太贵，而所有类目共用一个全局模型又难以表达品类差异。论文先把 teacher 的标签与解释蒸馏成轻量 pair classifier，再让不同 product type 在测试时做少量适配，于是实现了‘全局共享表示 + 局部决策边界’。",
+          "innovation": "核心创新有两层：一是把 rationale 一起蒸馏到非生成 student 中，而不是只学标签；二是用 product-type test-time training 替代统一的 adapter。相比纯 LLM inference 或直接训练一个统一模型，它更符合大规模电商推荐的工程约束。",
+          "key_metrics": "在 8,352 对人工标注 benchmark 上，最优 reasoning-distilled 4-class student 的 AUC 为 0.924，高于 label-only student 的 0.912。再加 PT-TTT 后，AUC 从 0.924 提升到 0.941，AP 从 0.920 提升到 0.940；单机 8 卡推断约比直接 LLM 快 5000 倍、成本低 10000 倍。"
+        },
+        "en": {
+          "method_overview": "The paper targets trade-up recommendation: finding higher-value alternatives without violating purchase intent. An LLM teacher provides four-way relation labels plus rationales, those reasoning signals are distilled into a lightweight embedding-pair student, and product-type test-time training adds category-specific adapters on top of the frozen student.",
+          "story": "Direct LLM inference is too expensive, while a single global model cannot capture category-specific notions of upgrade. The solution is to distill global reasoning first and then adapt locally per product type.",
+          "innovation": "The most useful contribution is reasoning distillation into a non-generative industrial classifier, followed by product-type-specific test-time adaptation. It is much more deployment-friendly than keeping LLMs in the inference path.",
+          "key_metrics": "The reasoning-distilled student reaches AUC 0.924 versus 0.912 for a label-only student, and PT-TTT pushes AUC to 0.941 and AP to 0.940 while being roughly 5000x faster and 10000x cheaper than direct LLM inference."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 2,
+        "relevance": 17,
+        "total": 78,
+        "rationale_zh": "工程价值很高，尤其适合推荐链路降本增效，但更偏交易转化推荐而非内容生态/达人治理主问题，因此保持在 80 分以下。",
+        "rationale_en": "This is a strong engineering paper for scalable recommendation, but it is closer to conversion optimization than the core content-governance problem, so it stays below 80."
+      },
+      "reproduce": {
+        "status": "not_implemented",
+        "code_checked": true,
+        "notes": "未检到可直接使用的官方代码；因综合分未达 80，本轮不做代码复现。"
+      },
+      "figure_steps": [
+        "Use an LLM teacher to label trade-up relations with rationales",
+        "Distill reasoning into an embedding-pair student model",
+        "Attach product-type-specific LoRA adapters at test time",
+        "Serve scalable trade-up ranking without online LLM calls"
+      ],
+      "exp_cards": [
+        ["Student AUC", "0.924"],
+        ["PT-TTT AUC", "0.941"],
+        ["Cost reduction", "10000x"]
+      ]
+    },
+    {
+      "id": "2609.04255",
+      "title": "SAGE: Semantic Attribute Graphs for Multi-Entity Visual Retrieval",
+      "published": "2026-09-01",
+      "source": "arXiv / cs.IR / EMNLP 2026",
+      "tags": [
+        "内容理解",
+        "视觉检索",
+        "属性图",
+        "电商详情页"
+      ],
+      "authors": [
+        "Yongjoo Kim",
+        "Mincheol Kwon",
+        "Seonga Choi",
+        "Minseung Lee",
+        "Kyeong-Jin Oh",
+        "Hyunyoung Lee",
+        "Yunsu Choi",
+        "Jungbeom Lee"
+      ],
+      "affiliations": [
+        "Korea University",
+        "KT Corporation"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04255",
+        "pdf": "https://arxiv.org/pdf/2609.04255.pdf",
+        "code": "https://github.com/All4Nothing/SAGE",
+        "project": "https://all4nothing.github.io/SAGE-project/"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "SAGE 研究的是密集商品详情图、参数对比图这类多实体视觉检索问题。它指出现有 patch-level retrieval 会发生 semantic dilution，于是先从长图里解析出实体和属性，再构造成层级语义图，用 multi-vector embedding 做子图级检索。整个框架 training-free，但能把 query 里的多实体、多属性约束对应到图中的证据节点。高光点在于：它把商品长图的业务对象显式拆开了。",
+          "story": "商品详情页和营销长图里常常塞了很多参数、配件和对比信息，用单向量或 patch 检索很容易把语义糊在一起。SAGE 先做实体-属性级解析，再在语义图上做 coarse-to-fine 检索，最后把检索到的证据子图交给 VLM 生成答案。",
+          "innovation": "这篇的贡献是把‘视觉检索粒度’从 patch 提升到实体-属性图节点，并顺带给出了 DEAR benchmark。相比只调大模型，它用结构化语义图解决密集商品长图理解问题，方向非常贴电商内容理解。缺点是对 OCR、region parsing 和属性抽取质量依赖较强。",
+          "key_metrics": "在自建 DEAR benchmark 上，SAGE† 的 Recall@3 达到 0.8488，generation score 为 2.7462；多实体比较的 Type C / Type D 上表现尤其明显。论文同时展示了 entity density 越高时，传统 CLIP/Jina-CLIP/SigLIP2 的排名劣化更快。"
+        },
+        "en": {
+          "method_overview": "SAGE tackles dense visual retrieval for product detail pages and comparison graphics. It diagnoses semantic dilution in patch-level retrieval, parses entities and attributes into a hierarchical graph, and performs multi-vector subgraph retrieval in a training-free manner. The key win is explicit entity-attribute grounding instead of one-vector-per-region indexing.",
+          "story": "Dense product visuals pack many attributes, tables, and comparisons into one image, so patch-level retrieval blurs the evidence. SAGE parses business objects first, then retrieves relevant subgraphs and forwards those grounded nodes to a VLM for answer generation.",
+          "innovation": "The main novelty is moving the retrieval unit from patches to entity-attribute graph nodes and pairing it with a dedicated DEAR benchmark. It is highly aligned with e-commerce visual content understanding, although it depends heavily on preprocessing quality.",
+          "key_metrics": "On DEAR, SAGE† reaches Recall@3 = 0.8488 and generation score = 2.7462, with the largest gains on the harder multi-entity question types."
+        }
+      },
+      "score": {
+        "innovation": 23,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 79,
+        "rationale_zh": "与电商商品详情长图、参数图和素材核验高度相关，但工程链路较长、官方仓库目前仍是占位态，所以先给到 79 分。",
+        "rationale_en": "SAGE is highly relevant to dense e-commerce visuals, but the engineering chain is heavy and the official repo is still effectively a placeholder, so it lands at 79."
+      },
+      "reproduce": {
+        "status": "not_implemented",
+        "code_checked": true,
+        "notes": "官方 GitHub 链接存在，但当前主要是占位 README，并未提供可直接复用的完整实现；因综合分未达 80，本轮不补复现。"
+      },
+      "figure_steps": [
+        "Parse dense product pages into entity and attribute regions",
+        "Build a hierarchical semantic attribute graph",
+        "Match query constraints against relevant evidence subgraphs",
+        "Send grounded nodes to a VLM for final comparison output"
+      ],
+      "exp_cards": [
+        ["Recall@3", "0.8488"],
+        ["Gen score", "2.7462"],
+        ["Question set", "DEAR"]
+      ]
+    },
+    {
+      "id": "2609.04800",
+      "title": "Intrinsic Temporal Adaptation of CLIP for Partially Relevant Video Retrieval",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.CV / EMNLP 2026",
+      "tags": [
+        "视频理解",
+        "内容检索",
+        "直播巡检",
+        "CLIP"
+      ],
+      "authors": [
+        "Hyun Seok Seong",
+        "Woojin Jun",
+        "SuBeen Lee",
+        "Jae-Pil Heo"
+      ],
+      "affiliations": [
+        "Sungkyunkwan University"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04800",
+        "pdf": "https://arxiv.org/pdf/2609.04800.pdf",
+        "code": "http://github.com/hynnsk/ITA"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "ITA 面向 partially relevant video retrieval：目标不是找整段视频，而是找 query 对应的关键时刻。作者把时序建模塞回 CLIP backbone 最后几层，让相邻帧在内部做 grouped temporal attention，同时用 AWGP 把弱监督训练信号从 top-1 frame 扩散到多个相关帧。它仍是参数高效路线，只训练少量适配参数。亮点在于：帧级证据明显更准，适合直播回放与长视频内容巡检。",
+          "story": "现有 PRVR 常常能找对视频，却找不准真正相关的 moment，因为 frozen CLIP frame feature 缺少时序感。ITA 先让 frame representation 在 backbone 内部获得 temporal awareness，再通过 affinity-weighted gradient 让多个可能相关帧都得到监督，最终把视频级命中和帧级证据一起拉起来。",
+          "innovation": "它的创新不是堆一个很重的时序头，而是把 temporal adaptation 内生到 CLIP backbone 中，再用 AWGP 解决弱监督 PRVR 的信号过稀问题。对内容生态来说，这种‘先提高帧级证据可信度’的路线比单纯刷视频级指标更有业务意义。",
+          "key_metrics": "在 TVR / ActivityNet / Charades-STA 上，ITA 的 SumR 分别达到 224.7 / 201.4 / 87.4；在 QVHighlights 上，R@1 为 39.8、R@5 为 67.2、R@10 为 78.0，SumR 为 281.9。相较 ProPy，ITA 只有 1.57M 可训练参数，视频编码 GFLOPs 也更低。"
+        },
+        "en": {
+          "method_overview": "ITA targets partially relevant video retrieval, where the goal is to retrieve the right moment instead of only the right video. It injects temporal attention into the last CLIP layers and uses affinity-weighted gradient propagation so supervision reaches multiple relevant frames under weak labels. The result is stronger frame-level evidence with only lightweight adaptation parameters.",
+          "story": "Many PRVR systems retrieve the right video but support the decision with poor frame evidence because frozen CLIP features are temporally weak. ITA internalizes temporal adaptation inside the backbone and spreads learning signals beyond a single top frame.",
+          "innovation": "The novelty is to move temporal adaptation inside CLIP rather than bolting on a heavy temporal head, then stabilize weak supervision with AWGP. This is especially meaningful for inspection workflows that need trustworthy evidence moments.",
+          "key_metrics": "ITA reports SumR 224.7 / 201.4 / 87.4 on TVR, ActivityNet, and Charades-STA, and SumR 281.9 on QVHighlights with only 1.57M trainable parameters and lower video-encoding cost than ProPy."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 77,
+        "rationale_zh": "对直播回放、长视频召回和审核提效很有价值，但与电商达人治理仍隔着 ASR/OCR 与违规判定这一层，因此给到 77 分。",
+        "rationale_en": "ITA is quite useful for long-video and livestream retrieval, but it still sits one layer below full e-commerce governance because speech/OCR and policy reasoning are missing, so it receives 77."
+      },
+      "reproduce": {
+        "status": "not_implemented",
+        "code_checked": true,
+        "notes": "官方 GitHub 仓库存在，但当前只有 README 与 License，尚非可直接运行的完整代码；因综合分未达 80，本轮不补复现。"
+      },
+      "figure_steps": [
+        "Inject temporal attention into the last CLIP visual layers",
+        "Learn frame-level affinities between text queries and video frames",
+        "Propagate gradients to multiple relevant frames with AWGP",
+        "Retrieve videos together with sharper evidence moments"
+      ],
+      "exp_cards": [
+        ["QV SumR", "281.9"],
+        ["Trainable params", "1.57M"],
+        ["TVR SumR", "224.7"]
+      ]
+    },
+    {
+      "id": "2609.04871",
+      "title": "AutoLR: Automating the Path from Research to Launch Review in Industrial Recommender Systems",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.AI",
+      "tags": [
+        "推荐系统",
+        "Agent",
+        "研发自动化",
+        "工业系统"
+      ],
+      "authors": [
+        "Qi Zhang",
+        "Yanlin Chen",
+        "Wenchao Xiao"
+      ],
+      "affiliations": [
+        "NetEase / DASHEN"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04871",
+        "pdf": "https://arxiv.org/pdf/2609.04871.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "AutoLR 不是一个单模型，而是把 industrial recommender 从 research 到 launch review 的长链路自动化。系统包含 multi-expert council、evidence-weighted exploration-exploitation selector，以及分层知识系统；LLM 负责语义推理与代码生成，确定性控制器负责执行、指标抽取和 guardrail。它更像自治研发 harness，而不是单点算法。亮点在于：论文给出了真实生产环境里的多轮迭代和上线证据。",
+          "story": "推荐系统改造通常不是‘想到一个方法就上线’，而是查资料、复现、改代码、离线评估、A/B、Launch Review 的长期循环。AutoLR 用多专家辩论、试验预算分配和知识沉淀，把这条链路串成一个可长期运行的自治系统，目标是减少人工串联成本。",
+          "innovation": "它的创新点主要在系统编排：把 agent 能力收束在受控的 lifecycle harness 里，而不是放任一个大模型端到端执行。相较普通代码 agent 或 paper reading agent，AutoLR 更接近真正的工业研发流程自动化。",
+          "key_metrics": "论文审计了数月实验日志，识别出 1,586 次已完成评估，并记录到 9 次正向 Launch Review。描述性汇总里，内容消费渗透率 +5.75%，总消费时长 +10.83%，总有效 VV +5.55%；优化后单次迭代的 LLM API 成本可做到人民币 3-4 元。"
+        },
+        "en": {
+          "method_overview": "AutoLR is an autonomous research-to-launch harness for industrial recommender systems rather than a single model. It combines a multi-expert council, an evidence-weighted selector, and layered knowledge sources while keeping execution and guardrails under deterministic controllers.",
+          "story": "Recommender improvement is a long cycle of reading, reproducing, coding, offline evaluation, A/B testing, and launch review. AutoLR turns that cycle into a controlled multi-agent system instead of leaving it as a human-only process.",
+          "innovation": "The novelty is orchestration: agent capabilities are embedded into a governed lifecycle harness instead of being used as loose assistants. This is a stronger systems contribution than a typical coding or reading agent pipeline.",
+          "key_metrics": "The paper audits 1,586 completed evaluations, reports 9 positive launch-review cases, and summarizes production lifts such as +5.75% content-consumption penetration and +10.83% total consumption time."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 14,
+        "total": 74,
+        "rationale_zh": "这是今天最值得关注的弱相关高热论文之一，工业证据很强，但它服务的是研发效率层，不是内容生态与达人治理的直接算法层。",
+        "rationale_en": "AutoLR is one of the strongest weakly related high-heat papers today because the industrial evidence is solid, but it targets research productivity rather than the direct content-governance algorithm layer."
+      },
+      "reproduce": {
+        "status": "not_implemented",
+        "code_checked": true,
+        "notes": "未发现公开可复用的官方代码；本轮作为高热基础设施论文保留，但不进入复现名单。"
+      },
+      "figure_steps": [
+        "Collect research ideas, logs, patches, and launch constraints",
+        "Debate candidate directions with a multi-expert council",
+        "Allocate experiment budget with evidence-weighted selection",
+        "Promote only robust winners toward launch review"
+      ],
+      "exp_cards": [
+        ["Audited evals", "1586"],
+        ["Positive launch reviews", "9"],
+        ["Consumption time", "+10.83%"]
+      ]
+    },
+    {
+      "id": "2609.04852",
+      "title": "KVMem: Virtualizing Million-Token Agent Workspaces on a Consumer GPU",
+      "published": "2026-09-04",
+      "source": "arXiv / cs.LG",
+      "tags": [
+        "Agent",
+        "长上下文",
+        "系统优化",
+        "弱相关高热"
+      ],
+      "authors": [
+        "Di Chai",
+        "Leye Wang",
+        "Zeshen Su",
+        "Zhiguo Xia",
+        "Zhihang Yu"
+      ],
+      "affiliations": [],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.04852",
+        "pdf": "https://arxiv.org/pdf/2609.04852.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "KVMem 研究的是长运行 agent 的 workspace 溢出问题。它不再把旧上下文压成文本 summary，而是把 overflow 历史保存在跨 GPU / host memory / NVMe 的 paged KV state 里，并用轻量 attention-space index 检索相关历史 block。真正执行时，只物化与当前 query 相关的一小段 execution view，因此把地址空间大小和模型原生 context window 解耦。亮点在于：这是一篇非常强的 agent infra 论文，且公开仓库是真代码。",
+          "story": "长上下文 agent 不是简单‘把旧内容总结一下’就行，因为 summary 会丢失执行证据，而且不断 prefill 旧文本也很浪费。KVMem 直接把 KV cache 当虚拟内存来管理，让模型复用已经算过的历史状态，并按 query 动态调页。",
+          "innovation": "创新核心是‘workspace virtualization’：不是优化 prompt，而是优化历史状态本身的存储与调度。相比 compaction-only 路线，它在 utility 和推理效率上都更强，也更贴近未来长期运行 agent 的底层能力。",
+          "key_metrics": "在 DeepSWE long-context test 中，Qwen3.8-27B 的任务成功率从 43.8% 提升到 48.4%。本地部署评测里，24GB RTX 5090 Laptop GPU 上可把工作空间虚拟化到 1M tokens，单 session 仍能达到约 50 tok/s。"
+        },
+        "en": {
+          "method_overview": "KVMem addresses context overflow in long-running agent workspaces. Instead of compressing old context into text summaries, it stores historical KV states across GPU memory, host memory, and NVMe, then materializes only the query-relevant execution view at runtime.",
+          "story": "Summary-only compaction loses fine-grained execution evidence and repeated prefilling is wasteful. KVMem treats KV cache as virtual memory so the agent can reuse already-processed state instead of re-reading text history.",
+          "innovation": "The real contribution is workspace virtualization: optimizing storage and retrieval of historical states rather than optimizing prompts alone. This is a strong infrastructure idea for future long-running agents.",
+          "key_metrics": "On DeepSWE long-context evaluation, task success improves from 43.8% to 48.4%, and a consumer laptop GPU setup can virtualize 1M-token workspaces at roughly 50 tokens/s in a single-session setting."
+        }
+      },
+      "score": {
+        "innovation": 24,
+        "results": 12,
+        "exp_quality": 11,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 11,
+        "total": 72,
+        "rationale_zh": "如果今天需要补一篇弱相关但很值得关注的基础设施论文，KVMem 是最稳的选择之一；不过它离电商内容生态主问题较远，因此相关性分不高。",
+        "rationale_en": "KVMem is an excellent weakly related infrastructure pick for today, but it is still far from the core e-commerce content-governance problem, so relevance stays low."
+      },
+      "reproduce": {
+        "status": "code_available",
+        "code_checked": true,
+        "notes": "公开代码线索显示其仓库为实装型项目，因此本轮不重复复现。"
+      },
+      "figure_steps": [
+        "Store overflowed workspace history as paged KV blocks",
+        "Index historical states across GPU, host memory, and NVMe",
+        "Retrieve only query-relevant blocks into a bounded view",
+        "Run long-lived agents without re-prefilling full history"
+      ],
+      "exp_cards": [
+        ["DeepSWE success", "48.4%"],
+        ["Workspace size", "1M tokens"],
+        ["Local speed", "~50 tok/s"]
+      ]
+    }
+  ]
+}

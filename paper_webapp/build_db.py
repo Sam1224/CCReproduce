@@ -103,7 +103,9 @@ def main() -> None:
             reproduce = p.get("reproduce", {})
 
             reproduce_url = None
-            if reproduce and reproduce.get("path"):
+            if reproduce and reproduce.get("url"):
+                reproduce_url = reproduce["url"]
+            elif reproduce and reproduce.get("path"):
                 reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/main/{reproduce['path']}"
 
             fig_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.svg"

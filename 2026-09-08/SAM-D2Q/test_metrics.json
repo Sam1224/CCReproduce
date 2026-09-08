@@ -1,0 +1,10 @@
+{
+  "baseline_recall_at_5": 0.0417,
+  "augmented_recall_at_5": 0.9333,
+  "baseline_quality": 0.1273,
+  "augmented_quality": 2.1025,
+  "baseline_zero_result_rate": 0.0,
+  "augmented_zero_result_rate": 0.0,
+  "recall_gain": 0.8916,
+  "quality_gain": 1.9752
+}
