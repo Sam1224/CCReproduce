@@ -1,0 +1,10 @@
+ls -la
+python3 --version
+node --version
+git status
+pip --version
+uname -a
+whoami
+pwd
+ls "paper_patrol"
+python3 -c "print('hello')"

@@ -1,0 +1,6 @@
+ls --not-a-real-flag
+pythonnn --version
+git sttatus
+nodee --version
+python3 -c "print('unterminated)"
+ls -Z
