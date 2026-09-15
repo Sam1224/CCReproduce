@@ -1,0 +1,9 @@
+{
+  "avg_ctr_static": 0.3849,
+  "avg_ctr_only_generator": 0.4154,
+  "avg_ctr_gese_selector": 0.4162,
+  "avg_ctr_oracle_in_candidates": 0.4295,
+  "regret_only_generator": 0.0141,
+  "regret_gese": 0.0133,
+  "device": "cpu"
+}

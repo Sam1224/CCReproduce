@@ -1,0 +1,71 @@
+{
+  "device": "cpu",
+  "cfg": {
+    "seed": 7,
+    "n_users": 64,
+    "n_items": 200,
+    "n_train": 800,
+    "n_test": 200,
+    "gen_candidates": 6,
+    "sel_candidates": 6,
+    "gen_epochs": 6,
+    "sel_epochs": 4
+  },
+  "generator_train": [
+    {
+      "epoch": 1,
+      "loss": -0.0028,
+      "avg_ctr": 0.3117,
+      "avg_div": 0.8647
+    },
+    {
+      "epoch": 2,
+      "loss": -0.0132,
+      "avg_ctr": 0.3229,
+      "avg_div": 0.8554
+    },
+    {
+      "epoch": 3,
+      "loss": -0.0384,
+      "avg_ctr": 0.3534,
+      "avg_div": 0.7926
+    },
+    {
+      "epoch": 4,
+      "loss": -0.0423,
+      "avg_ctr": 0.3961,
+      "avg_div": 0.61
+    },
+    {
+      "epoch": 5,
+      "loss": -0.0196,
+      "avg_ctr": 0.4206,
+      "avg_div": 0.4305
+    },
+    {
+      "epoch": 6,
+      "loss": -0.0072,
+      "avg_ctr": 0.4274,
+      "avg_div": 0.3762
+    }
+  ],
+  "selector_train": [
+    {
+      "epoch": 1,
+      "mse": 0.031514
+    },
+    {
+      "epoch": 2,
+      "mse": 0.021455
+    },
+    {
+      "epoch": 3,
+      "mse": 0.012468
+    },
+    {
+      "epoch": 4,
+      "mse": 0.007785
+    }
+  ],
+  "selector_dataset_size": 4800
+}

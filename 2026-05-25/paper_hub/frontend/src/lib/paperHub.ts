@@ -1,128 +1,152 @@
 export type Lang = "zh" | "en";
 
+export interface ScoreBreakdown {
+  innovation?: number;
+  results?: number;
+  exp_quality?: number;
+  efficiency?: number;
+  generalization?: number;
+  relevance?: number;
+  total?: number;
+  rationale_zh?: string;
+  rationale_en?: string;
+}
+
 export interface Paper {
-  id?: number;
-  uid: string;
-  date: string;
-  source: string;
+  paper_id: string;
+  inspection_date: string;
+  published?: string;
+  source?: string;
   title: string;
   authors?: string;
   affiliations?: string;
   paper_url?: string;
   pdf_url?: string;
   code_url?: string;
+  demo_url?: string;
   project_url?: string;
   tags?: string[];
-  score?: number;
-  score_reason_zh?: string;
-  score_reason_en?: string;
-  method_zh?: string;
-  method_en?: string;
+  score_total?: number;
+  score_breakdown?: ScoreBreakdown;
+  rationale_zh?: string;
+  rationale_en?: string;
+  method_overview_zh?: string;
+  method_overview_en?: string;
+  story_zh?: string;
+  story_en?: string;
   innovation_zh?: string;
   innovation_en?: string;
-  metrics_zh?: string;
-  metrics_en?: string;
-  thumbnail?: string;
+  key_metrics_zh?: string;
+  key_metrics_en?: string;
+  figure_path?: string;
+  exp_figure_path?: string;
+}
+
+interface AggregatedPayload {
+  days?: Array<{ inspection_date: string; paper_count: number }>;
+  papers?: unknown[];
 }
 
 export const API_BASE: string = (import.meta.env.VITE_API_BASE as string | undefined) ?? "";
+const REPO_RAW_BASE =
+  (import.meta.env.VITE_REPO_RAW_BASE as string | undefined) ??
+  "https://raw.githubusercontent.com/Sam1224/CCReproduce/main";
 
-const LOCAL_PREFIX = "paper_hub:v1:";
+let cachedPayload: AggregatedPayload | null = null;
 
-function hasApi(): boolean {
-  return API_BASE.trim().length > 0;
-}
-
-async function apiGet<T>(path: string): Promise<T> {
-  const resp = await fetch(`${API_BASE}${path}`);
-  if (!resp.ok) {
-    throw new Error(`Request failed: ${resp.status} ${resp.statusText}`);
+function joinValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value.filter((item) => typeof item === "string").join(", ");
   }
-  return (await resp.json()) as T;
+  return typeof value === "string" ? value : "";
 }
 
-function normalizePapers(payload: unknown): Paper[] {
-  const raw = Array.isArray(payload)
-    ? (payload as Paper[])
-    : payload && typeof payload === "object" && Array.isArray((payload as { papers?: unknown }).papers)
-      ? ((payload as { papers: unknown }).papers as Paper[])
-      : [];
-
-  return raw.map((paper) => {
-    const anyPaper = paper as unknown as { thumbnail_url?: string; thumbnail?: string };
-    return {
-      ...paper,
-      thumbnail: paper.thumbnail ?? anyPaper.thumbnail_url ?? "",
-    };
-  });
+function normalizePaperAsset(url: string | undefined): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  return `${REPO_RAW_BASE}/paper_webapp/${url.replace(/^\//, "")}`;
 }
 
-function readCached(date: string): Paper[] | null {
+function normalizePaper(paper: unknown): Paper {
+  const raw = paper as Record<string, unknown>;
+  const links = (raw.links ?? {}) as Record<string, string | undefined>;
+  const scoreBreakdown = (raw.score_breakdown ?? {}) as ScoreBreakdown;
+
+  return {
+    paper_id: String(raw.paper_id ?? raw.id ?? ""),
+    inspection_date: String(raw.inspection_date ?? raw.date ?? ""),
+    published: typeof raw.published === "string" ? raw.published : "",
+    source: typeof raw.source === "string" ? raw.source : "",
+    title: String(raw.title ?? ""),
+    authors: joinValue(raw.authors),
+    affiliations: joinValue(raw.affiliations),
+    paper_url: links.abs ?? (typeof raw.paper_url === "string" ? raw.paper_url : ""),
+    pdf_url: links.pdf ?? (typeof raw.pdf_url === "string" ? raw.pdf_url : ""),
+    code_url: links.code ?? (typeof raw.code_url === "string" ? raw.code_url : ""),
+    demo_url: links.demo ?? (typeof raw.demo_url === "string" ? raw.demo_url : ""),
+    project_url: typeof raw.reproduce_url === "string" ? raw.reproduce_url : "",
+    tags: Array.isArray(raw.tags) ? raw.tags.filter((item): item is string => typeof item === "string") : [],
+    score_total: typeof raw.score_total === "number" ? raw.score_total : 0,
+    score_breakdown: scoreBreakdown,
+    rationale_zh: typeof raw.rationale_zh === "string" ? raw.rationale_zh : scoreBreakdown.rationale_zh ?? "",
+    rationale_en: typeof raw.rationale_en === "string" ? raw.rationale_en : scoreBreakdown.rationale_en ?? "",
+    method_overview_zh: typeof raw.method_overview_zh === "string" ? raw.method_overview_zh : "",
+    method_overview_en: typeof raw.method_overview_en === "string" ? raw.method_overview_en : "",
+    story_zh: typeof raw.story_zh === "string" ? raw.story_zh : "",
+    story_en: typeof raw.story_en === "string" ? raw.story_en : "",
+    innovation_zh: typeof raw.innovation_zh === "string" ? raw.innovation_zh : "",
+    innovation_en: typeof raw.innovation_en === "string" ? raw.innovation_en : "",
+    key_metrics_zh: typeof raw.key_metrics_zh === "string" ? raw.key_metrics_zh : "",
+    key_metrics_en: typeof raw.key_metrics_en === "string" ? raw.key_metrics_en : "",
+    figure_path: normalizePaperAsset(typeof raw.figure_path === "string" ? raw.figure_path : ""),
+    exp_figure_path: normalizePaperAsset(typeof raw.exp_figure_path === "string" ? raw.exp_figure_path : ""),
+  };
+}
+
+async function fetchJson<T>(url: string): Promise<T | null> {
   try {
-    const raw = localStorage.getItem(`${LOCAL_PREFIX}${date}`);
-    if (!raw) return null;
-    const data = JSON.parse(raw) as unknown;
-    return normalizePapers(data);
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    return (await resp.json()) as T;
   } catch {
     return null;
   }
 }
 
-function writeCached(date: string, papers: Paper[]): void {
-  try {
-    localStorage.setItem(`${LOCAL_PREFIX}${date}`, JSON.stringify(papers));
-  } catch {
-    // ignore
+async function fetchAggregatedPayload(): Promise<AggregatedPayload> {
+  if (cachedPayload) return cachedPayload;
+
+  const localUrl = `${API_BASE || ""}/data/papers.json`;
+  const remoteUrl = `${REPO_RAW_BASE}/paper_webapp/data/papers.json`;
+  const payload = (await fetchJson<AggregatedPayload>(localUrl)) ?? (await fetchJson<AggregatedPayload>(remoteUrl));
+
+  if (!payload) {
+    throw new Error("Failed to load aggregated paper data.");
   }
+
+  cachedPayload = payload;
+  return payload;
 }
 
 export async function fetchDates(): Promise<string[]> {
-  if (hasApi()) {
-    const data = await apiGet<{ dates: string[] }>("/api/dates");
-    return data.dates;
-  }
-
-  const resp = await fetch("/data/index.json");
-  if (!resp.ok) {
-    throw new Error(`Failed to load local index: ${resp.status} ${resp.statusText}`);
-  }
-  const index = (await resp.json()) as { dates?: string[] };
-  const dates = new Set<string>(Array.isArray(index.dates) ? index.dates : []);
-
-  for (const key of Object.keys(localStorage)) {
-    if (!key.startsWith(LOCAL_PREFIX)) continue;
-    const date = key.slice(LOCAL_PREFIX.length);
-    if (date) dates.add(date);
-  }
-
-  return Array.from(dates).sort((a, b) => b.localeCompare(a));
+  const payload = await fetchAggregatedPayload();
+  const dates = Array.isArray(payload.days)
+    ? payload.days.map((item) => item.inspection_date)
+    : [];
+  return dates.sort((a, b) => b.localeCompare(a));
 }
 
 export async function fetchPapers(date: string): Promise<Paper[]> {
-  if (hasApi()) {
-    const data = await apiGet<{ papers: Paper[] }>(
-      `/api/papers?date=${encodeURIComponent(date)}`
-    );
-    return data.papers;
-  }
-
-  const cached = readCached(date);
-  if (cached) return cached;
-
-  const resp = await fetch(`/data/seed/${encodeURIComponent(date)}.json`);
-  if (!resp.ok) {
-    throw new Error(`Failed to load local seed: ${resp.status} ${resp.statusText}`);
-  }
-
-  const payload = (await resp.json()) as unknown;
-  const papers = normalizePapers(payload);
-  writeCached(date, papers);
-  return papers;
+  const payload = await fetchAggregatedPayload();
+  const papers = Array.isArray(payload.papers) ? payload.papers.map(normalizePaper) : [];
+  return papers
+    .filter((paper) => paper.inspection_date === date)
+    .sort((left, right) => (right.score_total ?? 0) - (left.score_total ?? 0));
 }
 
 export function tPaper(
   paper: Paper,
-  key: "method" | "innovation" | "metrics" | "score_reason",
+  key: "method_overview" | "story" | "innovation" | "key_metrics" | "rationale",
   lang: Lang
 ): string {
   const suffix = lang === "zh" ? "_zh" : "_en";
@@ -131,9 +155,6 @@ export function tPaper(
   return typeof value === "string" ? value : "";
 }
 
-export function resolveThumbnail(paper: Paper): string {
-  const url = paper.thumbnail ?? "";
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  return `${API_BASE}${url}`;
+export function resolveAsset(url?: string): string {
+  return url ?? "";
 }

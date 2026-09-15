@@ -1,0 +1,720 @@
+{
+  "inspection_date": "2026-09-15",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": [
+      "2026-09-15 00:00:00",
+      "2026-09-15 23:59:59"
+    ],
+    "utc": [
+      "2026-09-14T16:00:00Z",
+      "2026-09-15T15:59:59Z"
+    ]
+  },
+  "keyword_notes": {
+    "kept": [
+      "电商",
+      "内容理解",
+      "达人治理",
+      "LLM/VLM/MLLM",
+      "caption",
+      "向量化表征",
+      "聚类/相似",
+      "Agent",
+      "RAG",
+      "蒸馏",
+      "违规检测/治理",
+      "数据质量/清洗/打标"
+    ],
+    "added": [
+      "industrial recommendation",
+      "presentation-layer personalization",
+      "synthetic user panels",
+      "fashion image captioning",
+      "real-time video understanding",
+      "multimodal chat analysis"
+    ],
+    "excluded": [
+      "安全/后门/越狱/投毒/guardrail 对抗方向",
+      "以攻击、防御、深伪鉴伪为核心目标的安全类论文"
+    ]
+  },
+  "source_coverage": [
+    "arXiv cs/new / cs.CV / cs.IR / cs.HC / cs.MM / cs.AI / cs.LG 当日与近两日列表",
+    "Hugging Face Daily Papers 2026-09-15 热门论文页",
+    "OpenReview / TMLR / 顶会 accepted 信息回查",
+    "Google Scholar / Semantic Scholar / OpenAlex / DBLP 元数据交叉校验",
+    "Google / Meta / OpenAI / Qwen / Hunyuan / Meituan / Vidu 等研究博客与产品页补充",
+    "X / GitHub 仓库公开线索补充，用于核验热度与官方代码状态"
+  ],
+  "papers": [
+    {
+      "id": "2609.11638",
+      "title": "Vidu S2: Real-Time Interactive, Editable, and Spatial Video Generation",
+      "authors": [
+        "Jintao Zhang",
+        "Kai Jiang",
+        "Jintao Chen",
+        "Xu Wang",
+        "Deyuan Liu",
+        "Jungang Li",
+        "Dechuang Chen",
+        "Ming Lin",
+        "Jingjiang Zhou",
+        "Haopeng Jin",
+        "Qi Jia",
+        "Xiaohang Wang",
+        "Yaole Wang",
+        "Zhanqiang Zhang",
+        "Ran Li",
+        "Zhengkun Huang",
+        "Shuyue Xiong",
+        "Yuji Wang",
+        "Zikun Dai",
+        "Hui He",
+        "Yang Luo",
+        "Mang Ning",
+        "Weiqi Feng",
+        "Chengyang Ye",
+        "Xinyue Lin",
+        "Min Zhao",
+        "Hongzhou Zhu",
+        "Hengkai Tan",
+        "Zeyuan Wang",
+        "Chendong Xiang",
+        "Kaiwen Zheng",
+        "Zhijie Deng",
+        "Fan Bao",
+        "Jianfei Chen",
+        "Jun Zhu"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shengshu Technology"
+      ],
+      "source": "arXiv / cs.CV / Hugging Face Daily Papers",
+      "published": "2026-09-10",
+      "tags": [
+        "视频生成",
+        "实时交互",
+        "Avatar",
+        "视频编辑",
+        "弱相关高热"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.11638",
+        "pdf": "https://arxiv.org/pdf/2609.11638.pdf",
+        "demo": "https://vidu.com/vidu-stream"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "Vidu S2 把实时视频生成拆成两个能力：Vidu S2-Avatar 负责数字人实时交互，Vidu S2-Editing 负责流式视频实时编辑。Avatar 侧通过双向 image/reference-to-video 训练、hybrid teacher 与 self-replay forcing，把动态参考图、动作指令和长时稳定性联合起来；Editing 侧则重点解决服饰替换、角色替换和背景替换在流式条件下的一致性。论文的高光点不是单一模型效果，而是把模型、推理基础设施和 agentic 交互系统一起打通，真正把 720p 实时体验做出来。对电商直播、达人数字分身、持品互动和创意素材生产都很有启发。",
+          "story": "传统视频生成很强，但大都停留在离线生成或单次编辑，没法满足直播和实时内容生产对低延迟、可控和持续一致性的要求。Vidu S2 的思路是把“参考一致性”“流式因果生成”“实时推理优化”作为一个系统问题联合设计，让角色、服装和背景可以在交互过程中被持续修改，同时保持视频质量和时延可接受。于是它从‘能生成视频’进一步变成‘能在实时内容流里工作’。",
+          "innovation": "创新性体现在三层：一是 Avatar 与 Editing 两条实时视频链路分别引入面向流式场景的训练策略；二是通过 self-replay forcing、偏好优化和超分 refiner 兼顾稳定性与观感；三是把 efficient attention、量化线性层、kernel fusion、多 GPU 并行等推理基础设施写成完整系统。它和常见只报生成质量的论文不同，更像一篇把研究能力真正推向线上产品形态的工作。虽然与达人治理是弱相关，但对直播内容生产和虚拟达人生态的价值很高。",
+          "key_metrics": "论文报告 Vidu S2-Avatar 支持实时 720p 视频生成，并且在动态参考更新、动作跟随和实时编辑可控性上优于全部 baseline。系统层面重点结果是：可在在线 demo 中实现数字人实时交互和流式视频编辑；编辑能力覆盖 style rendering、clothing replacement、character replacement、background replacement。我们复现的 toy 版本中，editing 模式在服饰/风格编辑准确率上达到 1.0，而不使用参考控制的 baseline 为 0。"
+        },
+        "en": {
+          "method_overview": "Vidu S2 combines two real-time capabilities: Vidu S2-Avatar for interactive digital characters and Vidu S2-Editing for streaming video editing. The avatar track uses bidirectional image/reference-to-video training, hybrid teacher forcing, and self-replay forcing to stabilize dynamic references and long-horizon interaction, while the editing track focuses on streaming-consistent clothing, character, and background replacement. The highlight is not only generation quality, but the end-to-end integration of model training, inference infrastructure, and agentic interaction. That makes the system relevant to creator tooling, live commerce, and virtual-human content production.",
+          "story": "Most video generation systems remain offline or single-shot, which is insufficient for live content workflows that demand low latency, controllability, and temporal consistency. Vidu S2 treats reference consistency, causal streaming generation, and runtime optimization as a joint system problem, so users can keep changing character appearance, clothing, and background during interaction. In other words, it moves from ‘video generation works’ to ‘video generation works inside a live content loop.’",
+          "innovation": "Its novelty appears at three layers: streaming-oriented training for both avatar and editing pipelines, stability/quality mechanisms such as self-replay forcing and preference optimization, and a production-grade inference stack with efficient attention, quantized linear layers, kernel fusion, and multi-GPU parallelism. Unlike papers that only report static generative metrics, this one pushes video generation toward deployable real-time interaction. The governance relevance is weaker, but the content-ecosystem value is high.",
+          "key_metrics": "The paper reports real-time 720p generation for Vidu S2-Avatar and consistent gains over all baselines on dynamic reference updates, instruction following, and real-time editing quality. The deployed demo supports style rendering, clothing replacement, character replacement, and background replacement in a live stream. In our toy reproduction, the reference-aware editing path reaches 1.0 accuracy on clothing/style edit consistency while the no-reference baseline collapses to 0."
+        }
+      },
+      "score": {
+        "innovation": 29,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 92,
+        "rationale_zh": "这是今天最强的高热论文之一：真正把实时视频生成、编辑和产品级系统化能力做到了一个新高度。它与电商达人治理并非强相关，但对直播内容生产、虚拟人互动、素材工业化生成的潜在价值非常高，因此给到超高分。",
+        "rationale_en": "This is one of the strongest high-heat papers today because it turns real-time video generation and editing into a deployable system. It is not the most directly governance-related paper, but its value to live-commerce content creation and virtual creators is substantial."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-15/ViduS2",
+        "code_checked": true,
+        "notes": "Checked the official Vidu S2 demo/API page and did not find a substantive public model code release, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Encode the live video stream and current editable reference state",
+        "Apply streaming avatar or editing modules with causal rollout",
+        "Update clothes, style, character or background from new references",
+        "Render the next frames with low-latency refinement and feedback"
+      ],
+      "exp_cards": [
+        [
+          "Avatar output",
+          "Real-time 720p"
+        ],
+        [
+          "Editing scope",
+          "Style / clothes / bg"
+        ],
+        [
+          "Toy edit accuracy",
+          "0.0 → 1.0"
+        ]
+      ]
+    },
+    {
+      "id": "2609.14978",
+      "title": "LazFormer: Scaling Transformers for Industrial Recommendation via Transferable Generative Pre-training",
+      "authors": [
+        "Xiaodong Li",
+        "Alin Fan",
+        "Mingyang Li",
+        "Yan Xiao",
+        "Shichao Nie",
+        "Junfeng Zhang",
+        "Shaochuan Lin",
+        "Zhanming Ou",
+        "Tao Luo",
+        "Xiaoyi Zeng"
+      ],
+      "affiliations": [
+        "Alibaba International Digital Commerce Group"
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-14",
+      "tags": [
+        "推荐系统",
+        "电商推荐",
+        "Transformer",
+        "预训练",
+        "工业落地"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.14978",
+        "pdf": "https://arxiv.org/pdf/2609.14978.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "LazFormer 面向工业推荐里一个很现实的问题：直接用单一 ranking Transformer 从零训练既贵又慢，而且预训练参数直接迁移又容易负迁移。论文先做 generative pre-training，自回归生成用户序列特征，为后续 ranking 初始化 sparse + dense 参数；再通过 transferable residual adapter 把 ranking 特有信号以残差方式注入，避免预训练表征被硬搬过来。随后，request-aware ranking 将长序列压缩、混合稀疏注意力和 request-aware 范式结合起来，兼顾效率和效果。最后，asymmetric multi-epoch training 在多轮训练里重置 sparse 参数、累积 dense 参数，缓解稀疏特征过拟合。",
+          "story": "工业推荐想吃到 Transformer 的规模收益，但真正上线时常常卡在两件事上：一是全量训练成本太高，二是预训练和在线 ranking 的输入分布不一致，直接迁移反而伤效果。LazFormer 的思路是先利用生成式预训练拿到好的初始化，再用 adapter 和 request-aware 机制把 ranking 特有信息柔性接上，同时通过非对称多轮训练抑制稀疏参数过拟合。它不是单纯堆大模型，而是在工业推荐链路里把‘如何迁移、如何提效、如何训练稳定’一起解决。",
+          "innovation": "亮点主要有三个：第一，把生成式预训练明确用于工业推荐初始化，而不是只做通用序列表征；第二，transferable residual adapter 用很轻的结构解决 dense 参数负迁移；第三，request-aware ranking 与 asymmetric multi-epoch training 让长序列建模和多轮训练更贴合线上推荐。整体创新既合理又工程感很强，尤其适合电商 feed、搜索排序和广告推荐这类成本敏感场景。",
+          "key_metrics": "论文在阿里国际电商场景报告了显著 offline 和 online 收益：HTML 全文显示其在多个工业数据集上优于现有 Transformer 推荐基线，并在在线 A/B 中带来稳定增益。我们 toy 复现里，LazFormer 相比 baseline ranking 在 Recall@10 上从 0.7257 提升到 0.7670，验证了‘预训练 + adapter + request-aware ranking’这一主线设计的有效性。"
+        },
+        "en": {
+          "method_overview": "LazFormer tackles a practical industrial recommendation bottleneck: training a single Transformer ranking model from scratch is expensive and slow, while directly transferring pre-trained parameters can cause negative transfer. The paper first performs generative pre-training by autoregressively generating sequential features to initialize both sparse and dense parameters, then uses a transferable residual adapter to inject ranking-specific signals in a residual form. A request-aware ranking module combines long-sequence compression, hybrid sparse attention, and request-aware modeling, and an asymmetric multi-epoch strategy resets sparse parameters while accumulating dense ones across epochs.",
+          "story": "Industrial recommender systems want Transformer scalability, but deployment is blocked by high training cost and mismatch between pre-training inputs and online ranking inputs. LazFormer first harvests good initialization from generative pre-training, then carefully reconnects ranking-specific information through adapters and request-aware modeling, while its asymmetric training schedule controls sparse-parameter overfitting. It therefore solves not just ‘how to scale,’ but also ‘how to transfer, how to speed up, and how to stabilize training.’",
+          "innovation": "The paper stands out for three reasons: it turns generative pre-training into an explicitly recommendation-oriented initializer, uses a lightweight residual adapter to mitigate dense-parameter negative transfer, and combines request-aware long-sequence ranking with asymmetric multi-epoch optimization. The design is both methodologically meaningful and deeply industrial, making it especially relevant to e-commerce feed ranking and search recommendation.",
+          "key_metrics": "The full paper reports clear offline and online gains in Alibaba’s industrial recommendation setting over existing Transformer baselines. In our toy reproduction, LazFormer improves Recall@10 from 0.7257 to 0.7670 over a baseline ranking model, illustrating the value of the pre-training + adapter + request-aware ranking pipeline."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 88,
+        "rationale_zh": "这篇和电商推荐链路强相关，而且不是只做一点结构微调，而是围绕预训练迁移、长序列效率和训练稳定性做了系统设计。工业推荐可落地性很强，因此进入高优先级复现。",
+        "rationale_en": "This paper is strongly aligned with industrial e-commerce recommendation and offers a system-level redesign across transfer, long-sequence efficiency, and training stability rather than a minor architecture tweak."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-15/LazFormer",
+        "code_checked": true,
+        "notes": "No substantive public code release was found during today’s scan, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Pre-train a Transformer to autoregressively model user-item sequences",
+        "Inject ranking-specific features with a transferable residual adapter",
+        "Compress long histories with request-aware sparse attention",
+        "Fine-tune with asymmetric multi-epoch updates for stable industrial ranking"
+      ],
+      "exp_cards": [
+        [
+          "Recall@10",
+          "0.7257 → 0.7670"
+        ],
+        [
+          "Core trick",
+          "Residual adapter"
+        ],
+        [
+          "Target scenario",
+          "Industrial ranking"
+        ]
+      ]
+    },
+    {
+      "id": "2609.15094",
+      "title": "Generate to Explore, Select to Exploit: Aligning LLM-based Headline Generation with Personalized Recommendation",
+      "authors": [
+        "Yi Chen",
+        "Rufeng Cheng",
+        "Qiang Xie",
+        "Tao Li"
+      ],
+      "affiliations": [
+        "Baidu Inc."
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-14",
+      "tags": [
+        "推荐系统",
+        "标题生成",
+        "LLM",
+        "内容分发",
+        "presentation layer"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.15094",
+        "pdf": "https://arxiv.org/pdf/2609.15094.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "GESE 聚焦推荐系统里经常被忽略的展示层：同一个内容条目如果只给一个静态标题，会压制长尾兴趣用户。论文把个性化拆成两步：先让 LLM 用 GSPO 和层级奖励去生成一个覆盖多种潜在兴趣的 headline candidate set，再用一个轻量 selector 结合实时上下文信号做最终选择。也就是说，LLM 不再被逼着输出‘唯一最优标题’，而是先负责探索，再由 selector 负责利用。亮点在于它直接把生成式模型和在线推荐目标对齐到 presentation layer，而不是只停留在内容理解或 rerank。",
+          "story": "过去把 LLM 用在推荐标题生成时，往往直接优化单条输出，结果很容易模式坍缩，生成平均化、讨好大盘但不抓长尾需求的标题。GESE 认为问题不在于 LLM 不会写标题，而在于系统把‘探索多样表达’和‘精准命中当前用户’混成了一个动作。于是它先把 LLM 当探索器去撒开候选，再让实时反馈驱动的 selector 做最终选择，从而既保留多样性，又不牺牲点击率。",
+          "innovation": "创新点非常清晰：一是把个性化 headline generation 重新定义为 generate-to-explore + select-to-exploit 的双阶段系统；二是用 hierarchical reward 训练 LLM 关注 semantic utility 和 set-wise diversity，而不是只盯单条点击信号；三是在线阶段只保留轻量 selector，保证时延和系统可部署性。这个 framing 对电商内容分发、短视频封面文案、商品标题改写都非常有参考价值。",
+          "key_metrics": "论文在一个 1 亿+ DAU 商业平台上报告在线 A/B：CTR 提升 2.57%，dwell time 提升 0.87%。我们 toy 复现中，static 标题的 CTR proxy 为 0.3849，只有 generator 时提升到 0.4154，而 GESE 的 selector 进一步提升到 0.4162，且相对 oracle candidate 的 regret 更低。"
+        },
+        "en": {
+          "method_overview": "GESE focuses on the often-overlooked presentation layer of recommendation: a single static headline for an item suppresses long-tail user interests. The framework decouples personalization into two stages: an LLM trained with GSPO and hierarchical rewards generates a diverse candidate set that covers latent interests, and a lightweight real-time selector chooses the final headline using instant contextual signals. The LLM is therefore not forced to output one universal best title; it explores, and the selector exploits.",
+          "story": "Prior LLM-based headline generation usually optimizes a single output, which leads to mode collapse: generic titles that satisfy average tastes but miss specific user intents. GESE argues the issue is not headline generation itself, but the fact that diversity exploration and precise targeting are entangled. It separates them: let the LLM broaden the candidate space, then let the feedback-aware selector pick the right realization for the current user.",
+          "innovation": "The novelty is especially clean: it reframes personalized headline generation as a dual-stage generate-to-explore / select-to-exploit system, uses hierarchical rewards to optimize both semantic utility and set-wise diversity, and keeps the online exploitation stage lightweight enough for deployment. This framing is highly relevant to e-commerce feeds, short-video copywriting, and item-title personalization.",
+          "key_metrics": "On a commercial platform with 100M+ daily active users, the paper reports a +2.57% CTR lift and +0.87% dwell-time gain in online A/B testing. In our toy reproduction, the CTR proxy improves from 0.3849 for a static headline to 0.4154 with generation alone and 0.4162 with the GESE selector, while reducing regret relative to the oracle candidate."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 87,
+        "rationale_zh": "这篇既有明确业务价值，也有很漂亮的方法 framing：它不是‘让 LLM 写更好标题’这么简单，而是把展示层个性化重新建模成探索和利用的分工系统。对电商内容生态非常贴近。",
+        "rationale_en": "This paper has both strong business value and a very clean methodological framing: it recasts presentation-layer personalization as an explore-versus-exploit system rather than merely ‘better title generation.’"
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-15/GESE",
+        "code_checked": true,
+        "notes": "No substantive public code release was found during today’s scan, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Prompt an LLM to generate multiple headline candidates for the same item",
+        "Optimize candidate quality with semantic utility and diversity rewards",
+        "Read instant user-context signals with a lightweight selector",
+        "Serve the selected headline that best matches current preference"
+      ],
+      "exp_cards": [
+        [
+          "Online CTR",
+          "+2.57%"
+        ],
+        [
+          "Dwell time",
+          "+0.87%"
+        ],
+        [
+          "Toy CTR proxy",
+          "0.3849 → 0.4162"
+        ]
+      ]
+    },
+    {
+      "id": "2609.13148",
+      "title": "When Can You Trust Your Synthetic Users? Diagnostics and Corrections for LLM Consumer Panels",
+      "authors": [
+        "Robson Tigre",
+        "Hugo Gobato Souto"
+      ],
+      "affiliations": [
+        "Recast",
+        "Dell"
+      ],
+      "source": "arXiv / cs.HC / today radar back-check",
+      "published": "2026-06-03",
+      "tags": [
+        "合成用户",
+        "LLM 评测",
+        "消费者研究",
+        "用户建模",
+        "治理评估"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13148",
+        "pdf": "https://arxiv.org/pdf/2609.13148.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "这篇论文讨论的是一个越来越现实的问题：LLM 合成用户 panel 真的能用来替代真实消费者吗？作者没有给出简单的 yes/no，而是先把 synthetic-panel bias 分解为 covariate shift 和 concept shift，再设计三个诊断模块去判断该 trust、correct 还是 walk away。若需要修正，则使用只依赖少量人类校准样本的 doubly robust AIPW estimator 做偏差校正。亮点在于它把‘合成用户是否可信’从拍脑袋判断，变成了一个可检验、可决策、可纠偏的框架。",
+          "story": "很多团队开始用 LLM 生成消费者样本，因为便宜又快，但 aggregate 指标好看并不代表它在细分人群、因果估计或定价决策上可靠。问题在于 synthetic users 既可能在 covariates 上和真人分布不一致，也可能在同样输入下给出不同决策逻辑。作者因此先诊断‘错在哪’，再决定是可以直接信任、需要小样本人类校准，还是应该放弃这个合成 panel。这样就把‘用不用 synthetic users’从感性选择变成理性流程。",
+          "innovation": "创新点主要在框架层而不是模型层：它提出了 trust/correct/walk-away 的明确决策规则，把 overlap、conditional calibration、cross-LLM stability 这些诊断量串成一个可操作的判别流程；同时给出只依赖 50 到 300 人类校准样本的 AIPW 修正模块。对电商消费者洞察、达人种草模拟、政策和定价预估都很有借鉴意义，尤其适合作为治理评测方法。",
+          "key_metrics": "论文在 controlled simulations 中 180/180 次正确决策；在 ANES 上把 naive bias 降低 92.9% 到 99.6%；在 Twin-2K-500（172,884 对 human / GPT-4.1-mini 响应）上，分组场景 bias 降低 83% 到 94%。我们 toy 复现中，dr(AIPW) 对 ATE 的绝对误差从 naive 的约 0.022 降到约 0.0167，并能根据 covariate/concept shift 诊断给出 trust vs correct 决策。"
+        },
+        "en": {
+          "method_overview": "This paper asks a highly practical question: when can LLM-generated synthetic consumer panels be trusted as a substitute for real users? Instead of offering a binary answer, it decomposes synthetic-panel bias into covariate shift and concept shift, introduces three diagnostics to decide whether to trust, correct, or walk away, and provides a doubly robust AIPW estimator that only requires a small human calibration sample. Its key contribution is turning synthetic-user reliability into a testable decision framework.",
+          "story": "Many teams want to use LLM-generated consumers because they are cheap and fast, but good aggregate fit does not guarantee reliable subgroup estimates, causal conclusions, or pricing decisions. Synthetic users may differ from humans either in observed covariates or in conditional decision logic. The paper therefore diagnoses what goes wrong first, then decides whether the panel is usable as-is, salvageable with calibration, or unsuitable for the target task.",
+          "innovation": "The novelty lies in the framework rather than a new foundation model: it formalizes a trust/correct/walk-away decision rule, connects overlap, conditional calibration, and cross-LLM stability diagnostics into one operational pipeline, and pairs them with a small-sample AIPW correction module. This is highly relevant to e-commerce consumer insight, creator-strategy simulation, and governance-oriented evaluation workflows.",
+          "key_metrics": "The decision rule achieves 180/180 correct decisions in controlled simulations, reduces naive bias by 92.9% to 99.6% on ANES, and lowers subgroup bias by 83% to 94% on Twin-2K-500 with 172,884 paired human / GPT-4.1-mini responses. In our toy reproduction, the DR(AIPW) estimator reduces ATE absolute error from about 0.022 for the naive estimator to about 0.0167 while yielding the expected trust-versus-correct routing."
+        }
+      },
+      "score": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 19,
+        "total": 86,
+        "rationale_zh": "它不是直接做内容理解模型，但对电商消费者洞察、合成达人画像和治理评估非常有方法论价值。尤其是‘先诊断、再纠偏、最后决定是否可用’这一框架，极适合业务团队实际采用。",
+        "rationale_en": "This is not a direct content-understanding model, but it is methodologically valuable for synthetic user research, creator simulation, and governance-oriented evaluation. The trust/correct/walk-away pipeline is especially actionable."
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-09-15/SyntheticUsersDR",
+        "code_checked": true,
+        "notes": "No substantive public code release was found during today’s scan, so a toy-but-runnable PyTorch reproduction was added."
+      },
+      "figure_steps": [
+        "Compare synthetic and human panel samples under the same consumer task",
+        "Diagnose covariate overlap and conditional calibration gaps",
+        "Choose trust, correct or walk-away using interpretable thresholds",
+        "Apply doubly robust AIPW correction when a small human calibration set exists"
+      ],
+      "exp_cards": [
+        [
+          "Decision rule",
+          "180 / 180"
+        ],
+        [
+          "ANES bias drop",
+          "92.9%~99.6%"
+        ],
+        [
+          "Toy ATE error",
+          "0.0221 → 0.0167"
+        ]
+      ]
+    },
+    {
+      "id": "2609.14100",
+      "title": "RA-CoA: Training-free Fashion Image Captioning via Retrieval-Augmented Chain-of-Attributes",
+      "authors": [
+        "Abhirama Subramanyam Penamakuri",
+        "Shreya Shukla",
+        "Anand Mishra"
+      ],
+      "affiliations": [
+        "Mohamed Bin Zayed University of Artificial Intelligence",
+        "Indian Institute of Technology Jodhpur"
+      ],
+      "source": "arXiv / cs.CV / TMLR accepted",
+      "published": "2026-09-12",
+      "tags": [
+        "电商图像 caption",
+        "时尚理解",
+        "RAG",
+        "VLM",
+        "商品属性"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.14100",
+        "pdf": "https://arxiv.org/pdf/2609.14100.pdf",
+        "code": "https://github.com/vl2g/RACoA"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "RA-CoA 面向电商服饰 caption 这个极强相关问题，提出了 training-free 的两阶段框架。它先从 ProductKB 中检索视觉相近商品，拿到一组可信的 attribute keys；再让冻结 VLM 逐个预测 query 图像对应的 attribute values，最后结合 retrieved exemplars 生成 attribute-grounded caption。高光点在于它没有继续赌 end-to-end VLM 直接写 caption，而是把 fine-grained fashion captioning 拆成检索 + 属性链式推理 + 生成三个更可控的步骤。",
+          "story": "通用 VLM 写自然场景 caption 还行，但到了服饰电商就经常在 neckline、closure、pattern、silhouette 这种细粒度属性上幻觉或漏掉关键细节。RA-CoA 认为问题不只是‘模型不够大’，而是 caption 过程缺少领域知识和属性级约束。于是它先借助 ProductKB 检索出可能相关的属性集合，再按属性链逐个确认取值，最后才把这些可信属性编织成最终 caption。这样就把‘一口气生成整句’改成‘先想清楚每个属性，再生成句子’。",
+          "innovation": "创新性主要体现在范式上：把 retrieval-augmented generation 做到了 fashion captioning 的属性层，而不是只在文本侧塞几个 exemplars。Chain-of-Attributes 让 frozen VLM 变得更可解释，也更利于随着商品词汇演化而扩展。更重要的是，官方仓库是真实可用的，不是空链接，说明这篇工作很适合作为强相关、可落地参考方案。",
+          "key_metrics": "论文报告平均 METEOR 相比 zero-shot captioning 提升 26.3%，并在不同 VLM family 与 prompting paradigms 下都带来一致收益。论文还做了 top-K、ICL exemplar、retrieval cropping、ProductKB 质量与规模、跨 FashionGen / beyond fashion generalization 等分析，说明提升不是偶然刷分。"
+        },
+        "en": {
+          "method_overview": "RA-CoA targets a highly relevant e-commerce problem: fine-grained fashion captioning. It introduces a training-free two-stage framework that first retrieves visually similar products from a ProductKB to obtain reliable attribute keys, then asks a frozen VLM to predict query-specific attribute values before generating the final attribute-grounded caption with retrieved exemplars. The key highlight is that it does not rely on a generic end-to-end captioning prompt, but decomposes captioning into retrieval, attribute reasoning, and generation.",
+          "story": "General VLMs can produce fluent captions, but they often hallucinate or miss critical fashion details such as neckline, closure, pattern, and silhouette. RA-CoA argues the issue is not only model scale, but the lack of domain knowledge and attribute-level constraints during caption generation. It therefore retrieves a plausible attribute set from a ProductKB, resolves the values one by one, and only then forms the final caption. This turns ‘generate the whole sentence directly’ into ‘verify the attributes first, then verbalize them.’",
+          "innovation": "Its main novelty is a paradigm shift: retrieval-augmented generation is applied at the attribute level for fashion captioning rather than merely at the text-example level. The Chain-of-Attributes design makes frozen VLMs more interpretable and more extensible as product vocabularies evolve. Importantly, the official GitHub repository is real and substantive rather than a placeholder, which makes this paper especially actionable.",
+          "key_metrics": "The paper reports an average 26.3% METEOR gain over zero-shot captioning and shows consistent gains across multiple VLM families and prompting paradigms. It also includes analyses on top-K retrieval, ICL exemplars, product-aware cropping, ProductKB quality/scale, and generalization beyond FashionGen, suggesting the improvement is robust rather than benchmark-specific."
+        }
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 86,
+        "rationale_zh": "和电商商品理解的相关性非常强，而且方法足够干净：不微调大模型，而是用检索和属性链推理显著提高细粒度 caption 质量。官方代码也确认为真实可用，因此价值很高。",
+        "rationale_en": "This paper is highly aligned with e-commerce product understanding and offers a clean training-free design that materially improves fine-grained caption quality through retrieval and attribute reasoning. The official code is also genuinely usable."
+      },
+      "reproduce": {
+        "status": "official_verified",
+        "path": null,
+        "code_checked": true,
+        "notes": "Verified that https://github.com/vl2g/RACoA is a substantive public repository containing ProductKB construction, retrieval, stage-1 attribute prediction, and stage-2 caption generation code."
+      },
+      "figure_steps": [
+        "Build a ProductKB with structured fashion attribute tables",
+        "Retrieve visually similar catalog items for the query product image",
+        "Predict query-specific attribute values through a chain of attributes",
+        "Generate the final caption with grounded attributes and retrieved exemplars"
+      ],
+      "exp_cards": [
+        [
+          "METEOR gain",
+          "+26.3%"
+        ],
+        [
+          "Pipeline",
+          "Retrieve → CoA → caption"
+        ],
+        [
+          "Code status",
+          "Official repo verified"
+        ]
+      ]
+    },
+    {
+      "id": "2609.13986",
+      "title": "A Low-Latency Interactive System for Real-Time Video Understanding Based on VLMs",
+      "authors": [
+        "Punan Dai",
+        "Jun Xu",
+        "Bingcong Lu",
+        "Zhengxue Cheng",
+        "Hongwei Hu",
+        "Ronghua Wu",
+        "Li Song"
+      ],
+      "affiliations": [],
+      "source": "arXiv / cs.MM",
+      "published": "2026-09-12",
+      "tags": [
+        "实时视频理解",
+        "VLM",
+        "流式系统",
+        "直播巡检",
+        "内容理解"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13986",
+        "pdf": "https://arxiv.org/pdf/2609.13986.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "论文不是再提一个新 VLM，而是设计了一个统一的 edge-cloud 实时视频理解系统。客户端可以是手机、眼镜、PC 或 pseudo-replay source，服务端统一负责 ASR/TTS、session orchestration、backend adaptation、response delivery 和 archive-backed measurement，再接入六类代表性的 video VLM backend 做实时对话。它的亮点在于把‘模型能力’和‘系统时延’一起测清楚，回答了实时视频理解到底能不能上线。",
+          "story": "很多视频 VLM 论文强调离线能力和 benchmark 分数，但内容生态真正关心的是：面对直播、摄像头、佩戴设备流媒体，系统能不能在 1 秒级给出第一句可用回答。作者因此搭了完整的 edge-cloud 交互栈，把媒体传输、ASR/TTS、后端切换和用户可感知时延一起评估，而不是只报一个模型推理时间。这样就把‘视频理解模型’拉回到真实交互系统的语境里。",
+          "innovation": "方法创新不算特别激进，更多是系统创新：把多种实时视频 VLM backend 放进统一框架，并在 WebRTC、不同客户端和后端适配成本上做对照分析。对于直播巡检、实时内容审核辅助、达人直播 copilot 等场景，它的工程参考价值很高，因此分数接近复现阈值。",
+          "key_metrics": "论文报告在合适 backend + WebRTC 路径下，到首个 VLM 文本约 0.9 到 1.0 秒，到首个非静音 TTS 音频约 1.3 到 1.5 秒。这个量级已经进入直播和实时问答可用区间，并揭示了 backend adaptation 与 interaction behavior 的明显差异。"
+        },
+        "en": {
+          "method_overview": "Instead of proposing a new VLM, this paper designs a unified edge-cloud system for real-time video understanding. Clients can be phones, smart glasses, PCs, or pseudo-replay sources, while the server handles ASR/TTS, session orchestration, backend adaptation, response delivery, and archive-backed measurement, then connects to six representative video VLM backends. The key contribution is to evaluate model capability and end-to-end latency together.",
+          "story": "Many video VLM papers emphasize offline capability and benchmark scores, but content systems care about whether the stack can deliver the first useful answer within about one second on a real stream. The authors therefore build the full interaction stack and evaluate media transport, ASR/TTS, backend switching, and user-perceived latency together, instead of reporting only model runtime. That reframes video understanding as an interactive systems problem.",
+          "innovation": "The novelty is more systems-oriented than model-oriented: multiple real-time video VLM backends are compared inside one unified framework, with attention to WebRTC transport and backend adaptation cost. This makes the paper highly relevant for live-stream inspection, creator copilots, and real-time content assistance even if the core model novelty is modest.",
+          "key_metrics": "With a suitable backend and WebRTC transport, the system reaches about 0.9–1.0 s to first VLM text and 1.3–1.5 s to first non-silent TTS audio. That puts it close to a genuinely usable range for live and interactive video understanding."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 79,
+        "rationale_zh": "这篇不是最强方法创新，但对直播和实时内容理解的工程可行性非常重要。分数略低于复现阈值，主要因为论文更偏系统评测与集成，而不是一个可直接抽象成独立新模型的核心算法。",
+        "rationale_en": "The paper is more about deployable systems than a sharply new algorithm, which keeps it just below the reproduction threshold. Still, its engineering relevance to live content understanding is high."
+      },
+      "reproduce": {
+        "status": "below_threshold",
+        "path": null,
+        "code_checked": false,
+        "notes": "Scored below the implementation threshold of 80."
+      },
+      "figure_steps": [
+        "Stream video and speech from clients such as phone, glasses or PC",
+        "Run server-side ASR, orchestration and backend adaptation for video VLMs",
+        "Return real-time text or TTS responses through low-latency media transport",
+        "Measure first-token, first-audio and interaction behavior end to end"
+      ],
+      "exp_cards": [
+        [
+          "First VLM text",
+          "0.9~1.0 s"
+        ],
+        [
+          "First TTS audio",
+          "1.3~1.5 s"
+        ],
+        [
+          "System type",
+          "Edge-cloud"
+        ]
+      ]
+    },
+    {
+      "id": "2609.13993",
+      "title": "P3Rec: Distilling Prior--Posterior Preference Reasoning for LLM-based Recommendation",
+      "authors": [
+        "Jinfei Chen",
+        "Weihai Lu",
+        "Jiawei Cheng"
+      ],
+      "affiliations": [
+        "Chongqing University of Technology",
+        "Peking University",
+        "Chongqing University"
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-12",
+      "tags": [
+        "推荐系统",
+        "LLM 蒸馏",
+        "偏好推理",
+        "用户建模",
+        "电商推荐"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13993",
+        "pdf": "https://arxiv.org/pdf/2609.13993.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "P3Rec 试图解决 LLM-as-Enhancer 推荐方法只从单一视角蒸馏偏好知识的问题。它同时提炼 prior preference（稳定长期兴趣）和 posterior preference（面向当前目标的细粒度兴趣），再配合 item-centric preference 表征，把三种偏好信息逐步内化到轻量推荐器里。最后再用 interest entropy 对用户表示做自适应校准，避免综合偏好在检索阶段方向不清。整体上，它是把‘长期兴趣 + 当前目标相关兴趣’两种 reasoning 同时蒸馏下来。",
+          "story": "只看 prior，会懂用户大方向但抓不住当前决策；只看 posterior，又会过度依赖目标线索，泛化变差。P3Rec 认为推荐模型真正需要的是把两类 reasoning 结合起来，再根据历史兴趣分散度决定当前应不应该更聚焦。于是它先分别做 prior/posterior reasoning，再通过 preference absorption 和 posterior-guided distillation 融到高效推荐器里。",
+          "innovation": "优点在于它不是简单蒸馏一个 LLM 打分，而是把多视角 preference reasoning 的结构显式展开，并引入 interest entropy 做检索适配。这个设计对电商推荐、搜索推荐都有启发，但实验冲击力和工业真实性略逊于 LazFormer，因此分数落在 70+ 区间。",
+          "key_metrics": "论文在多个公开推荐数据集上验证有效，摘要指出其在多个基线之上取得更优结果，并分析了 generalization 与 computational complexity。由于目前公开信息以 arXiv 摘要为主，能确认它的方法在多数据集上稳定有效，但缺少更强的工业在线指标。"
+        },
+        "en": {
+          "method_overview": "P3Rec addresses a limitation of existing LLM-as-enhancer recommendation methods: they usually distill preference knowledge from only one perspective. P3Rec jointly extracts prior preference reasoning for stable long-term interests and posterior preference reasoning for target-conditioned fine-grained interests, then combines them with item-centric preference representations and adaptive interest-entropy calibration before retrieval optimization.",
+          "story": "Prior-only reasoning understands broad taste but may miss the current decision, while posterior-only reasoning can overfit target clues and hurt robustness. P3Rec argues that efficient recommendation needs both, plus a way to decide when the user representation should be more focused. It therefore distills prior and posterior reasoning separately, internalizes them progressively, and calibrates the final representation with interest entropy.",
+          "innovation": "The paper is stronger than a simple teacher-score distillation approach because it explicitly decomposes multi-perspective preference reasoning and adds entropy-based retrieval adaptation. The design is relevant to e-commerce recommendation, although the empirical punch is not as strong as the most industrial papers in today’s shortlist.",
+          "key_metrics": "The paper reports consistent gains over multiple baselines on several public recommendation datasets and includes analyses on generalization and computational complexity. Based on currently accessible public evidence, it looks solid but lacks the strongest industrial online metrics seen in the top-scoring papers."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 74,
+        "rationale_zh": "方法本身不错，也和电商推荐相关，但相比 LazFormer 和 GESE，它更偏学术上的偏好蒸馏增强，工业落地证据没那么强，因此分数中上但未进复现。",
+        "rationale_en": "The method is meaningful and relevant to e-commerce recommendation, but compared with LazFormer and GESE it is more academic preference distillation than clearly validated industrial redesign, so it remains below the implementation cutoff."
+      },
+      "reproduce": {
+        "status": "below_threshold",
+        "path": null,
+        "code_checked": false,
+        "notes": "Scored below the implementation threshold of 80."
+      },
+      "figure_steps": [
+        "Reason about prior preference from long-term user behavior",
+        "Reason about posterior preference conditioned on the target item",
+        "Absorb both signals into a lightweight recommender representation",
+        "Calibrate retrieval with interest entropy before contrastive optimization"
+      ],
+      "exp_cards": [
+        [
+          "Reasoning views",
+          "Prior + posterior"
+        ],
+        [
+          "Calibration",
+          "Interest entropy"
+        ],
+        [
+          "Task fit",
+          "LLM recommendation"
+        ]
+      ]
+    },
+    {
+      "id": "2609.13173",
+      "title": "Read Between the Stickers: Sentiment-Prior Reasoning with Learnable Verbalized Rules for Multimodal Chat Analysis",
+      "authors": [
+        "Zixiang Ni",
+        "Yifei Xu",
+        "Haowen Yang",
+        "Yang Liu",
+        "Ziyang Peng",
+        "Wenlong Li",
+        "Tingting Xin",
+        "Yan Liang",
+        "Yancheng Chen",
+        "Bin Chong",
+        "Yuan Rao"
+      ],
+      "affiliations": [
+        "Xi’an Jiaotong University",
+        "Xi’an University of Electronic Science and Technology",
+        "Peking University",
+        "Zhejiang University",
+        "Chinese Academy of Sciences"
+      ],
+      "source": "arXiv / cs.HC",
+      "published": "2026-07-27",
+      "tags": [
+        "多模态聊天分析",
+        "内容治理",
+        "情感识别",
+        "意图识别",
+        "sticker"
+      ],
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13173",
+        "pdf": "https://arxiv.org/pdf/2609.13173.pdf"
+      },
+      "summary": {
+        "zh": {
+          "method_overview": "ExCoVer 关注多模态聊天里 text + sticker 的联合理解，核心挑战是情感识别和意图识别之间会相互干扰。作者先用 Sentiment-Prior Chain-of-Thought 识别跨模态情感冲突，并以 dominant sentiment 缩小候选 intent 空间；再通过 Verbalized Rules Learning 学习可解释的区分规则，专门处理容易混淆的意图类别。论文的亮点是让多模态聊天分析从纯分类走向带显式推理链的判别。",
+          "story": "在社交平台治理和客服场景里，贴纸往往会改变文本语义，但传统多任务模型通常只把情感和意图两个头一起训，却很少显式处理二者互相干扰。ExCoVer 的做法是先问清楚情感到底是什么，再基于这个先验去判断意图，并把区分不同意图的 verbalized rules 显式学出来。于是模型不只是输出标签，还能更清楚地说明为什么这么判。",
+          "innovation": "论文把 sentiment-prior reasoning 与可学习 verbalized rules 结合起来，这一点比较新，也很契合治理场景对可解释性的需求。它和电商内容生态的关系主要体现在 IM 内容分析、评论/私信治理和多模态语义理解，因此相关性中等偏上。",
+          "key_metrics": "论文在 CSMSA 和 MSAIRS 数据集上达到 SOTA，并报告显式 reasoning chain 带来的可解释性提升。当前公开摘要没有给出完整数值表，但能确认其在多模态 sentiment + intent 联合识别上优于现有多任务方法。"
+        },
+        "en": {
+          "method_overview": "ExCoVer studies multimodal chat understanding where text and stickers must be interpreted jointly, and the core difficulty is interference between sentiment recognition and intent recognition. It first uses a Sentiment-Prior Chain-of-Thought to detect cross-modal sentiment conflict and narrow the candidate intent space, then learns explicit verbalized rules to distinguish confusing intents. The main contribution is to move multimodal chat analysis from pure classification toward explicit reasoning chains.",
+          "story": "In social-platform governance and service scenarios, stickers often reshape textual meaning, but conventional multi-task models usually predict sentiment and intent together without explicitly handling their interference. ExCoVer first clarifies sentiment, then reasons about intent under that prior, and learns verbalized discrimination rules for confusing classes. The system therefore outputs not only a label but a clearer path for why it made the decision.",
+          "innovation": "The combination of sentiment-prior reasoning and learnable verbalized rules is novel and well aligned with explainability requirements in governance settings. Its relevance to e-commerce comes through IM moderation, comment/private-message analysis, and multimodal semantic understanding rather than direct recommendation or retrieval.",
+          "key_metrics": "The paper reports state-of-the-art performance on CSMSA and MSAIRS while providing explicit reasoning chains. The public abstract does not expose the full numeric table, but it clearly establishes improvements over existing multi-task multimodal baselines."
+        }
+      },
+      "score": {
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 72,
+        "rationale_zh": "这篇对多模态聊天治理和 IM 内容理解有参考价值，尤其是显式规则学习这一点很适合治理解释需求。但它离电商内容生态主链路略远，因此排在补充关注名单。",
+        "rationale_en": "The paper is useful for multimodal chat governance and explainable IM analysis, but it is one step removed from the main e-commerce content and creator-governance pipeline, so it stays in the supplementary shortlist."
+      },
+      "reproduce": {
+        "status": "below_threshold",
+        "path": null,
+        "code_checked": false,
+        "notes": "Scored below the implementation threshold of 80."
+      },
+      "figure_steps": [
+        "Read the text utterance together with its sticker semantics",
+        "Infer the dominant sentiment and detect cross-modal conflict",
+        "Apply learnable verbalized rules to narrow confusing intents",
+        "Output final sentiment and intent with an explicit reasoning chain"
+      ],
+      "exp_cards": [
+        [
+          "Datasets",
+          "CSMSA / MSAIRS"
+        ],
+        [
+          "Main gain",
+          "SOTA + explainability"
+        ],
+        [
+          "Governance fit",
+          "Multimodal chat"
+        ]
+      ]
+    }
+  ]
+}
