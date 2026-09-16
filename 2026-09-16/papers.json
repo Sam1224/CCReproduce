@@ -1,0 +1,349 @@
+[
+  {
+    "id": "2609.16625",
+    "title": "AURA: Agentic Diagnosis and Refinement for Production Recommender Systems at Scale",
+    "authors": ["SungGeun Kim", "Abhinav Narain", "Daniel Nemirovsky"],
+    "affiliations": ["Not listed on the arXiv abstract page"],
+    "source": "arXiv / GenAIECommerce@RecSys 2026",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.16625",
+      "html": "https://arxiv.org/html/2609.16625v1"
+    },
+    "tags": ["Recommender Systems", "Agents", "Diagnosis", "E-commerce Transfer", "LLM Ops"],
+    "score": {
+      "total": 79,
+      "innovation": 26,
+      "metrics": 11,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 18,
+      "rationale_zh": "创新性(26/30)：把大模型从‘写推荐策略’前移到‘规模化诊断推荐失败模式+提出代码级改进’，系统完整；实验指标(11/15)：给出生产 rubric 提升，但不是标准公开 benchmark；实验质量(12/15)：有双平台案例、架构/提示词归因和成本拆解；效率(8/10)：多模型分层推理把成本压到百美元级；泛化(4/5)：论文明确映射到电商推荐场景；相关性(18/25)：与电商内容分发、推荐治理高度相关，但更偏推荐平台诊断而非内容理解本身。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "AURA 把生产推荐系统优化拆成一条 agentic 闭环：先从海量 session 日志里自动筛出 BAD cases，再让诊断 agent 总结失败模式，最后结合代码、数据与训练流程提出可落地的代码级修复建议。系统核心不是再做一个排序模型，而是把原本靠专家手工分析的问题归因流程自动化。它强调质化诊断而非单点 CTR 指标，用场景、用户意图、推荐错误类型等更细颗粒的证据推动迭代。多模型编排把高吞吐分类交给便宜模型，把复杂解释交给强模型，兼顾成本与诊断质量。",
+        "story": "仅靠聚合指标，工程团队很难知道推荐为什么失败，也很难快速把失败样例映射回代码和训练配置；因此 AURA 先做 session 级失败判别与案例聚合，再用专门诊断 agent 生成模式化结论，最后接上 code-aware refinement agent 给出修复方向。",
+        "innovation": "亮点在于把‘推荐诊断’而非‘推荐建模’作为第一目标，并把诊断结果继续连接到代码级 refinement；另外，论文把架构收益与 prompt 调整收益分开归因，这对线上 agent 系统非常重要。局限在于评测更偏内部 rubric，而非公开排行榜，因此论文更像高价值工业系统 paper。",
+        "key_metrics": "Platform A 诊断 rubric 从 15/25 提升到 23/25，Platform B 从 17/25 提升到 24/25；AURA 对 96,801 个 Platform A sessions 的诊断成本约 321 美元，对 101,594 个 Platform B sessions 的成本约 250 美元。"
+      },
+      "en": {
+        "method_overview": "AURA builds an agentic loop for production recommender improvement: it mines BAD sessions from large-scale engagement logs, synthesizes failure patterns with diagnosis agents, and then proposes code-aware refinements grounded in the recommender's code, data, and training pipeline. The contribution is not a new ranker, but an automated workflow for qualitative diagnosis at scale. Instead of relying only on aggregate CTR-style metrics, it reasons over concrete failure cases, user intent, and error types. A multi-model orchestration strategy keeps the system cost-efficient by reserving stronger models for interpretation and cheaper models for high-volume judging.",
+        "story": "Aggregate metrics tell engineers that the system underperforms, but not why it fails or how to map those failures back to code and pipeline choices. AURA therefore starts with session-level failure identification, summarizes recurring patterns with diagnosis agents, and then connects those patterns to code-aware refinement suggestions.",
+        "innovation": "The main novelty is reframing recommender improvement as an agentic diagnosis-and-refinement pipeline rather than a pure model-design problem. The paper also explicitly separates architecture gains from prompt-edit gains, which is unusually valuable for production LLM systems. Its limitation is that evaluation is mostly internal rubric-based rather than benchmark-based, so it reads as a strong industrial systems paper more than a benchmark paper.",
+        "key_metrics": "Stage-level diagnostic rubric improves from 15/25 to 23/25 on Platform A and from 17/25 to 24/25 on Platform B. End-to-end diagnosis cost is about $321 for 96,801 Platform A sessions and $250 for 101,594 Platform B sessions."
+      }
+    },
+    "figure": {
+      "input": ["User sessions", "Engagement logs", "Recommender code/data context"],
+      "steps": [
+        {"title": "Session Judge", "detail": "Detect BAD sessions and collect failure evidence"},
+        {"title": "Diagnosis Agent", "detail": "Summarize recurring recommendation failure modes"},
+        {"title": "Code-aware Refinement", "detail": "Map failures to pipeline/code changes"}
+      ],
+      "output": ["Refinement proposals", "Human-reviewed fixes", "Higher-quality recommendations"]
+    },
+    "experiment_highlights": [
+      {"label": "Platform A rubric", "value": "15/25 → 23/25", "note": "stage-level diagnostic quality"},
+      {"label": "Platform B rubric", "value": "17/25 → 24/25", "note": "stage-level diagnostic quality"},
+      {"label": "Diagnosis cost", "value": "$321 / $250", "note": "A/B platforms over ~100k sessions"}
+    ],
+    "code": {
+      "status": "no_public_code_found",
+      "official_url": null,
+      "repo_url": null,
+      "reproduce_path": null,
+      "note_zh": "arXiv 摘要页未给出可验证的公开代码仓库。"
+    }
+  },
+  {
+    "id": "2609.16005",
+    "title": "Automated Comment Moderation Enhances Social Media Advertising Performance",
+    "authors": ["Jiwoon Park", "Julian De Freitas"],
+    "affiliations": ["Harvard Business School"],
+    "source": "arXiv / Harvard Business School Working Paper 27-011",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.16005",
+      "working_paper": "https://www.hbs.edu/faculty/Pages/item.aspx?num=69254"
+    },
+    "tags": ["Comment Moderation", "Ads", "Governance", "UGC", "Causal Study"],
+    "score": {
+      "total": 76,
+      "innovation": 18,
+      "metrics": 13,
+      "quality": 14,
+      "efficiency": 4,
+      "generalization": 4,
+      "relevance": 23,
+      "rationale_zh": "创新性(18/30)：方法上不是新模型，而是把自动评论治理放到广告因果效果里做系统验证；实验指标(13/15)：两组真实场域实验指标非常亮眼；实验质量(14/15)：包含 A/B、机制实验与边界条件；效率(4/10)：不是效率型方法论文；泛化(4/5)：跨平台、跨实验设计验证；相关性(23/25)：和电商达人内容生态、品牌安全、评论治理高度相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "这篇论文关注广告评论区治理，而不是传统内容审核 benchmark。作者把 harmful comments 的自动隐藏和自动回复作为治理干预，评估它是否真的提升广告效果。全篇由两组大规模 field experiments 加四组在线实验组成，既看真实业务指标，也分析为什么 moderation 生效、在什么透明度条件下会失效。对于电商场景，它直接对应商家投流、达人带货评论区治理和品牌安全。",
+        "story": "社交广告下方的评论既能增强真实性，也可能因为 spam、辱骂、负面 UGC 拉低转化；因此作者设计自动化评论治理干预，把 harmful comments 隐藏/回复，再看广告点击、注册、ROAS 与购买意愿是否改善，以及平台透明展示隐藏评论时效果会不会逆转。",
+        "innovation": "创新点不在模型结构，而在把‘评论治理’放到因果验证框架中系统研究：论文把治理收益、品牌信任、平台透明度边界条件都量化出来，对平台规则设计很有启发。它非常适合给电商治理团队提供策略依据，但不属于典型可复现的算法 paper。",
+        "key_metrics": "Study 1 中可见负面评论占比从 57.37% 降到 43.06%，正面评论从 8.98% 升到 19.36%；点击从 1,522,246 提升到 1,885,415，注册完成数从 25,469 提升到 36,564，注册转化率从 1.67% 升到 1.94%。Study 2 中 ROAS 从 0.459 升到 0.678。"
+      },
+      "en": {
+        "method_overview": "This paper studies comment governance rather than a standard moderation benchmark. It evaluates whether automatically hiding harmful comments and replying to users actually improves ad performance. The paper combines two large-scale field experiments with four online studies, covering both real business metrics and the mechanisms/boundary conditions behind the effect. For e-commerce, the findings map directly to merchant ads, creator campaigns, comment-area governance, and brand safety.",
+        "story": "Comments under social ads can add authenticity, but spam, hate, and negative UGC can also reduce conversion. The paper therefore treats automated moderation as an intervention: hide harmful comments, manage replies, and test whether clicks, registrations, ROAS, and purchase intent improve—and whether transparency about hidden comments changes the outcome.",
+        "innovation": "The novelty is not a new model architecture but a careful causal design for evaluating comment governance. It quantifies not only the upside of moderation but also the role of brand trust and platform transparency. That makes it strategically valuable for marketplace and creator-governance teams, even though it is not a typical algorithmic systems paper.",
+        "key_metrics": "In Study 1, visible negative comments fall from 57.37% to 43.06% while positive comments rise from 8.98% to 19.36%; clicks increase from 1,522,246 to 1,885,415, completed registrations from 25,469 to 36,564, and registration completion rate from 1.67% to 1.94%. In Study 2, ROAS improves from 0.459 to 0.678."
+      }
+    },
+    "figure": {
+      "input": ["Ad post", "User comments", "Platform moderation policy"],
+      "steps": [
+        {"title": "AI Moderation", "detail": "Hide harmful comments and auto-handle replies"},
+        {"title": "Comment Environment Shift", "detail": "Reduce negative visible comments, increase positive ambience"},
+        {"title": "Ad Outcome Evaluation", "detail": "Measure conversion, ROAS, and purchase intent"}
+      ],
+      "output": ["Higher conversion", "Better ROAS", "Governance boundary conditions"]
+    },
+    "experiment_highlights": [
+      {"label": "Registration rate", "value": "1.67% → 1.94%", "note": "Study 1"},
+      {"label": "Clicks", "value": "1.52M → 1.89M", "note": "Study 1"},
+      {"label": "ROAS", "value": "0.459 → 0.678", "note": "Study 2"}
+    ],
+    "code": {
+      "status": "no_public_code_found",
+      "official_url": null,
+      "repo_url": null,
+      "reproduce_path": null,
+      "note_zh": "公开信息中未看到可直接运行的算法代码，且论文以因果实验与平台治理结论为主。"
+    }
+  },
+  {
+    "id": "2609.16304",
+    "title": "Evaluating Brand Retrieval and Ranking in Large Language Model Recommendations",
+    "authors": ["Edward Malthouse", "Kun-Yu Lee", "Jing Yang", "Sanchary Pal", "Xueyan Feng"],
+    "affiliations": ["Northwestern University", "Boston University"],
+    "source": "arXiv",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.16304",
+      "code": "https://anonymous.4open.science/r/LLM-Monitor-CF9F"
+    },
+    "tags": ["LLM Recommendation", "Brand Fairness", "Retrieval Audit", "E-commerce", "Evaluation"],
+    "score": {
+      "total": 71,
+      "innovation": 20,
+      "metrics": 8,
+      "quality": 11,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 21,
+      "rationale_zh": "创新性(20/30)：把 LLM 商品推荐建模为随机 retrieval-and-ranking 过程，并提出 BRP@k/MRR@k 审计框架；指标(8/15)：偏分析框架而非 SOTA 指标；实验质量(11/15)：跨 6 个商业 LLM、5 个品类、重复采样设计扎实；效率(7/10)：实验流程轻量；泛化(4/5)：方法可迁移到多品类品牌审计；相关性(21/25)：非常适合电商品牌曝光、公平性与推荐生态评估。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "论文研究的是‘LLM 给商品/品牌做开放式推荐时，品牌到底有没有被稳定召回与排前’。作者提出两个核心指标：BRP@k 衡量一个品牌在重复采样中被推荐出来的概率，MRR@k 衡量它通常排得多靠前。然后在 6 个商业 LLM、5 个产品类别上做大量重复请求，分析哪些品牌被漏召回、哪些品牌虽然本来不出现，但在加入更明确定位线索后又能被找回。",
+        "story": "传统推荐评估默认候选集固定，但 LLM 推荐不是固定候选集、同一句 prompt 多次请求也会给出不同品牌列表；因此作者先定义独立于 LLM 输出的竞争品牌集合，再通过 repeated sampling 估计品牌在 LLM 中的‘被召回概率’和‘排名显著性’，从而真正审计 LLM 推荐生态。",
+        "innovation": "最大的价值是把开放式 LLM 推荐从‘看一条答案像不像’升级为‘看一个品牌在随机生成过程中的长期曝光与排名分布’。这对电商平台品牌治理、商家公平曝光和大模型推荐审计都很实用。缺点是论文更偏分析/审计框架，算法创新和实验 benchmark 型指标较少。",
+        "key_metrics": "作者对 6 个商用 LLM 和 5 个品类做 category-only 与 needs-based 双阶段实验；category-only 阶段共生成 1,200 份推荐列表（5 类 × 6 模型 × 40 次），发现大量 established brands 完全不出现；论文用 BRP@5 与 MRR@5 分析品牌曝光和排序。"
+      },
+      "en": {
+        "method_overview": "The paper asks a simple but important question: when LLMs recommend products or brands in an open-ended way, which brands are actually retrieved consistently and ranked prominently? It introduces BRP@k to measure a brand's probability of appearing across repeated samples, and MRR@k to measure how highly it tends to be ranked. The authors then evaluate six commercial LLMs across five product categories, using repeated prompting to study omissions and conditional retrievability.",
+        "story": "Standard recommender evaluation assumes a fixed candidate set, but LLM recommendations do not: the same prompt can return different brand sets and orders across runs. The paper therefore defines the competitive set independently of the model outputs, and estimates a brand's retrieval prevalence and ranking prominence through repeated sampling.",
+        "innovation": "The core contribution is turning open-ended LLM recommendation into a stochastic retrieval-and-ranking audit problem rather than a one-shot generation problem. That is highly practical for e-commerce brand governance, merchant visibility auditing, and fairness analysis. The downside is that it is primarily an evaluation framework rather than a new algorithmic method.",
+        "key_metrics": "The paper evaluates six commercial LLMs across five categories. In the category-only setting it generates 1,200 recommendation lists (5 categories × 6 models × 40 repeats), and uses BRP@5 and MRR@5 to show that many established brands are omitted while prominence correlates more with search interest and online conversation than with conventional popularity."
+      }
+    },
+    "figure": {
+      "input": ["Product category prompt", "Needs-based prompt", "Independent brand set"],
+      "steps": [
+        {"title": "Repeated Sampling", "detail": "Query each LLM many times under identical settings"},
+        {"title": "Brand Audit", "detail": "Compute BRP@k and MRR@k over returned lists"},
+        {"title": "Diagnostic Probes", "detail": "Test whether omitted brands are conditionally retrievable"}
+      ],
+      "output": ["Brand omission map", "Ranking prominence", "Fairness/governance signals"]
+    },
+    "experiment_highlights": [
+      {"label": "Commercial LLMs", "value": "6", "note": "GPT / Gemini / Claude families"},
+      {"label": "Product categories", "value": "5", "note": "e.g. drills, cat food, coffee makers"},
+      {"label": "Category-only lists", "value": "1,200", "note": "5 × 6 × 40 repeated calls"}
+    ],
+    "code": {
+      "status": "official_repo_empty",
+      "official_url": "https://anonymous.4open.science/r/LLM-Monitor-CF9F",
+      "repo_url": null,
+      "reproduce_path": null,
+      "note_zh": "论文给出的匿名仓库当前为空仓库，未见可运行代码。"
+    }
+  },
+  {
+    "id": "2609.17269",
+    "title": "Semantic-Spatial Agreement Verification for Mitigating Object Hallucination in Multimodal Large Language Models",
+    "authors": ["Ziheng Ren", "Qian Gao", "Jun Fan", "Guohui Ding", "Zhenyu Yang", "Yuteng Xiao"],
+    "affiliations": ["Qilu University of Technology (Shandong Academy of Sciences)", "China Telecom Digital Intelligence Technology Co., Ltd.", "Shenyang Aerospace University"],
+    "source": "arXiv",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.17269",
+      "code": "https://github.com/zihengren/SSAV"
+    },
+    "tags": ["MLLM", "Hallucination", "Verification", "Vision Governance", "Detection"],
+    "score": {
+      "total": 78,
+      "innovation": 24,
+      "metrics": 12,
+      "quality": 13,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 17,
+      "rationale_zh": "创新性(24/30)：把 object hallucination 校验拆成语义一致性与空间一致性两支路，并设计 QIRV；实验指标(12/15)：POPE 与 CHAIR 指标提升明显；实验质量(13/15)：多协议、多模型验证较完整；效率(8/10)：训练自由、推理外插；泛化(4/5)：适用于多种 MLLM 验证场景；相关性(17/25)：对商品图理解、违规审核辅助很有价值，但与电商内容生态属于中强相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "SSAV 是一个 training-free 的 MLLM 幻觉校验框架。它先对模型生成中的 object claims 做多种语义等价 prompt 改写，观察模型是否稳定认为这个对象存在；再借助冻结的 open-vocabulary detector 检查这些查询是否 repeatedly 对齐到同一图像区域。最后，方法把语义支持分数与空间一致性分数做几何平均，只要任一支路证据不足，就把 claim 的置信度压低。",
+        "story": "MLLM 会‘看见并不存在的东西’，单靠一次问答的词面结果不可靠；因此作者提出同时验证两件事：这个对象在不同问法下是否都成立，以及它是否稳定落到同一块区域。只有语义与空间证据同时一致，claim 才可信。",
+        "innovation": "论文最有价值的点是把 hallucination verification 从纯文本后处理，扩展为带视觉 grounding 的外部证据校验，而且无需重新训练原始 MLLM。对于电商商品图、达人内容识别、违规审核辅助，这类外插式校验非常实用。官方 GitHub 仓库已存在且包含可运行代码，因此无需重复复现。",
+        "key_metrics": "在 LLaVA-1.5-7B 上，POPE Popular 平均准确率提升 1.81 个点，POPE Adversarial 提升 3.17 个点；CHAIRs 从 49.40% 降到 32.80%，CHAIRi 从 13.82% 降到 8.22%。"
+      },
+      "en": {
+        "method_overview": "SSAV is a training-free verification framework for MLLM hallucinations. It rewrites object claims into multiple semantically equivalent prompts to test whether the model consistently supports the same object, then uses a frozen open-vocabulary detector to check whether those queries repeatedly localize to the same image region. The final score is the geometric mean of semantic support and spatial consistency, so weak evidence on either branch lowers confidence.",
+        "story": "MLLMs can describe objects that are not actually present, and a single textual response is not enough to verify them. SSAV therefore asks two questions at once: does the claim remain stable under paraphrased queries, and does it ground to the same region repeatedly? Only claims supported by both semantic and spatial evidence are trusted.",
+        "innovation": "The strongest idea is to move hallucination mitigation beyond text-only post-processing and into visually grounded external verification, without retraining the base MLLM. This is highly relevant to e-commerce image understanding, creator-content inspection, and moderation assistance. The official GitHub repository is already non-empty and includes implementation guidance, so a separate reproduction is unnecessary.",
+        "key_metrics": "On LLaVA-1.5-7B, average accuracy improves by 1.81 points on POPE Popular and 3.17 points on POPE Adversarial; CHAIRs drops from 49.40% to 32.80%, and CHAIRi from 13.82% to 8.22%."
+      }
+    },
+    "figure": {
+      "input": ["Image", "Generated object claim", "Paraphrased verification prompts"],
+      "steps": [
+        {"title": "Semantic Verification", "detail": "Check claim stability across semantically equivalent prompts"},
+        {"title": "QIRV Spatial Verification", "detail": "Verify persistence and overlap of grounded regions"},
+        {"title": "Evidence Fusion", "detail": "Combine semantic and spatial scores by geometric mean"}
+      ],
+      "output": ["Verified claim score", "Lower hallucination rate", "Interpretable visual evidence"]
+    },
+    "experiment_highlights": [
+      {"label": "POPE Popular", "value": "+1.81 pts", "note": "average accuracy gain"},
+      {"label": "POPE Adversarial", "value": "+3.17 pts", "note": "average accuracy gain"},
+      {"label": "CHAIRs", "value": "49.40% → 32.80%", "note": "hallucination reduction"}
+    ],
+    "code": {
+      "status": "official_code_verified",
+      "official_url": "https://github.com/zihengren/SSAV",
+      "repo_url": "https://github.com/zihengren/SSAV",
+      "reproduce_path": null,
+      "note_zh": "已核实官方 GitHub 仓库非空，包含 README、推理脚本与评测目录。"
+    }
+  },
+  {
+    "id": "2609.16847",
+    "title": "RegRet: Enhancing Region-Level Retrieval in Large Multimodal Models",
+    "authors": ["Xun Liang", "Honghui Yang", "Weihang Pan", "Ruisi Zhao", "Boyuan Pan", "Yao Hu", "Wenxiao Wang", "Binbin Lin", "Deng Cai"],
+    "affiliations": ["Zhejiang University", "Xiaohongshu Inc."],
+    "source": "arXiv / ECCV 2026",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.16847"
+    },
+    "tags": ["Region Retrieval", "MLLM", "E-commerce Search", "RAG", "Multimodal Retrieval"],
+    "score": {
+      "total": 85,
+      "innovation": 26,
+      "metrics": 13,
+      "quality": 14,
+      "efficiency": 7,
+      "generalization": 4,
+      "relevance": 21,
+      "rationale_zh": "创新性(26/30)：Region-Aware Encoder + 三阶段训练同时解决 ROI 表达与背景上下文平衡问题；实验指标(13/15)：REGMB 与公共 benchmark 上增益显著；实验质量(14/15)：新 benchmark、零样本/微调与全局检索兼容性分析都比较完整；效率(7/10)：不是最轻量，但兼顾区域与全局性能；泛化(4/5)：覆盖多种 retrieval task；相关性(21/25)：直接服务电商局部搜索、同款/相似款检索、达人内容商品定位。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "RegRet 解决的是‘用户只圈出图片里一个局部区域时，模型怎么做高质量检索’。论文提出 Region-Aware Encoder，让 region token 从全图 context encoder 中按需提取背景信息，避免只看局部导致语义不够，也避免全图背景淹没 ROI。训练上采用三阶段：先用 localized captioning 让模型学会描述局部，再做纯文本对比学习增强细粒度语义，最后做 region-level contrastive learning 对齐区域、文本和候选区域。作者还构建了 REGMB benchmark，为 region retrieval 提供 225k 对比样本。",
+        "story": "现实中的电商和 RAG 检索经常不是‘整张图找相似’，而是‘只找图里的这块地毯/这只包/这件衣服’。现有大多数 LMM 检索模型更擅长全图级别表示，因此不是忽略 ROI，就是被背景干扰。RegRet 于是显式建模 ROI 与背景的平衡关系，并补上缺失的区域级训练/评测数据。",
+        "innovation": "这篇 paper 对电商最有价值的地方在于问题定义非常贴近真实业务：局部商品搜索、搭配查找、图中商品定位都依赖 ROI-aware retrieval。方法创新与 benchmark 创新同时存在，且论文没有提供可验证的公开代码，因此值得优先做 toy-but-runnable reproduction。",
+        "key_metrics": "零样本设置下，相比强基线平均在 REGMB 上提升 14.3%，在公开 benchmark 上提升 15.0%；用 REGMB 微调后，又分别比自身零样本提升 7.4% 和 7.8%。REGMB 一共包含 225k 对比对，其中训练 200k、测试 25k。"
+      },
+      "en": {
+        "method_overview": "RegRet tackles the case where retrieval should focus on a user-specified image region rather than the whole image. It introduces a Region-Aware Encoder that selectively pulls useful global context into the ROI representation, avoiding both overly local and overly background-dominated embeddings. Training follows three stages: localized captioning to build fine-grained regional understanding, pure-text contrastive learning to sharpen semantics, and region-level contrastive learning to align regions, text, and candidates. The paper also contributes REGMB, a 225k-pair benchmark for region-level multimodal retrieval.",
+        "story": "In real e-commerce search and multimodal RAG, users often want not 'find a similar image' but 'find a similar carpet / bag / garment in this region of the image'. Existing large multimodal retrieval models are mostly optimized for image-level representations, so they either under-use the ROI or get distracted by background context. RegRet explicitly models the trade-off between regional detail and global context, and backs it with dedicated region-level training/evaluation data.",
+        "innovation": "The business value is unusually direct: ROI-aware retrieval is exactly what powers local product search, visual matching, and product grounding in creator content. The work is innovative both methodologically and in benchmark construction. No verifiable public code was surfaced during inspection, so it is the best candidate for a toy-but-runnable reproduction.",
+        "key_metrics": "In zero-shot evaluation, RegRet exceeds the average performance of strong LMM baselines by 14.3% on REGMB and 15.0% on public benchmarks. After REGMB fine-tuning, it gains another 7.4% and 7.8% over its own zero-shot setting. REGMB contains 225k contrastive pairs, with 200k for training and 25k for testing."
+      }
+    },
+    "figure": {
+      "input": ["Full image", "ROI box", "Text / candidate regions"],
+      "steps": [
+        {"title": "Region-Aware Encoder", "detail": "Fuse ROI detail with selective global context"},
+        {"title": "Three-stage Training", "detail": "localized captioning → pure-text contrastive → regional contrastive"},
+        {"title": "Region Retrieval", "detail": "Match ROI to text or candidate regions"}
+      ],
+      "output": ["Better region embeddings", "Higher Recall@K", "Robust e-commerce local search"]
+    },
+    "experiment_highlights": [
+      {"label": "REGMB zero-shot", "value": "+14.3%", "note": "vs average LMM baselines"},
+      {"label": "Public benchmarks", "value": "+15.0%", "note": "zero-shot gain"},
+      {"label": "REGMB scale", "value": "225k pairs", "note": "200k train / 25k test"}
+    ],
+    "code": {
+      "status": "reproduced_here",
+      "official_url": null,
+      "repo_url": "https://github.com/Sam1224/CCReproduce/tree/aime/20260916-paper-patrol/2026-09-16/RegRet",
+      "reproduce_path": "2026-09-16/RegRet",
+      "note_zh": "未检索到可验证的公开代码，已在本仓库中补充 toy-but-runnable reproduction。"
+    }
+  },
+  {
+    "id": "2609.16858",
+    "title": "TecoPrompt: Temporal-Conservative Prompt Learning for Vision-Language Models",
+    "authors": ["Zeyi Shao", "Haowen Hua", "Jiaxin Zhang", "John See", "Zeyd Boukhers", "Cong Yang"],
+    "affiliations": ["Soochow University", "NVIDIA Shanghai", "Heriot-Watt University Malaysia", "Fraunhofer FIT"],
+    "source": "arXiv / ECCV 2026",
+    "published": "2026-09-16",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.16858",
+      "code": "https://github.com/haji-mimi/TecoPrompt"
+    },
+    "tags": ["Prompt Learning", "VLM", "Label Noise", "Data Quality", "Few-shot"],
+    "score": {
+      "total": 74,
+      "innovation": 23,
+      "metrics": 11,
+      "quality": 12,
+      "efficiency": 8,
+      "generalization": 4,
+      "relevance": 16,
+      "rationale_zh": "创新性(23/30)：把 OT 伪标签与时间稳定性窗口结合，缓解 prompt learning 在噪声标签下被污染；实验指标(11/15)：多个数据集在高噪声下收益明显；实验质量(12/15)：噪声设置与多数据集实验充分；效率(8/10)：只调 prompts，成本友好；泛化(4/5)：跨多数据集和 Food101N；相关性(16/25)：对电商标签体系、内容审核弱监督和数据清洗很有启发，但与业务场景是中等相关。"
+    },
+    "summary": {
+      "zh": {
+        "method_overview": "TecoPrompt 面向 few-shot prompt learning 最常见的问题——标签脏。方法先在 CLIP 语义空间中用 entropic OT 生成 globally consistent 的 pseudo-label candidates，再要求某个 candidate 必须在连续 K 个 epoch 内保持稳定、且通过 EMA confidence gate，才允许重写原始 noisy label。最终训练时把样本分成 clean / mid / noisy 三组，用不同损失联合优化 prompts。",
+        "story": "在低样本场景里，哪怕中等强度的标签噪声也会把 prompt tuning 带偏；因此作者不是简单相信一次伪标签，而是观察伪标签在训练过程里的时间轨迹，只有‘长期稳定 + 足够自信’才用于纠错，再把纠正结果反馈回 prompt learning。",
+        "innovation": "它把伪标签从一次性静态判断，升级为时间保守型判断，这一点非常适合电商内容打标、标签清洗和弱监督审核。官方 GitHub 已非空并给出运行脚本，因此不需要重复复现。",
+        "key_metrics": "OxfordPets 在 50% asymmetric noise 下，准确率从 0.775 提升到 0.843；Flowers102 在 75% asymmetric noise 下，从 55.3% 提升到 66.6%。实验覆盖 7 个合成噪声数据集与 Food101N。"
+      },
+      "en": {
+        "method_overview": "TecoPrompt targets the classic failure mode of few-shot prompt learning under noisy labels. It first generates globally consistent pseudo-label candidates with entropic optimal transport in CLIP semantic space, then only rewrites a noisy label if the candidate remains unchanged for K consecutive epochs and also passes an EMA-based confidence gate. During training, samples are separated into clean, mid, and noisy groups with different objectives.",
+        "story": "In few-shot adaptation, even moderate label noise can corrupt prompt tuning. Instead of trusting a one-shot pseudo-label, TecoPrompt looks at the temporal trajectory of the pseudo-label across training: only candidates that stay stable over time and remain confident are allowed to correct the original label, and the corrected labels are then fed back into prompt learning.",
+        "innovation": "The key contribution is turning pseudo-label correction from a static decision into a temporally conservative one. That idea is highly relevant to e-commerce data tagging, taxonomy cleaning, and weakly supervised moderation pipelines. The official GitHub repository is non-empty and includes runnable scripts, so no extra reproduction is needed.",
+        "key_metrics": "On OxfordPets with 50% asymmetric noise, accuracy improves from 0.775 to 0.843. On Flowers102 with 75% asymmetric noise, it improves from 55.3% to 66.6%. Experiments span seven synthetic-noise datasets plus Food101N."
+      }
+    },
+    "figure": {
+      "input": ["Few-shot data", "Noisy labels", "CLIP semantic space"],
+      "steps": [
+        {"title": "OT Pseudo-labeling", "detail": "Generate globally consistent label candidates"},
+        {"title": "Temporal Stability Check", "detail": "Require K-epoch consistency and EMA confidence"},
+        {"title": "Tri-group Prompt Training", "detail": "Optimize prompts for clean, mid, and noisy subsets"}
+      ],
+      "output": ["Cleaner labels", "Robust prompts", "Better noisy-label adaptation"]
+    },
+    "experiment_highlights": [
+      {"label": "OxfordPets", "value": "0.775 → 0.843", "note": "50% asymmetric noise"},
+      {"label": "Flowers102", "value": "55.3% → 66.6%", "note": "75% asymmetric noise"},
+      {"label": "Dataset coverage", "value": "7 + Food101N", "note": "broad noisy-label evaluation"}
+    ],
+    "code": {
+      "status": "official_code_verified",
+      "official_url": "https://github.com/haji-mimi/TecoPrompt",
+      "repo_url": "https://github.com/haji-mimi/TecoPrompt",
+      "reproduce_path": null,
+      "note_zh": "已核实官方 GitHub 仓库非空，包含训练脚本、配置和数据集说明。"
+    }
+  }
+]
