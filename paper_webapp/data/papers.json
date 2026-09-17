@@ -1,6 +1,10 @@
 {
   "days": [
     {
+      "inspection_date": "2026-09-17",
+      "paper_count": 6
+    },
+    {
       "inspection_date": "2026-09-15",
       "paper_count": 8
     },
@@ -142,6 +146,357 @@
     }
   ],
   "papers": [
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2608.07055",
+      "title": "Teacher Retains Full Tokens, Student Merges Efficiently: TM20K for E-Commerce Sequence Modeling in Ad Recommendation",
+      "authors": [
+        "Xinchun Li",
+        "Duoru Zheng",
+        "Wenlin Zhao",
+        "Haoran Ding",
+        "Ziyi Zhou",
+        "Jingxuan Tan",
+        "Huizhi Yang",
+        "Yuchen Jiang",
+        "Zhe Chen",
+        "Yuchao Zheng",
+        "Linlan Chen",
+        "Dongjian Wang",
+        "Dongyue Wang",
+        "Xiaosong Li",
+        "Hongyue Mao",
+        "Yaocheng Tan"
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "source": "arXiv / cs.IR / arXiv HTML",
+      "published": "2026-08-13",
+      "links": {
+        "abs": "https://arxiv.org/abs/2608.07055",
+        "pdf": "https://arxiv.org/pdf/2608.07055.pdf"
+      },
+      "tags": [
+        "广告推荐",
+        "长序列建模",
+        "Transformer",
+        "蒸馏",
+        "强相关"
+      ],
+      "score_total": 93,
+      "score_breakdown": {
+        "innovation": 29,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 10,
+        "generalization": 3,
+        "relevance": 23,
+        "total": 93,
+        "rationale_zh": "这篇是今天最强的强相关工业论文之一：问题定义精准、方法设计克制、收益和成本都给得很实，而且已经落在 ByteDance 电商广告系统里。对长周期兴趣建模、广告/内容混排和达人内容曝光都非常有迁移价值。",
+        "rationale_en": "This is one of the strongest directly relevant industrial papers today: the problem is real, the design is disciplined, the gains are measurable, and the method is already deployed in ByteDance's e-commerce ad system."
+      },
+      "rationale_zh": "这篇是今天最强的强相关工业论文之一：问题定义精准、方法设计克制、收益和成本都给得很实，而且已经落在 ByteDance 电商广告系统里。对长周期兴趣建模、广告/内容混排和达人内容曝光都非常有迁移价值。",
+      "rationale_en": "This is one of the strongest directly relevant industrial papers today: the problem is real, the design is disciplined, the gains are measurable, and the method is already deployed in ByteDance's e-commerce ad system.",
+      "method_overview_zh": "TM20K 解决的是电商广告推荐里超长行为序列‘效果想要、成本也要’的矛盾。论文先用 full-attention teacher 吃满 20K 序列，再让 full-attention student 在不牺牲建模能力的前提下，通过 LITM / PATM / LPTM 三类 token merge 把历史压缩掉，最后再用知识蒸馏把 teacher 的收益迁移到 student。真正的亮点不是单一结构，而是把长序列效果、蒸馏和线上 serving 成本一起平衡到了可部署状态。对内容生态里的广告分发、长周期兴趣理解和达人内容曝光排序都很有参考价值。",
+      "method_overview_en": "TM20K tackles the core industrial tension in e-commerce ad recommendation: long behavior histories improve ranking quality, but they are expensive to train and serve. The paper first trains a full-attention teacher on 20K-token sequences, then builds a full-attention student that compresses history through LITM / PATM / LPTM token merging, and finally transfers the teacher's gains with knowledge distillation. The real highlight is not a single module, but the joint balance of sequence quality, distillation, and production cost. This is highly relevant to long-horizon ad targeting and content exposure ranking.",
+      "story_zh": "传统超长序列推荐通常要么靠 target attention 或截断硬省成本，要么靠搜索式/聚类式压缩丢失细粒度信号。TM20K 的思路是先让 teacher 完整建模全量 token，再让 student 保留 full-attention 但只对压缩后的 token 序列做建模，用蒸馏补回压缩带来的损失。于是问题从‘长序列太贵’变成‘如何有信息地压缩并把 teacher 的能力迁移下来’。",
+      "story_en": "Prior ultra-long recommenders usually either save cost with truncation / target attention or compress sequences in ways that lose fine-grained signal. TM20K reframes the problem: let a teacher model the full sequence, compress the student input in an information-aware way, and recover the lost capacity through distillation. The challenge therefore becomes not 'can we afford long sequences' but 'how do we compress them without discarding the useful parts.'",
+      "innovation_zh": "创新点主要有三层：第一，teacher 和 student 都保留 full-attention，而不是简单退回 target attention；第二，token merge 不是单一路径，而是 LITM / PATM / LPTM 这样的多视角压缩，兼顾局部、频次与时序尾部；第三，用 two-stage distillation 把 teacher 的长序列收益迁移到 student。整体设计很合理，也非常贴近真实电商广告系统的工程约束。",
+      "innovation_en": "The paper is innovative at three levels: both teacher and student keep full-attention modeling, token merging is multi-view rather than single-path, and a two-stage distillation recipe transfers the teacher's long-sequence gains into the student. The design is methodologically sensible and strongly aligned with industrial e-commerce constraints.",
+      "key_metrics_zh": "论文报告 TM20K 已部署在 ByteDance 电商广告推荐中，把序列长度扩展到 20K，关键业务指标 ADSS 提升 +1.036%，serving latency 仅增加 +5.6%。HTML 全文还显示：相比 target attention，20K full attention teacher 在 AUC 上可进一步提升约 +0.25%，而 student 可保留完整 20K 建模约 85% 的效果收益。",
+      "key_metrics_en": "The paper reports deployment in ByteDance's e-commerce advertising recommender, extending sequence length to 20K with ADSS +1.036% and only +5.6% serving latency. The HTML version also shows that 20K full-attention teacher models outperform target-attention baselines by about +0.25% AUC, while the student preserves roughly 85% of the full 20K modeling gain.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-17/TM20K",
+      "figure_path": "assets/figures/2608.07055.svg",
+      "exp_figure_path": "assets/figures/2608.07055_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2606.23911",
+      "title": "Scaling Dense Retrieval with LLM-Annotated Training Data: Structured Mining and Progressive Curriculum for E-Commerce Sponsored Search",
+      "authors": [
+        "Md Omar Faruk Rokon",
+        "Shasvat Desai",
+        "Jhalak Nilesh Acharya",
+        "Isha Shah",
+        "Kumar Priyam",
+        "Brahanyaa Somasundaram",
+        "Vamsee Tangirala",
+        "Minuteresa Thomas",
+        "Vivek Arora",
+        "Vijay Manchi",
+        "Hong Yao",
+        "Kuang-chih Lee"
+      ],
+      "affiliations": [
+        "Walmart Global Tech"
+      ],
+      "source": "arXiv / cs.IR / SIGIR eCom 2026 accepted",
+      "published": "2026-06-22",
+      "links": {
+        "abs": "https://arxiv.org/abs/2606.23911",
+        "pdf": "https://arxiv.org/pdf/2606.23911.pdf"
+      },
+      "tags": [
+        "赞助搜索",
+        "Dense Retrieval",
+        "LLM 标注",
+        "课程学习",
+        "强相关"
+      ],
+      "score_total": 92,
+      "score_breakdown": {
+        "innovation": 28,
+        "results": 15,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 92,
+        "rationale_zh": "这篇论文的工业含金量极高：不是简单说‘LLM 能打标’，而是把挖样本、标样本、训模型整套链路做成生产系统，还给了很完整的 offline + online 指标。对电商搜索/广告召回非常值得重点跟进。",
+        "rationale_en": "This paper has unusually strong industrial value: it does not just claim that LLMs can annotate data, but turns mining, labeling, and retrieval training into a production pipeline with both offline and online evidence."
+      },
+      "rationale_zh": "这篇论文的工业含金量极高：不是简单说‘LLM 能打标’，而是把挖样本、标样本、训模型整套链路做成生产系统，还给了很完整的 offline + online 指标。对电商搜索/广告召回非常值得重点跟进。",
+      "rationale_en": "This paper has unusually strong industrial value: it does not just claim that LLMs can annotate data, but turns mining, labeling, and retrieval training into a production pipeline with both offline and online evidence.",
+      "method_overview_zh": "这篇 Walmart 论文回答了一个非常现实的问题：不依赖点击偏置、也不靠人工海量标注，dense retrieval 的训练数据怎么在生产规模上做出来。它把多通道检索不一致性当作 structured mining 信号，先挖 easy positives、hard positives、hard negatives，再用 184M cross-encoder → 2B LoRA LLM → 8B LoRA LLM 的三级标注 cascade 给出 graded relevance 标签，最后按难度分层做 BCE → MNR → Triplet 的 progressive curriculum 训练。整篇论文最亮的是把数据构造、标注质量和训练策略连成了一条完整的工业流水线。",
+      "method_overview_en": "This Walmart paper addresses a very practical question: how can a dense retriever be trained at production scale without relying on click bias or massive manual labeling. It turns disagreement among heterogeneous retrieval channels into structured mining signals, labels those pairs with a three-stage cascade (184M cross-encoder -> 2B LoRA LLM -> 8B LoRA LLM), and then trains a two-tower model with a BCE -> MNR -> Triplet curriculum. The highlight is the end-to-end industrial pipeline rather than a single isolated model tweak.",
+      "story_zh": "点击日志训练 dense retriever 的问题在于位置偏置严重、tail query 稀疏，而且人工标注数亿对 query-item 从成本上不可能。论文的思路是先利用 lexical 与 dense 等多路召回系统的‘分歧’自动挖出高价值样本，再用分层 LLM 标注提高标签质量，最后用由易到难的课程学习稳定训练双塔模型。也就是说，它不是单点改模，而是重写了 sponsored search dense retrieval 的监督构造链路。",
+      "story_en": "Click-trained dense retrieval suffers from position bias and weak tail-query supervision, while manual annotation at hundreds-of-millions scale is economically unrealistic. The paper first mines informative pairs from lexical-vs-dense disagreements, then upgrades them into graded labels with an LLM cascade, and finally trains the model from easy to hard. In other words, it redesigns the supervision pipeline for sponsored-search retrieval rather than merely changing the encoder.",
+      "innovation_zh": "创新主要在三件事：第一，structured mining 把多系统 disagreement 变成了天然高价值监督；第二，graded-relevance 的 calibrated cascade 让 LLM 标注真正能落到工业规模；第三，progressive curriculum 把 240M+ 样本按难度组织起来，训练节奏很清晰。对电商内容/广告检索、商品召回和 tail query 优化都很有借鉴意义。",
+      "innovation_en": "Its novelty lies in three pieces: structured disagreement mining, calibrated large-scale LLM annotation, and a difficulty-aware progressive curriculum over 240M+ examples. The recipe is highly relevant to e-commerce retrieval, sponsored search, and tail-query optimization.",
+      "key_metrics_zh": "论文报告该系统在 30K 人工标注 query 上，相比 click-trained production baseline，NDCG@10 从 0.878 提升到 0.923（+5.1%），tail queries 上增益更大；rating-0 embarrassing retrieval 从 8.7% 降到 3.5%。两周线上 A/B 还带来 +2.80% ad spend、+1.4% CTR、+2.8% eCPM、+2.9% click conversion。",
+      "key_metrics_en": "Against a click-trained production baseline, the paper reports NDCG@10 improving from 0.878 to 0.923 (+5.1%) on 30K human-labeled queries, with even larger gains on tail queries. Embarrassing rating-0 retrievals drop from 8.7% to 3.5%, and a two-week online A/B shows +2.80% ad spend, +1.4% CTR, +2.8% eCPM, and +2.9% click conversion.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-17/StructuredCurriculumDR",
+      "figure_path": "assets/figures/2606.23911.svg",
+      "exp_figure_path": "assets/figures/2606.23911_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2605.05991",
+      "title": "A Case-Driven Multi-Agent Framework for E-Commerce Search Relevance",
+      "authors": [
+        "Global E-Commerce Search Relevance Team"
+      ],
+      "affiliations": [
+        "ByteDance"
+      ],
+      "source": "arXiv / cs.IR / tech report",
+      "published": "2026-05-07",
+      "links": {
+        "abs": "https://arxiv.org/abs/2605.05991",
+        "pdf": "https://arxiv.org/pdf/2605.05991.pdf"
+      },
+      "tags": [
+        "电商搜索",
+        "相关性治理",
+        "多智能体",
+        "Bad-case 闭环",
+        "强相关"
+      ],
+      "score_total": 89,
+      "score_breakdown": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 23,
+        "total": 89,
+        "rationale_zh": "这篇论文和‘电商内容生态/达人治理’的契合点非常强，因为它本质上是在讲怎么把 bad-case 巡检、标注、修复变成可持续闭环。即使不是直接做达人内容，也几乎可以平移到治理工作流里。",
+        "rationale_en": "This paper is highly aligned with content-ecosystem governance because it explains how bad-case patrol, annotation, and repair can become a sustainable closed loop rather than a one-shot modeling task."
+      },
+      "rationale_zh": "这篇论文和‘电商内容生态/达人治理’的契合点非常强，因为它本质上是在讲怎么把 bad-case 巡检、标注、修复变成可持续闭环。即使不是直接做达人内容，也几乎可以平移到治理工作流里。",
+      "rationale_en": "This paper is highly aligned with content-ecosystem governance because it explains how bad-case patrol, annotation, and repair can become a sustainable closed loop rather than a one-shot modeling task.",
+      "method_overview_zh": "这篇 ByteDance 论文把电商搜索相关性优化定义成一个闭环生态问题：用户发现 bad case，产品/标注侧定义标准，算法侧做分析与修复，评测侧持续校验。论文的做法是用 User Agent、Annotator Agent、Optimizer Agent 替代这条链路里的关键人力角色，再辅以 Global Memory、Deep Search Agent、instruction-following relevance model 和统一 retrieval-and-ranking relevance model，把 bad-case 发现到修复自动串起来。高光点在于它不是讨论单个模型，而是在讨论‘相关性治理系统’如何 agent 化。",
+      "method_overview_en": "This ByteDance paper reframes e-commerce search relevance as a closed-loop ecosystem problem: users surface bad cases, standards evolve, annotators label, engineers optimize, and evaluators validate. It replaces the key human roles in that loop with a User Agent, Annotator Agent, and Optimizer Agent, supported by Global Memory, a Deep Search Agent, an instruction-following relevance model, and a unified retrieval-and-ranking relevance model. The highlight is not a single model but an agentized relevance-governance system.",
+      "story_zh": "线上相关性问题的难点不只是模型不够强，而是 bad case 发现慢、标准同步慢、标注与优化链路割裂，导致问题修复又慢又不泛化。论文的思路是把整个 relevance 生态重写成 agent 闭环，让 bad case 自动被发现、被多轮标注、被分析和修复，并把经验沉淀进 Global Memory。于是优化目标从‘调一个模型’升级成‘让相关性系统持续自我纠偏’。",
+      "story_en": "Many online relevance issues are not caused only by weak models, but by slow bad-case discovery, inconsistent standards, and broken handoffs between annotation and optimization. The paper turns the whole loop into an autonomous system so that bad cases are discovered, relabeled, analyzed, resolved, and remembered. The objective therefore shifts from 'train a better model once' to 'continuously self-correct the relevance system.'",
+      "innovation_zh": "最有价值的创新是系统层面的：多智能体分工并不是噱头，而是和 Deep Search、Global Memory、统一 relevance model 一起，服务于 bad-case resolution 这条主线。它和传统 relevance 论文的差别在于不再只看单轮离线训练，而是关注标准演化、案例闭环与人机协同。对内容生态治理、违规/低质内容判定、搜索相关性巡检都很有启发。",
+      "innovation_en": "Its main contribution is system-level rather than module-level: multi-agent division of labor is tied to Deep Search, Global Memory, and a unified relevance model around the concrete goal of bad-case resolution. That makes it highly relevant to search relevance patrol, governance workflows, and broader content-quality triage systems.",
+      "key_metrics_zh": "论文报告在 human evaluation 中，User–Annotator discussion precision 达到 0.9524、recall 达到 0.7895，和 human baseline precision 0.9545 接近；SBS win-rate 在三个阶段分别提升 2.71%、3.1%、4.36%。这说明 agent 闭环不只是可行，而且可以持续提升 bad-case resolution 质量。",
+      "key_metrics_en": "The paper reports User–Annotator discussion precision of 0.9524 and recall of 0.7895, close to the human baseline precision of 0.9545. It also shows SBS win-rate gains of 2.71%, 3.1%, and 4.36% across three phases, indicating that the agent loop can improve bad-case resolution quality over time.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-17/CaseDrivenSearchAgents",
+      "figure_path": "assets/figures/2605.05991.svg",
+      "exp_figure_path": "assets/figures/2605.05991_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2605.18805",
+      "title": "RecoAtlas: From Semantic Plausibility to Set-Level Utility in LLM Recommendation Agents",
+      "authors": [
+        "Imad Aouali",
+        "Flavian Vasile",
+        "Otmane Sakhi",
+        "Alexandre Gilotte",
+        "Benjamin Heymann"
+      ],
+      "affiliations": [
+        "Criteo AI Lab"
+      ],
+      "source": "arXiv / cs.IR / benchmark",
+      "published": "2026-05-11",
+      "links": {
+        "abs": "https://arxiv.org/abs/2605.18805",
+        "pdf": "https://arxiv.org/pdf/2605.18805.pdf",
+        "code": "https://github.com/imadaouali/reco-atlas"
+      },
+      "tags": [
+        "购物 Agent",
+        "推荐系统",
+        "Benchmark",
+        "Set-level Utility",
+        "中强相关"
+      ],
+      "score_total": 78,
+      "score_breakdown": {
+        "innovation": 26,
+        "results": 12,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 5,
+        "relevance": 14,
+        "total": 78,
+        "rationale_zh": "RecoAtlas 很值得看，但更偏方法论 benchmark。它对购物 agent / 推荐助手评测非常重要，可是离电商内容理解和治理链路的直接落地价值略远，所以没有进 80 分以上主复现名单。",
+        "rationale_en": "RecoAtlas is methodologically valuable and very relevant to shopping-agent evaluation, but it is more benchmark-oriented than directly deployable in content-understanding or governance pipelines, so it stays below the reproduction threshold."
+      },
+      "rationale_zh": "RecoAtlas 很值得看，但更偏方法论 benchmark。它对购物 agent / 推荐助手评测非常重要，可是离电商内容理解和治理链路的直接落地价值略远，所以没有进 80 分以上主复现名单。",
+      "rationale_en": "RecoAtlas is methodologically valuable and very relevant to shopping-agent evaluation, but it is more benchmark-oriented than directly deployable in content-understanding or governance pipelines, so it stays below the reproduction threshold.",
+      "method_overview_zh": "RecoAtlas 针对的是 shopping recommendation agents 的一个评价盲区：很多系统看起来推荐理由很像回事，但真正拿到的是不是高 utility 的商品集合并不清楚。它提出 behavior-grounded 的 set-level benchmark，把 relevance、complementarity、diversity 这些交互数据驱动的 utility proxy 与 semantic coherence / explanation quality 拆开评估，还提供不同质量的工具环境去诊断 agent 到底是 reasoning 强、工具强还是只是‘说得像对的’。这使它很适合做购物 agent 与推荐助手的系统级评测。",
+      "method_overview_en": "RecoAtlas targets a blind spot in shopping recommendation agents: many systems generate plausible-looking recommendation reports, but it is unclear whether the resulting item sets are actually useful. The benchmark separates behavior-grounded set-level utility (relevance, complementarity, diversity) from semantic coherence and explanation quality, and varies tool quality so we can diagnose whether gains come from reasoning, better signals, or tool usage. This makes it a strong systems benchmark for shopping assistants.",
+      "story_zh": "传统推荐评测常把问题简化成 rerank 一小撮候选，或者只让 LLM judge 判断‘文本像不像回事’，但 shopping assistant 的真实产出是一个商品集合加一份解释报告。RecoAtlas 的思路是把‘会说’和‘真的有用’拆开，既看集合层 utility，也看语义和解释，让 benchmark 真正反映 shopping agent 的实际价值。",
+      "story_en": "Classic recommender evaluation often reduces the task to reranking a small candidate list or lets an LLM judge whether the report sounds reasonable. But a shopping assistant outputs a set of items plus a structured report. RecoAtlas splits 'sounds plausible' from 'is behaviorally useful,' making the evaluation closer to real shopping-agent value.",
+      "innovation_zh": "创新点在于把 set-level utility、behavior-grounded proxy、工具质量诊断和 recommendation report generation 放进同一个 benchmark。相比只看语义 plausibility 的工作，它更能揭示工具对 agent 表现的真实贡献，也更接近电商购物助手的使用场景。问题在于它更偏 benchmark / evaluation，距离直接线上收益还有一段。",
+      "innovation_en": "Its novelty is the combination of set-level utility, behavior-grounded metrics, tool-diagnosis, and recommendation-report generation inside one benchmark. Compared with semantic-plausibility-only evaluation, it better exposes what tools actually contribute. The downside is that it is more benchmark-oriented than directly deployable.",
+      "key_metrics_zh": "论文展示 utility-aligned tools 能显著提升 bundle shopping SetHit@20：search-only 为 0.156，加入 complementarity 工具后升到 0.460，完整工具集下 comparative / bundle 任务分别达到 0.508 / 0.540。Qwen3 with reasoning 还展示了从 0.6B 到 32B 的明显规模收益。",
+      "key_metrics_en": "Utility-aligned tools strongly improve bundle-shopping SetHit@20: search-only reaches 0.156, adding complementarity tools raises it to 0.460, and the full toolset reaches 0.508 / 0.540 on comparative / bundle tasks. The paper also shows clear scaling gains for reasoning-enabled Qwen3 variants.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2605.18805.svg",
+      "exp_figure_path": "assets/figures/2605.18805_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2609.15863",
+      "title": "LynnReal-Omni: Native multi-modal Video Generation for Agentic Visual Workflows",
+      "authors": [
+        "Xiaofeng Mao",
+        "Peijia Lin",
+        "Shaohao Rui",
+        "Yibo Zhang",
+        "Haibin Wan",
+        "Weijie Ma"
+      ],
+      "affiliations": [
+        "LynnReal AI"
+      ],
+      "source": "arXiv / cs.CV / Hugging Face Daily",
+      "published": "2026-09-14",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.15863",
+        "pdf": "https://arxiv.org/pdf/2609.15863.pdf",
+        "code": "https://github.com/LynnReal-AI/LynnReal-Omni"
+      },
+      "tags": [
+        "视频生成",
+        "多模态",
+        "Agentic Workflow",
+        "创作者工具",
+        "弱相关高热"
+      ],
+      "score_total": 76,
+      "score_breakdown": {
+        "innovation": 28,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 8,
+        "total": 76,
+        "rationale_zh": "这篇论文非常强、也很热，但它更偏多模态创作基础设施。和电商内容生态是有连接点的，和达人治理则是弱相关，所以保留在高热观察名单而不进入主复现名单。",
+        "rationale_en": "This is a very strong and very hot paper, but it belongs more to multimodal creation infrastructure than direct governance. It is worth tracking, yet it is only weakly related to the governance side of the user's scope."
+      },
+      "rationale_zh": "这篇论文非常强、也很热，但它更偏多模态创作基础设施。和电商内容生态是有连接点的，和达人治理则是弱相关，所以保留在高热观察名单而不进入主复现名单。",
+      "rationale_en": "This is a very strong and very hot paper, but it belongs more to multimodal creation infrastructure than direct governance. It is worth tracking, yet it is only weakly related to the governance side of the user's scope.",
+      "method_overview_zh": "LynnReal-Omni 想做的是一个真正统一的 native multimodal video generation 基座：文本、图片参考、结构控制、编辑、修复、长视频都进同一套 shared multimodal diffusion transformer。它同时提供 32B 的 Omni 主模型和 27B 的 Flash 实时版，并配套了视频清洗、subject association、多模态标注和 control construction 的系统数据流水线。对内容生态来说，它更像创作基础设施，而不是治理模型，但对虚拟达人、商品视频制作和 agent 驱动素材生成很有想象空间。",
+      "method_overview_en": "LynnReal-Omni aims to be a genuinely unified native multimodal video-generation backbone: text, image references, structural control, editing, restoration, and long-video generation are all handled by a shared multimodal diffusion transformer. It offers both a 32B Omni model and a 27B Flash real-time variant, supported by a data pipeline for video cleaning, subject association, multimodal annotation, and control construction. For content ecosystems, it is more creation infrastructure than governance, but highly relevant to virtual creators and agent-driven media production.",
+      "story_zh": "单纯的视频扩散模型虽然强，但很难精确控制、长视频也容易漂；纯 agentic visual creation 又不保证角色和物体 fidelity。LynnReal-Omni 把两者结合起来：让 heterogeneous visual inputs 成为统一模型的条件输入，兼顾 controllability 和 generation quality。问题从‘能不能生成’升级到‘能不能在 agent 工作流里稳定生成’。",
+      "story_en": "Pure video diffusion models are hard to control and often drift on long horizons, while pure agentic visual creation does not guarantee strong fidelity. LynnReal-Omni combines the two by feeding heterogeneous visual conditions into one unified model. The question shifts from 'can we generate video' to 'can we generate stable video inside an agent workflow.'",
+      "innovation_zh": "创新性很高：统一多种视觉条件模态、显式面向 agentic workflow、再加上 Flash 版本追求实时 rendering，明显不是普通 T2V 论文。弱点是与电商治理本身的直接关系偏弱，所以主要作为高热补位论文保留。",
+      "innovation_en": "Its novelty is high: unified conditioning across many modalities, an explicit agentic-workflow framing, and a Flash version aimed at real-time rendering. The direct governance relevance is weaker, so it serves as a high-heat supplementary paper rather than a core reproduction target.",
+      "key_metrics_zh": "论文报告 32B Omni 与 27B Flash 两个版本；在单张 H100 上，22-frame 540p 视频的 warm generation + decoding 可做到毫秒级，摘要中给出 Omni 843ms、Flash 377ms。官方 GitHub 仓库已核验为非空，包含推理与工程目录。",
+      "key_metrics_en": "The paper reports both 32B Omni and 27B Flash models. On one H100, warm generation plus decoding for a 22-frame 540p video is reported at millisecond scale, with the abstract listing 843ms for Omni and 377ms for Flash. The official GitHub repository has been verified as non-empty.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.15863.svg",
+      "exp_figure_path": "assets/figures/2609.15863_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-17",
+      "paper_id": "2609.15478",
+      "title": "BVB: Benchmarking Agentic Video Understanding via Programmatic Reconstruction in Blender",
+      "authors": [
+        "Yolo Y. Tang",
+        "Daiki Shimada",
+        "Jiayue Meng",
+        "Jing Bi",
+        "Pinxin Liu",
+        "Yicheng Wang",
+        "Yunzhong Xiao",
+        "Zhangyun Tan",
+        "Zeliang Zhang",
+        "Chao Huang",
+        "Susan Liang",
+        "Qianxiang Shen",
+        "Luchuan Song",
+        "Ali Vosoughi",
+        "Mingqian Feng",
+        "Melika Filvantorkaman",
+        "Chenliang Xu"
+      ],
+      "affiliations": [
+        "University of Rochester",
+        "Sony Group Corporation",
+        "Carnegie Mellon University",
+        "University of Washington"
+      ],
+      "source": "arXiv / cs.CV / benchmark",
+      "published": "2026-09-14",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.15478",
+        "pdf": "https://arxiv.org/pdf/2609.15478v1.pdf",
+        "code": "https://github.com/yunlong10/BVB"
+      },
+      "tags": [
+        "Video Understanding",
+        "Benchmark",
+        "Agent",
+        "Blender",
+        "弱相关高热"
+      ],
+      "score_total": 74,
+      "score_breakdown": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 9,
+        "total": 74,
+        "rationale_zh": "BVB 的方法论新意很强，也确实是今天值得关注的高热 benchmark，但它和电商内容理解/达人治理的直接关系偏弱，因此分数主要来自 benchmark 创新和实验设计，而不是业务贴合度。",
+        "rationale_en": "BVB is methodologically fresh and absolutely worth tracking as a hot benchmark, but its direct connection to e-commerce content understanding or creator governance is limited, so the score is driven more by benchmark innovation than by business relevance."
+      },
+      "rationale_zh": "BVB 的方法论新意很强，也确实是今天值得关注的高热 benchmark，但它和电商内容理解/达人治理的直接关系偏弱，因此分数主要来自 benchmark 创新和实验设计，而不是业务贴合度。",
+      "rationale_en": "BVB is methodologically fresh and absolutely worth tracking as a hot benchmark, but its direct connection to e-commerce content understanding or creator governance is limited, so the score is driven more by benchmark innovation than by business relevance.",
+      "method_overview_zh": "BVB 提出一个很新颖的观点：如果一个多模态 agent 真的理解了视频，它不应该只会答题，还应该能把视频以 Blender 程序化场景重建出来。于是它构造了 Blender-VideoBench，让 agent 在统一 Mini-BVB sandbox 中写 bpy 代码重建真实视频，再用 Dual VQA 和 Latent Similarity 两条轴来同时评价语义保真和感知相似。这个 benchmark 对 agentic video understanding 的评估方式很有启发。",
+      "method_overview_en": "BVB proposes a striking idea: if a multimodal agent truly understands a video, it should not merely answer questions about it, but be able to reconstruct it programmatically in Blender. The benchmark therefore asks agents to write bpy code inside a shared Mini-BVB sandbox and evaluates reconstructions with both Dual VQA and Latent Similarity. This makes BVB a distinctive benchmark for agentic video understanding.",
+      "story_zh": "传统视频理解 benchmark 主要靠 QA，但答对题不一定意味着真的理解了时空结构。BVB 的思路是把‘理解’提升到‘可执行重建’，要求模型同时保留布局、相机轨迹、事件顺序和视觉相似性。它因此比单纯问答更难伪装，也更接近 agent 真实能力边界。",
+      "story_en": "Conventional video-understanding benchmarks rely on QA, but correct answers do not necessarily prove that a model tracked layout, camera motion, and event order. BVB raises the bar from 'answer correctly' to 'reconstruct faithfully.' That makes it much harder to fake and closer to real agent capability.",
+      "innovation_zh": "创新点主要是评测范式本身：程序化重建、Dual VQA + Latent Similarity 双轴评价、统一 sandbox 和成本约束。和电商治理的直接关系不强，但对未来多模态 agent 评测、创作者工具理解能力校验都有长期参考价值。",
+      "innovation_en": "Its novelty lies in the evaluation paradigm itself: programmatic reconstruction, dual-axis semantic/perceptual scoring, and a unified sandbox with shared cost limits. The direct e-commerce governance relevance is weak, but the benchmark is valuable for tracking multimodal-agent capability.",
+      "key_metrics_zh": "论文评估了 10 个模型家族共 51 个配置，最佳模型 Overall 达到 70.07，Latent Similarity 达到 88.6，但 Dual VQA 最高仅 53.7%，说明‘看起来像’和‘真的理解了’仍有明显差距。官方 GitHub 仓库已核验为非空。",
+      "key_metrics_en": "The paper evaluates 51 configurations across 10 model families. The best result reaches 70.07 Overall and 88.6 Latent Similarity, yet Dual VQA tops out at 53.7%, revealing a substantial gap between visual plausibility and true spatiotemporal retention. The official GitHub repository has been verified as non-empty.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.15478.svg",
+      "exp_figure_path": "assets/figures/2609.15478_exp.svg"
+    },
     {
       "inspection_date": "2026-09-15",
       "paper_id": "2609.11638",

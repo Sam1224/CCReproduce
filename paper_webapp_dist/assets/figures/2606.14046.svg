@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <defs>
+    <style>
+      .bg{fill:#fbfdff}
+      .box{fill:#ffffff;stroke:#c7d3e3;stroke-width:2;rx:14;ry:14}
+      .t{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans";fill:#1f2d3d}
+      .h{font-size:22px;font-weight:700}
+      .p{font-size:16px}
+      .cap{font-size:14px;fill:#48617a}
+      .arrow{stroke:#5b8def;stroke-width:3;fill:none;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b8def" />
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="900" height="420" />
+
+  <text class="t h" x="30" y="48">PAD: Popularity-Aware Denoising</text>
+  <text class="t cap" x="30" y="74">2606.14046 · Denoising × Popularity Bias</text>
+
+  <rect class="box" x="40" y="110" width="210" height="90" />
+  <text class="t p" x="60" y="145">Implicit logs</text>
+  <text class="t cap" x="60" y="170">(noisy positives)</text>
+
+  <rect class="box" x="325" y="95" width="245" height="120" />
+  <text class="t p" x="345" y="135">Base denoising weight</text>
+  <text class="t cap" x="345" y="162">w = ŷ^α (pos), (1-ŷ)^α (neg)</text>
+
+  <rect class="box" x="325" y="250" width="245" height="120" />
+  <text class="t p" x="345" y="290">Popularity gate</text>
+  <text class="t cap" x="345" y="317">s_i = (pop(i)/max_pop)^η</text>
+
+  <rect class="box" x="640" y="150" width="220" height="150" />
+  <text class="t p" x="660" y="195">Weighted training</text>
+  <text class="t cap" x="660" y="222">w_PAD = (1-s_i)+s_i·w</text>
+  <text class="t cap" x="660" y="248">→ less over-denoise tail</text>
+
+  <path class="arrow" d="M250 155 L315 155" />
+  <path class="arrow" d="M570 155 L630 205" />
+  <path class="arrow" d="M250 155 L315 310" />
+  <path class="arrow" d="M570 310 L630 245" />
+
+  <text class="t cap" x="40" y="395">Figure drawn by Aime (toy illustration). If the original paper has an overview figure, prefer that one.</text>
+</svg>

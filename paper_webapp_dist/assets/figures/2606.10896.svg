@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">Flash-GMM</text>
+  <text class="s" x="76" y="118">Memory-efficient fused kernel for scalable soft clustering (GMM EM)</text>
+
+  <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
+
+  <rect x="92" y="220" width="270" height="150" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="252">1) Data</text>
+  <text class="p" x="112" y="282">N points × D dims</text>
+  <text class="p" x="112" y="308">K components</text>
+
+  <rect x="392" y="220" width="320" height="210" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="412" y="252">2) Flash E-step</text>
+  <text class="m" x="412" y="282">no N×K responsibilities</text>
+  <text class="m" x="412" y="308">store logZi buffer</text>
+  <text class="p" x="412" y="342">FlashAttention-style tiling</text>
+
+  <rect x="742" y="220" width="328" height="210" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="762" y="252">3) M-step</text>
+  <text class="m" x="762" y="282">update μ, Σ, π</text>
+  <text class="p" x="762" y="312">scales to 10^8 points</text>
+  <text class="p" x="762" y="338">orders-of-magnitude speedup</text>
+
+  <rect x="92" y="450" width="978" height="150" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="112" y="482">4) ANN application</text>
+  <text class="p" x="112" y="512">Use GMM responsibilities for IVF multi-assignment (better recall–cost tradeoff)</text>
+  <text class="p" x="112" y="538">Practical for large-scale clustering & retrieval infrastructure</text>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 362 295 L 392 295"/>
+    <path d="M 712 320 L 742 320"/>
+    <path d="M 560 430 L 560 450"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="387,295 375,288 375,302"/>
+    <polygon points="737,320 725,313 725,327"/>
+    <polygon points="560,450 553,438 567,438"/>
+  </g>
+</svg>

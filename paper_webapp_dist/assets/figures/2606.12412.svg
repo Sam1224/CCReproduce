@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#ecfeff"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/></g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">Reroute, Don’t Remove</text>
+  <text class="s" x="76" y="118">Recoverable visual token routing for efficient vision-language transformers</text>
+
+  <g filter="url(#sh)"><rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/></g>
+
+  <rect x="92" y="240" width="280" height="170" rx="16" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="272">1) Image</text>
+  <text class="p" x="112" y="302">patch tokens v1..vM</text>
+  <text class="p" x="112" y="328">+ text prompt</text>
+
+  <rect x="410" y="220" width="330" height="200" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="430" y="252">2) Router</text>
+  <text class="p" x="430" y="282">select important tokens</text>
+  <text class="p" x="430" y="308">route others to side cache</text>
+  <text class="m" x="430" y="342">keep set A, cache set B</text>
+
+  <rect x="410" y="450" width="330" height="150" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="430" y="482">3) Recover step</text>
+  <text class="p" x="430" y="512">bring back cached tokens</text>
+  <text class="p" x="430" y="538">when evidence needed</text>
+
+  <rect x="780" y="240" width="340" height="360" rx="16" fill="#faf5ff" stroke="#e9d5ff"/>
+  <text class="h" x="800" y="272">4) VL Transformer</text>
+  <text class="p" x="800" y="302">compute on fewer tokens</text>
+  <text class="p" x="800" y="328">preserve accuracy</text>
+  <text class="p" x="800" y="368">outputs:</text>
+  <text class="p" x="820" y="396">• caption / VQA</text>
+  <text class="p" x="820" y="422">• grounding signals</text>
+  <text class="p" x="820" y="448">• moderation tags</text>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 372 320 L 410 320"/>
+    <path d="M 575 420 L 575 450"/>
+    <path d="M 740 520 L 780 520"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="405,320 393,313 393,327"/>
+    <polygon points="575,450 568,438 582,438"/>
+    <polygon points="775,520 763,513 763,527"/>
+  </g>
+</svg>

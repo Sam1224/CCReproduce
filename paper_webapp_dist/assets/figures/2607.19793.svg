@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f8fbff"/>
+  <rect x="24" y="24" width="672" height="372" rx="24" fill="#ffffff" stroke="#dbe7ff"/>
+  <text x="40" y="58" font-size="24" font-weight="700" fill="#0f172a">Silent Failures · Diagnostic Taxonomy for Multimodal Agentic Search</text>
+  <text x="40" y="84" font-size="14" fill="#475569">Correct final answers can still hide wrong evidence grounding.</text>
+  <rect x="40" y="118" width="140" height="92" rx="18" fill="#eef4ff" stroke="#bfd3ff"/>
+  <text x="56" y="148" font-size="16" font-weight="700" fill="#1d4ed8">Multimodal Query</text>
+  <text x="56" y="176" font-size="13" fill="#334155">image + text +</text>
+  <text x="56" y="194" font-size="13" fill="#334155">retrieval actions</text>
+  <rect x="204" y="118" width="164" height="92" rx="18" fill="#effcf6" stroke="#b7f0cf"/>
+  <text x="220" y="148" font-size="16" font-weight="700" fill="#047857">Agent Trajectory</text>
+  <text x="220" y="176" font-size="13" fill="#334155">search, inspect, cite</text>
+  <text x="220" y="194" font-size="13" fill="#334155">multi-step evidence path</text>
+  <rect x="394" y="108" width="152" height="112" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="410" y="136" font-size="16" font-weight="700" fill="#c2410c">Silent Failure Types</text>
+  <text x="410" y="162" font-size="13" fill="#334155">shortcut</text>
+  <text x="410" y="180" font-size="13" fill="#334155">hallucinated grounding</text>
+  <text x="410" y="198" font-size="13" fill="#334155">evidence misalignment ...</text>
+  <rect x="572" y="118" width="106" height="92" rx="18" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="588" y="148" font-size="16" font-weight="700" fill="#6d28d9">Cross Judges</text>
+  <text x="588" y="176" font-size="13" fill="#334155">human + LLM</text>
+  <text x="588" y="194" font-size="13" fill="#334155">+ VLM review</text>
+  <path d="M180 164H204" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M368 164H394" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M546 164H572" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="44" y="254" width="632" height="104" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="282" font-size="16" font-weight="700" fill="#0f172a">Why e-commerce teams should care</text>
+  <text x="60" y="310" font-size="14" fill="#334155">A shopping assistant can quote the wrong product spec yet still guess the right answer, creating invisible trust and compliance risk.</text>
+  <text x="60" y="336" font-size="14" fill="#334155">This paper provides a vocabulary and workflow for auditing those hidden multimodal agent failures.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker></defs>
+</svg>

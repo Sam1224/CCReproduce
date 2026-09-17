@@ -68,6 +68,7 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
 def main() -> None:
     out_path = WEBAPP_DIR / "data" / "papers.sqlite"
     json_out_path = WEBAPP_DIR / "data" / "papers.json"
+    js_out_path = WEBAPP_DIR / "data" / "papers.js"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     if out_path.exists():
@@ -203,10 +204,13 @@ def main() -> None:
         "days": sorted(web_days, key=lambda item: item["inspection_date"], reverse=True),
         "papers": sorted(web_papers, key=lambda item: (item["inspection_date"], item["score_total"], item["title"]), reverse=True),
     }
-    json_out_path.write_text(json.dumps(web_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    payload_text = json.dumps(web_payload, ensure_ascii=False, indent=2)
+    json_out_path.write_text(payload_text, encoding="utf-8")
+    js_out_path.write_text(f"window.__PAPER_PAYLOAD__ = {payload_text};\n", encoding="utf-8")
 
     print(f"wrote: {out_path}")
     print(f"wrote: {json_out_path}")
+    print(f"wrote: {js_out_path}")
 
 
 if __name__ == "__main__":

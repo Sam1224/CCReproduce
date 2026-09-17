@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f8fbff"/>
+  <rect x="24" y="24" width="672" height="372" rx="24" fill="#ffffff" stroke="#dbe7ff"/>
+  <text x="40" y="58" font-size="24" font-weight="700" fill="#0f172a">PRTA · Autonomous Recommendation Tool Learning</text>
+  <text x="40" y="84" font-size="14" fill="#475569">LLM acts as planner, classical recommenders act as tools.</text>
+  <rect x="40" y="122" width="132" height="92" rx="18" fill="#eef4ff" stroke="#bfd3ff"/>
+  <text x="56" y="150" font-size="16" font-weight="700" fill="#1d4ed8">User Profile</text>
+  <text x="56" y="176" font-size="13" fill="#334155">history + context</text>
+  <text x="56" y="194" font-size="13" fill="#334155">content preference</text>
+  <rect x="196" y="122" width="154" height="92" rx="18" fill="#effcf6" stroke="#b7f0cf"/>
+  <text x="212" y="150" font-size="16" font-weight="700" fill="#047857">LLM Planner</text>
+  <text x="212" y="176" font-size="13" fill="#334155">tool reflection</text>
+  <text x="212" y="194" font-size="13" fill="#334155">memory update</text>
+  <rect x="376" y="112" width="170" height="112" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="392" y="140" font-size="16" font-weight="700" fill="#c2410c">Recommendation Tools</text>
+  <text x="392" y="166" font-size="13" fill="#334155">LightGCN</text>
+  <text x="392" y="184" font-size="13" fill="#334155">SASRec</text>
+  <text x="392" y="202" font-size="13" fill="#334155">SimpleX</text>
+  <rect x="572" y="122" width="108" height="92" rx="18" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="588" y="150" font-size="16" font-weight="700" fill="#6d28d9">Fusion</text>
+  <text x="588" y="176" font-size="13" fill="#334155">aggregate +</text>
+  <text x="588" y="194" font-size="13" fill="#334155">rerank</text>
+  <path d="M172 168H196" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M350 168H376" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M546 168H572" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="44" y="258" width="632" height="96" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="286" font-size="16" font-weight="700" fill="#0f172a">Business intuition</text>
+  <text x="60" y="314" font-size="14" fill="#334155">Different users and creator-content types need different rankers. PRTA learns when to trust sequence models, graph models, or sparse feature tools.</text>
+  <text x="60" y="338" font-size="14" fill="#334155">That makes it suitable for mixed feed, shopping, and creator-governance recommendation stacks.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8"/></marker></defs>
+</svg>

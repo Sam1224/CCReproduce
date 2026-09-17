@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arr" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrR" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arrO" markerWidth="11" markerHeight="11" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4 L0,8 z" fill="#f97316"/>
+    </marker>
+    <style>
+      .t  { font:700 22px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .s  { font:500 13px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .h  { font:700 14px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0f172a }
+      .p  { font:500 11.5px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#334155 }
+      .m  { font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; fill:#0f766e }
+      .lbl{ font:600 11px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#475569 }
+      .stage { font:800 12px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; fill:#0ea5e9 }
+    </style>
+  </defs>
+<rect width="760" height="560" rx="18" fill="url(#bg)"/>
+  <g filter="url(#sh)"><rect x="20" y="18" width="720" height="60" rx="14" fill="#ffffff"/></g>
+  <rect x="20" y="18" width="720" height="5" rx="2.5" fill="url(#bar)"/>
+  <text class="t" x="38" y="48">RecLoop</text>
+  <text class="s" x="38" y="68">Closed-loop simulation: recommender &lt;-&gt; LLM user agent</text>
+
+<g filter="url(#sh)"><rect x="40" y="130" width="200" height="120" rx="12" fill="#eff6ff" stroke="#bfdbfe"/></g>
+<text class="h" x="54" y="152">Recommender</text>
+<text class="p" x="54" y="172">retrain (periodic)</text>
+<text class="p" x="54" y="190">+ candidate generator</text>
+<text class="p" x="54" y="208"></text>
+<text class="m" x="54" y="226">produces Exposure List E</text>
+<g filter="url(#sh)"><rect x="520" y="130" width="200" height="150" rx="12" fill="#f0fdfa" stroke="#99f6e4"/></g>
+<text class="h" x="534" y="152">LLM User Agent</text>
+<text class="p" x="534" y="172">Dynamic Profile</text>
+<text class="p" x="534" y="190">Dual Memory (short/long)</text>
+<text class="p" x="534" y="208">Periodic Reflection</text>
+<text class="p" x="534" y="226">Action -&gt; select item</text>
+<g filter="url(#sh)"><rect x="300" y="96" width="160" height="50" rx="12" fill="#ecfeff" stroke="#a5f3fc"/></g>
+<text class="h" x="314" y="118">Exposure List E</text>
+<g filter="url(#sh)"><rect x="300" y="300" width="160" height="70" rx="12" fill="#fefce8" stroke="#fde68a"/></g>
+<text class="h" x="314" y="322">Feedback Collector</text>
+<text class="p" x="314" y="342">-&gt; Dataset Update</text>
+<path d="M 240 150 C 270 120, 290 120, 300 121" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 460 121 C 490 120, 500 130, 520 150" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 600 280 C 600 330, 520 335, 460 335" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<path d="M 300 335 C 180 335, 140 300, 140 250" fill="none" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arr)"/>
+<text class="lbl" x="300" y="200">selects item -&gt; feedback</text>
+<g filter="url(#sh)"><rect x="160" y="410" width="440" height="96" rx="12" fill="#f5f3ff" stroke="#ddd6fe"/></g>
+<text class="h" x="174" y="432">Code-Space Structural Cocoon metric</text>
+<text class="p" x="174" y="452">layer-wise code entropy</text>
+<text class="p" x="174" y="470">Top-k concentration over learned discrete codes</text>
+<path d="M 380 370 L 380 410" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arr)"/></svg>

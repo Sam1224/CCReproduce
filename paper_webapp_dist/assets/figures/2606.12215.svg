@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#f1f5f9"/></linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .t{font:700 32px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .s{font:500 16px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#475569}
+      .h{font:700 18px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#0f172a}
+      .p{font:500 15px ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;fill:#334155}
+      .m{font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="url(#bg)"/>
+  <g filter="url(#sh)">
+    <rect x="48" y="42" width="1104" height="86" rx="18" fill="#fff"/>
+  </g>
+  <rect x="48" y="42" width="1104" height="6" rx="3" fill="url(#bar)"/>
+  <text class="t" x="76" y="92">MLT-Dedup</text>
+  <text class="s" x="76" y="118">Multi-level retrieval + spatial-temporal verification for near-duplicate governance</text>
+
+  <!-- Pipeline cards -->
+  <g filter="url(#sh)">
+    <rect x="60" y="170" width="1080" height="470" rx="18" fill="#fff"/>
+  </g>
+
+  <!-- Step blocks -->
+  <rect x="92" y="220" width="230" height="140" rx="16" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="112" y="252">1) Input</text>
+  <text class="p" x="112" y="282">UGC videos / clips</text>
+  <text class="p" x="112" y="308">frames + timestamps</text>
+
+  <rect x="350" y="220" width="260" height="180" rx="16" fill="#faf5ff" stroke="#e9d5ff"/>
+  <text class="h" x="370" y="252">2) ML-VE</text>
+  <text class="m" x="370" y="280">clip embedding (compact)</text>
+  <text class="m" x="370" y="306">frame embedding (fine)</text>
+  <text class="p" x="370" y="340">one forward → two levels</text>
+  <text class="p" x="370" y="366">index budget vs accuracy decoupled</text>
+
+  <rect x="640" y="220" width="230" height="140" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="660" y="252">3) ANN Retrieval</text>
+  <text class="p" x="660" y="282">search in clip space</text>
+  <text class="p" x="660" y="308">top-N candidates</text>
+
+  <rect x="900" y="220" width="220" height="180" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="h" x="920" y="252">4) DiF-SiM</text>
+  <text class="m" x="920" y="282">Δf_t + f_t matching</text>
+  <text class="p" x="920" y="312">temporal localization</text>
+  <text class="p" x="920" y="338">overlap ratio evidence</text>
+
+  <rect x="350" y="430" width="770" height="170" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+  <text class="h" x="370" y="462">Policy-driven decision</text>
+  <text class="p" x="370" y="492">If overlap ≥ τ and similarity ≥ τ' → near-duplicate (dedup / downrank / audit)</text>
+  <text class="p" x="370" y="520">Outputs: (i) duplicate segment timestamps, (ii) confidence score, (iii) action</text>
+
+  <!-- Arrows -->
+  <g fill="none" stroke="#94a3b8" stroke-width="4">
+    <path d="M 322 290 L 350 290"/>
+    <path d="M 610 290 L 640 290"/>
+    <path d="M 870 290 L 900 290"/>
+    <path d="M 1010 400 L 1010 430"/>
+  </g>
+  <g fill="#94a3b8">
+    <polygon points="345,290 333,283 333,297"/>
+    <polygon points="635,290 623,283 623,297"/>
+    <polygon points="895,290 883,283 883,297"/>
+    <polygon points="1010,430 1003,418 1017,418"/>
+  </g>
+</svg>

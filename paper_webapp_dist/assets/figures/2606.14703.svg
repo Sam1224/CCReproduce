@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <defs>
+    <style>
+      .bg{fill:#fbfdff}
+      .box{fill:#ffffff;stroke:#c7d3e3;stroke-width:2;rx:14;ry:14}
+      .t{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans";fill:#1f2d3d}
+      .h{font-size:22px;font-weight:700}
+      .p{font-size:16px}
+      .cap{font-size:14px;fill:#48617a}
+      .arrow{stroke:#5b8def;stroke-width:3;fill:none;marker-end:url(#m)}
+      .badge{fill:#eef5ff;stroke:#5b8def;stroke-width:1.5;rx:10;ry:10}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b8def" />
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="900" height="420" />
+
+  <text class="t h" x="30" y="48">Gaze Heads: Region Tracking & Inference-time Control</text>
+  <text class="t cap" x="30" y="74">2606.14703 · VLM interpretability & controllability</text>
+
+  <rect class="box" x="40" y="120" width="250" height="110" />
+  <text class="t p" x="60" y="160">Image + prompt</text>
+  <text class="t cap" x="60" y="186">"Describe the scene"</text>
+
+  <rect class="box" x="340" y="95" width="250" height="160" />
+  <text class="t p" x="360" y="135">VLM forward pass</text>
+  <text class="t cap" x="360" y="162">identify gaze heads</text>
+  <text class="t cap" x="360" y="188">(small subset of heads)</text>
+
+  <rect class="badge" x="360" y="210" width="210" height="32" />
+  <text class="t cap" x="372" y="231">attention redirect (mask)</text>
+
+  <rect class="box" x="640" y="140" width="220" height="150" />
+  <text class="t p" x="660" y="185">Controlled caption</text>
+  <text class="t cap" x="660" y="212">describe chosen region</text>
+  <text class="t cap" x="660" y="238">no retraining</text>
+
+  <path class="arrow" d="M290 175 L330 175" />
+  <path class="arrow" d="M590 175 L630 205" />
+
+  <text class="t cap" x="40" y="395">Figure drawn by Aime (illustration).</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+  <rect width="760" height="420" fill="#f8fbff"/>
+  <text x="34" y="42" font-size="24" font-family="Arial" fill="#1d3557">PaletteID methodology</text>
+  <rect x="36" y="92" width="152" height="72" rx="18" fill="#dbeafe"/>
+  <text x="56" y="128" font-size="20" font-family="Arial" fill="#1d4ed8">Multimodal item</text>
+  <rect x="214" y="92" width="158" height="72" rx="18" fill="#e0f2fe"/>
+  <text x="234" y="128" font-size="20" font-family="Arial" fill="#0369a1">Prototype palette</text>
+  <rect x="398" y="92" width="150" height="72" rx="18" fill="#ede9fe"/>
+  <text x="418" y="128" font-size="20" font-family="Arial" fill="#6d28d9">Top-K retrieve</text>
+  <rect x="214" y="216" width="158" height="72" rx="18" fill="#dcfce7"/>
+  <text x="240" y="252" font-size="20" font-family="Arial" fill="#15803d">Similarity gate</text>
+  <rect x="398" y="216" width="150" height="72" rx="18" fill="#fee2e2"/>
+  <text x="436" y="252" font-size="20" font-family="Arial" fill="#b91c1c">Semantic ID</text>
+  <rect x="580" y="152" width="138" height="72" rx="18" fill="#fef3c7"/>
+  <text x="620" y="188" font-size="20" font-family="Arial" fill="#b45309">CTR head</text>
+  <path d="M188 128 L214 128" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M372 128 L398 128" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M293 164 L293 216" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M372 252 L398 252" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <path d="M548 188 L580 188" stroke="#64748b" stroke-width="4" marker-end="url(#a)"/>
+  <text x="36" y="352" font-size="18" font-family="Arial" fill="#334155">Real prototypes replace abstract codebooks for interpretable semantic IDs</text>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#64748b"/></marker></defs>
+</svg>

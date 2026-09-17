@@ -277,8 +277,12 @@ async function init() {
   setLang("zh");
   setStatus(I18N[lang].loading);
 
-  const res = await fetch("data/papers.json", { cache: "no-store" });
-  payload = await res.json();
+  if (window.__PAPER_PAYLOAD__?.papers?.length) {
+    payload = window.__PAPER_PAYLOAD__;
+  } else {
+    const res = await fetch("data/papers.json", { cache: "no-store" });
+    payload = await res.json();
+  }
 
   let dates = (payload.days || []).map((item) =>
     typeof item === "string" ? item : item.inspection_date
