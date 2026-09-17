@@ -7,6 +7,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WEBAPP_DIR = Path(__file__).resolve().parent
+REPRO_BRANCH_OVERRIDES = {
+    "2026-09-17": "aime/20260917-paper-patrol",
+}
 
 
 def iter_papers_json():
@@ -122,7 +125,8 @@ def main() -> None:
 
             reproduce_url = None
             if reproduce and reproduce.get("path"):
-                reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/main/{reproduce['path']}"
+                branch = REPRO_BRANCH_OVERRIDES.get(inspection_date, "main")
+                reproduce_url = f"https://github.com/Sam1224/CCReproduce/tree/{branch}/{reproduce['path']}"
 
             fig_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.svg"
             fig_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.png"
