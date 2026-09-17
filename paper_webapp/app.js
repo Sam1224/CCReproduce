@@ -207,7 +207,9 @@ function renderPapers(papers) {
     const expBtn = card.querySelector(".toggle-exp");
     const figureEl = card.querySelector(".figure");
 
-    if (p.figure_path) {
+    if (p.figure_inline) {
+      figureEl.src = p.figure_inline;
+    } else if (p.figure_path) {
       figureEl.addEventListener("error", () => {
         figBtn.disabled = true;
         figBtn.classList.remove("btn-secondary");
@@ -221,7 +223,9 @@ function renderPapers(papers) {
 
     const expText = lang === "zh" ? p.key_metrics_zh : p.key_metrics_en;
     const expFig = card.querySelector(".exp-figure");
-    if (p.exp_figure_path) {
+    if (p.exp_figure_inline) {
+      expFig.src = p.exp_figure_inline;
+    } else if (p.exp_figure_path) {
       expFig.addEventListener("error", () => {
         expFig.remove();
         if (!expText) {

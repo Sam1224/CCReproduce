@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import sqlite3
@@ -20,6 +21,22 @@ def summary_value(summary: dict, lang: str, key: str):
     if isinstance(nested, dict) and nested.get(key) is not None:
         return nested.get(key)
     return summary.get(f"{key}_{lang}")
+
+
+def inline_asset(asset_path: Path):
+    if not asset_path.exists():
+        return None
+    suffix = asset_path.suffix.lower()
+    mime = {
+        ".svg": "image/svg+xml",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+    }.get(suffix)
+    if mime is None:
+        return None
+    payload = base64.b64encode(asset_path.read_bytes()).decode("ascii")
+    return f"data:{mime};base64,{payload}"
 
 
 def ensure_schema(conn: sqlite3.Connection) -> None:
@@ -111,19 +128,25 @@ def main() -> None:
             fig_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}.png"
             if fig_path_svg.exists():
                 figure_path = f"assets/figures/{p['id']}.svg"
+                figure_inline = inline_asset(fig_path_svg)
             elif fig_path_png.exists():
                 figure_path = f"assets/figures/{p['id']}.png"
+                figure_inline = inline_asset(fig_path_png)
             else:
                 figure_path = None
+                figure_inline = None
 
             exp_path_svg = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.svg"
             exp_path_png = WEBAPP_DIR / "assets" / "figures" / f"{p['id']}_exp.png"
             if exp_path_svg.exists():
                 exp_figure_path = f"assets/figures/{p['id']}_exp.svg"
+                exp_figure_inline = inline_asset(exp_path_svg)
             elif exp_path_png.exists():
                 exp_figure_path = f"assets/figures/{p['id']}_exp.png"
+                exp_figure_inline = inline_asset(exp_path_png)
             else:
                 exp_figure_path = None
+                exp_figure_inline = None
 
             row = {
                 "inspection_date": inspection_date,
@@ -149,7 +172,9 @@ def main() -> None:
                 "key_metrics_en": summary_value(summary, "en", "key_metrics"),
                 "reproduce_url": reproduce_url,
                 "figure_path": figure_path,
+                "figure_inline": figure_inline,
                 "exp_figure_path": exp_figure_path,
+                "exp_figure_inline": exp_figure_inline,
             }
             web_papers.append(row)
 
