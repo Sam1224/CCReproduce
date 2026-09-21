@@ -1,6 +1,14 @@
 {
   "days": [
     {
+      "inspection_date": "2026-09-21",
+      "paper_count": 6
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_count": 8
+    },
+    {
       "inspection_date": "2026-09-04",
       "paper_count": 7
     },
@@ -138,6 +146,812 @@
     }
   ],
   "papers": [
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.21548",
+      "title": "Dual-Interest Sequential Product Recommendation With Multi-Granular SSM",
+      "authors": [
+        "Shuiying Liao",
+        "P. Y. Mok"
+      ],
+      "affiliations": [
+        "The Hong Kong University of Science and Technology"
+      ],
+      "source": "arXiv / cs.AI / e-commerce recommendation",
+      "published": "2026-09-18",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.21548",
+        "pdf": "https://arxiv.org/pdf/2609.21548.pdf"
+      },
+      "tags": [
+        "电商推荐",
+        "序列推荐",
+        "SSM",
+        "Mamba",
+        "用户兴趣建模"
+      ],
+      "score_total": 86,
+      "score_breakdown": {
+        "innovation": 26,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 8,
+        "generalization": 3,
+        "relevance": 25,
+        "total": 86,
+        "rationale_zh": "与电商推荐强相关，方法动机清楚，且把 SSM 效率与兴趣语义拆分结合得较好；扣分点是公开可见关键指标细节有限。",
+        "rationale_en": "Highly relevant to e-commerce recommendation, with a clean dual-interest SSM design; points are held back because detailed public metrics are only partially visible."
+      },
+      "rationale_zh": "与电商推荐强相关，方法动机清楚，且把 SSM 效率与兴趣语义拆分结合得较好；扣分点是公开可见关键指标细节有限。",
+      "rationale_en": "Highly relevant to e-commerce recommendation, with a clean dual-interest SSM design; points are held back because detailed public metrics are only partially visible.",
+      "method_overview_zh": "DSRec 面向序列推荐中同一商品在不同上下文下语义角色不同的问题，把用户兴趣拆成长期稳定偏好和短期会话意图两条分支。长期分支用全序列 SSM/Mamba 建模历史聚合，短期分支用时间间隔调制的 SSM 捕捉最近点击节奏。两条分支通过 residual cross-fusion 交换信息但保留语义独立性，最后用于 next-item prediction。高光点是把 item polysemy 与多粒度时间建模结合起来，直接贴合电商推荐链路。",
+      "method_overview_en": "DSRec addresses item polysemy in sequential recommendation by separating each item into long-term preference and short-term session-intent roles. A full-sequence SSM/Mamba branch models stable historical interest, while a time-modulated SSM branch tracks local intent with inter-click gaps. Residual cross-fusion exchanges contextual signals while preserving branch specialization. The highlight is the combination of item-role disentanglement and multi-granular temporal modeling for e-commerce recommendation.",
+      "story_zh": "现有 Transformer 推荐效果强但成本高，很多 SSM 推荐又把每个 item 当成单一语义实体，忽视同一商品在长周期兴趣和短周期意图里可能扮演不同角色。DSRec 的设计是先显式拆分长期/短期兴趣，再分别用适合的状态空间编码器处理，最后用残差交叉融合避免两路信息割裂。这样解决的是‘同一商品为什么被点’而不只是‘下一个商品是什么’。",
+      "story_en": "Transformer recommenders are powerful but expensive, and many SSM recommenders still encode each item as a single semantic role. DSRec argues that the same item can mean different things in long-term preference versus short-term intent. It therefore disentangles the two roles, processes them with asymmetric SSM encoders, and fuses them residually for next-item prediction.",
+      "innovation_zh": "创新点合理且工程可行：item polysemy 的问题定义清楚；非对称 dual-SSM 比单一序列编码更贴合推荐行为；时间调制短期分支能利用 inter-click gap；cross-fusion 又避免简单 concat 的弱交互。相比传统 SASRec/BERT4Rec 或单路 Mamba 推荐，它的核心差异是把语义角色和时间粒度拆开建模。",
+      "innovation_en": "The method is plausible and useful: item polysemy is a clear recommendation problem; asymmetric dual SSMs match different temporal granularities; time-modulated dynamics use inter-click gaps; and cross-fusion is stronger than late concatenation. Its distinction from SASRec/BERT4Rec or single-branch Mamba is explicit semantic-role modeling.",
+      "key_metrics_zh": "论文报告在多个公开推荐 benchmark 上超过 SOTA，并强调准确率与效率均有提升；公开文本未暴露完整表格数值。Toy 复现验证 Recall@10 可稳定超过随机/弱基线，说明双兴趣分支能学习长短期切换信号。",
+      "key_metrics_en": "The paper reports SOTA gains on several public recommendation benchmarks and highlights both accuracy and efficiency; the accessible text did not expose complete numeric tables. The toy reproduction checks Recall@10 against synthetic long/short-interest switching signals.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-21/DSRec",
+      "figure_path": "assets/figures/2609.21548.svg",
+      "exp_figure_path": "assets/figures/2609.21548_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.20784",
+      "title": "RetireOPD: Self-Retiring On-Policy Distillation for Agentic Reinforcement Learning",
+      "authors": [
+        "Yan Yu",
+        "Zhengxi Lu",
+        "Yizhou Liu",
+        "Yichen Pan",
+        "Aozhe Wang",
+        "Qipeng Chen",
+        "Hua Yang",
+        "Wenqi Zhang",
+        "Weiming Lu",
+        "Qianglong Chen",
+        "Yongliang Shen"
+      ],
+      "affiliations": [
+        "Zhejiang University",
+        "Alibaba Group"
+      ],
+      "source": "arXiv / cs.CL / agentic RL",
+      "published": "2026-09-17",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.20784",
+        "pdf": "https://arxiv.org/pdf/2609.20784.pdf",
+        "code": "https://github.com/ZJU-REAL/SDAR"
+      },
+      "tags": [
+        "Agent",
+        "RL",
+        "蒸馏",
+        "WebShop",
+        "弱相关高热"
+      ],
+      "score_total": 84,
+      "score_breakdown": {
+        "innovation": 26,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 84,
+        "rationale_zh": "高热 agentic RL/蒸馏论文，WebShop 与电商 agent 强相关；官方仓库已确认包含 RetireOPD 代码，因此不重复复现。",
+        "rationale_en": "A strong agentic RL/distillation paper with direct WebShop relevance; the official repository contains RetireOPD code, so no duplicate reproduction was needed."
+      },
+      "rationale_zh": "高热 agentic RL/蒸馏论文，WebShop 与电商 agent 强相关；官方仓库已确认包含 RetireOPD 代码，因此不重复复现。",
+      "rationale_en": "A strong agentic RL/distillation paper with direct WebShop relevance; the official repository contains RetireOPD code, so no duplicate reproduction was needed.",
+      "method_overview_zh": "RetireOPD 先训练一个真正会使用 privileged skills 的 teacher，再让无 skill 的 student 同时接受环境奖励和 OPD token-level 监督。关键机制是 Adaptive Retirement：当 teacher-student discrepancy 不再缩小且 student 达到 teacher 目标比例后，自动退休 teacher，后续只保留 RL。高光点是把蒸馏从固定 schedule 改成训练信号驱动的自退休。",
+      "method_overview_en": "RetireOPD first trains a teacher that can actually use privileged skills, then trains a skill-free student with both environment rewards and OPD token-level supervision. Adaptive Retirement removes the teacher once discrepancy stops shrinking and the student reaches a target fraction of teacher performance. The highlight is retiring distillation based on live training signals rather than a fixed schedule.",
+      "story_zh": "多轮 agent RL 只有轨迹级稀疏奖励，OPD 可以提供 dense supervision，但 teacher 并不总可靠，且后期 teacher 反而可能限制 student 突破。RetireOPD 先把 teacher 训练到能用技能，再在 student 已经内化技能后撤掉 teacher，避免一直模仿带来的上限约束。",
+      "story_en": "Agentic RL provides sparse trajectory-level rewards, while OPD provides dense supervision, but the teacher may be unreliable and later constrain the student. RetireOPD trains the teacher separately and removes it after the student has internalized the skill behavior, letting RL continue beyond the teacher ceiling.",
+      "innovation_zh": "相比标准 OPD、privileged OPD 或预设退火 schedule，它的创新在于 teacher 先解耦训练、再用 discrepancy 与成功率条件在线判断退休时机。这个机制对电商 WebShop 类 agent、客服排障 agent、治理操作 agent 都有参考价值。",
+      "innovation_en": "Compared with standard OPD or fixed distillation schedules, the key design is decoupled teacher training plus online retirement based on discrepancy and success-rate conditions. This is useful for WebShop-style commerce agents, support agents, and governance-operation agents.",
+      "key_metrics_zh": "论文报告在 Qwen2.5 1.5B/3B/7B 上，ALFWorld success rate 相比 GRPO 提升 14.1% 到 18.8%，WebShop accuracy 提升 11.8% 到 19.0%，并且每个设置都超过自己的 skill-conditioned teacher。",
+      "key_metrics_en": "Across Qwen2.5 1.5B/3B/7B, RetireOPD improves ALFWorld success by 14.1%–18.8% and WebShop accuracy by 11.8%–19.0% over GRPO, surpassing its own skill-conditioned teacher in every setting.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.20784.svg",
+      "exp_figure_path": "assets/figures/2609.20784_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.21626",
+      "title": "One Prompt Does Not Fit All: Self-Meta-Evolve for Personalized Information Extraction",
+      "authors": [
+        "Hongliang Li",
+        "Lu Wang",
+        "Yong Xu",
+        "Hanyang Chen",
+        "Zhitao Hou",
+        "Xiaoting Qin",
+        "Song Ge",
+        "Qingwei Lin",
+        "Dongmei Zhang"
+      ],
+      "affiliations": [
+        "Microsoft",
+        "Beijing Jiaotong University"
+      ],
+      "source": "arXiv / cs.AI / enterprise IE",
+      "published": "2026-09-18",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.21626",
+        "pdf": "https://arxiv.org/pdf/2609.21626.pdf"
+      },
+      "tags": [
+        "信息抽取",
+        "LLM",
+        "Prompt 优化",
+        "个性化",
+        "内容理解"
+      ],
+      "score_total": 83,
+      "score_breakdown": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 20,
+        "total": 83,
+        "rationale_zh": "与内容理解和治理运营的信息抽取强相关，实验包含模拟 persona 与真人验证，方法可低成本落地；扣分点是更多是 prompt/agent 框架而非底层模型突破。",
+        "rationale_en": "Strongly useful for content-understanding and governance operations, with simulated and human validation; the main limitation is that it is a prompt/agent framework rather than a base-model breakthrough."
+      },
+      "rationale_zh": "与内容理解和治理运营的信息抽取强相关，实验包含模拟 persona 与真人验证，方法可低成本落地；扣分点是更多是 prompt/agent 框架而非底层模型突破。",
+      "rationale_en": "Strongly useful for content-understanding and governance operations, with simulated and human validation; the main limitation is that it is a prompt/agent framework rather than a base-model breakthrough.",
+      "method_overview_zh": "Self-Meta-Evolve 把企业信息抽取从‘一个全局 prompt 服务所有人’改成‘每个用户一个可演化 prompt’。内循环根据 persona-conditioned feedback 编辑结构化 prompt，外循环从成功编辑轨迹中蒸馏 meta-prompt，让之后的个性化更快收敛。论文还构建了 292 个基于 O*NET 职业分类的模拟企业 persona benchmark。高光点是把个性化内容理解落到可持续演化的 prompt 机制，而不是一次性 prompt search。",
+      "method_overview_en": "Self-Meta-Evolve changes enterprise information extraction from one global prompt for all users to a portfolio of evolving user-specific prompts. The inner loop edits structured prompts from persona-conditioned feedback, while the outer loop distills successful edits into a meta-prompt for faster future adaptation. It also introduces a 292-persona enterprise IE benchmark grounded in O*NET. The highlight is persistent personalization rather than one-shot prompt search.",
+      "story_zh": "同一份内容对项目经理、财务分析师、治理运营的抽取目标并不一样，静态 prompt 容易让不同用户都需要二次修改。论文把这个不足建模为 per-user prompt adaptation：用户反馈驱动内循环修正，跨用户成功经验驱动外循环改进编辑策略。最终系统像一个会长期记住偏好的个人抽取助手。",
+      "story_en": "A project manager, finance analyst, and trust-ops reviewer need different fields from the same document, so static prompts force users into repetitive post-editing. The paper formulates this as per-user prompt adaptation: feedback updates the individual prompt, and successful edits update the shared meta-strategy. The result behaves like a long-lived extraction assistant that remembers role-specific needs.",
+      "innovation_zh": "相比 APE/OPRO/ProTeGi 等全局 prompt optimizer，这篇的关键区别是优化对象从 dataset-level prompt 变为 user-level prompt portfolio，并引入 meta-prompt 演化来复用编辑经验。这个设计对电商运营内容抽取、达人画像字段抽取、治理 case 摘要个性化都可迁移。",
+      "innovation_en": "Unlike global prompt optimizers such as APE, OPRO, or ProTeGi, the optimized object is a user-level prompt portfolio, with a meta-prompt that evolves from cross-user edit trajectories. This is transferable to e-commerce operation notes, creator-profile extraction, and governance-case summarization.",
+      "key_metrics_zh": "论文报告在 292 persona benchmark 上成功率 74.58%，超过最强 prompt-optimization baseline 13.56 个百分点，并在两轮内达到 52.54%；20 名真实专业人士双盲评测中，个性化 prompt 相比静态 baseline 的 pairwise win rate 为 71%。",
+      "key_metrics_en": "The paper reports 74.58% success on the 292-persona benchmark, +13.56 absolute points over the strongest prompt-optimization baseline, 52.54% success within two iterations, and a 71% pairwise win rate over static prompts in a double-blind study with 20 professionals.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-21/SelfMetaEvolve",
+      "figure_path": "assets/figures/2609.21626.svg",
+      "exp_figure_path": "assets/figures/2609.21626_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.22048",
+      "title": "Available Guardrails: Certifying Selective Prediction across ML Systems",
+      "authors": [
+        "Parivesh Priye",
+        "Yufeng Wang",
+        "Haibin Ling",
+        "Michael Chaykowsky"
+      ],
+      "affiliations": [
+        "Rivian and Volkswagen Group Technologies",
+        "Stony Brook University",
+        "Westlake University"
+      ],
+      "source": "arXiv / cs.LG / content moderation and recommendation gates",
+      "published": "2026-09-18",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.22048",
+        "pdf": "https://arxiv.org/pdf/2609.22048.pdf"
+      },
+      "tags": [
+        "内容审核",
+        "Selective Prediction",
+        "可信门控",
+        "推荐系统",
+        "治理评估"
+      ],
+      "score_total": 82,
+      "score_breakdown": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 82,
+        "rationale_zh": "与达人/内容治理的自动化审核门控高度相关，方法虽偏统计决策但上线价值大，实验覆盖内容审核与推荐等多域。",
+        "rationale_en": "Highly relevant to automated governance gates; although statistical rather than model-heavy, it has strong deployment value and is evaluated across moderation and recommendation domains."
+      },
+      "rationale_zh": "与达人/内容治理的自动化审核门控高度相关，方法虽偏统计决策但上线价值大，实验覆盖内容审核与推荐等多域。",
+      "rationale_en": "Highly relevant to automated governance gates; although statistical rather than model-heavy, it has strong deployment value and is evaluated across moderation and recommendation domains.",
+      "method_overview_zh": "Available Guardrails 研究如何在有限校准数据下，为选择性预测系统提供分组精度证书。它把‘能否发证’定义成 availability，并用 exact-binomial inversion 计算每个候选报告分区在目标精度下能覆盖多少流量。随后把固定 group order 下的 partition selection 写成动态规划，显式权衡安全、粒度和覆盖量。这个思想可用于内容审核自动通过/拒绝、人审兜底、推荐结果可信门控。",
+      "method_overview_en": "Available Guardrails studies how to certify group-wise precision for selective predictors under finite calibration data. It defines certificate availability, computes it with exact-binomial inversion, and casts reporting-partition selection under a fixed group order as dynamic programming. The resulting frontier trades off safety, granularity, and served traffic. This is directly useful for moderation automation, human fallback, and trustworthy recommendation gates.",
+      "story_zh": "很多治理系统会设置置信门控：模型有把握就自动处理，没把握就转人工。但全局精度达标不代表每个政策标签、工具或人群子组都安全；分得太细又会因为样本不够拿不到证书。论文把问题从‘证书是否有效’推进到‘有限数据下哪些分组能拿到证书’，再用分区搜索最大化可服务流量。",
+      "story_en": "Governance systems often gate decisions: act automatically when confidence is high and defer otherwise. Global precision is not enough because a tool, policy label, or subgroup can still be unsafe, but splitting too finely leaves too little calibration evidence. The paper shifts the question from whether a certificate is valid to which grouping can obtain a useful certificate with finite labels.",
+      "innovation_zh": "创新点在问题定义和优化目标：将 certified availability 作为部署资源，并用动态规划选择报告分区；held-out selection 降低有限样本下的过拟合；error-budget reallocation 则在不破坏有效性的前提下恢复覆盖。相比只做 conformal/risk control validity 的工作，它更贴近治理系统上线时的粒度选择问题。",
+      "innovation_en": "The key novelty is certified availability as a deployment resource, optimized with dynamic programming over reporting partitions. Held-out selection reduces overfitting from noisy planning data, and error-budget reallocation recovers coverage without violating validity. Compared with standard conformal/risk-control work, it targets the operational granularity problem.",
+      "key_metrics_zh": "论文报告 truth-informed planner 相对 support balancing 平均 coverage +0.157，naive estimator 仅恢复 +0.005；held-out selection 可恢复 +0.060，并且方向在 3 个 intent-routing 数据集、2 种架构的 60 个 model effects 中有 59 个复现。",
+      "key_metrics_en": "The paper reports +0.157 mean coverage for a truth-informed planner over support balancing, while a naive estimator recovers only +0.005. Held-out selection recovers +0.060, and the direction appears in 59 of 60 model effects across three intent-routing datasets and two architectures.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-21/AvailableGuardrails",
+      "figure_path": "assets/figures/2609.22048.svg",
+      "exp_figure_path": "assets/figures/2609.22048_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.20754",
+      "title": "RAFT: A Stateful Retrieval-Augmented Framework for Troubleshooting Agents",
+      "authors": [
+        "Mingxuan Zhang",
+        "Xiaowen Wang",
+        "Anupma Sharan",
+        "Zhengyi Chen",
+        "Chenyu Diana Zhang",
+        "Shanshan Yang",
+        "Chittibabu Pacharu"
+      ],
+      "affiliations": [
+        "Microsoft"
+      ],
+      "source": "arXiv / EMNLP 2026 Industry Track / RAG",
+      "published": "2026-09-17",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.20754",
+        "pdf": "https://arxiv.org/pdf/2609.20754.pdf",
+        "code": "https://github.com/microsoft/RAFT"
+      },
+      "tags": [
+        "RAG",
+        "Agent",
+        "Case Retrieval",
+        "治理工单",
+        "企业支持"
+      ],
+      "score_total": 81,
+      "score_breakdown": {
+        "innovation": 24,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 81,
+        "rationale_zh": "RAG 框架创新和治理工单适配性强；官方代码已确认不是空仓库，因此无需重复实现。",
+        "rationale_en": "Strong RAG architecture and governance-case applicability; the official code repository is substantive, so duplicate reproduction was skipped."
+      },
+      "rationale_zh": "RAG 框架创新和治理工单适配性强；官方代码已确认不是空仓库，因此无需重复实现。",
+      "rationale_en": "Strong RAG architecture and governance-case applicability; the official code repository is substantive, so duplicate reproduction was skipped.",
+      "method_overview_zh": "RAFT 把历史支持 case 表示成有向 timeline entry，而不是静态文档块。检索时先按当前 case 的阶段状态匹配 entry，再返回父 case 的完整调查轨迹；可选 case graph 进一步扩展相似案例。高光点是 RAG 检索单元从‘文档’变成‘问题解决过程中的状态’，非常适合治理/客服/质检工单。",
+      "method_overview_en": "RAFT represents closed support cases as directed chains of timeline entries instead of static documents. Retrieval matches the current case state at the entry level, then returns the parent case trajectory anchored at the matched state; an optional case graph expands related cases. The highlight is making the retrieval unit a troubleshooting state rather than a document chunk.",
+      "story_zh": "传统 RAG 在排障里容易拿到很长、很杂、阶段错位的上下文，因为 closed case 是动态调查过程而不是单篇知识文档。RAFT 先把 case 压成阶段链路，再按当前调查阶段匹配相似状态，最后给出后续诊断和解决路径。这样 agent 拿到的是可执行经验而非静态片段。",
+      "story_en": "Traditional RAG often retrieves long, noisy, stage-mismatched context because support cases are dynamic investigations, not static documents. RAFT distills each case into a staged trajectory, matches the active investigation state, and returns actionable diagnostic and resolution paths.",
+      "innovation_zh": "和 GraphRAG 的实体关系图不同，RAFT 的主线是 stateful timeline retrieval；可选图只是补充扩展。这个抽象对电商达人违规申诉、内容审核 case、客服售后排障都很自然。官方代码、README、examples、tests 均可见。",
+      "innovation_en": "Unlike entity-centric GraphRAG, RAFT centers stateful timeline retrieval and uses graph expansion only as an optional complement. The abstraction fits creator-governance appeals, moderation cases, and customer-support troubleshooting. The official repo contains source, examples, and tests.",
+      "key_metrics_zh": "论文报告在 Microsoft Learn 构造的 826 个支持 case synthetic benchmark 和 Apache Jira duplicate-label 数据上，RAFT 在各阶段 Case Hit 均超过 vanilla RAG 与 GraphRAG，且相对最强 baseline 有统计显著提升。",
+      "key_metrics_en": "The paper reports consistent Case Hit gains over vanilla RAG and GraphRAG at every progress stage on an 826-case Microsoft Learn synthetic benchmark and directional transfer on Apache Jira duplicate labels, with statistically significant gains over the strongest baseline.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.20754.svg",
+      "exp_figure_path": "assets/figures/2609.20754_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-21",
+      "paper_id": "2609.20800",
+      "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
+      "authors": [
+        "Taoyong Cui",
+        "Zhongyao Wang",
+        "Xinyue Xu",
+        "Weiyang Liu",
+        "Zhaochen Yu",
+        "Yuying Zhang",
+        "Qiang Gao",
+        "Mengyue Yang",
+        "Wanli Ouyang",
+        "Pheng Ann Heng",
+        "Yingcheng Wu",
+        "Zhenfei Yin",
+        "Ling Yang"
+      ],
+      "affiliations": [],
+      "source": "arXiv / cs.CL / world modeling",
+      "published": "2026-09-17",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.20800",
+        "pdf": "https://arxiv.org/pdf/2609.20800.pdf"
+      },
+      "tags": [
+        "基座模型",
+        "World Model",
+        "JEPA",
+        "表示学习",
+        "弱相关高热"
+      ],
+      "score_total": 75,
+      "score_breakdown": {
+        "innovation": 28,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 6,
+        "generalization": 5,
+        "relevance": 8,
+        "total": 75,
+        "rationale_zh": "方法很强、实验覆盖面大，但与电商内容生态/达人治理为弱相关，因此未进入复现阈值。",
+        "rationale_en": "Very strong method and broad experiments, but only weakly relevant to the target e-commerce/governance scope, so it stays below the reproduction threshold."
+      },
+      "rationale_zh": "方法很强、实验覆盖面大，但与电商内容生态/达人治理为弱相关，因此未进入复现阈值。",
+      "rationale_en": "Very strong method and broad experiments, but only weakly relevant to the target e-commerce/governance scope, so it stays below the reproduction threshold.",
+      "method_overview_zh": "JEPA-Anything 提出 orthogonal predictive factorization，把 JEPA 的单一目标表征拆成多个互补、正交的预测因子，再由专门分支预测并重组 latent world state。它在视觉、生物、临床、控制、分子动力学、物理场、天气 7 个领域验证同一预测原则。高光点是尝试把 world model 从特定模态扩展成跨世界的统一表示学习框架。",
+      "method_overview_en": "JEPA-Anything introduces orthogonal predictive factorization, decomposing a monolithic JEPA target into complementary orthogonal predictive factors, each with a dedicated branch, then recombining them into a latent world state. It is evaluated across vision, biology, clinical trajectories, control, molecular dynamics, physical fields, and weather. The highlight is a unified predictive-learning principle across very different worlds.",
+      "story_zh": "普通 JEPA 容易让高方差或容易预测的因素主导目标 embedding，弱但关键的预测结构被淹没。JEPA-Anything 用正交因子分解来分配预测容量，让不同因素承担不同可预测结构，再合成为完整状态。这样有机会提升跨域泛化和长期动力学建模。",
+      "story_en": "Standard JEPA can let high-variance or easy-to-predict structure dominate the target embedding, burying weaker but important factors. JEPA-Anything allocates predictive capacity through orthogonal factors and synthesizes the factors back into a complete state, improving generalization and dynamics modeling.",
+      "innovation_zh": "创新性很强，但与电商内容/治理是弱相关，更多是底层表示学习启发。可迁移点在于商品/内容表征也有多因素结构，例如视觉、文本、用户反馈、时间动态可被分解建模。",
+      "innovation_en": "The work is highly innovative but only weakly tied to e-commerce governance. Its transferable idea is multi-factor representation learning for product/content embeddings that combine visual, textual, user-feedback, and temporal signals.",
+      "key_metrics_zh": "论文报告在 10 个 matched dynamics tasks 上全部优于 matched JEPA baseline；Interventional Pong 单次干预预测误差降低 34.8%；在 4 个分子系统上取得最低 one-step 与 100-step error，并在生物干预实验中得到支持。",
+      "key_metrics_en": "The paper reports improvements over matched JEPA baselines on all 10 dynamics tasks, 34.8% lower single-intervention prediction error on Interventional Pong, lowest one-step and 100-step molecular errors across four systems, and support from wet-lab intervention studies.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.20800.svg",
+      "exp_figure_path": "assets/figures/2609.20800_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.11638",
+      "title": "Vidu S2: Real-Time Interactive, Editable, and Spatial Video Generation",
+      "authors": [
+        "Jintao Zhang",
+        "Kai Jiang",
+        "Jintao Chen",
+        "Xu Wang",
+        "Deyuan Liu",
+        "Jungang Li",
+        "Dechuang Chen",
+        "Ming Lin",
+        "Jingjiang Zhou",
+        "Haopeng Jin",
+        "Qi Jia",
+        "Xiaohang Wang",
+        "Yaole Wang",
+        "Zhanqiang Zhang",
+        "Ran Li",
+        "Zhengkun Huang",
+        "Shuyue Xiong",
+        "Yuji Wang",
+        "Zikun Dai",
+        "Hui He",
+        "Yang Luo",
+        "Mang Ning",
+        "Weiqi Feng",
+        "Chengyang Ye",
+        "Xinyue Lin",
+        "Min Zhao",
+        "Hongzhou Zhu",
+        "Hengkai Tan",
+        "Zeyuan Wang",
+        "Chendong Xiang",
+        "Kaiwen Zheng",
+        "Zhijie Deng",
+        "Fan Bao",
+        "Jianfei Chen",
+        "Jun Zhu"
+      ],
+      "affiliations": [
+        "Tsinghua University",
+        "Shengshu Technology"
+      ],
+      "source": "arXiv / cs.CV / Hugging Face Daily Papers",
+      "published": "2026-09-10",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.11638",
+        "pdf": "https://arxiv.org/pdf/2609.11638.pdf",
+        "demo": "https://vidu.com/vidu-stream"
+      },
+      "tags": [
+        "视频生成",
+        "实时交互",
+        "Avatar",
+        "视频编辑",
+        "弱相关高热"
+      ],
+      "score_total": 92,
+      "score_breakdown": {
+        "innovation": 29,
+        "results": 14,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 92,
+        "rationale_zh": "这是今天最强的高热论文之一：真正把实时视频生成、编辑和产品级系统化能力做到了一个新高度。它与电商达人治理并非强相关，但对直播内容生产、虚拟人互动、素材工业化生成的潜在价值非常高，因此给到超高分。",
+        "rationale_en": "This is one of the strongest high-heat papers today because it turns real-time video generation and editing into a deployable system. It is not the most directly governance-related paper, but its value to live-commerce content creation and virtual creators is substantial."
+      },
+      "rationale_zh": "这是今天最强的高热论文之一：真正把实时视频生成、编辑和产品级系统化能力做到了一个新高度。它与电商达人治理并非强相关，但对直播内容生产、虚拟人互动、素材工业化生成的潜在价值非常高，因此给到超高分。",
+      "rationale_en": "This is one of the strongest high-heat papers today because it turns real-time video generation and editing into a deployable system. It is not the most directly governance-related paper, but its value to live-commerce content creation and virtual creators is substantial.",
+      "method_overview_zh": "Vidu S2 把实时视频生成拆成两个能力：Vidu S2-Avatar 负责数字人实时交互，Vidu S2-Editing 负责流式视频实时编辑。Avatar 侧通过双向 image/reference-to-video 训练、hybrid teacher 与 self-replay forcing，把动态参考图、动作指令和长时稳定性联合起来；Editing 侧则重点解决服饰替换、角色替换和背景替换在流式条件下的一致性。论文的高光点不是单一模型效果，而是把模型、推理基础设施和 agentic 交互系统一起打通，真正把 720p 实时体验做出来。对电商直播、达人数字分身、持品互动和创意素材生产都很有启发。",
+      "method_overview_en": "Vidu S2 combines two real-time capabilities: Vidu S2-Avatar for interactive digital characters and Vidu S2-Editing for streaming video editing. The avatar track uses bidirectional image/reference-to-video training, hybrid teacher forcing, and self-replay forcing to stabilize dynamic references and long-horizon interaction, while the editing track focuses on streaming-consistent clothing, character, and background replacement. The highlight is not only generation quality, but the end-to-end integration of model training, inference infrastructure, and agentic interaction. That makes the system relevant to creator tooling, live commerce, and virtual-human content production.",
+      "story_zh": "传统视频生成很强，但大都停留在离线生成或单次编辑，没法满足直播和实时内容生产对低延迟、可控和持续一致性的要求。Vidu S2 的思路是把“参考一致性”“流式因果生成”“实时推理优化”作为一个系统问题联合设计，让角色、服装和背景可以在交互过程中被持续修改，同时保持视频质量和时延可接受。于是它从‘能生成视频’进一步变成‘能在实时内容流里工作’。",
+      "story_en": "Most video generation systems remain offline or single-shot, which is insufficient for live content workflows that demand low latency, controllability, and temporal consistency. Vidu S2 treats reference consistency, causal streaming generation, and runtime optimization as a joint system problem, so users can keep changing character appearance, clothing, and background during interaction. In other words, it moves from ‘video generation works’ to ‘video generation works inside a live content loop.’",
+      "innovation_zh": "创新性体现在三层：一是 Avatar 与 Editing 两条实时视频链路分别引入面向流式场景的训练策略；二是通过 self-replay forcing、偏好优化和超分 refiner 兼顾稳定性与观感；三是把 efficient attention、量化线性层、kernel fusion、多 GPU 并行等推理基础设施写成完整系统。它和常见只报生成质量的论文不同，更像一篇把研究能力真正推向线上产品形态的工作。虽然与达人治理是弱相关，但对直播内容生产和虚拟达人生态的价值很高。",
+      "innovation_en": "Its novelty appears at three layers: streaming-oriented training for both avatar and editing pipelines, stability/quality mechanisms such as self-replay forcing and preference optimization, and a production-grade inference stack with efficient attention, quantized linear layers, kernel fusion, and multi-GPU parallelism. Unlike papers that only report static generative metrics, this one pushes video generation toward deployable real-time interaction. The governance relevance is weaker, but the content-ecosystem value is high.",
+      "key_metrics_zh": "论文报告 Vidu S2-Avatar 支持实时 720p 视频生成，并且在动态参考更新、动作跟随和实时编辑可控性上优于全部 baseline。系统层面重点结果是：可在在线 demo 中实现数字人实时交互和流式视频编辑；编辑能力覆盖 style rendering、clothing replacement、character replacement、background replacement。我们复现的 toy 版本中，editing 模式在服饰/风格编辑准确率上达到 1.0，而不使用参考控制的 baseline 为 0。",
+      "key_metrics_en": "The paper reports real-time 720p generation for Vidu S2-Avatar and consistent gains over all baselines on dynamic reference updates, instruction following, and real-time editing quality. The deployed demo supports style rendering, clothing replacement, character replacement, and background replacement in a live stream. In our toy reproduction, the reference-aware editing path reaches 1.0 accuracy on clothing/style edit consistency while the no-reference baseline collapses to 0.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-15/ViduS2",
+      "figure_path": "assets/figures/2609.11638.svg",
+      "exp_figure_path": "assets/figures/2609.11638_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.14978",
+      "title": "LazFormer: Scaling Transformers for Industrial Recommendation via Transferable Generative Pre-training",
+      "authors": [
+        "Xiaodong Li",
+        "Alin Fan",
+        "Mingyang Li",
+        "Yan Xiao",
+        "Shichao Nie",
+        "Junfeng Zhang",
+        "Shaochuan Lin",
+        "Zhanming Ou",
+        "Tao Luo",
+        "Xiaoyi Zeng"
+      ],
+      "affiliations": [
+        "Alibaba International Digital Commerce Group"
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-14",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.14978",
+        "pdf": "https://arxiv.org/pdf/2609.14978.pdf"
+      },
+      "tags": [
+        "推荐系统",
+        "电商推荐",
+        "Transformer",
+        "预训练",
+        "工业落地"
+      ],
+      "score_total": 88,
+      "score_breakdown": {
+        "innovation": 27,
+        "results": 13,
+        "exp_quality": 14,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 88,
+        "rationale_zh": "这篇和电商推荐链路强相关，而且不是只做一点结构微调，而是围绕预训练迁移、长序列效率和训练稳定性做了系统设计。工业推荐可落地性很强，因此进入高优先级复现。",
+        "rationale_en": "This paper is strongly aligned with industrial e-commerce recommendation and offers a system-level redesign across transfer, long-sequence efficiency, and training stability rather than a minor architecture tweak."
+      },
+      "rationale_zh": "这篇和电商推荐链路强相关，而且不是只做一点结构微调，而是围绕预训练迁移、长序列效率和训练稳定性做了系统设计。工业推荐可落地性很强，因此进入高优先级复现。",
+      "rationale_en": "This paper is strongly aligned with industrial e-commerce recommendation and offers a system-level redesign across transfer, long-sequence efficiency, and training stability rather than a minor architecture tweak.",
+      "method_overview_zh": "LazFormer 面向工业推荐里一个很现实的问题：直接用单一 ranking Transformer 从零训练既贵又慢，而且预训练参数直接迁移又容易负迁移。论文先做 generative pre-training，自回归生成用户序列特征，为后续 ranking 初始化 sparse + dense 参数；再通过 transferable residual adapter 把 ranking 特有信号以残差方式注入，避免预训练表征被硬搬过来。随后，request-aware ranking 将长序列压缩、混合稀疏注意力和 request-aware 范式结合起来，兼顾效率和效果。最后，asymmetric multi-epoch training 在多轮训练里重置 sparse 参数、累积 dense 参数，缓解稀疏特征过拟合。",
+      "method_overview_en": "LazFormer tackles a practical industrial recommendation bottleneck: training a single Transformer ranking model from scratch is expensive and slow, while directly transferring pre-trained parameters can cause negative transfer. The paper first performs generative pre-training by autoregressively generating sequential features to initialize both sparse and dense parameters, then uses a transferable residual adapter to inject ranking-specific signals in a residual form. A request-aware ranking module combines long-sequence compression, hybrid sparse attention, and request-aware modeling, and an asymmetric multi-epoch strategy resets sparse parameters while accumulating dense ones across epochs.",
+      "story_zh": "工业推荐想吃到 Transformer 的规模收益，但真正上线时常常卡在两件事上：一是全量训练成本太高，二是预训练和在线 ranking 的输入分布不一致，直接迁移反而伤效果。LazFormer 的思路是先利用生成式预训练拿到好的初始化，再用 adapter 和 request-aware 机制把 ranking 特有信息柔性接上，同时通过非对称多轮训练抑制稀疏参数过拟合。它不是单纯堆大模型，而是在工业推荐链路里把‘如何迁移、如何提效、如何训练稳定’一起解决。",
+      "story_en": "Industrial recommender systems want Transformer scalability, but deployment is blocked by high training cost and mismatch between pre-training inputs and online ranking inputs. LazFormer first harvests good initialization from generative pre-training, then carefully reconnects ranking-specific information through adapters and request-aware modeling, while its asymmetric training schedule controls sparse-parameter overfitting. It therefore solves not just ‘how to scale,’ but also ‘how to transfer, how to speed up, and how to stabilize training.’",
+      "innovation_zh": "亮点主要有三个：第一，把生成式预训练明确用于工业推荐初始化，而不是只做通用序列表征；第二，transferable residual adapter 用很轻的结构解决 dense 参数负迁移；第三，request-aware ranking 与 asymmetric multi-epoch training 让长序列建模和多轮训练更贴合线上推荐。整体创新既合理又工程感很强，尤其适合电商 feed、搜索排序和广告推荐这类成本敏感场景。",
+      "innovation_en": "The paper stands out for three reasons: it turns generative pre-training into an explicitly recommendation-oriented initializer, uses a lightweight residual adapter to mitigate dense-parameter negative transfer, and combines request-aware long-sequence ranking with asymmetric multi-epoch optimization. The design is both methodologically meaningful and deeply industrial, making it especially relevant to e-commerce feed ranking and search recommendation.",
+      "key_metrics_zh": "论文在阿里国际电商场景报告了显著 offline 和 online 收益：HTML 全文显示其在多个工业数据集上优于现有 Transformer 推荐基线，并在在线 A/B 中带来稳定增益。我们 toy 复现里，LazFormer 相比 baseline ranking 在 Recall@10 上从 0.7257 提升到 0.7670，验证了‘预训练 + adapter + request-aware ranking’这一主线设计的有效性。",
+      "key_metrics_en": "The full paper reports clear offline and online gains in Alibaba’s industrial recommendation setting over existing Transformer baselines. In our toy reproduction, LazFormer improves Recall@10 from 0.7257 to 0.7670 over a baseline ranking model, illustrating the value of the pre-training + adapter + request-aware ranking pipeline.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-15/LazFormer",
+      "figure_path": "assets/figures/2609.14978.svg",
+      "exp_figure_path": "assets/figures/2609.14978_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.15094",
+      "title": "Generate to Explore, Select to Exploit: Aligning LLM-based Headline Generation with Personalized Recommendation",
+      "authors": [
+        "Yi Chen",
+        "Rufeng Cheng",
+        "Qiang Xie",
+        "Tao Li"
+      ],
+      "affiliations": [
+        "Baidu Inc."
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-14",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.15094",
+        "pdf": "https://arxiv.org/pdf/2609.15094.pdf"
+      },
+      "tags": [
+        "推荐系统",
+        "标题生成",
+        "LLM",
+        "内容分发",
+        "presentation layer"
+      ],
+      "score_total": 87,
+      "score_breakdown": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 21,
+        "total": 87,
+        "rationale_zh": "这篇既有明确业务价值，也有很漂亮的方法 framing：它不是‘让 LLM 写更好标题’这么简单，而是把展示层个性化重新建模成探索和利用的分工系统。对电商内容生态非常贴近。",
+        "rationale_en": "This paper has both strong business value and a very clean methodological framing: it recasts presentation-layer personalization as an explore-versus-exploit system rather than merely ‘better title generation.’"
+      },
+      "rationale_zh": "这篇既有明确业务价值，也有很漂亮的方法 framing：它不是‘让 LLM 写更好标题’这么简单，而是把展示层个性化重新建模成探索和利用的分工系统。对电商内容生态非常贴近。",
+      "rationale_en": "This paper has both strong business value and a very clean methodological framing: it recasts presentation-layer personalization as an explore-versus-exploit system rather than merely ‘better title generation.’",
+      "method_overview_zh": "GESE 聚焦推荐系统里经常被忽略的展示层：同一个内容条目如果只给一个静态标题，会压制长尾兴趣用户。论文把个性化拆成两步：先让 LLM 用 GSPO 和层级奖励去生成一个覆盖多种潜在兴趣的 headline candidate set，再用一个轻量 selector 结合实时上下文信号做最终选择。也就是说，LLM 不再被逼着输出‘唯一最优标题’，而是先负责探索，再由 selector 负责利用。亮点在于它直接把生成式模型和在线推荐目标对齐到 presentation layer，而不是只停留在内容理解或 rerank。",
+      "method_overview_en": "GESE focuses on the often-overlooked presentation layer of recommendation: a single static headline for an item suppresses long-tail user interests. The framework decouples personalization into two stages: an LLM trained with GSPO and hierarchical rewards generates a diverse candidate set that covers latent interests, and a lightweight real-time selector chooses the final headline using instant contextual signals. The LLM is therefore not forced to output one universal best title; it explores, and the selector exploits.",
+      "story_zh": "过去把 LLM 用在推荐标题生成时，往往直接优化单条输出，结果很容易模式坍缩，生成平均化、讨好大盘但不抓长尾需求的标题。GESE 认为问题不在于 LLM 不会写标题，而在于系统把‘探索多样表达’和‘精准命中当前用户’混成了一个动作。于是它先把 LLM 当探索器去撒开候选，再让实时反馈驱动的 selector 做最终选择，从而既保留多样性，又不牺牲点击率。",
+      "story_en": "Prior LLM-based headline generation usually optimizes a single output, which leads to mode collapse: generic titles that satisfy average tastes but miss specific user intents. GESE argues the issue is not headline generation itself, but the fact that diversity exploration and precise targeting are entangled. It separates them: let the LLM broaden the candidate space, then let the feedback-aware selector pick the right realization for the current user.",
+      "innovation_zh": "创新点非常清晰：一是把个性化 headline generation 重新定义为 generate-to-explore + select-to-exploit 的双阶段系统；二是用 hierarchical reward 训练 LLM 关注 semantic utility 和 set-wise diversity，而不是只盯单条点击信号；三是在线阶段只保留轻量 selector，保证时延和系统可部署性。这个 framing 对电商内容分发、短视频封面文案、商品标题改写都非常有参考价值。",
+      "innovation_en": "The novelty is especially clean: it reframes personalized headline generation as a dual-stage generate-to-explore / select-to-exploit system, uses hierarchical rewards to optimize both semantic utility and set-wise diversity, and keeps the online exploitation stage lightweight enough for deployment. This framing is highly relevant to e-commerce feeds, short-video copywriting, and item-title personalization.",
+      "key_metrics_zh": "论文在一个 1 亿+ DAU 商业平台上报告在线 A/B：CTR 提升 2.57%，dwell time 提升 0.87%。我们 toy 复现中，static 标题的 CTR proxy 为 0.3849，只有 generator 时提升到 0.4154，而 GESE 的 selector 进一步提升到 0.4162，且相对 oracle candidate 的 regret 更低。",
+      "key_metrics_en": "On a commercial platform with 100M+ daily active users, the paper reports a +2.57% CTR lift and +0.87% dwell-time gain in online A/B testing. In our toy reproduction, the CTR proxy improves from 0.3849 for a static headline to 0.4154 with generation alone and 0.4162 with the GESE selector, while reducing regret relative to the oracle candidate.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-15/GESE",
+      "figure_path": "assets/figures/2609.15094.svg",
+      "exp_figure_path": "assets/figures/2609.15094_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.13148",
+      "title": "When Can You Trust Your Synthetic Users? Diagnostics and Corrections for LLM Consumer Panels",
+      "authors": [
+        "Robson Tigre",
+        "Hugo Gobato Souto"
+      ],
+      "affiliations": [
+        "Recast",
+        "Dell"
+      ],
+      "source": "arXiv / cs.HC / today radar back-check",
+      "published": "2026-06-03",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13148",
+        "pdf": "https://arxiv.org/pdf/2609.13148.pdf"
+      },
+      "tags": [
+        "合成用户",
+        "LLM 评测",
+        "消费者研究",
+        "用户建模",
+        "治理评估"
+      ],
+      "score_total": 86,
+      "score_breakdown": {
+        "innovation": 27,
+        "results": 14,
+        "exp_quality": 13,
+        "efficiency": 8,
+        "generalization": 5,
+        "relevance": 19,
+        "total": 86,
+        "rationale_zh": "它不是直接做内容理解模型，但对电商消费者洞察、合成达人画像和治理评估非常有方法论价值。尤其是‘先诊断、再纠偏、最后决定是否可用’这一框架，极适合业务团队实际采用。",
+        "rationale_en": "This is not a direct content-understanding model, but it is methodologically valuable for synthetic user research, creator simulation, and governance-oriented evaluation. The trust/correct/walk-away pipeline is especially actionable."
+      },
+      "rationale_zh": "它不是直接做内容理解模型，但对电商消费者洞察、合成达人画像和治理评估非常有方法论价值。尤其是‘先诊断、再纠偏、最后决定是否可用’这一框架，极适合业务团队实际采用。",
+      "rationale_en": "This is not a direct content-understanding model, but it is methodologically valuable for synthetic user research, creator simulation, and governance-oriented evaluation. The trust/correct/walk-away pipeline is especially actionable.",
+      "method_overview_zh": "这篇论文讨论的是一个越来越现实的问题：LLM 合成用户 panel 真的能用来替代真实消费者吗？作者没有给出简单的 yes/no，而是先把 synthetic-panel bias 分解为 covariate shift 和 concept shift，再设计三个诊断模块去判断该 trust、correct 还是 walk away。若需要修正，则使用只依赖少量人类校准样本的 doubly robust AIPW estimator 做偏差校正。亮点在于它把‘合成用户是否可信’从拍脑袋判断，变成了一个可检验、可决策、可纠偏的框架。",
+      "method_overview_en": "This paper asks a highly practical question: when can LLM-generated synthetic consumer panels be trusted as a substitute for real users? Instead of offering a binary answer, it decomposes synthetic-panel bias into covariate shift and concept shift, introduces three diagnostics to decide whether to trust, correct, or walk away, and provides a doubly robust AIPW estimator that only requires a small human calibration sample. Its key contribution is turning synthetic-user reliability into a testable decision framework.",
+      "story_zh": "很多团队开始用 LLM 生成消费者样本，因为便宜又快，但 aggregate 指标好看并不代表它在细分人群、因果估计或定价决策上可靠。问题在于 synthetic users 既可能在 covariates 上和真人分布不一致，也可能在同样输入下给出不同决策逻辑。作者因此先诊断‘错在哪’，再决定是可以直接信任、需要小样本人类校准，还是应该放弃这个合成 panel。这样就把‘用不用 synthetic users’从感性选择变成理性流程。",
+      "story_en": "Many teams want to use LLM-generated consumers because they are cheap and fast, but good aggregate fit does not guarantee reliable subgroup estimates, causal conclusions, or pricing decisions. Synthetic users may differ from humans either in observed covariates or in conditional decision logic. The paper therefore diagnoses what goes wrong first, then decides whether the panel is usable as-is, salvageable with calibration, or unsuitable for the target task.",
+      "innovation_zh": "创新点主要在框架层而不是模型层：它提出了 trust/correct/walk-away 的明确决策规则，把 overlap、conditional calibration、cross-LLM stability 这些诊断量串成一个可操作的判别流程；同时给出只依赖 50 到 300 人类校准样本的 AIPW 修正模块。对电商消费者洞察、达人种草模拟、政策和定价预估都很有借鉴意义，尤其适合作为治理评测方法。",
+      "innovation_en": "The novelty lies in the framework rather than a new foundation model: it formalizes a trust/correct/walk-away decision rule, connects overlap, conditional calibration, and cross-LLM stability diagnostics into one operational pipeline, and pairs them with a small-sample AIPW correction module. This is highly relevant to e-commerce consumer insight, creator-strategy simulation, and governance-oriented evaluation workflows.",
+      "key_metrics_zh": "论文在 controlled simulations 中 180/180 次正确决策；在 ANES 上把 naive bias 降低 92.9% 到 99.6%；在 Twin-2K-500（172,884 对 human / GPT-4.1-mini 响应）上，分组场景 bias 降低 83% 到 94%。我们 toy 复现中，dr(AIPW) 对 ATE 的绝对误差从 naive 的约 0.022 降到约 0.0167，并能根据 covariate/concept shift 诊断给出 trust vs correct 决策。",
+      "key_metrics_en": "The decision rule achieves 180/180 correct decisions in controlled simulations, reduces naive bias by 92.9% to 99.6% on ANES, and lowers subgroup bias by 83% to 94% on Twin-2K-500 with 172,884 paired human / GPT-4.1-mini responses. In our toy reproduction, the DR(AIPW) estimator reduces ATE absolute error from about 0.022 for the naive estimator to about 0.0167 while yielding the expected trust-versus-correct routing.",
+      "reproduce_url": "https://github.com/Sam1224/CCReproduce/tree/main/2026-09-15/SyntheticUsersDR",
+      "figure_path": "assets/figures/2609.13148.svg",
+      "exp_figure_path": "assets/figures/2609.13148_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.14100",
+      "title": "RA-CoA: Training-free Fashion Image Captioning via Retrieval-Augmented Chain-of-Attributes",
+      "authors": [
+        "Abhirama Subramanyam Penamakuri",
+        "Shreya Shukla",
+        "Anand Mishra"
+      ],
+      "affiliations": [
+        "Mohamed Bin Zayed University of Artificial Intelligence",
+        "Indian Institute of Technology Jodhpur"
+      ],
+      "source": "arXiv / cs.CV / TMLR accepted",
+      "published": "2026-09-12",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.14100",
+        "pdf": "https://arxiv.org/pdf/2609.14100.pdf",
+        "code": "https://github.com/vl2g/RACoA"
+      },
+      "tags": [
+        "电商图像 caption",
+        "时尚理解",
+        "RAG",
+        "VLM",
+        "商品属性"
+      ],
+      "score_total": 86,
+      "score_breakdown": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 9,
+        "generalization": 4,
+        "relevance": 22,
+        "total": 86,
+        "rationale_zh": "和电商商品理解的相关性非常强，而且方法足够干净：不微调大模型，而是用检索和属性链推理显著提高细粒度 caption 质量。官方代码也确认为真实可用，因此价值很高。",
+        "rationale_en": "This paper is highly aligned with e-commerce product understanding and offers a clean training-free design that materially improves fine-grained caption quality through retrieval and attribute reasoning. The official code is also genuinely usable."
+      },
+      "rationale_zh": "和电商商品理解的相关性非常强，而且方法足够干净：不微调大模型，而是用检索和属性链推理显著提高细粒度 caption 质量。官方代码也确认为真实可用，因此价值很高。",
+      "rationale_en": "This paper is highly aligned with e-commerce product understanding and offers a clean training-free design that materially improves fine-grained caption quality through retrieval and attribute reasoning. The official code is also genuinely usable.",
+      "method_overview_zh": "RA-CoA 面向电商服饰 caption 这个极强相关问题，提出了 training-free 的两阶段框架。它先从 ProductKB 中检索视觉相近商品，拿到一组可信的 attribute keys；再让冻结 VLM 逐个预测 query 图像对应的 attribute values，最后结合 retrieved exemplars 生成 attribute-grounded caption。高光点在于它没有继续赌 end-to-end VLM 直接写 caption，而是把 fine-grained fashion captioning 拆成检索 + 属性链式推理 + 生成三个更可控的步骤。",
+      "method_overview_en": "RA-CoA targets a highly relevant e-commerce problem: fine-grained fashion captioning. It introduces a training-free two-stage framework that first retrieves visually similar products from a ProductKB to obtain reliable attribute keys, then asks a frozen VLM to predict query-specific attribute values before generating the final attribute-grounded caption with retrieved exemplars. The key highlight is that it does not rely on a generic end-to-end captioning prompt, but decomposes captioning into retrieval, attribute reasoning, and generation.",
+      "story_zh": "通用 VLM 写自然场景 caption 还行，但到了服饰电商就经常在 neckline、closure、pattern、silhouette 这种细粒度属性上幻觉或漏掉关键细节。RA-CoA 认为问题不只是‘模型不够大’，而是 caption 过程缺少领域知识和属性级约束。于是它先借助 ProductKB 检索出可能相关的属性集合，再按属性链逐个确认取值，最后才把这些可信属性编织成最终 caption。这样就把‘一口气生成整句’改成‘先想清楚每个属性，再生成句子’。",
+      "story_en": "General VLMs can produce fluent captions, but they often hallucinate or miss critical fashion details such as neckline, closure, pattern, and silhouette. RA-CoA argues the issue is not only model scale, but the lack of domain knowledge and attribute-level constraints during caption generation. It therefore retrieves a plausible attribute set from a ProductKB, resolves the values one by one, and only then forms the final caption. This turns ‘generate the whole sentence directly’ into ‘verify the attributes first, then verbalize them.’",
+      "innovation_zh": "创新性主要体现在范式上：把 retrieval-augmented generation 做到了 fashion captioning 的属性层，而不是只在文本侧塞几个 exemplars。Chain-of-Attributes 让 frozen VLM 变得更可解释，也更利于随着商品词汇演化而扩展。更重要的是，官方仓库是真实可用的，不是空链接，说明这篇工作很适合作为强相关、可落地参考方案。",
+      "innovation_en": "Its main novelty is a paradigm shift: retrieval-augmented generation is applied at the attribute level for fashion captioning rather than merely at the text-example level. The Chain-of-Attributes design makes frozen VLMs more interpretable and more extensible as product vocabularies evolve. Importantly, the official GitHub repository is real and substantive rather than a placeholder, which makes this paper especially actionable.",
+      "key_metrics_zh": "论文报告平均 METEOR 相比 zero-shot captioning 提升 26.3%，并在不同 VLM family 与 prompting paradigms 下都带来一致收益。论文还做了 top-K、ICL exemplar、retrieval cropping、ProductKB 质量与规模、跨 FashionGen / beyond fashion generalization 等分析，说明提升不是偶然刷分。",
+      "key_metrics_en": "The paper reports an average 26.3% METEOR gain over zero-shot captioning and shows consistent gains across multiple VLM families and prompting paradigms. It also includes analyses on top-K retrieval, ICL exemplars, product-aware cropping, ProductKB quality/scale, and generalization beyond FashionGen, suggesting the improvement is robust rather than benchmark-specific.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.14100.svg",
+      "exp_figure_path": "assets/figures/2609.14100_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.13986",
+      "title": "A Low-Latency Interactive System for Real-Time Video Understanding Based on VLMs",
+      "authors": [
+        "Punan Dai",
+        "Jun Xu",
+        "Bingcong Lu",
+        "Zhengxue Cheng",
+        "Hongwei Hu",
+        "Ronghua Wu",
+        "Li Song"
+      ],
+      "affiliations": [],
+      "source": "arXiv / cs.MM",
+      "published": "2026-09-12",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13986",
+        "pdf": "https://arxiv.org/pdf/2609.13986.pdf"
+      },
+      "tags": [
+        "实时视频理解",
+        "VLM",
+        "流式系统",
+        "直播巡检",
+        "内容理解"
+      ],
+      "score_total": 79,
+      "score_breakdown": {
+        "innovation": 22,
+        "results": 12,
+        "exp_quality": 12,
+        "efficiency": 10,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 79,
+        "rationale_zh": "这篇不是最强方法创新，但对直播和实时内容理解的工程可行性非常重要。分数略低于复现阈值，主要因为论文更偏系统评测与集成，而不是一个可直接抽象成独立新模型的核心算法。",
+        "rationale_en": "The paper is more about deployable systems than a sharply new algorithm, which keeps it just below the reproduction threshold. Still, its engineering relevance to live content understanding is high."
+      },
+      "rationale_zh": "这篇不是最强方法创新，但对直播和实时内容理解的工程可行性非常重要。分数略低于复现阈值，主要因为论文更偏系统评测与集成，而不是一个可直接抽象成独立新模型的核心算法。",
+      "rationale_en": "The paper is more about deployable systems than a sharply new algorithm, which keeps it just below the reproduction threshold. Still, its engineering relevance to live content understanding is high.",
+      "method_overview_zh": "论文不是再提一个新 VLM，而是设计了一个统一的 edge-cloud 实时视频理解系统。客户端可以是手机、眼镜、PC 或 pseudo-replay source，服务端统一负责 ASR/TTS、session orchestration、backend adaptation、response delivery 和 archive-backed measurement，再接入六类代表性的 video VLM backend 做实时对话。它的亮点在于把‘模型能力’和‘系统时延’一起测清楚，回答了实时视频理解到底能不能上线。",
+      "method_overview_en": "Instead of proposing a new VLM, this paper designs a unified edge-cloud system for real-time video understanding. Clients can be phones, smart glasses, PCs, or pseudo-replay sources, while the server handles ASR/TTS, session orchestration, backend adaptation, response delivery, and archive-backed measurement, then connects to six representative video VLM backends. The key contribution is to evaluate model capability and end-to-end latency together.",
+      "story_zh": "很多视频 VLM 论文强调离线能力和 benchmark 分数，但内容生态真正关心的是：面对直播、摄像头、佩戴设备流媒体，系统能不能在 1 秒级给出第一句可用回答。作者因此搭了完整的 edge-cloud 交互栈，把媒体传输、ASR/TTS、后端切换和用户可感知时延一起评估，而不是只报一个模型推理时间。这样就把‘视频理解模型’拉回到真实交互系统的语境里。",
+      "story_en": "Many video VLM papers emphasize offline capability and benchmark scores, but content systems care about whether the stack can deliver the first useful answer within about one second on a real stream. The authors therefore build the full interaction stack and evaluate media transport, ASR/TTS, backend switching, and user-perceived latency together, instead of reporting only model runtime. That reframes video understanding as an interactive systems problem.",
+      "innovation_zh": "方法创新不算特别激进，更多是系统创新：把多种实时视频 VLM backend 放进统一框架，并在 WebRTC、不同客户端和后端适配成本上做对照分析。对于直播巡检、实时内容审核辅助、达人直播 copilot 等场景，它的工程参考价值很高，因此分数接近复现阈值。",
+      "innovation_en": "The novelty is more systems-oriented than model-oriented: multiple real-time video VLM backends are compared inside one unified framework, with attention to WebRTC transport and backend adaptation cost. This makes the paper highly relevant for live-stream inspection, creator copilots, and real-time content assistance even if the core model novelty is modest.",
+      "key_metrics_zh": "论文报告在合适 backend + WebRTC 路径下，到首个 VLM 文本约 0.9 到 1.0 秒，到首个非静音 TTS 音频约 1.3 到 1.5 秒。这个量级已经进入直播和实时问答可用区间，并揭示了 backend adaptation 与 interaction behavior 的明显差异。",
+      "key_metrics_en": "With a suitable backend and WebRTC transport, the system reaches about 0.9–1.0 s to first VLM text and 1.3–1.5 s to first non-silent TTS audio. That puts it close to a genuinely usable range for live and interactive video understanding.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.13986.svg",
+      "exp_figure_path": "assets/figures/2609.13986_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.13993",
+      "title": "P3Rec: Distilling Prior--Posterior Preference Reasoning for LLM-based Recommendation",
+      "authors": [
+        "Jinfei Chen",
+        "Weihai Lu",
+        "Jiawei Cheng"
+      ],
+      "affiliations": [
+        "Chongqing University of Technology",
+        "Peking University",
+        "Chongqing University"
+      ],
+      "source": "arXiv / cs.IR",
+      "published": "2026-09-12",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13993",
+        "pdf": "https://arxiv.org/pdf/2609.13993.pdf"
+      },
+      "tags": [
+        "推荐系统",
+        "LLM 蒸馏",
+        "偏好推理",
+        "用户建模",
+        "电商推荐"
+      ],
+      "score_total": 74,
+      "score_breakdown": {
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 11,
+        "efficiency": 8,
+        "generalization": 4,
+        "relevance": 18,
+        "total": 74,
+        "rationale_zh": "方法本身不错，也和电商推荐相关，但相比 LazFormer 和 GESE，它更偏学术上的偏好蒸馏增强，工业落地证据没那么强，因此分数中上但未进复现。",
+        "rationale_en": "The method is meaningful and relevant to e-commerce recommendation, but compared with LazFormer and GESE it is more academic preference distillation than clearly validated industrial redesign, so it remains below the implementation cutoff."
+      },
+      "rationale_zh": "方法本身不错，也和电商推荐相关，但相比 LazFormer 和 GESE，它更偏学术上的偏好蒸馏增强，工业落地证据没那么强，因此分数中上但未进复现。",
+      "rationale_en": "The method is meaningful and relevant to e-commerce recommendation, but compared with LazFormer and GESE it is more academic preference distillation than clearly validated industrial redesign, so it remains below the implementation cutoff.",
+      "method_overview_zh": "P3Rec 试图解决 LLM-as-Enhancer 推荐方法只从单一视角蒸馏偏好知识的问题。它同时提炼 prior preference（稳定长期兴趣）和 posterior preference（面向当前目标的细粒度兴趣），再配合 item-centric preference 表征，把三种偏好信息逐步内化到轻量推荐器里。最后再用 interest entropy 对用户表示做自适应校准，避免综合偏好在检索阶段方向不清。整体上，它是把‘长期兴趣 + 当前目标相关兴趣’两种 reasoning 同时蒸馏下来。",
+      "method_overview_en": "P3Rec addresses a limitation of existing LLM-as-enhancer recommendation methods: they usually distill preference knowledge from only one perspective. P3Rec jointly extracts prior preference reasoning for stable long-term interests and posterior preference reasoning for target-conditioned fine-grained interests, then combines them with item-centric preference representations and adaptive interest-entropy calibration before retrieval optimization.",
+      "story_zh": "只看 prior，会懂用户大方向但抓不住当前决策；只看 posterior，又会过度依赖目标线索，泛化变差。P3Rec 认为推荐模型真正需要的是把两类 reasoning 结合起来，再根据历史兴趣分散度决定当前应不应该更聚焦。于是它先分别做 prior/posterior reasoning，再通过 preference absorption 和 posterior-guided distillation 融到高效推荐器里。",
+      "story_en": "Prior-only reasoning understands broad taste but may miss the current decision, while posterior-only reasoning can overfit target clues and hurt robustness. P3Rec argues that efficient recommendation needs both, plus a way to decide when the user representation should be more focused. It therefore distills prior and posterior reasoning separately, internalizes them progressively, and calibrates the final representation with interest entropy.",
+      "innovation_zh": "优点在于它不是简单蒸馏一个 LLM 打分，而是把多视角 preference reasoning 的结构显式展开，并引入 interest entropy 做检索适配。这个设计对电商推荐、搜索推荐都有启发，但实验冲击力和工业真实性略逊于 LazFormer，因此分数落在 70+ 区间。",
+      "innovation_en": "The paper is stronger than a simple teacher-score distillation approach because it explicitly decomposes multi-perspective preference reasoning and adds entropy-based retrieval adaptation. The design is relevant to e-commerce recommendation, although the empirical punch is not as strong as the most industrial papers in today’s shortlist.",
+      "key_metrics_zh": "论文在多个公开推荐数据集上验证有效，摘要指出其在多个基线之上取得更优结果，并分析了 generalization 与 computational complexity。由于目前公开信息以 arXiv 摘要为主，能确认它的方法在多数据集上稳定有效，但缺少更强的工业在线指标。",
+      "key_metrics_en": "The paper reports consistent gains over multiple baselines on several public recommendation datasets and includes analyses on generalization and computational complexity. Based on currently accessible public evidence, it looks solid but lacks the strongest industrial online metrics seen in the top-scoring papers.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.13993.svg",
+      "exp_figure_path": "assets/figures/2609.13993_exp.svg"
+    },
+    {
+      "inspection_date": "2026-09-15",
+      "paper_id": "2609.13173",
+      "title": "Read Between the Stickers: Sentiment-Prior Reasoning with Learnable Verbalized Rules for Multimodal Chat Analysis",
+      "authors": [
+        "Zixiang Ni",
+        "Yifei Xu",
+        "Haowen Yang",
+        "Yang Liu",
+        "Ziyang Peng",
+        "Wenlong Li",
+        "Tingting Xin",
+        "Yan Liang",
+        "Yancheng Chen",
+        "Bin Chong",
+        "Yuan Rao"
+      ],
+      "affiliations": [
+        "Xi’an Jiaotong University",
+        "Xi’an University of Electronic Science and Technology",
+        "Peking University",
+        "Zhejiang University",
+        "Chinese Academy of Sciences"
+      ],
+      "source": "arXiv / cs.HC",
+      "published": "2026-07-27",
+      "links": {
+        "abs": "https://arxiv.org/abs/2609.13173",
+        "pdf": "https://arxiv.org/pdf/2609.13173.pdf"
+      },
+      "tags": [
+        "多模态聊天分析",
+        "内容治理",
+        "情感识别",
+        "意图识别",
+        "sticker"
+      ],
+      "score_total": 72,
+      "score_breakdown": {
+        "innovation": 22,
+        "results": 11,
+        "exp_quality": 12,
+        "efficiency": 7,
+        "generalization": 4,
+        "relevance": 16,
+        "total": 72,
+        "rationale_zh": "这篇对多模态聊天治理和 IM 内容理解有参考价值，尤其是显式规则学习这一点很适合治理解释需求。但它离电商内容生态主链路略远，因此排在补充关注名单。",
+        "rationale_en": "The paper is useful for multimodal chat governance and explainable IM analysis, but it is one step removed from the main e-commerce content and creator-governance pipeline, so it stays in the supplementary shortlist."
+      },
+      "rationale_zh": "这篇对多模态聊天治理和 IM 内容理解有参考价值，尤其是显式规则学习这一点很适合治理解释需求。但它离电商内容生态主链路略远，因此排在补充关注名单。",
+      "rationale_en": "The paper is useful for multimodal chat governance and explainable IM analysis, but it is one step removed from the main e-commerce content and creator-governance pipeline, so it stays in the supplementary shortlist.",
+      "method_overview_zh": "ExCoVer 关注多模态聊天里 text + sticker 的联合理解，核心挑战是情感识别和意图识别之间会相互干扰。作者先用 Sentiment-Prior Chain-of-Thought 识别跨模态情感冲突，并以 dominant sentiment 缩小候选 intent 空间；再通过 Verbalized Rules Learning 学习可解释的区分规则，专门处理容易混淆的意图类别。论文的亮点是让多模态聊天分析从纯分类走向带显式推理链的判别。",
+      "method_overview_en": "ExCoVer studies multimodal chat understanding where text and stickers must be interpreted jointly, and the core difficulty is interference between sentiment recognition and intent recognition. It first uses a Sentiment-Prior Chain-of-Thought to detect cross-modal sentiment conflict and narrow the candidate intent space, then learns explicit verbalized rules to distinguish confusing intents. The main contribution is to move multimodal chat analysis from pure classification toward explicit reasoning chains.",
+      "story_zh": "在社交平台治理和客服场景里，贴纸往往会改变文本语义，但传统多任务模型通常只把情感和意图两个头一起训，却很少显式处理二者互相干扰。ExCoVer 的做法是先问清楚情感到底是什么，再基于这个先验去判断意图，并把区分不同意图的 verbalized rules 显式学出来。于是模型不只是输出标签，还能更清楚地说明为什么这么判。",
+      "story_en": "In social-platform governance and service scenarios, stickers often reshape textual meaning, but conventional multi-task models usually predict sentiment and intent together without explicitly handling their interference. ExCoVer first clarifies sentiment, then reasons about intent under that prior, and learns verbalized discrimination rules for confusing classes. The system therefore outputs not only a label but a clearer path for why it made the decision.",
+      "innovation_zh": "论文把 sentiment-prior reasoning 与可学习 verbalized rules 结合起来，这一点比较新，也很契合治理场景对可解释性的需求。它和电商内容生态的关系主要体现在 IM 内容分析、评论/私信治理和多模态语义理解，因此相关性中等偏上。",
+      "innovation_en": "The combination of sentiment-prior reasoning and learnable verbalized rules is novel and well aligned with explainability requirements in governance settings. Its relevance to e-commerce comes through IM moderation, comment/private-message analysis, and multimodal semantic understanding rather than direct recommendation or retrieval.",
+      "key_metrics_zh": "论文在 CSMSA 和 MSAIRS 数据集上达到 SOTA，并报告显式 reasoning chain 带来的可解释性提升。当前公开摘要没有给出完整数值表，但能确认其在多模态 sentiment + intent 联合识别上优于现有多任务方法。",
+      "key_metrics_en": "The paper reports state-of-the-art performance on CSMSA and MSAIRS while providing explicit reasoning chains. The public abstract does not expose the full numeric table, but it clearly establishes improvements over existing multi-task multimodal baselines.",
+      "reproduce_url": null,
+      "figure_path": "assets/figures/2609.13173.svg",
+      "exp_figure_path": "assets/figures/2609.13173_exp.svg"
+    },
     {
       "inspection_date": "2026-09-04",
       "paper_id": "2609.04083",

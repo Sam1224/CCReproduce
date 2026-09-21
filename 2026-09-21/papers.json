@@ -1,0 +1,132 @@
+{
+  "inspection_date": "2026-09-21",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": ["2026-09-21 00:00:00", "2026-09-21 23:59:59"],
+    "utc": ["2026-09-20T16:00:00Z", "2026-09-21T15:59:59Z"]
+  },
+  "keyword_notes": {
+    "kept": ["电商", "内容理解", "达人治理", "LLM/VLM/MLLM", "Caption", "向量化表征", "聚类/相似", "Agent", "RAG", "蒸馏", "违规检测/治理", "数据质量/清洗/打标"],
+    "added": ["sequential recommendation", "selective prediction", "policy operationalization", "enterprise information extraction", "troubleshooting RAG", "world model", "agentic RL", "creator/content moderation"],
+    "excluded": ["后门", "越狱", "prompt injection", "攻击型安全", "以规避/攻击防护为主的 red-team 论文"]
+  },
+  "source_coverage": [
+    "arXiv recent/new: cs.AI, cs.CL, cs.LG, cs.CV, cs.IR, cs.HC, cs.CY, cs.MM",
+    "Hugging Face Daily Papers and trending discussion back-check",
+    "OpenReview / TMLR / ICML / NeurIPS / ICLR / CVPR / ICCV / ECCV / ACL / EMNLP / NAACL / KDD / SIGIR / SIGMOD / VLDB accepted-paper pages",
+    "Google Scholar / Semantic Scholar / OpenAlex / DBLP metadata cross-check",
+    "AI lab blogs: Google/DeepMind, Meta AI, OpenAI, Qwen, Tencent Hunyuan, DeepSeek, Meituan Tech, Kuaishou Tech, Xiaohongshu Tech",
+    "Social signals: X, Zhihu, Xiaohongshu, 机器之心, 量子位, CVer, 新智元, GitHub repository activity"
+  ],
+  "papers": [
+    {
+      "id": "2609.21548",
+      "title": "Dual-Interest Sequential Product Recommendation With Multi-Granular SSM",
+      "authors": ["Shuiying Liao", "P. Y. Mok"],
+      "affiliations": ["The Hong Kong University of Science and Technology"],
+      "source": "arXiv / cs.AI / e-commerce recommendation",
+      "published": "2026-09-18",
+      "tags": ["电商推荐", "序列推荐", "SSM", "Mamba", "用户兴趣建模"],
+      "links": {"abs": "https://arxiv.org/abs/2609.21548", "pdf": "https://arxiv.org/pdf/2609.21548.pdf"},
+      "summary": {
+        "zh": {
+          "method_overview": "DSRec 面向序列推荐中同一商品在不同上下文下语义角色不同的问题，把用户兴趣拆成长期稳定偏好和短期会话意图两条分支。长期分支用全序列 SSM/Mamba 建模历史聚合，短期分支用时间间隔调制的 SSM 捕捉最近点击节奏。两条分支通过 residual cross-fusion 交换信息但保留语义独立性，最后用于 next-item prediction。高光点是把 item polysemy 与多粒度时间建模结合起来，直接贴合电商推荐链路。",
+          "story": "现有 Transformer 推荐效果强但成本高，很多 SSM 推荐又把每个 item 当成单一语义实体，忽视同一商品在长周期兴趣和短周期意图里可能扮演不同角色。DSRec 的设计是先显式拆分长期/短期兴趣，再分别用适合的状态空间编码器处理，最后用残差交叉融合避免两路信息割裂。这样解决的是‘同一商品为什么被点’而不只是‘下一个商品是什么’。",
+          "innovation": "创新点合理且工程可行：item polysemy 的问题定义清楚；非对称 dual-SSM 比单一序列编码更贴合推荐行为；时间调制短期分支能利用 inter-click gap；cross-fusion 又避免简单 concat 的弱交互。相比传统 SASRec/BERT4Rec 或单路 Mamba 推荐，它的核心差异是把语义角色和时间粒度拆开建模。",
+          "key_metrics": "论文报告在多个公开推荐 benchmark 上超过 SOTA，并强调准确率与效率均有提升；公开文本未暴露完整表格数值。Toy 复现验证 Recall@10 可稳定超过随机/弱基线，说明双兴趣分支能学习长短期切换信号。"
+        },
+        "en": {
+          "method_overview": "DSRec addresses item polysemy in sequential recommendation by separating each item into long-term preference and short-term session-intent roles. A full-sequence SSM/Mamba branch models stable historical interest, while a time-modulated SSM branch tracks local intent with inter-click gaps. Residual cross-fusion exchanges contextual signals while preserving branch specialization. The highlight is the combination of item-role disentanglement and multi-granular temporal modeling for e-commerce recommendation.",
+          "story": "Transformer recommenders are powerful but expensive, and many SSM recommenders still encode each item as a single semantic role. DSRec argues that the same item can mean different things in long-term preference versus short-term intent. It therefore disentangles the two roles, processes them with asymmetric SSM encoders, and fuses them residually for next-item prediction.",
+          "innovation": "The method is plausible and useful: item polysemy is a clear recommendation problem; asymmetric dual SSMs match different temporal granularities; time-modulated dynamics use inter-click gaps; and cross-fusion is stronger than late concatenation. Its distinction from SASRec/BERT4Rec or single-branch Mamba is explicit semantic-role modeling.",
+          "key_metrics": "The paper reports SOTA gains on several public recommendation benchmarks and highlights both accuracy and efficiency; the accessible text did not expose complete numeric tables. The toy reproduction checks Recall@10 against synthetic long/short-interest switching signals."
+        }
+      },
+      "score": {"innovation": 26, "results": 12, "exp_quality": 12, "efficiency": 8, "generalization": 3, "relevance": 25, "total": 86, "rationale_zh": "与电商推荐强相关，方法动机清楚，且把 SSM 效率与兴趣语义拆分结合得较好；扣分点是公开可见关键指标细节有限。", "rationale_en": "Highly relevant to e-commerce recommendation, with a clean dual-interest SSM design; points are held back because detailed public metrics are only partially visible."},
+      "reproduce": {"status": "implemented", "path": "2026-09-21/DSRec", "github_url": "https://github.com/Sam1224/CCReproduce/tree/aime/1789989022-daily-paper-patrol-20260921/2026-09-21/DSRec", "code_checked": true, "notes": "未检索到实质公开代码，已补充 toy-but-runnable PyTorch 复现。"},
+      "figure_steps": ["Encode each clicked product into shared item embeddings", "Split roles into long-term preference and short-term time-aware intent", "Run full-sequence and time-modulated SSM encoders", "Fuse branches with residual cross-granularity exchange for next-item ranking"],
+      "exp_cards": [["Claimed result", "SOTA on benchmarks"], ["Core metric", "Recall / NDCG"], ["Toy check", "Recall@10 runnable"]]
+    },
+    {
+      "id": "2609.21626",
+      "title": "One Prompt Does Not Fit All: Self-Meta-Evolve for Personalized Information Extraction",
+      "authors": ["Hongliang Li", "Lu Wang", "Yong Xu", "Hanyang Chen", "Zhitao Hou", "Xiaoting Qin", "Song Ge", "Qingwei Lin", "Dongmei Zhang"],
+      "affiliations": ["Microsoft", "Beijing Jiaotong University"],
+      "source": "arXiv / cs.AI / enterprise IE",
+      "published": "2026-09-18",
+      "tags": ["信息抽取", "LLM", "Prompt 优化", "个性化", "内容理解"],
+      "links": {"abs": "https://arxiv.org/abs/2609.21626", "pdf": "https://arxiv.org/pdf/2609.21626.pdf"},
+      "summary": {
+        "zh": {"method_overview": "Self-Meta-Evolve 把企业信息抽取从‘一个全局 prompt 服务所有人’改成‘每个用户一个可演化 prompt’。内循环根据 persona-conditioned feedback 编辑结构化 prompt，外循环从成功编辑轨迹中蒸馏 meta-prompt，让之后的个性化更快收敛。论文还构建了 292 个基于 O*NET 职业分类的模拟企业 persona benchmark。高光点是把个性化内容理解落到可持续演化的 prompt 机制，而不是一次性 prompt search。", "story": "同一份内容对项目经理、财务分析师、治理运营的抽取目标并不一样，静态 prompt 容易让不同用户都需要二次修改。论文把这个不足建模为 per-user prompt adaptation：用户反馈驱动内循环修正，跨用户成功经验驱动外循环改进编辑策略。最终系统像一个会长期记住偏好的个人抽取助手。", "innovation": "相比 APE/OPRO/ProTeGi 等全局 prompt optimizer，这篇的关键区别是优化对象从 dataset-level prompt 变为 user-level prompt portfolio，并引入 meta-prompt 演化来复用编辑经验。这个设计对电商运营内容抽取、达人画像字段抽取、治理 case 摘要个性化都可迁移。", "key_metrics": "论文报告在 292 persona benchmark 上成功率 74.58%，超过最强 prompt-optimization baseline 13.56 个百分点，并在两轮内达到 52.54%；20 名真实专业人士双盲评测中，个性化 prompt 相比静态 baseline 的 pairwise win rate 为 71%。"},
+        "en": {"method_overview": "Self-Meta-Evolve changes enterprise information extraction from one global prompt for all users to a portfolio of evolving user-specific prompts. The inner loop edits structured prompts from persona-conditioned feedback, while the outer loop distills successful edits into a meta-prompt for faster future adaptation. It also introduces a 292-persona enterprise IE benchmark grounded in O*NET. The highlight is persistent personalization rather than one-shot prompt search.", "story": "A project manager, finance analyst, and trust-ops reviewer need different fields from the same document, so static prompts force users into repetitive post-editing. The paper formulates this as per-user prompt adaptation: feedback updates the individual prompt, and successful edits update the shared meta-strategy. The result behaves like a long-lived extraction assistant that remembers role-specific needs.", "innovation": "Unlike global prompt optimizers such as APE, OPRO, or ProTeGi, the optimized object is a user-level prompt portfolio, with a meta-prompt that evolves from cross-user edit trajectories. This is transferable to e-commerce operation notes, creator-profile extraction, and governance-case summarization.", "key_metrics": "The paper reports 74.58% success on the 292-persona benchmark, +13.56 absolute points over the strongest prompt-optimization baseline, 52.54% success within two iterations, and a 71% pairwise win rate over static prompts in a double-blind study with 20 professionals."}
+      },
+      "score": {"innovation": 25, "results": 13, "exp_quality": 13, "efficiency": 8, "generalization": 4, "relevance": 20, "total": 83, "rationale_zh": "与内容理解和治理运营的信息抽取强相关，实验包含模拟 persona 与真人验证，方法可低成本落地；扣分点是更多是 prompt/agent 框架而非底层模型突破。", "rationale_en": "Strongly useful for content-understanding and governance operations, with simulated and human validation; the main limitation is that it is a prompt/agent framework rather than a base-model breakthrough."},
+      "reproduce": {"status": "implemented", "path": "2026-09-21/SelfMetaEvolve", "github_url": "https://github.com/Sam1224/CCReproduce/tree/aime/1789989022-daily-paper-patrol-20260921/2026-09-21/SelfMetaEvolve", "code_checked": true, "notes": "未检索到实质公开代码，已补充 toy-but-runnable PyTorch 复现。"},
+      "figure_steps": ["Create a role-specific extraction prompt for each user persona", "Collect feedback on missing or misprioritized fields", "Edit the user prompt in the inner adaptation loop", "Distill successful edits into a shared meta-prompt for faster future users"],
+      "exp_cards": [["Success rate", "74.58%"], ["Baseline lift", "+13.56 pts"], ["Human study", "71% win rate"]]
+    },
+    {
+      "id": "2609.22048",
+      "title": "Available Guardrails: Certifying Selective Prediction across ML Systems",
+      "authors": ["Parivesh Priye", "Yufeng Wang", "Haibin Ling", "Michael Chaykowsky"],
+      "affiliations": ["Rivian and Volkswagen Group Technologies", "Stony Brook University", "Westlake University"],
+      "source": "arXiv / cs.LG / content moderation and recommendation gates",
+      "published": "2026-09-18",
+      "tags": ["内容审核", "Selective Prediction", "可信门控", "推荐系统", "治理评估"],
+      "links": {"abs": "https://arxiv.org/abs/2609.22048", "pdf": "https://arxiv.org/pdf/2609.22048.pdf"},
+      "summary": {
+        "zh": {"method_overview": "Available Guardrails 研究如何在有限校准数据下，为选择性预测系统提供分组精度证书。它把‘能否发证’定义成 availability，并用 exact-binomial inversion 计算每个候选报告分区在目标精度下能覆盖多少流量。随后把固定 group order 下的 partition selection 写成动态规划，显式权衡安全、粒度和覆盖量。这个思想可用于内容审核自动通过/拒绝、人审兜底、推荐结果可信门控。", "story": "很多治理系统会设置置信门控：模型有把握就自动处理，没把握就转人工。但全局精度达标不代表每个政策标签、工具或人群子组都安全；分得太细又会因为样本不够拿不到证书。论文把问题从‘证书是否有效’推进到‘有限数据下哪些分组能拿到证书’，再用分区搜索最大化可服务流量。", "innovation": "创新点在问题定义和优化目标：将 certified availability 作为部署资源，并用动态规划选择报告分区；held-out selection 降低有限样本下的过拟合；error-budget reallocation 则在不破坏有效性的前提下恢复覆盖。相比只做 conformal/risk control validity 的工作，它更贴近治理系统上线时的粒度选择问题。", "key_metrics": "论文报告 truth-informed planner 相对 support balancing 平均 coverage +0.157，naive estimator 仅恢复 +0.005；held-out selection 可恢复 +0.060，并且方向在 3 个 intent-routing 数据集、2 种架构的 60 个 model effects 中有 59 个复现。"},
+        "en": {"method_overview": "Available Guardrails studies how to certify group-wise precision for selective predictors under finite calibration data. It defines certificate availability, computes it with exact-binomial inversion, and casts reporting-partition selection under a fixed group order as dynamic programming. The resulting frontier trades off safety, granularity, and served traffic. This is directly useful for moderation automation, human fallback, and trustworthy recommendation gates.", "story": "Governance systems often gate decisions: act automatically when confidence is high and defer otherwise. Global precision is not enough because a tool, policy label, or subgroup can still be unsafe, but splitting too finely leaves too little calibration evidence. The paper shifts the question from whether a certificate is valid to which grouping can obtain a useful certificate with finite labels.", "innovation": "The key novelty is certified availability as a deployment resource, optimized with dynamic programming over reporting partitions. Held-out selection reduces overfitting from noisy planning data, and error-budget reallocation recovers coverage without violating validity. Compared with standard conformal/risk-control work, it targets the operational granularity problem.", "key_metrics": "The paper reports +0.157 mean coverage for a truth-informed planner over support balancing, while a naive estimator recovers only +0.005. Held-out selection recovers +0.060, and the direction appears in 59 of 60 model effects across three intent-routing datasets and two architectures."}
+      },
+      "score": {"innovation": 24, "results": 13, "exp_quality": 14, "efficiency": 8, "generalization": 4, "relevance": 19, "total": 82, "rationale_zh": "与达人/内容治理的自动化审核门控高度相关，方法虽偏统计决策但上线价值大，实验覆盖内容审核与推荐等多域。", "rationale_en": "Highly relevant to automated governance gates; although statistical rather than model-heavy, it has strong deployment value and is evaluated across moderation and recommendation domains."},
+      "reproduce": {"status": "implemented", "path": "2026-09-21/AvailableGuardrails", "github_url": "https://github.com/Sam1224/CCReproduce/tree/aime/1789989022-daily-paper-patrol-20260921/2026-09-21/AvailableGuardrails", "code_checked": true, "notes": "未检索到实质公开代码，已补充 selective prediction + partition DP 的 toy-but-runnable PyTorch 复现。"},
+      "figure_steps": ["Train or observe a confidence gate for each ML decision", "Estimate finite-sample precision certificates per reporting unit", "Merge ordered units with dynamic programming to maximize certified traffic", "Serve automated decisions only for certified high-precision groups"],
+      "exp_cards": [["Truth planner", "+0.157 coverage"], ["Naive estimator", "+0.005 coverage"], ["Held-out selection", "+0.060 coverage"]]
+    },
+    {
+      "id": "2609.20784",
+      "title": "RetireOPD: Self-Retiring On-Policy Distillation for Agentic Reinforcement Learning",
+      "authors": ["Yan Yu", "Zhengxi Lu", "Yizhou Liu", "Yichen Pan", "Aozhe Wang", "Qipeng Chen", "Hua Yang", "Wenqi Zhang", "Weiming Lu", "Qianglong Chen", "Yongliang Shen"],
+      "affiliations": ["Zhejiang University", "Alibaba Group"],
+      "source": "arXiv / cs.CL / agentic RL",
+      "published": "2026-09-17",
+      "tags": ["Agent", "RL", "蒸馏", "WebShop", "弱相关高热"],
+      "links": {"abs": "https://arxiv.org/abs/2609.20784", "pdf": "https://arxiv.org/pdf/2609.20784.pdf", "code": "https://github.com/ZJU-REAL/SDAR"},
+      "summary": {"zh": {"method_overview": "RetireOPD 先训练一个真正会使用 privileged skills 的 teacher，再让无 skill 的 student 同时接受环境奖励和 OPD token-level 监督。关键机制是 Adaptive Retirement：当 teacher-student discrepancy 不再缩小且 student 达到 teacher 目标比例后，自动退休 teacher，后续只保留 RL。高光点是把蒸馏从固定 schedule 改成训练信号驱动的自退休。", "story": "多轮 agent RL 只有轨迹级稀疏奖励，OPD 可以提供 dense supervision，但 teacher 并不总可靠，且后期 teacher 反而可能限制 student 突破。RetireOPD 先把 teacher 训练到能用技能，再在 student 已经内化技能后撤掉 teacher，避免一直模仿带来的上限约束。", "innovation": "相比标准 OPD、privileged OPD 或预设退火 schedule，它的创新在于 teacher 先解耦训练、再用 discrepancy 与成功率条件在线判断退休时机。这个机制对电商 WebShop 类 agent、客服排障 agent、治理操作 agent 都有参考价值。", "key_metrics": "论文报告在 Qwen2.5 1.5B/3B/7B 上，ALFWorld success rate 相比 GRPO 提升 14.1% 到 18.8%，WebShop accuracy 提升 11.8% 到 19.0%，并且每个设置都超过自己的 skill-conditioned teacher。"}, "en": {"method_overview": "RetireOPD first trains a teacher that can actually use privileged skills, then trains a skill-free student with both environment rewards and OPD token-level supervision. Adaptive Retirement removes the teacher once discrepancy stops shrinking and the student reaches a target fraction of teacher performance. The highlight is retiring distillation based on live training signals rather than a fixed schedule.", "story": "Agentic RL provides sparse trajectory-level rewards, while OPD provides dense supervision, but the teacher may be unreliable and later constrain the student. RetireOPD trains the teacher separately and removes it after the student has internalized the skill behavior, letting RL continue beyond the teacher ceiling.", "innovation": "Compared with standard OPD or fixed distillation schedules, the key design is decoupled teacher training plus online retirement based on discrepancy and success-rate conditions. This is useful for WebShop-style commerce agents, support agents, and governance-operation agents.", "key_metrics": "Across Qwen2.5 1.5B/3B/7B, RetireOPD improves ALFWorld success by 14.1%–18.8% and WebShop accuracy by 11.8%–19.0% over GRPO, surpassing its own skill-conditioned teacher in every setting."}},
+      "score": {"innovation": 26, "results": 14, "exp_quality": 13, "efficiency": 7, "generalization": 4, "relevance": 20, "total": 84, "rationale_zh": "高热 agentic RL/蒸馏论文，WebShop 与电商 agent 强相关；官方仓库已确认包含 RetireOPD 代码，因此不重复复现。", "rationale_en": "A strong agentic RL/distillation paper with direct WebShop relevance; the official repository contains RetireOPD code, so no duplicate reproduction was needed."},
+      "reproduce": {"status": "official_verified", "path": null, "official_code": "https://github.com/ZJU-REAL/SDAR", "code_checked": true, "notes": "官方仓库 ZJU-REAL/SDAR 已确认包含 RetireOPD 代码、训练脚本与结果说明。"},
+      "figure_steps": ["Train a skill-conditioned teacher with environment reward", "Train a skill-free student with RL plus OPD guidance", "Monitor discrepancy and target teacher-success fraction", "Retire teacher and continue reward-only agentic RL"],
+      "exp_cards": [["ALFWorld", "+14.1~18.8%"], ["WebShop", "+11.8~19.0%"], ["Code", "Official verified"]]
+    },
+    {
+      "id": "2609.20754",
+      "title": "RAFT: A Stateful Retrieval-Augmented Framework for Troubleshooting Agents",
+      "authors": ["Mingxuan Zhang", "Xiaowen Wang", "Anupma Sharan", "Zhengyi Chen", "Chenyu Diana Zhang", "Shanshan Yang", "Chittibabu Pacharu"],
+      "affiliations": ["Microsoft"],
+      "source": "arXiv / EMNLP 2026 Industry Track / RAG",
+      "published": "2026-09-17",
+      "tags": ["RAG", "Agent", "Case Retrieval", "治理工单", "企业支持"],
+      "links": {"abs": "https://arxiv.org/abs/2609.20754", "pdf": "https://arxiv.org/pdf/2609.20754.pdf", "code": "https://github.com/microsoft/RAFT"},
+      "summary": {"zh": {"method_overview": "RAFT 把历史支持 case 表示成有向 timeline entry，而不是静态文档块。检索时先按当前 case 的阶段状态匹配 entry，再返回父 case 的完整调查轨迹；可选 case graph 进一步扩展相似案例。高光点是 RAG 检索单元从‘文档’变成‘问题解决过程中的状态’，非常适合治理/客服/质检工单。", "story": "传统 RAG 在排障里容易拿到很长、很杂、阶段错位的上下文，因为 closed case 是动态调查过程而不是单篇知识文档。RAFT 先把 case 压成阶段链路，再按当前调查阶段匹配相似状态，最后给出后续诊断和解决路径。这样 agent 拿到的是可执行经验而非静态片段。", "innovation": "和 GraphRAG 的实体关系图不同，RAFT 的主线是 stateful timeline retrieval；可选图只是补充扩展。这个抽象对电商达人违规申诉、内容审核 case、客服售后排障都很自然。官方代码、README、examples、tests 均可见。", "key_metrics": "论文报告在 Microsoft Learn 构造的 826 个支持 case synthetic benchmark 和 Apache Jira duplicate-label 数据上，RAFT 在各阶段 Case Hit 均超过 vanilla RAG 与 GraphRAG，且相对最强 baseline 有统计显著提升。"}, "en": {"method_overview": "RAFT represents closed support cases as directed chains of timeline entries instead of static documents. Retrieval matches the current case state at the entry level, then returns the parent case trajectory anchored at the matched state; an optional case graph expands related cases. The highlight is making the retrieval unit a troubleshooting state rather than a document chunk.", "story": "Traditional RAG often retrieves long, noisy, stage-mismatched context because support cases are dynamic investigations, not static documents. RAFT distills each case into a staged trajectory, matches the active investigation state, and returns actionable diagnostic and resolution paths.", "innovation": "Unlike entity-centric GraphRAG, RAFT centers stateful timeline retrieval and uses graph expansion only as an optional complement. The abstraction fits creator-governance appeals, moderation cases, and customer-support troubleshooting. The official repo contains source, examples, and tests.", "key_metrics": "The paper reports consistent Case Hit gains over vanilla RAG and GraphRAG at every progress stage on an 826-case Microsoft Learn synthetic benchmark and directional transfer on Apache Jira duplicate labels, with statistically significant gains over the strongest baseline."}},
+      "score": {"innovation": 24, "results": 13, "exp_quality": 14, "efficiency": 7, "generalization": 4, "relevance": 19, "total": 81, "rationale_zh": "RAG 框架创新和治理工单适配性强；官方代码已确认不是空仓库，因此无需重复实现。", "rationale_en": "Strong RAG architecture and governance-case applicability; the official code repository is substantive, so duplicate reproduction was skipped."},
+      "reproduce": {"status": "official_verified", "path": null, "official_code": "https://github.com/microsoft/RAFT", "code_checked": true, "notes": "官方仓库 microsoft/RAFT 已确认包含 src/raft、examples、tests 与 README。"},
+      "figure_steps": ["Extract raw support artifacts into chronological timeline entries", "Embed each entry and retrieve stage-matched historical states", "Promote matches to parent case trajectories", "Optionally expand through case-level graph similarity"],
+      "exp_cards": [["Synthetic data", "826 cases"], ["Metric", "Case Hit"], ["Code", "Official verified"]]
+    },
+    {
+      "id": "2609.20800",
+      "title": "JEPA-Anything: Learning Predictive Models across Different Worlds",
+      "authors": ["Taoyong Cui", "Zhongyao Wang", "Xinyue Xu", "Weiyang Liu", "Zhaochen Yu", "Yuying Zhang", "Qiang Gao", "Mengyue Yang", "Wanli Ouyang", "Pheng Ann Heng", "Yingcheng Wu", "Zhenfei Yin", "Ling Yang"],
+      "affiliations": [],
+      "source": "arXiv / cs.CL / world modeling",
+      "published": "2026-09-17",
+      "tags": ["基座模型", "World Model", "JEPA", "表示学习", "弱相关高热"],
+      "links": {"abs": "https://arxiv.org/abs/2609.20800", "pdf": "https://arxiv.org/pdf/2609.20800.pdf"},
+      "summary": {"zh": {"method_overview": "JEPA-Anything 提出 orthogonal predictive factorization，把 JEPA 的单一目标表征拆成多个互补、正交的预测因子，再由专门分支预测并重组 latent world state。它在视觉、生物、临床、控制、分子动力学、物理场、天气 7 个领域验证同一预测原则。高光点是尝试把 world model 从特定模态扩展成跨世界的统一表示学习框架。", "story": "普通 JEPA 容易让高方差或容易预测的因素主导目标 embedding，弱但关键的预测结构被淹没。JEPA-Anything 用正交因子分解来分配预测容量，让不同因素承担不同可预测结构，再合成为完整状态。这样有机会提升跨域泛化和长期动力学建模。", "innovation": "创新性很强，但与电商内容/治理是弱相关，更多是底层表示学习启发。可迁移点在于商品/内容表征也有多因素结构，例如视觉、文本、用户反馈、时间动态可被分解建模。", "key_metrics": "论文报告在 10 个 matched dynamics tasks 上全部优于 matched JEPA baseline；Interventional Pong 单次干预预测误差降低 34.8%；在 4 个分子系统上取得最低 one-step 与 100-step error，并在生物干预实验中得到支持。"}, "en": {"method_overview": "JEPA-Anything introduces orthogonal predictive factorization, decomposing a monolithic JEPA target into complementary orthogonal predictive factors, each with a dedicated branch, then recombining them into a latent world state. It is evaluated across vision, biology, clinical trajectories, control, molecular dynamics, physical fields, and weather. The highlight is a unified predictive-learning principle across very different worlds.", "story": "Standard JEPA can let high-variance or easy-to-predict structure dominate the target embedding, burying weaker but important factors. JEPA-Anything allocates predictive capacity through orthogonal factors and synthesizes the factors back into a complete state, improving generalization and dynamics modeling.", "innovation": "The work is highly innovative but only weakly tied to e-commerce governance. Its transferable idea is multi-factor representation learning for product/content embeddings that combine visual, textual, user-feedback, and temporal signals.", "key_metrics": "The paper reports improvements over matched JEPA baselines on all 10 dynamics tasks, 34.8% lower single-intervention prediction error on Interventional Pong, lowest one-step and 100-step molecular errors across four systems, and support from wet-lab intervention studies."}},
+      "score": {"innovation": 28, "results": 14, "exp_quality": 14, "efficiency": 6, "generalization": 5, "relevance": 8, "total": 75, "rationale_zh": "方法很强、实验覆盖面大，但与电商内容生态/达人治理为弱相关，因此未进入复现阈值。", "rationale_en": "Very strong method and broad experiments, but only weakly relevant to the target e-commerce/governance scope, so it stays below the reproduction threshold."},
+      "reproduce": {"status": "below_threshold", "path": null, "code_checked": false, "notes": "评分低于 80，未复现。"},
+      "figure_steps": ["Encode observed context from a world", "Factorize target latent states into orthogonal predictive components", "Predict each component through dedicated pathways", "Recombine factors for dynamics, intervention, or downstream readout"],
+      "exp_cards": [["Domains", "7"], ["Dynamics tasks", "10/10 improved"], ["Pong error", "-34.8%"]]
+    }
+  ]
+}
