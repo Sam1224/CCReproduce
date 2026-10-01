@@ -1,0 +1,78 @@
+{
+  "paper": "Ranking-Aware Prompt Optimization for Multimodal Clinical Diagnosis",
+  "toy_domain": "e-commerce content and creator-governance risk ranking",
+  "training_history": [
+    {
+      "epoch": 1,
+      "loss": 0.82982
+    },
+    {
+      "epoch": 2,
+      "loss": 0.6612
+    },
+    {
+      "epoch": 3,
+      "loss": 0.48264
+    },
+    {
+      "epoch": 4,
+      "loss": 0.31298
+    },
+    {
+      "epoch": 5,
+      "loss": 0.24737
+    },
+    {
+      "epoch": 6,
+      "loss": 0.17477
+    },
+    {
+      "epoch": 7,
+      "loss": 0.14182
+    },
+    {
+      "epoch": 8,
+      "loss": 0.12587
+    }
+  ],
+  "selection": {
+    "accuracy_pe": {
+      "prompt": "text_violation",
+      "instruction_zh": "重点检查标题、caption 与话术中的夸大、引流、违规词。",
+      "selection_score": 0.9346,
+      "all_scores": [
+        0.8923,
+        0.9346,
+        0.9308,
+        0.9269,
+        0.9346,
+        0.9308
+      ]
+    },
+    "ranking_pe": {
+      "prompt": "balanced_audit",
+      "instruction_zh": "在漏放和误伤之间平衡，按证据强度输出连续风险分。",
+      "selection_score": 0.9639,
+      "all_scores": [
+        0.9611,
+        0.9625,
+        0.9597,
+        0.9583,
+        0.9625,
+        0.9639
+      ]
+    }
+  },
+  "test": {
+    "accuracy_pe": {
+      "auroc": 0.9556,
+      "balanced_accuracy": 0.8814,
+      "positive_rate_pred": 0.1346
+    },
+    "ranking_pe": {
+      "auroc": 0.9556,
+      "balanced_accuracy": 0.8535,
+      "positive_rate_pred": 0.1192
+    }
+  }
+}

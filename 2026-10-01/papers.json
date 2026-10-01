@@ -1,0 +1,141 @@
+{
+  "inspection_date": "2026-10-01",
+  "timezone": "GMT+8",
+  "window": {
+    "gmt8": ["2026-10-01 00:00:00", "2026-10-01 23:59:59"],
+    "utc": ["2026-09-30T16:00:00Z", "2026-10-01T15:59:59Z"]
+  },
+  "keyword_notes": {
+    "kept": ["电商", "内容理解", "达人治理", "LLM/VLM/MLLM", "Caption", "向量化表征", "聚类/相似", "Agent", "RAG", "蒸馏", "违规检测/治理", "数据质量/清洗/打标"],
+    "added": ["multimodal risk ranking", "agentic perception", "world auditing", "physical captioning", "continuous multimodal generation", "prompt optimization under imbalance"],
+    "excluded": ["安全/后门/越狱/投毒/攻防对抗为核心的论文", "与内容理解和治理弱相关且无 LLM/VLM/MLLM 方法增量的论文"]
+  },
+  "source_coverage": [
+    "arXiv cs.AI / cs.CL / cs.CV / cs.LG 当日提交列表与主题检索",
+    "Hugging Face Daily Papers 与 Papers with Code 作为热度和代码线索补充",
+    "OpenReview / Google Scholar / Semantic Scholar / OpenAlex / DBLP 用于后续元数据回查",
+    "Google DeepMind / OpenAI / Meta AI / Qwen / Hunyuan / Meituan / Kuaishou 等研究博客补充",
+    "X、知乎、机器之心、量子位、新智元、CVer、小红书等社区信号用于热度辅助判断",
+    "ICML / NeurIPS / ICLR / CVPR / ICCV / ECCV / ACL / EMNLP / KDD / SIGIR / SIGMOD / VLDB accepted papers 页面补充"
+  ],
+  "papers": [
+    {
+      "id": "2609.40362v1",
+      "title": "Multimodal Flow: Unified Flow Modeling of Language and Vision in Embedding Spaces",
+      "authors": ["Hongyuan Tao", "Xinggang Wang", "Lianghui Zhu", "Yongkang Li", "Yunchao Wei", "Bin Feng", "Shaoyu Chen", "Qian Zhang", "Chang Huang", "Kai Yu"],
+      "affiliations": ["HUST-VL / related labs"],
+      "source": "arXiv cs.CV",
+      "published": "2026-09-30T17:59:57Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["MLLM", "连续表征", "多模态生成", "弱相关高热"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40362", "pdf": "https://arxiv.org/pdf/2609.40362v1", "code": "https://github.com/hustvl/Multimodal-Flow"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文提出 Multimodal Flow，把语言和视觉都放到连续 embedding 空间中统一建模，避免图像量化 token 的瓶颈，也避免语言离散预测和图像连续生成两套目标割裂。它用 chunk-causal flow backbone 组织文本块和图像 hyperchunk，通过 Flow Matching 学一个共享向量场，并用联合注意力完成跨模态交互。高光点是用单一连续生成范式覆盖文本和图像，且在较低训练 token 规模下仍达到有竞争力的多模态生成和理解结果。",
+          "story": "现有统一多模态模型要么把图像离散化导致视觉细节损失，要么对语言和图像使用不同目标，训练和采样链路复杂。Multimodal Flow 的设计是把文本顺序和图像空间结构都封装成连续 hyperchunk，用同一个 flow 过程做建模，从而让跨模态生成和理解共享一套机制。",
+          "innovation": "创新点在于全连续的统一多模态建模、chunk-causal flow backbone、并行预测多个目标 chunk。相比常见离散 VQ/token 路线，它更适合保留视觉细节；相比混合目标路线，它减少了模态特定训练目标。可行性较高，但训练成本仍偏大。",
+          "key_metrics": "论文摘要报告 MF-1 在 0.6B/1.2B/1.6B 多尺度上均因 continued pretraining 提升；用 150B token 训练后，GenEval + DPG-Bench 平均 82.8，VQAv2 + MMBench + POPE 平均 75.3，并在匹配数据、优化和参数预算下超过代表性 hybrid/discrete 模型。"
+        },
+        "en": {
+          "method_overview": "Multimodal Flow unifies language and vision generation in continuous embedding spaces. It organizes text blocks and images into ordered hyperchunks, learns a shared vector field with Flow Matching, and relies on joint attention for cross-modal interaction. The highlight is a single continuous paradigm that avoids visual quantization bottlenecks while remaining competitive at modest pretraining scale.",
+          "innovation": "The main novelty is fully continuous multimodal generation with a chunk-causal flow backbone and parallel target-chunk prediction. It differs from discrete-token unified models and hybrid objective models by keeping both modalities in one flow process."
+        }
+      },
+      "score": {"innovation": 28, "results": 14, "exp_quality": 13, "efficiency": 7, "generalization": 4, "relevance": 18, "total": 84, "rationale_zh": "弱相关但高热且方法基础性强，对电商内容理解的多模态表征、caption 和生成式理解底座有潜在价值。"},
+      "reproduce": {"status": "official_code_available", "path": null, "code_checked": true, "notes": "摘要给出 GitHub 链接，远端 HEAD 可访问，未做重复 toy 复现。"},
+      "figure_steps": ["Text and image are encoded as continuous hyperchunks", "Chunk-causal flow backbone learns a shared vector field", "Joint attention enables cross-modal interaction", "Sequential hyperchunk generation produces text or image outputs"],
+      "exp_cards": [["GenEval + DPG-Bench", "82.8 avg"], ["VQAv2 + MMBench + POPE", "75.3 avg"], ["Pretraining scale", "150B tokens"]]
+    },
+    {
+      "id": "2609.40361v1",
+      "title": "Ranking-Aware Prompt Optimization for Multimodal Clinical Diagnosis",
+      "authors": ["Tian Xia", "Minghao Liu", "Yiqing Liang", "Laixi Shi", "Jiayun Wang"],
+      "affiliations": ["Harvard University", "University of California, Santa Cruz", "Brown University", "Johns Hopkins University", "Georgia Institute of Technology"],
+      "source": "arXiv cs.LG/cs.CL/cs.CV",
+      "published": "2026-09-30T17:59:56Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["MLLM", "Prompt Optimization", "Ranking", "治理强相关迁移"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40361", "pdf": "https://arxiv.org/pdf/2609.40361v1", "code": "https://github.com/Sam1224/CCReproduce/tree/aime/1790852697-paper-patrol-2026-10-01/2026-10-01/RankingPE"},
+      "summary": {
+        "zh": {
+          "method_overview": "论文指出临床诊断类 MLLM 若继续按 accuracy 做 prompt evolution，会在强类别不均衡下被多数类捷径误导。Ranking-PE 把 GEPA 式 prompt 搜索中的 per-instance correctness 行替换为正负样本对的 pairwise ordering 行，使列均值等价于经验 AUROC。这个替换同时作用于 Pareto 支配、反思反馈和最终候选选择，不增加额外模型调用。",
+          "story": "原有 prompt 优化把“答对多少样本”当目标，但在稀有正例场景下，一个多数类策略也能拿到很高 accuracy，却完全不具备风险排序能力。Ranking-PE 把优化单元从样本换成正负样本对，要求模型把真正阳性排在阴性前面，因此更贴近诊断、违规识别、达人风险分层等场景。",
+          "innovation": "创新点不是新模型，而是找到了 reflective prompt evolution 中隐藏的 row schema 问题，并用 Wilcoxon-Mann-Whitney/AUROC 等价关系把 prompt 搜索目标系统性换成 ranking。方法简单、低成本、可插拔，迁移到电商违规风险排序也很自然。",
+          "key_metrics": "论文报告在 MIMIC 三个疾病任务上，Ranking-PE 相比 accuracy-based recipe 在 fine-tuned Qwen3-VL-8B 上 AUROC +5.8pp，在 MedGemma-4B 上 AUROC +16.2pp；Atelectasis 上相对 Accuracy-PE 获得 +7.1 AUROC pp 和 +25.5 Balanced Accuracy pp。"
+        },
+        "en": {
+          "method_overview": "Ranking-PE replaces instance-level correctness rows in reflective prompt evolution with positive-negative pair-ordering rows, making the column average an empirical AUROC objective. The swap affects Pareto filtering, reflector feedback, and final prompt selection without extra model calls.",
+          "innovation": "The key idea is to expose the hidden row schema of prompt search and align it with ranking metrics. This is simple, low-cost, and highly transferable to imbalanced governance and risk-ranking tasks."
+        }
+      },
+      "score": {"innovation": 25, "results": 13, "exp_quality": 13, "efficiency": 9, "generalization": 4, "relevance": 21, "total": 85, "rationale_zh": "虽然原场景是医疗，但稀有正例风险排序与电商治理高度相似，且方法低成本可迁移。"},
+      "reproduce": {"status": "implemented", "path": "2026-10-01/RankingPE", "code_checked": true, "notes": "未发现摘要中的官方代码链接，因此实现 toy-but-runnable PyTorch pipeline。"},
+      "figure_steps": ["Build imbalanced multimodal risk samples", "Generate candidate prompts", "Accuracy-PE scores per-instance correctness", "Ranking-PE scores positive-negative pair ordering", "Select prompt by AUROC-aligned objective"],
+      "exp_cards": [["Qwen3-VL-8B", "+5.8 AUROC pp"], ["MedGemma-4B", "+16.2 AUROC pp"], ["Atelectasis", "+25.5 BalAcc pp"]]
+    },
+    {
+      "id": "2609.40360v1",
+      "title": "Semifactual Credit-Augmented Policy Optimization",
+      "authors": ["Junshu Pan", "Zhizhang Fu", "Shulin Huang", "Yiran Ding", "Zifan Cheng", "Wenqi Shao", "Qiaosheng Zhang", "Yue Zhang"],
+      "affiliations": ["Zhejiang University", "Westlake University", "Shanghai Innovation Institute", "Shanghai AI Laboratory"],
+      "source": "arXiv cs.LG/cs.AI/cs.CL",
+      "published": "2026-09-30T17:59:56Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["LLM", "RLVR", "泛化", "弱相关高热"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40360", "pdf": "https://arxiv.org/pdf/2609.40360v1", "code": "https://github.com/DtYXs/SCAPO"},
+      "summary": {"zh": {"method_overview": "SCAPO 研究 RLVR 中模型对任务无关 prompt 特征的敏感性，用 semifactual prompt intervention 度量固定响应 token 的概率漂移，并把稳定性作为 token-level credit augmentation 注入 GRPO。它只降低相对不稳定 token 的优势，不因稳定本身额外加分。", "story": "GRPO 把最终答案奖励平均分给整段响应 token，可能把由无关格式或表述带来的虚假相关性也强化了。SCAPO 先构造保持答案不变的 prompt 扰动，找出高漂移 token，再在早期训练中削弱这些 token 的 credit，从而提高推理泛化。", "innovation": "创新在于把因果不变性思想落到 RLVR token credit 分配中，且不需要过程监督或外部 reward model。对电商治理的直接相关性较弱，但对治理 Agent 的稳健推理训练有启发。", "key_metrics": "Qwen3-4B-Base 和 Qwen3-1.7B-Base 上，SCAPO 相比 GRPO 在 AIME 2024-2026 accuracy 分别提升 +5.63 和 +4.17 个百分点；两个尺度上多数数学 benchmark 与全部 OOD benchmark 达到最佳。"}, "en": {"method_overview": "SCAPO measures token probability drift under answer-preserving semifactual prompt interventions and uses the resulting stability signal as token-level credit augmentation for GRPO.", "innovation": "It brings causal invariance into RLVR credit assignment without process supervision or an external reward model."}},
+      "score": {"innovation": 27, "results": 13, "exp_quality": 13, "efficiency": 7, "generalization": 5, "relevance": 16, "total": 81, "rationale_zh": "弱相关但高质量，适合治理 Agent/RL 训练参考；官方代码存在。"},
+      "reproduce": {"status": "official_code_available", "path": null, "code_checked": true, "notes": "摘要给出 GitHub 链接，远端 HEAD 可访问，未重复复现。"},
+      "figure_steps": ["Original prompt and semifactual prompt keep same answer", "Teacher-force fixed response under perturbations", "Measure token probability drift", "Reduce credit for unstable tokens during early GRPO", "Continue standard GRPO optimization"],
+      "exp_cards": [["Qwen3-4B", "+5.63 AIME pp"], ["Qwen3-1.7B", "+4.17 AIME pp"], ["OOD", "best on all evaluated sets"]]
+    },
+    {
+      "id": "2609.40358v1",
+      "title": "Physis-Lang: Self-Evolving Language as a Physical Representation for Video World Model",
+      "authors": ["Liming Lu", "Xianzheng Ma", "Wenkun He", "Guanqi Zhan", "Yilin Zhao", "Junyu Chen", "Mengyao Xu", "Jiaojiao Fan", "Wenhang Ge", "Yuchao Gu", "Yunze Liu", "Boyi Li", "Zhen Dong", "Victor Prisacariu", "Ming-Yu Liu", "Song Han", "Han Cai"],
+      "affiliations": ["NVIDIA", "MIT", "University of Oxford"],
+      "source": "arXiv cs.CV",
+      "published": "2026-09-30T17:59:51Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["VLM", "Caption", "视频理解", "弱相关高热"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40358", "pdf": "https://arxiv.org/pdf/2609.40358v1"},
+      "summary": {"zh": {"method_overview": "Physis-Lang 把物理过程显式写成语言表示，包括实体、原因、相互作用、物理规律、时间演化和结果，并用 agentic loop 在 PhysCapBench 上迭代改进 caption 指令。之后用物理语言指导数据检索、重标注、模型训练和推理。", "story": "视频世界模型常生成看似真实但违反物理的视频。作者认为问题不一定是自然语言表达不了物理，而是 caption 不够显式、不够可优化。于是用断言级评估和反馈循环让物理 caption 自进化，再把语言作为贯穿数据、训练和推理的共享表示。", "innovation": "创新点在于把 caption 从语义描述升级为可评估、可进化的物理表示，并把它贯穿数据闭环。对电商短视频内容理解、商品使用过程描述和素材质量评估有间接价值。", "key_metrics": "论文在 PhyGround、PhyGenBench、Physics-IQ、VerifiedVideo、Phy-2 等物理视频 benchmark 上报告稳定提升；从开源 Cosmos3-Nano backbone 出发，Physis-Lang 增强模型超过专有 Veo 3.1。"}, "en": {"method_overview": "Physis-Lang turns physical processes into explicit language representations and improves them through an agentic caption-evolution loop evaluated by PhysCapBench.", "innovation": "It upgrades captions into optimizable physical representations shared across curation, training, and inference."}},
+      "score": {"innovation": 27, "results": 13, "exp_quality": 13, "efficiency": 6, "generalization": 4, "relevance": 16, "total": 79, "rationale_zh": "方法质量很高，但对电商治理是内容理解弱相关，未进入 80 分复现线。"},
+      "reproduce": {"status": "not_required_below_80", "path": null, "code_checked": false, "notes": "总分低于 80，未触发复现。"},
+      "figure_steps": ["Video enters physical captioner", "Critic checks cause/law/effect assertions", "Evolution agent refines caption instruction", "Language-guided retrieval fills missing physics", "World model trains and infers with physical language"],
+      "exp_cards": [["Backbone", "Cosmos3-Nano"], ["Benchmarks", "5 physical video sets"], ["Claim", "surpasses Veo 3.1"]]
+    },
+    {
+      "id": "2609.40325v1",
+      "title": "WorldAuditBench: Interactive 3D World Auditing with Multimodal Agents",
+      "authors": ["Ziyan Jiang", "Jingbo Yang", "Jiabao Ji", "Yujian Liu", "Qiucheng Wu", "Tommi Jaakkola", "Yang Zhang", "Shiyu Chang"],
+      "affiliations": ["UC Santa Barbara", "MIT CSAIL", "MIT-IBM Watson AI Lab"],
+      "source": "arXiv cs.AI",
+      "published": "2026-09-30T17:55:29Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["Multimodal Agent", "Auditing", "异常检测", "治理相关"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40325", "pdf": "https://arxiv.org/pdf/2609.40325v1"},
+      "summary": {"zh": {"method_overview": "WorldAuditBench 提出交互式 3D 世界审计 benchmark，要求多模态 Agent 在 UE5/Three.js 环境中探索并发现漂浮物体、碰撞缺失、语义不一致、物体消失等异常。它把任务拆成行动探索和视觉推理的耦合问题，并比较端到端 VLM Agent 与 VLA 探索后 VLM 离线分析两种范式。", "story": "静态图像问答无法覆盖很多需要交互或重复观察才能发现的世界异常。WorldAuditBench 让 Agent 主动走近、穿越、回看和验证，从而测试它是否能把视觉怀疑转化为行动证据。", "innovation": "亮点在于把多模态异常检测从单帧识别推进到交互式审计，这与电商治理中的直播巡检、虚拟场景审核、达人内容证据链构建有较强启发。", "key_metrics": "Benchmark 包含 13 个环境、213 个异常任务、5 类异常家族。VLM agents 成功率为 28.2%-42.3%，两阶段 VLA-VLM 为 6.6%-17.4%，人类为 83.4%，显示当前模型仍有明显差距。"}, "en": {"method_overview": "WorldAuditBench evaluates multimodal agents on interactive 3D anomaly auditing across 213 tasks in 13 environments.", "innovation": "It shifts anomaly detection from static recognition to action-guided evidence gathering."}},
+      "score": {"innovation": 24, "results": 10, "exp_quality": 14, "efficiency": 6, "generalization": 4, "relevance": 20, "total": 78, "rationale_zh": "治理启发较强，但主要是 benchmark 而非直接可落地方法，未触发复现。"},
+      "reproduce": {"status": "not_required_below_80", "path": null, "code_checked": false, "notes": "总分低于 80，未触发复现。"},
+      "figure_steps": ["Agent observes 3D world", "Visual reasoning proposes anomaly hypothesis", "Action policy moves to gather evidence", "Agent compares before/after observations", "Final audit report identifies anomaly"],
+      "exp_cards": [["Tasks", "213"], ["VLM Agent", "28.2%-42.3%"], ["Human", "83.4%"]]
+    },
+    {
+      "id": "2609.40230v1",
+      "title": "EviRover: Reinforcing Agentic Perception Beyond a Glance",
+      "authors": ["Unknown from available abstract extract"],
+      "affiliations": ["Unknown from available abstract extract"],
+      "source": "arXiv cs.CV/cs.AI",
+      "published": "2026-09-30T17:30:09Z",
+      "date_gmt8": "2026-10-01",
+      "tags": ["Agentic Perception", "VLM", "证据收集", "治理相关"],
+      "links": {"abs": "https://arxiv.org/abs/2609.40230", "pdf": "https://arxiv.org/pdf/2609.40230v1"},
+      "summary": {"zh": {"method_overview": "EviRover 将感知不足问题定义为 agentic perception：当单次观察证据不足时，模型应主动获取更多信息。论文构建 EviRover-SFT-5K 与 EviRover-RL-12K 数据管线，用 SFT 与 RL 强化模型的证据获取和多步感知能力。", "story": "许多内容审核和视觉问答错误并非模型完全不懂，而是只看了一眼、证据不充分。EviRover 的思路是让模型学会什么时候需要继续看、看哪里、如何把新证据纳入判断。", "innovation": "创新性在于把感知从单步分类变成主动证据收集过程，对直播违规、商品误导、图文不一致检测有较直接启发。", "key_metrics": "可访问摘要显示论文提出 EviRover-SFT-5K 和 EviRover-RL-12K 两条数据生成管线；完整 PDF 抓取受网络代理超时影响，本次未能核验全部表格数值。"}, "en": {"method_overview": "EviRover formulates perception under insufficient evidence as an agentic process that can collect more information beyond a single glance.", "innovation": "It turns perception into active evidence acquisition, which is relevant to content moderation and multimodal audit workflows."}},
+      "score": {"innovation": 24, "results": 9, "exp_quality": 11, "efficiency": 6, "generalization": 4, "relevance": 20, "total": 74, "rationale_zh": "方向与治理很相关，但本次未能完整核验实验表格，保守评分。"},
+      "reproduce": {"status": "not_required_below_80", "path": null, "code_checked": false, "notes": "总分低于 80，未触发复现；PDF 读取因代理超时失败。"},
+      "figure_steps": ["Initial image or video observation", "Model detects insufficient evidence", "Agent chooses next view/action/query", "New evidence is fused into perception", "Final answer includes evidence-backed decision"],
+      "exp_cards": [["Data", "SFT-5K"], ["Data", "RL-12K"], ["Task", "insufficient evidence perception"]]
+    }
+  ]
+}
