@@ -1,0 +1,26 @@
+{
+  "inspection_date": "2026-10-13",
+  "timezone": "GMT+8",
+  "papers": [
+    {
+      "id": "2610.13066",
+      "title": "Evolving Creatives with Clicks: CTR-Driven Advertising Image Editing via Attribute Disentanglement and Preference Alignment",
+      "score": 91,
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-10-13/ECC",
+        "notes": "No verified public code was available from the paper page; a toy-but-runnable PyTorch reproduction was added."
+      }
+    },
+    {
+      "id": "2610.12580",
+      "title": "CLUE: A Contrastive Learning Framework for Unsupervised Event Type Induction and Annotation",
+      "score": 84,
+      "reproduce": {
+        "status": "official_code_verified",
+        "path": null,
+        "notes": "The public repository was checked and contains core implementation scripts."
+      }
+    }
+  ]
+}
