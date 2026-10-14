@@ -1,0 +1,16 @@
+{
+  "semantic_only": {
+    "precision@10": 0.2606,
+    "recall@10": 0.3818,
+    "ndcg@10": 0.7234,
+    "ndcg@20": 0.7559
+  },
+  "lacrm_full": {
+    "precision@10": 0.3139,
+    "recall@10": 0.4367,
+    "ndcg@10": 0.7807,
+    "ndcg@20": 0.8064
+  },
+  "device": "cpu",
+  "num_sources": 180
+}

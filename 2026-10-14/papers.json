@@ -1,0 +1,46 @@
+{
+  "inspection_date": "2026-10-14",
+  "timezone": "GMT+8",
+  "papers": [
+    {
+      "id": "2610.13959",
+      "title": "LACRM: LLM-Guided Mining of Directed Advertiser Competition Relationships in E-Commerce Advertising",
+      "authors": [
+        "Xiang Shi",
+        "Yitian Kou",
+        "Bing Li",
+        "Shengsheng Niu",
+        "Chun Gan",
+        "Linghui Meng",
+        "Jie He",
+        "Zhangang Lin",
+        "Ching Law"
+      ],
+      "affiliations": [
+        "JD.com",
+        "East China Normal University"
+      ],
+      "source": "arXiv",
+      "published": "2026-10-10",
+      "links": {
+        "abs": "https://arxiv.org/abs/2610.13959"
+      },
+      "score": {
+        "innovation": 25,
+        "results": 13,
+        "exp_quality": 13,
+        "efficiency": 6,
+        "generalization": 4,
+        "relevance": 19,
+        "total": 80
+      },
+      "reproduce": {
+        "status": "implemented",
+        "path": "2026-10-14/LACRM",
+        "code_checked": true,
+        "notes": "Public search and arXiv HTML check did not reveal a substantive official code repository, so a PyTorch toy reproduction was added."
+      }
+    }
+  ]
+}
+
